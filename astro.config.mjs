@@ -5,8 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://marcocyl04-ux.github.io',
-  base: '/rise-website/',
+  site: 'https://rise-website-jade.vercel.app',
   vite: {
     plugins: [tailwindcss()]
   },
