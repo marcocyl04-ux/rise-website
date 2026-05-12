@@ -31,19 +31,19 @@ const { lang = "en" } = Astro.props;
       <h4>{lang === "zh" ? "連結" : "Links"}</h4>
       {lang === "zh" ? (
         <>
-          <a href="/zh/#about">關於</a>
-          <a href="/zh/#services">服務</a>
-          <a href="/zh/#players">運動員</a>
-          <a href="/zh/#contact">聯繫</a>
-          <a href="/">EN</a>
+          <a href="#about">關於</a>
+          <a href="#services">服務</a>
+          <a href="#players">運動員</a>
+          <a href="#contact">聯繫</a>
+          <a href={import.meta.env.BASE_URL}>EN</a>
         </>
       ) : (
         <>
-          <a href="/#about">About</a>
-          <a href="/#services">Services</a>
-          <a href="/#players">Players</a>
-          <a href="/#contact">Contact</a>
-          <a href="/zh/">中文</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#players">Players</a>
+          <a href="#contact">Contact</a>
+          <a href={`${import.meta.env.BASE_URL}zh/`}>中文</a>
         </>
       )}
     </div>

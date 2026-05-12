@@ -9,7 +9,7 @@ const { lang = "en" } = Astro.props;
 <header class="site-header">
   <div class="container header-inner">
     <!-- Logo -->
-    <a href="/" class="logo" aria-label="RISE Advancement Home">
+    <a href={import.meta.env.BASE_URL} class="logo" aria-label="RISE Advancement Home">
       <span class="logo-text">RISE</span>
       <span class="logo-subtext">Advancement</span>
     </a>
@@ -18,17 +18,17 @@ const { lang = "en" } = Astro.props;
     <nav class="nav-desktop" aria-label="Main navigation">
       {lang === "zh" ? (
         <>
-          <a href="/zh/#about">關於</a>
-          <a href="/zh/#services">服務</a>
-          <a href="/zh/#players">運動員</a>
-          <a href="/zh/#contact">聯繫我們</a>
+          <a href="#about">關於</a>
+          <a href="#services">服務</a>
+          <a href="#players">運動員</a>
+          <a href="#contact">聯繫我們</a>
         </>
       ) : (
         <>
-          <a href="/#about">About</a>
-          <a href="/#services">Services</a>
-          <a href="/#players">Players</a>
-          <a href="/#contact">Contact</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#players">Players</a>
+          <a href="#contact">Contact</a>
         </>
       )}
     </nav>
@@ -36,9 +36,9 @@ const { lang = "en" } = Astro.props;
     <!-- Language Toggle + Mobile Menu Button -->
     <div class="header-actions">
       {lang === "zh" ? (
-        <a href="/" class="lang-toggle" aria-label="Switch to English">EN</a>
+        <a href={import.meta.env.BASE_URL} class="lang-toggle" aria-label="Switch to English">EN</a>
       ) : (
-        <a href="/zh/" class="lang-toggle" aria-label="Switch to Chinese">中文</a>
+        <a href={`${import.meta.env.BASE_URL}zh/`} class="lang-toggle" aria-label="Switch to Chinese">中文</a>
       )}
 
       <button
@@ -59,19 +59,19 @@ const { lang = "en" } = Astro.props;
   <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
     {lang === "zh" ? (
       <>
-        <a href="/zh/#about">關於</a>
-        <a href="/zh/#services">服務</a>
-        <a href="/zh/#players">運動員</a>
-        <a href="/zh/#contact">聯繫我們</a>
-        <a href="/" class="mobile-lang">EN</a>
+        <a href="#about">關於</a>
+        <a href="#services">服務</a>
+        <a href="#players">運動員</a>
+        <a href="#contact">聯繫我們</a>
+        <a href={import.meta.env.BASE_URL} class="mobile-lang">EN</a>
       </>
     ) : (
       <>
-        <a href="/#about">About</a>
-        <a href="/#services">Services</a>
-        <a href="/#players">Players</a>
-        <a href="/#contact">Contact</a>
-        <a href="/zh/" class="mobile-lang">中文</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#players">Players</a>
+        <a href="#contact">Contact</a>
+        <a href={`${import.meta.env.BASE_URL}zh/`} class="mobile-lang">中文</a>
       </>
     )}
   </nav>
