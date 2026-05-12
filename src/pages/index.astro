@@ -1,0 +1,385 @@
+---
+// Home page — EN
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import PlayerCard from "../components/PlayerCard.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import ContactForm from "../components/ContactForm.astro";
+---
+
+<BaseLayout title="Home">
+  <Header slot="header" />
+
+  <!-- Hero Section -->
+  <section class="hero section">
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-eyebrow">Hong Kong &bull; Canada</p>
+        <h1 class="hero-title">
+          RISE <span class="hero-title-red">Advancement</span>
+        </h1>
+        <p class="hero-lead">
+          We place young hockey players from Hong Kong and China onto teams
+          and schools in Canada. Then we develop them through the season.
+          21 players placed. $91K in fees. Real names, real teams.
+        </p>
+        <div class="hero-actions">
+          <a href="/#contact" class="btn-primary">Get Started</a>
+          <a href="/#services" class="btn-secondary">Our Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="About RISE Advancement"
+        subtitle="We're not an agency. We're a team. Three coaches who evaluate your kid, place them on a team, and mentor them through the season."
+      />
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>Placement</h3>
+          <p>
+            We find the right team and school in Canada. AA, AAA, or Elite.
+            We handle the scouting, introductions, VISA paperwork, and GTHL
+            transfers.
+          </p>
+        </div>
+        <div class="about-card">
+          <h3>Development</h3>
+          <p>
+            Video review, skill skates, exercise plans, nutritional coaching,
+            mental skills support. Pick what your kid needs.
+          </p>
+        </div>
+        <div class="about-card">
+          <h3>Family</h3>
+          <p>
+            We treat every player like our own. Weekly check-ins, coach
+            communication, group chat with all three mentors. Your kid is
+            never alone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="section">
+    <div class="container">
+      <SectionHeader
+        title="Our Services"
+        subtitle="Three ways we help. From full placement to season-long mentoring to off-season training in Hong Kong."
+      />
+      <div class="services-grid">
+        <ServiceCard
+          title="The Move"
+          description="Full player placement and transition service. We evaluate game footage, determine the right level, find teams and schools, handle VISA and transfer paperwork."
+          price="From $7,000 CAD"
+          features={[
+            "Game footage evaluation",
+            "Level determination (AA/AAA/Elite)",
+            "Team and school placement",
+            "VISA and GTHL transfer support",
+            "Post-move wrap-up conversation",
+          ]}
+          ctaText="Learn More"
+          ctaLink="/#contact"
+        />
+        <ServiceCard
+          title="Mentoring"
+          description="Season-long development program. Choose the services that fit your kid's game. Video review, skill skates, exercise plans, nutrition, mental skills, school help."
+          price="From $3,000 CAD"
+          features={[
+            "Signing fee covers onboarding + weekly check-ins",
+            "Video review sessions ($150/session)",
+            "Skill skates ($350/skate)",
+            "Exercise and nutrition plans",
+            "Mental skills coaching",
+            "Exit interview at season end",
+          ]}
+          ctaText="Learn More"
+          ctaLink="/#contact"
+        />
+        <ServiceCard
+          title="HK Off-Ice Program"
+          description="10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting. Gym, off-ice shooting, park training, on-ice sessions."
+          price="Summer 2026"
+          features={[
+            "June 8 to August 16",
+            "ONYX Gym, Taikoo Place",
+            "The Flying Puck shooting sessions",
+            "Quarry Bay Park training",
+            "Discovery Bay Ice Rink",
+            "Custom merch included",
+          ]}
+          ctaText="Learn More"
+          ctaLink="/#contact"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Players Section -->
+  <section id="players" class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="Our Players"
+        subtitle="21 players from Hong Kong placed on teams across Canada. Here are some of them."
+      />
+      <div class="players-grid">
+        <PlayerCard
+          number="#13"
+          name="Ryan Cheuk"
+          position='Forward — "A" Alternate Captain'
+          team="XL"
+        />
+        <PlayerCard
+          number="#7"
+          name="Wilshere Tung"
+          position='Defenceman — "A" Alternate Captain'
+          team="Toronto Red Wings"
+        />
+        <PlayerCard
+          number="#12"
+          name="Felix Lloren"
+          position="Defenceman"
+          team="Upper Canada College U15AAA"
+        />
+        <PlayerCard
+          number="#29"
+          name="Marcus Nuyen"
+          position="Forward"
+          team="HK RISE Elite"
+        />
+        <PlayerCard
+          number="#25"
+          name="Owen Lam"
+          position="Forward"
+          team="2010, left-shot from Hong Kong"
+        />
+        <PlayerCard
+          number="#20"
+          name="Moses Fung"
+          position="Goalie"
+          team="HK RISE Elite"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="container">
+      <SectionHeader
+        title="Get In Touch"
+        subtitle="Ready to take the next step? Contact us for a confidential consultation."
+      />
+      <ContactForm />
+
+      <div class="whatsapp-cta-wrapper">
+        <a
+          href="https://wa.me/85200000000"
+          class="whatsapp-cta-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Or message us on WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* ========== HERO ========== */
+  .hero {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+  }
+
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: var(--text-5xl);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (max-width: 639px) {
+    .hero-title {
+      font-size: var(--text-3xl);
+    }
+  }
+
+  .hero-title-red {
+    color: var(--rise-red);
+  }
+
+  .hero-lead {
+    font-size: var(--text-lg);
+    color: var(--rise-neutral-500);
+    margin-bottom: var(--space-8);
+    max-width: none;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ========== BUTTONS ========== */
+  .btn-primary,
+  .btn-secondary {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--rise-black);
+    border: 2px solid var(--rise-neutral-300);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  /* ========== ABOUT ========== */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .about-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .about-card {
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    padding: var(--space-8);
+  }
+
+  .about-card h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .about-card p {
+    color: var(--rise-neutral-500);
+    font-size: var(--text-sm);
+    max-width: 65ch;
+  }
+
+  /* ========== SERVICES ========== */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ========== PLAYERS ========== */
+  .players-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .players-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .players-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ========== CONTACT ========== */
+  .whatsapp-cta-wrapper {
+    text-align: center;
+    margin-top: var(--space-8);
+  }
+
+  .whatsapp-cta-btn {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: var(--rise-black);
+    color: var(--rise-white);
+    transition: background-color 0.2s;
+  }
+
+  .whatsapp-cta-btn:hover {
+    background-color: var(--rise-neutral-700);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+</style>

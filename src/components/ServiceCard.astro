@@ -1,0 +1,126 @@
+---
+// ServiceCard.astro — Service offering card with title, description, price, features, CTA
+export interface Props {
+  title: string;
+  description: string;
+  price: string;
+  features: string[];
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const {
+  title,
+  description,
+  price,
+  features,
+  ctaText = "Learn More",
+  ctaLink = "#",
+} = Astro.props;
+---
+
+<div class="service-card">
+  <h3 class="service-title">{title}</h3>
+  <p class="service-description">{description}</p>
+  <p class="service-price">{price}</p>
+
+  {features.length > 0 && (
+    <ul class="service-features">
+      {features.map((feature) => (
+        <li>{feature}</li>
+      ))}
+    </ul>
+  )}
+
+  <a href={ctaLink} class="btn-primary">{ctaText}</a>
+</div>
+
+<style>
+  .service-card {
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    padding: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: 100%;
+  }
+
+  .service-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--rise-black);
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .service-description {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .service-price {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--rise-red);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .service-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+  }
+
+  .service-features li {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--rise-neutral-500);
+    padding-left: 1.25rem;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .service-features li::before {
+    content: "\2714";
+    position: absolute;
+    left: 0;
+    color: var(--rise-red);
+    font-weight: 700;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+    text-align: center;
+    transition: background-color 0.2s;
+    margin-top: auto;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+</style>

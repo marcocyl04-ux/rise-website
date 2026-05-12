@@ -1,0 +1,43 @@
+---
+// SectionHeader.astro — Title + subtitle component for page sections
+export interface Props {
+  title: string;
+  subtitle?: string;
+  align?: "left" | "center";
+}
+
+const { title, subtitle, align = "center" } = Astro.props;
+---
+
+<div class:list={["section-header", `align-${align}`]}>
+  <h2>{title}</h2>
+  {subtitle && <p class="subtitle">{subtitle}</p>}
+</div>
+
+<style>
+  .section-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .align-center {
+    text-align: center;
+  }
+
+  .align-left {
+    text-align: left;
+  }
+
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    color: var(--rise-neutral-500);
+    margin: var(--space-3) auto 0;
+    max-width: 55ch;
+  }
+
+  .align-center .subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>

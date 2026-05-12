@@ -1,0 +1,49 @@
+---
+// BaseLayout.astro — HTML shell with meta tags, font loading, header/footer slots
+import "../styles/global.css";
+
+export interface Props {
+  title: string;
+  description?: string;
+  lang?: string;
+}
+
+const {
+  title,
+  description = "RISE Advancement — Elite hockey player development and placement. Hong Kong / Canada.",
+  lang = "en",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Google Fonts: Oswald (headings) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Oswald:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>{title} | RISE Advancement</title>
+  </head>
+  <body>
+    <slot name="header" />
+
+    <main>
+      <slot />
+    </main>
+
+    <slot name="footer" />
+  </body>
+</html>

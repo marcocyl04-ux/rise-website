@@ -1,0 +1,170 @@
+---
+// Footer.astro — Contact info, social links, WhatsApp CTA
+export interface Props {
+  lang?: string;
+}
+const { lang = "en" } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <!-- Brand -->
+    <div class="footer-brand">
+      <span class="footer-logo">RISE Advancement</span>
+      <p class="footer-tagline">
+        Elite hockey player development and placement.<br />
+        Hong Kong &bull; Canada
+      </p>
+    </div>
+
+    <!-- Contact -->
+    <div class="footer-contact">
+      <h4>{lang === "zh" ? "聯繫我們" : "Contact"}</h4>
+      <a href="mailto:info@riseadvancement.com">info@riseadvancement.com</a>
+      <a href="https://wa.me/85200000000" class="whatsapp-cta" target="_blank" rel="noopener noreferrer">
+        WhatsApp
+      </a>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-links">
+      <h4>{lang === "zh" ? "連結" : "Links"}</h4>
+      {lang === "zh" ? (
+        <>
+          <a href="/zh/#about">關於</a>
+          <a href="/zh/#services">服務</a>
+          <a href="/zh/#players">運動員</a>
+          <a href="/zh/#contact">聯繫</a>
+          <a href="/">EN</a>
+        </>
+      ) : (
+        <>
+          <a href="/#about">About</a>
+          <a href="/#services">Services</a>
+          <a href="/#players">Players</a>
+          <a href="/#contact">Contact</a>
+          <a href="/zh/">中文</a>
+        </>
+      )}
+    </div>
+
+    <!-- Social -->
+    <div class="footer-social">
+      <h4>{lang === "zh" ? "追蹤" : "Follow"}</h4>
+      <a href="https://instagram.com/riseadvancement" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        Instagram
+      </a>
+      <a href="https://facebook.com/riseadvancement" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        Facebook
+      </a>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; {new Date().getFullYear()} RISE Advancement. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--rise-neutral-900);
+    color: var(--rise-neutral-200);
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-8);
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  @media (min-width: 640px) {
+    .footer-inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-inner {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+  }
+
+  .footer-logo {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--rise-white);
+    text-transform: uppercase;
+  }
+
+  .footer-tagline {
+    margin-top: var(--space-2);
+    line-height: 1.5;
+    color: var(--rise-neutral-400);
+  }
+
+  .footer-contact h4,
+  .footer-links h4,
+  .footer-social h4 {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--rise-white);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-contact a,
+  .footer-links a,
+  .footer-social a {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-300);
+    text-decoration: none;
+    padding: 0.2rem 0;
+    transition: color 0.2s;
+  }
+
+  .footer-contact a:hover,
+  .footer-links a:hover,
+  .footer-social a:hover {
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  .whatsapp-cta {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: var(--rise-red);
+    color: var(--rise-white) !important;
+    padding: var(--space-2) var(--space-4) !important;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-top: var(--space-3);
+    transition: background-color 0.2s;
+  }
+
+  .whatsapp-cta:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white) !important;
+    text-decoration: none;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--rise-neutral-700);
+    padding-top: var(--space-6);
+    text-align: center;
+  }
+
+  .footer-bottom p {
+    font-size: var(--text-xs);
+    color: var(--rise-neutral-500);
+    margin: 0;
+    max-width: none;
+  }
+</style>

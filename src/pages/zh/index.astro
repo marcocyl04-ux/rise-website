@@ -1,0 +1,383 @@
+---
+// Home page — 中文 (Chinese)
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import PlayerCard from "../../components/PlayerCard.astro";
+import ServiceCard from "../../components/ServiceCard.astro";
+import ContactForm from "../../components/ContactForm.astro";
+---
+
+<BaseLayout title="首頁" lang="zh-HK">
+  <Header slot="header" lang="zh" />
+
+  <!-- Hero Section -->
+  <section class="hero section">
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-eyebrow">香港 &bull; 加拿大</p>
+        <h1 class="hero-title">
+          RISE <span class="hero-title-red">Advancement</span>
+        </h1>
+        <p class="hero-lead">
+          我們將香港和中國的年輕冰球運動員安置到加拿大的球隊和學校。
+          然後我們在整個賽季中培養他們。已安置21名運動員。
+        </p>
+        <div class="hero-actions">
+          <a href="/zh/#contact" class="btn-primary">立即開始</a>
+          <a href="/zh/#services" class="btn-secondary">了解服務</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="關於 RISE Advancement"
+        subtitle="我們不是中介。我們是一個團隊。三位教練評估你的孩子，為他們找到合適的球隊，並在整個賽季中指導他們。"
+      />
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>置入</h3>
+          <p>
+            我們在加拿大為你的孩子找到最合適的球隊和學校。AA、AAA 或精英級別。
+            我們負責球探聯繫、介紹、VISA 文件和 GTHL 轉會手續。
+          </p>
+        </div>
+        <div class="about-card">
+          <h3>發展</h3>
+          <p>
+            視頻分析、技術訓練、運動計劃、營養指導、心理技能支援。
+            選擇你的孩子需要的服務。
+          </p>
+        </div>
+        <div class="about-card">
+          <h3>家庭</h3>
+          <p>
+            我們把每位球員當作自己的孩子。每週跟進、教練溝通、與三位導師的群組聊天。
+            你的孩子絕不孤單。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="section">
+    <div class="container">
+      <SectionHeader
+        title="我們的服務"
+        subtitle="三種方式幫助你的孩子。從全面安置到賽季指導，再到香港的休賽期訓練。"
+      />
+      <div class="services-grid">
+        <ServiceCard
+          title="球員安置"
+          description="全面的球員安置和過渡服務。我們評估比賽錄像，確定合適的水平，尋找球隊和學校，處理 VISA 和轉會手續。"
+          price="由 $7,000 加元起"
+          features={[
+            "比賽錄像評估",
+            "水平確定 (AA/AAA/精英)",
+            "球隊和學校安置",
+            "VISA 和 GTHL 轉會支援",
+            "安置後總結對話",
+          ]}
+          ctaText="了解更多"
+          ctaLink="/zh/#contact"
+        />
+        <ServiceCard
+          title="訓練指導"
+          description="整個賽季的發展計劃。選擇適合你孩子需求的服務。視頻回顧、技術訓練、運動計劃、營養指導、心理技能、學業幫助。"
+          price="由 $3,000 加元起"
+          features={[
+            "簽約費包含入職培訓 + 每週跟進",
+            "視頻回顧課程 ($150/節)",
+            "技術訓練 ($350/次)",
+            "運動和營養計劃",
+            "心理技能指導",
+            "賽季結束面談",
+          ]}
+          ctaText="了解更多"
+          ctaLink="/zh/#contact"
+        />
+        <ServiceCard
+          title="香港體能訓練計劃"
+          description="為期10週的夏季訓練計劃，在香港舉行。與 EJ Elite Shooting 合作。健身房、陸地射門、公園訓練、冰上訓練。"
+          price="2026 夏季"
+          features={[
+            "6月8日至8月16日",
+            "ONYX 健身中心，太古坊",
+            "The Flying Puck 射門訓練",
+            "鰂魚涌公園訓練",
+            "愉景灣冰場",
+            "包含定制裝備",
+          ]}
+          ctaText="了解更多"
+          ctaLink="/zh/#contact"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Players Section -->
+  <section id="players" class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="我們的運動員"
+        subtitle="21名來自香港的運動員已安置到加拿大各地的球隊。以下是其中幾位。"
+      />
+      <div class="players-grid">
+        <PlayerCard
+          number="#13"
+          name="Ryan Cheuk"
+          position='前鋒 — "A" 副隊長'
+          team="XL"
+        />
+        <PlayerCard
+          number="#7"
+          name="Wilshere Tung"
+          position='後衛 — "A" 副隊長'
+          team="Toronto Red Wings"
+        />
+        <PlayerCard
+          number="#12"
+          name="Felix Lloren"
+          position="後衛"
+          team="Upper Canada College U15AAA"
+        />
+        <PlayerCard
+          number="#29"
+          name="Marcus Nuyen"
+          position="前鋒"
+          team="HK RISE Elite"
+        />
+        <PlayerCard
+          number="#25"
+          name="Owen Lam"
+          position="前鋒"
+          team="2010年出生，左手桿，來自香港"
+        />
+        <PlayerCard
+          number="#20"
+          name="Moses Fung"
+          position="守門員"
+          team="HK RISE Elite"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="container">
+      <SectionHeader
+        title="聯繫我們"
+        subtitle="準備好邁出下一步？聯繫我們進行保密諮詢。"
+      />
+      <ContactForm lang="zh" />
+
+      <div class="whatsapp-cta-wrapper">
+        <a
+          href="https://wa.me/85200000000"
+          class="whatsapp-cta-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          或通過 WhatsApp 聯繫我們
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" lang="zh" />
+</BaseLayout>
+
+<style>
+  /* ========== HERO ========== */
+  .hero {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+  }
+
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: var(--text-5xl);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (max-width: 639px) {
+    .hero-title {
+      font-size: var(--text-3xl);
+    }
+  }
+
+  .hero-title-red {
+    color: var(--rise-red);
+  }
+
+  .hero-lead {
+    font-size: var(--text-lg);
+    color: var(--rise-neutral-500);
+    margin-bottom: var(--space-8);
+    max-width: none;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ========== BUTTONS ========== */
+  .btn-primary,
+  .btn-secondary {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--rise-black);
+    border: 2px solid var(--rise-neutral-300);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  /* ========== ABOUT ========== */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .about-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .about-card {
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    padding: var(--space-8);
+  }
+
+  .about-card h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .about-card p {
+    color: var(--rise-neutral-500);
+    font-size: var(--text-sm);
+    max-width: 65ch;
+  }
+
+  /* ========== SERVICES ========== */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ========== PLAYERS ========== */
+  .players-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .players-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .players-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ========== CONTACT ========== */
+  .whatsapp-cta-wrapper {
+    text-align: center;
+    margin-top: var(--space-8);
+  }
+
+  .whatsapp-cta-btn {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: var(--rise-black);
+    color: var(--rise-white);
+    transition: background-color 0.2s;
+  }
+
+  .whatsapp-cta-btn:hover {
+    background-color: var(--rise-neutral-700);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+</style>

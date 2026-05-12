@@ -1,0 +1,82 @@
+---
+// PlayerCard.astro — Player display card (jersey-style number, name, position/team)
+export interface Props {
+  name: string;
+  number: string;
+  position: string;
+  team: string;
+  shot?: string;
+  year?: string;
+  imageUrl?: string;
+}
+
+const { name, number, position, team, shot, year, imageUrl } = Astro.props;
+---
+
+<div class="player-card">
+  <div class="player-number">{number}</div>
+  <h3 class="player-name">{name}</h3>
+  <p class="player-position">{position}</p>
+  <p class="player-team">{team}</p>
+  {shot && <p class="player-meta">Shoots: {shot}</p>}
+  {year && <p class="player-meta">Year: {year}</p>}
+</div>
+
+<style>
+  .player-card {
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    padding: var(--space-8);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .player-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    color: var(--rise-red);
+    line-height: 1;
+    margin-bottom: var(--space-1);
+  }
+
+  .player-name {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--rise-black);
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .player-position {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    margin: 0;
+  }
+
+  .player-team {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--rise-neutral-400);
+    margin: 0;
+    font-style: italic;
+  }
+
+  .player-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--rise-neutral-300);
+    margin: 0;
+  }
+
+  /* Grid: full width on mobile, 2-col tablet, 3-col desktop — handled by parent grid */
+</style>

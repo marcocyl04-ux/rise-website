@@ -1,0 +1,137 @@
+---
+// ContactForm.astro — Simple contact form, no backend (mailto action)
+export interface Props {
+  lang?: string;
+}
+const { lang = "en" } = Astro.props;
+---
+
+<form class="contact-form" action="mailto:info@riseadvancement.com" method="POST" enctype="text/plain">
+  <div class="form-group">
+    <label for="name">{lang === "zh" ? "姓名" : "Name"}</label>
+    <input type="text" id="name" name="name" required placeholder={lang === "zh" ? "你的全名" : "Your full name"} />
+  </div>
+
+  <div class="form-group">
+    <label for="email">{lang === "zh" ? "電子郵件" : "Email"}</label>
+    <input type="email" id="email" name="email" required placeholder="you@example.com" />
+  </div>
+
+  <div class="form-group">
+    <label for="phone">{lang === "zh" ? "電話" : "Phone"}</label>
+    <input type="tel" id="phone" name="phone" placeholder="+852 or +1..." />
+  </div>
+
+  <div class="form-group">
+    <label for="source">{lang === "zh" ? "您是怎麼知道我們的？" : "How did you hear about us?"}</label>
+    <select id="source" name="source">
+      {lang === "zh" ? (
+        <>
+          <option value="">請選擇...</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Word of mouth">口碑推薦</option>
+          <option value="Coach referral">教練推薦</option>
+          <option value="Hockey tournament">冰球比賽</option>
+          <option value="Other">其他</option>
+        </>
+      ) : (
+        <>
+          <option value="">Select one...</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Word of mouth">Word of mouth</option>
+          <option value="Coach referral">Coach referral</option>
+          <option value="Hockey tournament">Hockey tournament</option>
+          <option value="Other">Other</option>
+        </>
+      )}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="message">{lang === "zh" ? "留言" : "Message"}</label>
+    <textarea id="message" name="message" rows="5" required placeholder={lang === "zh" ? "告訴我們關於你的球員..." : "Tell us about your player..."}></textarea>
+  </div>
+
+  <button type="submit" class="btn-submit">{lang === "zh" ? "發送訊息" : "Send Message"}</button>
+</form>
+
+<style>
+  .contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .form-group label {
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--rise-neutral-500);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--rise-black);
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 4px;
+    padding: var(--space-3) var(--space-4);
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--rise-red);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--rise-neutral-300);
+  }
+
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235c5555' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-4) center;
+    padding-right: var(--space-10);
+  }
+
+  .btn-submit {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+    transition: background-color 0.2s;
+    align-self: flex-start;
+  }
+
+  .btn-submit:hover {
+    background-color: var(--rise-red-dark);
+  }
+</style>

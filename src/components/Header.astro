@@ -1,0 +1,265 @@
+---
+// Header.astro — Site header with logo, nav links, EN/中文 toggle, mobile hamburger
+export interface Props {
+  lang?: string;
+}
+const { lang = "en" } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <!-- Logo -->
+    <a href="/" class="logo" aria-label="RISE Advancement Home">
+      <span class="logo-text">RISE</span>
+      <span class="logo-subtext">Advancement</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="nav-desktop" aria-label="Main navigation">
+      {lang === "zh" ? (
+        <>
+          <a href="/zh/#about">關於</a>
+          <a href="/zh/#services">服務</a>
+          <a href="/zh/#players">運動員</a>
+          <a href="/zh/#contact">聯繫我們</a>
+        </>
+      ) : (
+        <>
+          <a href="/#about">About</a>
+          <a href="/#services">Services</a>
+          <a href="/#players">Players</a>
+          <a href="/#contact">Contact</a>
+        </>
+      )}
+    </nav>
+
+    <!-- Language Toggle + Mobile Menu Button -->
+    <div class="header-actions">
+      {lang === "zh" ? (
+        <a href="/" class="lang-toggle" aria-label="Switch to English">EN</a>
+      ) : (
+        <a href="/zh/" class="lang-toggle" aria-label="Switch to Chinese">中文</a>
+      )}
+
+      <button
+        class="hamburger"
+        id="hamburger-btn"
+        aria-label="Open menu"
+        aria-expanded="false"
+        type="button"
+      >
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
+    {lang === "zh" ? (
+      <>
+        <a href="/zh/#about">關於</a>
+        <a href="/zh/#services">服務</a>
+        <a href="/zh/#players">運動員</a>
+        <a href="/zh/#contact">聯繫我們</a>
+        <a href="/" class="mobile-lang">EN</a>
+      </>
+    ) : (
+      <>
+        <a href="/#about">About</a>
+        <a href="/#services">Services</a>
+        <a href="/#players">Players</a>
+        <a href="/#contact">Contact</a>
+        <a href="/zh/" class="mobile-lang">中文</a>
+      </>
+    )}
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--rise-white);
+    border-bottom: 1px solid var(--rise-neutral-100);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+
+  /* Logo */
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    text-decoration: none;
+    color: var(--rise-black);
+    flex-shrink: 0;
+  }
+
+  .logo:hover {
+    text-decoration: none;
+    color: var(--rise-black);
+  }
+
+  .logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.563rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--rise-red);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-subtext {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--rise-neutral-500);
+    letter-spacing: 0.04em;
+  }
+
+  /* Desktop nav */
+  .nav-desktop {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .nav-desktop {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+    }
+
+    .nav-desktop a {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--rise-neutral-700);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-desktop a:hover,
+    .nav-desktop a:focus-visible {
+      color: var(--rise-red);
+      border-bottom-color: var(--rise-red);
+      text-decoration: none;
+    }
+  }
+
+  /* Header actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .lang-toggle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .lang-toggle:hover {
+    color: var(--rise-red);
+    border-color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  @media (min-width: 768px) {
+    .hamburger {
+      display: none;
+    }
+  }
+
+  .hamburger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--rise-black);
+    border-radius: 1px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  /* Mobile nav */
+  .nav-mobile {
+    background-color: var(--rise-white);
+    border-bottom: 1px solid var(--rise-neutral-100);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .nav-mobile[hidden] {
+    display: none;
+  }
+
+  .nav-mobile a {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--rise-neutral-700);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-4);
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .nav-mobile a:hover {
+    background-color: var(--rise-red-light);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  .mobile-lang {
+    border-top: 1px solid var(--rise-neutral-100);
+    margin-top: var(--space-2);
+    padding-top: var(--space-3) !important;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById("hamburger-btn");
+  const nav = document.getElementById("mobile-nav");
+
+  btn?.addEventListener("click", () => {
+    const isOpen = nav?.hasAttribute("hidden") === false;
+    if (isOpen) {
+      nav?.setAttribute("hidden", "");
+      btn.setAttribute("aria-expanded", "false");
+    } else {
+      nav?.removeAttribute("hidden");
+      btn.setAttribute("aria-expanded", "true");
+    }
+  });
+</script>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Angular "R" mark in RISE Red on transparent background -->
+  <path d="
+    M 14 10
+    L 14 54
+    L 22 54
+    L 22 36
+    L 36 36
+    L 46 26
+    L 46 10
+    L 36 10
+    L 36 22
+    L 28 22
+    L 28 10
+    Z
+    M 30 36
+    L 50 54
+    L 42 54
+    L 26 40
+    Z
+  " fill="#D3191F" />
+</svg>
