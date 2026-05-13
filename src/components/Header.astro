@@ -18,17 +18,17 @@ const { lang = "en" } = Astro.props;
     <nav class="nav-desktop" aria-label="Main navigation">
       {lang === "zh" ? (
         <>
-          <a href="#about">關於</a>
-          <a href="#services">服務</a>
-          <a href="#players">運動員</a>
-          <a href="#contact">聯繫我們</a>
+          <a href="/zh/#about">關於</a>
+          <a href="/zh/services/">服務</a>
+          <a href="/zh/#players">運動員</a>
+          <a href="/zh/#contact">聯繫我們</a>
         </>
       ) : (
         <>
-          <a href="#about">About</a>
-          <a href="#services">Services</a>
-          <a href="#players">Players</a>
-          <a href="#contact">Contact</a>
+          <a href="/#about">About</a>
+          <a href="/services/">Services</a>
+          <a href="/#players">Players</a>
+          <a href="/#contact">Contact</a>
         </>
       )}
     </nav>
@@ -59,18 +59,18 @@ const { lang = "en" } = Astro.props;
   <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
     {lang === "zh" ? (
       <>
-        <a href="#about">關於</a>
-        <a href="#services">服務</a>
-        <a href="#players">運動員</a>
-        <a href="#contact">聯繫我們</a>
+        <a href="/zh/#about">關於</a>
+        <a href="/zh/services/">服務</a>
+        <a href="/zh/#players">運動員</a>
+        <a href="/zh/#contact">聯繫我們</a>
         <a href={import.meta.env.BASE_URL} class="mobile-lang">EN</a>
       </>
     ) : (
       <>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#players">Players</a>
-        <a href="#contact">Contact</a>
+        <a href="/#about">About</a>
+        <a href="/services/">Services</a>
+        <a href="/#players">Players</a>
+        <a href="/#contact">Contact</a>
         <a href={`${import.meta.env.BASE_URL}zh/`} class="mobile-lang">中文</a>
       </>
     )}
