@@ -391,6 +391,7 @@ const { lang = "en" } = Astro.props;
   // Desktop dropdown — hover + click
   const dropdown = document.querySelector(".nav-dropdown");
   const trigger = dropdown?.querySelector(".nav-dropdown-trigger");
+  const menu = dropdown?.querySelector(".nav-dropdown-menu");
   let hoverTimeout: ReturnType<typeof setTimeout>;
 
   function openDropdown() {
