@@ -1,127 +1,72 @@
 ---
-// The Move — Player Placement to Canada
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
+import ServiceNav from "../../components/ServiceNav.astro";
 ---
 
 <BaseLayout title="The Move" description="Full player placement and transition service. We evaluate game footage, find the right team and school in Canada, and handle all the logistics.">
   <Header slot="header" />
 
-  <!-- Hero -->
+  <div class="container" style="max-width: 960px; margin: 0 auto;">
+    <ServiceNav current="the-move" />
+  </div>
+
   <section class="service-hero section">
     <div class="container">
       <p class="hero-eyebrow">Service</p>
       <h1 class="hero-title">The <span class="red">Move</span></h1>
-      <p class="hero-lead">
-        Full player placement and transition service. We evaluate your kid, find the right team and school in Canada, and handle every step of the move.
-      </p>
+      <p class="hero-lead">Full player placement and transition service. We evaluate your kid, find the right team and school in Canada, and handle every step of the move.</p>
       <a href="/#contact" class="btn-primary">Get Started</a>
     </div>
   </section>
 
-  <!-- How It Works -->
   <section class="section" style="background-color: var(--rise-neutral-50);">
     <div class="container">
-      <SectionHeader
-        title="How It Works"
-        subtitle="Four steps from Hong Kong to the ice in Canada."
-      />
+      <SectionHeader title="How It Works" subtitle="Four steps from Hong Kong to the ice in Canada." />
       <div class="steps-grid">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Evaluate</h3>
-          <p>We review game footage and assess your kid's skill level. We determine if they're ready for AA, AAA, or Elite hockey in Canada.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Match</h3>
-          <p>We find the right team and school. We know the coaches, the programs, and the levels. We match your kid to where they'll develop best.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Move</h3>
-          <p>We handle the logistics. VISA paperwork, GTHL transfers, school enrollment, introductions to coaches and families. You don't figure this out alone.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">4</div>
-          <h3>Wrap Up</h3>
-          <p>After the move, we check in. A wrap-up conversation to make sure your kid is settled, the team is the right fit, and the season is on track.</p>
-        </div>
+        <div class="step"><div class="step-number">1</div><h3>Evaluate</h3><p>We review game footage and assess your kid's skill level. We determine if they're ready for AA, AAA, or Elite hockey in Canada.</p></div>
+        <div class="step"><div class="step-number">2</div><h3>Match</h3><p>We find the right team and school. We know the coaches, the programs, and the levels. We match your kid to where they'll develop best.</p></div>
+        <div class="step"><div class="step-number">3</div><h3>Move</h3><p>We handle the logistics. VISA paperwork, GTHL transfers, school enrollment, introductions to coaches and families. You don't figure this out alone.</p></div>
+        <div class="step"><div class="step-number">4</div><h3>Wrap Up</h3><p>After the move, we check in. A wrap-up conversation to make sure your kid is settled, the team is the right fit, and the season is on track.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- What's Included -->
   <section class="section">
     <div class="container">
-      <SectionHeader
-        title="What's Included"
-        subtitle="Everything your kid needs to make the move."
-      />
+      <SectionHeader title="What's Included" subtitle="Everything your kid needs to make the move." />
       <div class="included-grid">
-        <div class="included-item">
-          <span class="check">✔</span>
-          <span>Game footage evaluation</span>
-        </div>
-        <div class="included-item">
-          <span class="check">✔</span>
-          <span>Level determination (AA/AAA/Elite)</span>
-        </div>
-        <div class="included-item">
-          <span class="check">✔</span>
-          <span>Team and school placement</span>
-        </div>
-        <div class="included-item">
-          <span class="check">✔</span>
-          <span>VISA and GTHL transfer support</span>
-        </div>
-        <div class="included-item">
-          <span class="check">✔</span>
-          <span>Post-move wrap-up conversation</span>
-        </div>
+        <div class="included-item"><span class="check">✔</span><span>Game footage evaluation</span></div>
+        <div class="included-item"><span class="check">✔</span><span>Level determination (AA/AAA/Elite)</span></div>
+        <div class="included-item"><span class="check">✔</span><span>Team and school placement</span></div>
+        <div class="included-item"><span class="check">✔</span><span>VISA and GTHL transfer support</span></div>
+        <div class="included-item"><span class="check">✔</span><span>Post-move wrap-up conversation</span></div>
       </div>
       <p class="included-note">Add-ons available: school finding, VISA processing, GTHL transfer assistance.</p>
     </div>
   </section>
 
-  <!-- Honest Note -->
   <section class="honest section" style="background-color: var(--rise-neutral-50);">
     <div class="container" style="max-width: 640px;">
       <h2>An honest word</h2>
-      <p>
-        We don't guarantee placement. No honest advisor can. What we guarantee is effort. Every player gets the same commitment, regardless of level. We've placed players because we do the work, not because we make promises.
-      </p>
+      <p>We don't guarantee placement. No honest advisor can. What we guarantee is effort. Every player gets the same commitment, regardless of level. We've placed players because we do the work, not because we make promises.</p>
     </div>
   </section>
 
-  <!-- FAQ -->
   <section class="section">
     <div class="container" style="max-width: 640px;">
       <SectionHeader title="Questions" />
       <div class="faq-list">
-        <div class="faq-item">
-          <h3>What if you don't find a team for my kid?</h3>
-          <p>We've placed players because we know the system and we do the work. But we don't guarantee placement, and we'll be honest with you from the start about your kid's readiness and options.</p>
-        </div>
-        <div class="faq-item">
-          <h3>What level will my kid play at?</h3>
-          <p>That depends on their skill, age, and readiness. We evaluate game footage and determine the right level. AA, AAA, or Elite. We place them where they'll develop, not where they'll struggle.</p>
-        </div>
-        <div class="faq-item">
-          <h3>How long does the process take?</h3>
-          <p>It depends on timing. Most placements happen before the season starts (September). Reach out early and we'll map out a timeline for your kid.</p>
-        </div>
-        <div class="faq-item">
-          <h3>Do you handle housing?</h3>
-          <p>We help coordinate housing and connect you with host families and school boarding programs. It's part of the transition support.</p>
-        </div>
+        <div class="faq-item"><h3>What if you don't find a team for my kid?</h3><p>We've placed players because we know the system and we do the work. But we don't guarantee placement, and we'll be honest with you from the start about your kid's readiness and options.</p></div>
+        <div class="faq-item"><h3>What level will my kid play at?</h3><p>That depends on their skill, age, and readiness. We evaluate game footage and determine the right level. AA, AAA, or Elite. We place them where they'll develop, not where they'll struggle.</p></div>
+        <div class="faq-item"><h3>How long does the process take?</h3><p>It depends on timing. Most placements happen before the season starts (September). Reach out early and we'll map out a timeline for your kid.</p></div>
+        <div class="faq-item"><h3>Do you handle housing?</h3><p>We help coordinate housing and connect you with host families and school boarding programs. It's part of the transition support.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
   <section class="cta-banner section" style="background-color: var(--rise-black);">
     <div class="container" style="text-align: center;">
       <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to explore The Move?</h2>
@@ -137,179 +82,31 @@ import SectionHeader from "../../components/SectionHeader.astro";
 </BaseLayout>
 
 <style>
-  .service-hero {
-    padding-top: var(--space-20);
-    padding-bottom: var(--space-16);
-    text-align: center;
-  }
-
-  .hero-eyebrow {
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--rise-neutral-500);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: var(--space-4);
-  }
-
-  .hero-title {
-    font-size: var(--text-5xl);
-    margin-bottom: var(--space-6);
-  }
-
+  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
+  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
+  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
   .red { color: var(--rise-red); }
-
-  .hero-lead {
-    font-size: var(--text-lg);
-    color: var(--rise-neutral-500);
-    max-width: 600px;
-    margin: 0 auto var(--space-8);
-  }
-
-  .steps-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  @media (min-width: 640px) {
-    .steps-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (min-width: 1024px) {
-    .steps-grid { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .step {
-    text-align: center;
-    padding: var(--space-6);
-  }
-
-  .step-number {
-    font-family: var(--font-heading);
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    color: var(--rise-red);
-    margin-bottom: var(--space-3);
-  }
-
-  .step h3 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-2);
-  }
-
-  .step p {
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
-    line-height: 1.6;
-  }
-
-  .included-grid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  .included-item {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-3);
-    font-size: var(--text-base);
-  }
-
-  .check {
-    color: var(--rise-red);
-    font-weight: 700;
-    font-size: var(--text-lg);
-    flex-shrink: 0;
-  }
-
-  .included-note {
-    text-align: center;
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
-  }
-
-  .honest h2 {
-    margin-bottom: var(--space-4);
-  }
-
-  .honest p {
-    font-size: var(--text-base);
-    color: var(--rise-neutral-500);
-    line-height: 1.7;
-  }
-
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-  }
-
-  .faq-item h3 {
-    font-size: var(--text-lg);
-    margin-bottom: var(--space-2);
-  }
-
-  .faq-item p {
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
-    line-height: 1.7;
-  }
-
+  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
+  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(4, 1fr); } }
+  .step { text-align: center; padding: var(--space-6); }
+  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
+  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .included-grid { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
+  .included-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
+  .check { color: var(--rise-red); font-weight: 700; font-size: var(--text-lg); flex-shrink: 0; }
+  .included-note { text-align: center; margin-top: var(--space-8); font-size: var(--text-sm); color: var(--rise-neutral-500); }
+  .honest h2 { margin-bottom: var(--space-4); }
+  .honest p { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; }
+  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
   .cta-banner { padding: var(--space-16) 0; }
-
-  .cta-actions {
-    display: flex;
-    gap: var(--space-4);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: var(--rise-red);
-    color: var(--rise-white);
-    transition: background-color 0.2s;
-  }
-
-  .btn-primary:hover {
-    background-color: var(--rise-red-dark);
-    color: var(--rise-white);
-    text-decoration: none;
-  }
-
-  .btn-secondary-light {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: transparent;
-    color: var(--rise-white);
-    border: 2px solid var(--rise-neutral-500);
-    transition: border-color 0.2s;
-  }
-
-  .btn-secondary-light:hover {
-    border-color: var(--rise-red);
-    color: var(--rise-red);
-    text-decoration: none;
-  }
+  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
+  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
+  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
+  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
 </style>

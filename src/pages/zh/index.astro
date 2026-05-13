@@ -190,30 +190,17 @@ import ContactForm from "../../components/ContactForm.astro";
 
   <!-- 6. CONTACT -->
   <section id="contact" class="contact-section section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
+    <div class="container" style="max-width: 640px; text-align: center;">
       <SectionHeader
         title="聯繫我們"
-        subtitle="沒有承諾。只是聊聊孩子的冰球未來。我們在 WhatsApp 上 24 小時內回复。"
+        subtitle="沒有承諾。只是聊聊孩子的冰球未來。"
       />
-      <div class="contact-grid">
-        <div class="contact-form-wrapper">
-          <ContactForm />
+      <div class="contact-center">
+        <div class="contact-person">
+          <h3>和 Ryan 聊聊</h3>
+          <p>RISE Advancement 聯合創始人。前球員，現任教練。他會坦白回答你的問題。</p>
         </div>
-        <div class="contact-side">
-          <div class="contact-person">
-            <h3>和 Ryan 聊聊</h3>
-            <p>RISE Advancement 聯合創始人。前球員，現任教練。他會坦白回答你的問題。</p>
-          </div>
-          <a
-            href="https://wa.me/85290950387"
-            class="whatsapp-cta-btn"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            通過 WhatsApp 聯繫我們
-          </a>
-          <p class="contact-note">喜歡 WhatsApp？同一個號碼。同一個人。更快回复。</p>
-        </div>
+        <ContactForm lang="zh" />
       </div>
     </div>
   </section>
@@ -252,13 +239,8 @@ import ContactForm from "../../components/ContactForm.astro";
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
   .faq-item a { color: var(--rise-red); text-decoration: underline; }
-  .contact-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-8); }
-  @media (min-width: 768px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
-  .contact-side { display: flex; flex-direction: column; gap: var(--space-6); justify-content: center; }
+  .contact-center { display: flex; flex-direction: column; gap: var(--space-8); align-items: center; }
   .contact-person h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
   .contact-person p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .whatsapp-cta-btn { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: #25D366; color: var(--rise-white); text-align: center; transition: background-color 0.2s; }
-  .whatsapp-cta-btn:hover { background-color: #1da851; color: var(--rise-white); text-decoration: none; }
-  .contact-note { font-size: var(--text-xs); color: var(--rise-neutral-400); }
   .mid-cta { text-align: center; margin-top: var(--space-8); }
 </style>

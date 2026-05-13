@@ -1,0 +1,96 @@
+---
+// ServiceNav.astro — Navigation bar for service subpages
+export interface Props {
+  lang?: string;
+  current: string;
+}
+const { lang = "en", current } = Astro.props;
+
+const services = lang === "zh" ? [
+  { slug: "the-move", label: "球員安置" },
+  { slug: "mentoring", label: "訓練指導" },
+  { slug: "hk-program", label: "香港體能訓練" },
+] : [
+  { slug: "the-move", label: "The Move" },
+  { slug: "mentoring", label: "Mentoring" },
+  { slug: "hk-program", label: "HK Program" },
+];
+
+const prefix = lang === "zh" ? "/zh/services" : "/services";
+const backLabel = lang === "zh" ? "← 所有服務" : "← All Services";
+---
+
+<nav class="service-nav">
+  <a href={`${prefix}/`} class="service-nav-back">{backLabel}</a>
+  <div class="service-nav-links">
+    {services.map((s) => (
+      <a
+        href={`${prefix}/${s.slug}`}
+        class:list={["service-nav-link", { active: s.slug === current }]}
+      >
+        {s.label}
+      </a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .service-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
+    margin-bottom: var(--space-4);
+    border-bottom: 1px solid var(--rise-neutral-100);
+  }
+
+  .service-nav-back {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .service-nav-back:hover {
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  .service-nav-links {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .service-nav-link {
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-2) var(--space-4);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--rise-neutral-500);
+    border: 1px solid var(--rise-neutral-200);
+    transition: all 0.2s;
+  }
+
+  .service-nav-link:hover {
+    color: var(--rise-red);
+    border-color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  .service-nav-link.active {
+    color: var(--rise-white);
+    background-color: var(--rise-red);
+    border-color: var(--rise-red);
+  }
+
+  .service-nav-link.active:hover {
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+</style>

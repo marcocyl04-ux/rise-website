@@ -190,30 +190,17 @@ import ContactForm from "../components/ContactForm.astro";
 
   <!-- 6. CONTACT — I'm ready to reach out -->
   <section id="contact" class="contact-section section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
+    <div class="container" style="max-width: 640px; text-align: center;">
       <SectionHeader
         title="Get In Touch"
-        subtitle="No commitment. Just a conversation about your kid's hockey future. We reply within 24 hours on WhatsApp."
+        subtitle="No commitment. Just a conversation about your kid's hockey future."
       />
-      <div class="contact-grid">
-        <div class="contact-form-wrapper">
-          <ContactForm />
+      <div class="contact-center">
+        <div class="contact-person">
+          <h3>Talk to Ryan</h3>
+          <p>Co-founder, RISE Advancement. Former player, now coaching. He'll answer your questions honestly.</p>
         </div>
-        <div class="contact-side">
-          <div class="contact-person">
-            <h3>Talk to Ryan</h3>
-            <p>Co-founder, RISE Advancement. Former player, now coaching. He'll answer your questions honestly.</p>
-          </div>
-          <a
-            href="https://wa.me/85290950387"
-            class="whatsapp-cta-btn"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Message us on WhatsApp
-          </a>
-          <p class="contact-note">Prefer WhatsApp? Same number. Same person. Faster reply.</p>
-        </div>
+        <ContactForm />
       </div>
     </div>
   </section>
@@ -404,21 +391,11 @@ import ContactForm from "../components/ContactForm.astro";
   }
 
   /* ========== CONTACT ========== */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-  }
-
-  @media (min-width: 768px) {
-    .contact-grid { grid-template-columns: 1fr 1fr; }
-  }
-
-  .contact-side {
+  .contact-center {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
-    justify-content: center;
+    gap: var(--space-8);
+    align-items: center;
   }
 
   .contact-person h3 {
@@ -430,33 +407,6 @@ import ContactForm from "../components/ContactForm.astro";
     font-size: var(--text-sm);
     color: var(--rise-neutral-500);
     line-height: 1.6;
-  }
-
-  .whatsapp-cta-btn {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: #25D366;
-    color: var(--rise-white);
-    text-align: center;
-    transition: background-color 0.2s;
-  }
-
-  .whatsapp-cta-btn:hover {
-    background-color: #1da851;
-    color: var(--rise-white);
-    text-decoration: none;
-  }
-
-  .contact-note {
-    font-size: var(--text-xs);
-    color: var(--rise-neutral-400);
   }
 
   /* ========== MID-PAGE CTAs ========== */
