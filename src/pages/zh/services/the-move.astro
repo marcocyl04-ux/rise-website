@@ -6,75 +6,53 @@ import SectionHeader from "../../../components/SectionHeader.astro";
 import ServiceNav from "../../../components/ServiceNav.astro";
 ---
 
-<BaseLayout title="球員安置" description="全面的球員安置和過渡服務。" lang="zh-HK">
+<BaseLayout title="球員安置" lang="zh-HK">
   <Header slot="header" lang="zh" />
 
-  <div class="container" style="max-width: 960px; margin: 0 auto;">
-    <ServiceNav lang="zh" current="the-move" />
-  </div>
+  <section class="service-hero section"><div class="container">
+    <p class="hero-eyebrow">服務</p>
+    <h1 class="hero-title">球員<span class="red">安置</span></h1>
+    <p class="hero-lead">全面的球員安置和過渡服務。我們評估你的孩子，找到加拿大合適的球隊和學校，處理搬遷的每一步。</p>
+    <a href="mailto:riseadvancements@gmail.com?subject=球員安置 - 查詢" class="btn-primary">立即開始</a>
+  </div></section>
 
-  <section class="service-hero section">
-    <div class="container">
-      <p class="hero-eyebrow">服務</p>
-      <h1 class="hero-title">球員<span class="red">安置</span></h1>
-      <p class="hero-lead">全面的球員安置和過渡服務。我們評估你的孩子，找到加拿大合適的球隊和學校，處理搬遷的每一步。</p>
-      <a href="/zh/#contact" class="btn-primary">立即開始</a>
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
+    <SectionHeader title="運作方式" subtitle="從香港到加拿大冰場的四個步驟。" />
+    <div class="steps-grid">
+      <div class="step"><div class="step-number">1</div><h3>評估</h3><p>審視比賽錄像，評估技能水平。</p></div>
+      <div class="step"><div class="step-number">2</div><h3>配對</h3><p>找到合適的球隊和學校。</p></div>
+      <div class="step"><div class="step-number">3</div><h3>搬遷</h3><p>處理 VISA、轉會、學校註冊。</p></div>
+      <div class="step"><div class="step-number">4</div><h3>跟進</h3><p>確保孩子安頓下來。</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
-      <SectionHeader title="運作方式" subtitle="從香港到加拿大冰場的四個步驟。" />
-      <div class="steps-grid">
-        <div class="step"><div class="step-number">1</div><h3>評估</h3><p>我們審視比賽錄像，評估孩子的技能水平。確定他們是否準備好參加加拿大 AA、AAA 或精英級別的冰球。</p></div>
-        <div class="step"><div class="step-number">2</div><h3>配對</h3><p>我們找到合適的球隊和學校。我們了解教練、課程和各個級別。我們將孩子配對到最能發展的地方。</p></div>
-        <div class="step"><div class="step-number">3</div><h3>搬遷</h3><p>我們處理後勤事務。VISA 文件、GTHL 轉會、學校註冊、介紹教練和家庭。你不需要獨自面對這些。</p></div>
-        <div class="step"><div class="step-number">4</div><h3>跟進</h3><p>搬遷後，我們進行跟進。確保孩子安頓下來，球隊合適，賽季順利進行。</p></div>
-      </div>
+  <section class="section"><div class="container">
+    <SectionHeader title="包含內容" />
+    <div class="included-grid">
+      <div class="included-item"><span class="check">✔</span><span>比賽錄像評估</span></div>
+      <div class="included-item"><span class="check">✔</span><span>水平確定 (AA/AAA/精英)</span></div>
+      <div class="included-item"><span class="check">✔</span><span>球隊和學校安置</span></div>
+      <div class="included-item"><span class="check">✔</span><span>VISA 和 GTHL 轉會支援</span></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section">
-    <div class="container">
-      <SectionHeader title="包含內容" subtitle="孩子搬遷所需的一切。" />
-      <div class="included-grid">
-        <div class="included-item"><span class="check">✔</span><span>比賽錄像評估</span></div>
-        <div class="included-item"><span class="check">✔</span><span>水平確定 (AA/AAA/精英)</span></div>
-        <div class="included-item"><span class="check">✔</span><span>球隊和學校安置</span></div>
-        <div class="included-item"><span class="check">✔</span><span>VISA 和 GTHL 轉會支援</span></div>
-        <div class="included-item"><span class="check">✔</span><span>安置後總結對話</span></div>
-      </div>
+  <section class="section"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="常見問題" />
+    <div class="faq-list">
+      <div class="faq-item"><h3>找不到球隊怎麼辦？</h3><p>我們不保證安置，但保證努力。</p></div>
+      <div class="faq-item"><h3>打什麼級別？</h3><p>取決於技能、年齡和準備程度。</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="honest section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 640px;">
-      <h2>坦白說</h2>
-      <p>我們不保證安置。沒有誠實的顧問可以保證。我們保證的是努力。每位球員都獲得同樣的承諾，無論水平如何。</p>
-    </div>
-  </section>
+  <ServiceNav lang="zh" current="the-move" />
 
-  <section class="section">
-    <div class="container" style="max-width: 640px;">
-      <SectionHeader title="常見問題" />
-      <div class="faq-list">
-        <div class="faq-item"><h3>如果你找不到球隊怎麼辦？</h3><p>我們安置球員是因為我們了解系統並做好工作。但我們不保證安置，從一開始就會坦白告訴你孩子的準備程度和選擇。</p></div>
-        <div class="faq-item"><h3>我的孩子會打什麼級別？</h3><p>這取決於他們的技能、年齡和準備程度。我們評估比賽錄像並確定合適的級別。</p></div>
-        <div class="faq-item"><h3>過程需要多長時間？</h3><p>這取決於時間安排。大多數安置在賽季開始前（九月）完成。儘早聯繫，我們會為你的孩子制定時間表。</p></div>
-      </div>
+  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好了嗎？</h2>
+    <div class="cta-actions">
+      <a href="mailto:riseadvancements@gmail.com?subject=球員安置 - 查詢" class="btn-primary">發送電子郵件</a>
+      <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
-  </section>
-
-  <section class="cta-banner section" style="background-color: var(--rise-black);">
-    <div class="container" style="text-align: center;">
-      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好了嗎？</h2>
-      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">沒有承諾。只是聊聊孩子的冰球未來。</p>
-      <div class="cta-actions">
-        <a href="/zh/#contact" class="btn-primary">聯繫我們</a>
-        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-      </div>
-    </div>
-  </section>
+  </div></section>
 
   <Footer slot="footer" />
 </BaseLayout>
@@ -95,8 +73,6 @@ import ServiceNav from "../../../components/ServiceNav.astro";
   .included-grid { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
   .included-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
   .check { color: var(--rise-red); font-weight: 700; font-size: var(--text-lg); flex-shrink: 0; }
-  .honest h2 { margin-bottom: var(--space-4); }
-  .honest p { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }

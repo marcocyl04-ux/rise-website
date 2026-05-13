@@ -6,59 +6,40 @@ import SectionHeader from "../../../components/SectionHeader.astro";
 import ServiceNav from "../../../components/ServiceNav.astro";
 ---
 
-<BaseLayout title="訓練指導" description="賽季發展計劃。" lang="zh-HK">
+<BaseLayout title="訓練指導" lang="zh-HK">
   <Header slot="header" lang="zh" />
-  <div class="container" style="max-width: 960px; margin: 0 auto;"><ServiceNav lang="zh" current="mentoring" /></div>
-
   <section class="service-hero section"><div class="container">
     <p class="hero-eyebrow">服務</p>
     <h1 class="hero-title">訓練<span class="red">指導</span></h1>
-    <p class="hero-lead">賽季發展計劃。選擇孩子需要的服務。我們整個賽季每週與他們一起工作。</p>
-    <a href="/zh/#contact" class="btn-primary">立即開始</a>
+    <p class="hero-lead">賽季發展計劃。選擇孩子需要的服務。</p>
+    <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="btn-primary">立即開始</a>
   </div></section>
-
   <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="運作方式" subtitle="你的孩子。我們的教練。整個賽季。" />
+    <SectionHeader title="運作方式" />
     <div class="steps-grid">
-      <div class="step"><div class="step-number">1</div><h3>簽約</h3><p>入職培訓。評估比賽，設定目標，制定賽季發展計劃。</p></div>
-      <div class="step"><div class="step-number">2</div><h3>選擇服務</h3><p>視頻回顧、技術訓練、運動計劃、營養、心理技能。自由搭配。</p></div>
-      <div class="step"><div class="step-number">3</div><h3>每週跟進</h3><p>進度更新、調整、教練溝通。你隨時知道孩子的狀況。</p></div>
-      <div class="step"><div class="step-number">4</div><h3>賽季總結</h3><p>總結面談。什麼有效、什麼無效、下一步是什麼。</p></div>
+      <div class="step"><div class="step-number">1</div><h3>簽約</h3><p>入職培訓和發展計劃。</p></div>
+      <div class="step"><div class="step-number">2</div><h3>選擇</h3><p>自由搭配服務。</p></div>
+      <div class="step"><div class="step-number">3</div><h3>跟進</h3><p>每週進度更新。</p></div>
+      <div class="step"><div class="step-number">4</div><h3>總結</h3><p>賽季結束面談。</p></div>
     </div>
   </div></section>
-
-  <section class="section"><div class="container">
-    <SectionHeader title="選擇孩子需要的" subtitle="自由搭配。" />
-    <div class="services-list">
-      <div class="service-item"><h3>視頻回顧課程</h3><p>一對一的比賽視頻分析。</p></div>
-      <div class="service-item"><h3>技術訓練</h3><p>專注於特定技能的冰上訓練。</p></div>
-      <div class="service-item"><h3>運動計劃</h3><p>每兩週更新的定制訓練計劃。</p></div>
-      <div class="service-item"><h3>營養指導</h3><p>適合年齡、針對運動的營養方案。</p></div>
-      <div class="service-item"><h3>心理技能指導</h3><p>自信、專注、應對壓力。</p></div>
-      <div class="service-item"><h3>學業幫助</h3><p>學術支持，確保孩子在課堂上保持進度。</p></div>
-    </div>
-  </div></section>
-
   <section class="section"><div class="container" style="max-width: 640px;">
     <SectionHeader title="常見問題" />
     <div class="faq-list">
-      <div class="faq-item"><h3>可以只選擇個別服務嗎？</h3><p>可以。選擇適合孩子比賽的東西。</p></div>
+      <div class="faq-item"><h3>可以只選個別服務嗎？</h3><p>可以。</p></div>
       <div class="faq-item"><h3>多久跟進一次？</h3><p>每週。</p></div>
-      <div class="faq-item"><h3>如果孩子遇到困難怎麼辦？</h3><p>我們調整計劃，與教練溝通，支持孩子度過難關。</p></div>
     </div>
   </div></section>
-
+  <ServiceNav lang="zh" current="mentoring" />
   <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好開始發展了嗎？</h2>
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好了嗎？</h2>
     <div class="cta-actions">
-      <a href="/zh/#contact" class="btn-primary">聯繫我們</a>
+      <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="btn-primary">發送電子郵件</a>
       <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </div></section>
-
   <Footer slot="footer" />
 </BaseLayout>
-
 <style>
   .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
   .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
@@ -72,11 +53,6 @@ import ServiceNav from "../../../components/ServiceNav.astro";
   .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
   .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
   .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .services-list { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .services-list { grid-template-columns: repeat(2, 1fr); } }
-  .service-item { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; }
-  .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .service-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }

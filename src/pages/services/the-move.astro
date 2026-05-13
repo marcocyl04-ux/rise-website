@@ -6,77 +6,61 @@ import SectionHeader from "../../components/SectionHeader.astro";
 import ServiceNav from "../../components/ServiceNav.astro";
 ---
 
-<BaseLayout title="The Move" description="Full player placement and transition service. We evaluate game footage, find the right team and school in Canada, and handle all the logistics.">
+<BaseLayout title="The Move" description="Full player placement and transition service to Canada.">
   <Header slot="header" />
 
-  <div class="container" style="max-width: 960px; margin: 0 auto;">
-    <ServiceNav current="the-move" />
-  </div>
+  <section class="service-hero section"><div class="container">
+    <p class="hero-eyebrow">Service</p>
+    <h1 class="hero-title">The <span class="red">Move</span></h1>
+    <p class="hero-lead">Full player placement and transition service. We evaluate your kid, find the right team and school in Canada, and handle every step of the move.</p>
+    <a href="mailto:riseadvancements@gmail.com?subject=The Move - Inquiry" class="btn-primary">Get Started</a>
+  </div></section>
 
-  <section class="service-hero section">
-    <div class="container">
-      <p class="hero-eyebrow">Service</p>
-      <h1 class="hero-title">The <span class="red">Move</span></h1>
-      <p class="hero-lead">Full player placement and transition service. We evaluate your kid, find the right team and school in Canada, and handle every step of the move.</p>
-      <a href="/#contact" class="btn-primary">Get Started</a>
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
+    <SectionHeader title="How It Works" subtitle="Four steps from Hong Kong to the ice in Canada." />
+    <div class="steps-grid">
+      <div class="step"><div class="step-number">1</div><h3>Evaluate</h3><p>We review game footage and assess your kid's skill level. AA, AAA, or Elite.</p></div>
+      <div class="step"><div class="step-number">2</div><h3>Match</h3><p>We find the right team and school. We know the coaches and programs.</p></div>
+      <div class="step"><div class="step-number">3</div><h3>Move</h3><p>VISA, GTHL transfers, school enrollment, introductions. We handle it.</p></div>
+      <div class="step"><div class="step-number">4</div><h3>Wrap Up</h3><p>Post-move check-in. Your kid is settled, the team is right, the season is on track.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
-      <SectionHeader title="How It Works" subtitle="Four steps from Hong Kong to the ice in Canada." />
-      <div class="steps-grid">
-        <div class="step"><div class="step-number">1</div><h3>Evaluate</h3><p>We review game footage and assess your kid's skill level. We determine if they're ready for AA, AAA, or Elite hockey in Canada.</p></div>
-        <div class="step"><div class="step-number">2</div><h3>Match</h3><p>We find the right team and school. We know the coaches, the programs, and the levels. We match your kid to where they'll develop best.</p></div>
-        <div class="step"><div class="step-number">3</div><h3>Move</h3><p>We handle the logistics. VISA paperwork, GTHL transfers, school enrollment, introductions to coaches and families. You don't figure this out alone.</p></div>
-        <div class="step"><div class="step-number">4</div><h3>Wrap Up</h3><p>After the move, we check in. A wrap-up conversation to make sure your kid is settled, the team is the right fit, and the season is on track.</p></div>
-      </div>
+  <section class="section"><div class="container">
+    <SectionHeader title="What's Included" />
+    <div class="included-grid">
+      <div class="included-item"><span class="check">✔</span><span>Game footage evaluation</span></div>
+      <div class="included-item"><span class="check">✔</span><span>Level determination (AA/AAA/Elite)</span></div>
+      <div class="included-item"><span class="check">✔</span><span>Team and school placement</span></div>
+      <div class="included-item"><span class="check">✔</span><span>VISA and GTHL transfer support</span></div>
+      <div class="included-item"><span class="check">✔</span><span>Post-move wrap-up conversation</span></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section">
-    <div class="container">
-      <SectionHeader title="What's Included" subtitle="Everything your kid needs to make the move." />
-      <div class="included-grid">
-        <div class="included-item"><span class="check">✔</span><span>Game footage evaluation</span></div>
-        <div class="included-item"><span class="check">✔</span><span>Level determination (AA/AAA/Elite)</span></div>
-        <div class="included-item"><span class="check">✔</span><span>Team and school placement</span></div>
-        <div class="included-item"><span class="check">✔</span><span>VISA and GTHL transfer support</span></div>
-        <div class="included-item"><span class="check">✔</span><span>Post-move wrap-up conversation</span></div>
-      </div>
-      <p class="included-note">Add-ons available: school finding, VISA processing, GTHL transfer assistance.</p>
-    </div>
-  </section>
+  <section class="honest section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px;">
+    <h2>An honest word</h2>
+    <p>We don't guarantee placement. We guarantee effort. Every player gets the same commitment, regardless of level.</p>
+  </div></section>
 
-  <section class="honest section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 640px;">
-      <h2>An honest word</h2>
-      <p>We don't guarantee placement. No honest advisor can. What we guarantee is effort. Every player gets the same commitment, regardless of level. We've placed players because we do the work, not because we make promises.</p>
+  <section class="section"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="Questions" />
+    <div class="faq-list">
+      <div class="faq-item"><h3>What if you don't find a team?</h3><p>We don't guarantee placement. We'll be honest about your kid's readiness and options from the start.</p></div>
+      <div class="faq-item"><h3>What level will my kid play at?</h3><p>Depends on skill, age, and readiness. We evaluate and determine the right level.</p></div>
+      <div class="faq-item"><h3>How long does it take?</h3><p>Most placements happen before September. Reach out early.</p></div>
+      <div class="faq-item"><h3>Do you handle housing?</h3><p>We help coordinate host families and school boarding programs.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section">
-    <div class="container" style="max-width: 640px;">
-      <SectionHeader title="Questions" />
-      <div class="faq-list">
-        <div class="faq-item"><h3>What if you don't find a team for my kid?</h3><p>We've placed players because we know the system and we do the work. But we don't guarantee placement, and we'll be honest with you from the start about your kid's readiness and options.</p></div>
-        <div class="faq-item"><h3>What level will my kid play at?</h3><p>That depends on their skill, age, and readiness. We evaluate game footage and determine the right level. AA, AAA, or Elite. We place them where they'll develop, not where they'll struggle.</p></div>
-        <div class="faq-item"><h3>How long does the process take?</h3><p>It depends on timing. Most placements happen before the season starts (September). Reach out early and we'll map out a timeline for your kid.</p></div>
-        <div class="faq-item"><h3>Do you handle housing?</h3><p>We help coordinate housing and connect you with host families and school boarding programs. It's part of the transition support.</p></div>
-      </div>
-    </div>
-  </section>
+  <ServiceNav current="the-move" />
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);">
-    <div class="container" style="text-align: center;">
-      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to explore The Move?</h2>
-      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">No commitment. Just a conversation about your kid's hockey future.</p>
-      <div class="cta-actions">
-        <a href="/#contact" class="btn-primary">Contact Us</a>
-        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-      </div>
+  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to explore The Move?</h2>
+    <div class="cta-actions">
+      <a href="mailto:riseadvancements@gmail.com?subject=The Move - Inquiry" class="btn-primary">Email Us</a>
+      <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
-  </section>
+  </div></section>
 
   <Footer slot="footer" />
 </BaseLayout>
@@ -97,7 +81,6 @@ import ServiceNav from "../../components/ServiceNav.astro";
   .included-grid { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
   .included-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
   .check { color: var(--rise-red); font-weight: 700; font-size: var(--text-lg); flex-shrink: 0; }
-  .included-note { text-align: center; margin-top: var(--space-8); font-size: var(--text-sm); color: var(--rise-neutral-500); }
   .honest h2 { margin-bottom: var(--space-4); }
   .honest p { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }

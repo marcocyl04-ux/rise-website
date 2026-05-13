@@ -1,5 +1,5 @@
 ---
-// Header.astro — Site header with logo, nav links, Services dropdown, EN/中文 toggle, mobile hamburger
+// Header.astro — Site header with animated Services dropdown
 export interface Props {
   lang?: string;
 }
@@ -8,44 +8,56 @@ const { lang = "en" } = Astro.props;
 
 <header class="site-header">
   <div class="container header-inner">
-    <!-- Logo -->
     <a href={import.meta.env.BASE_URL} class="logo" aria-label="RISE Advancement Home">
       <span class="logo-text">RISE</span>
       <span class="logo-subtext">Advancement</span>
     </a>
 
-    <!-- Desktop Navigation -->
     <nav class="nav-desktop" aria-label="Main navigation">
       <a href={lang === "zh" ? "/zh/#how-it-works" : "/#how-it-works"}>
         {lang === "zh" ? "流程" : "How It Works"}
       </a>
 
-      <!-- Services Dropdown -->
       <div class="nav-dropdown">
         <button class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
           {lang === "zh" ? "服務" : "Services"}
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
         </button>
         <div class="nav-dropdown-menu" hidden>
           {lang === "zh" ? (
             <>
-              <a href="/zh/services/the-move">球員安置</a>
-              <a href="/zh/services/mentoring">訓練指導</a>
-              <a href="/zh/services/hk-program">香港體能訓練</a>
+              <a href="/zh/services/the-move">
+                <span class="dropdown-label">球員安置</span>
+                <span class="dropdown-desc">全面安置到加拿大</span>
+              </a>
+              <a href="/zh/services/mentoring">
+                <span class="dropdown-label">訓練指導</span>
+                <span class="dropdown-desc">賽季發展計劃</span>
+              </a>
+              <a href="/zh/services/hk-program">
+                <span class="dropdown-label">香港體能訓練</span>
+                <span class="dropdown-desc">2026 夏季計劃</span>
+              </a>
             </>
           ) : (
             <>
-              <a href="/services/the-move">The Move</a>
-              <a href="/services/mentoring">Mentoring</a>
-              <a href="/services/hk-program">HK Program</a>
+              <a href="/services/the-move">
+                <span class="dropdown-label">The Move</span>
+                <span class="dropdown-desc">Full placement to Canada</span>
+              </a>
+              <a href="/services/mentoring">
+                <span class="dropdown-label">Mentoring</span>
+                <span class="dropdown-desc">Season-long development</span>
+              </a>
+              <a href="/services/hk-program">
+                <span class="dropdown-label">HK Program</span>
+                <span class="dropdown-desc">Summer 2026 training</span>
+              </a>
             </>
           )}
         </div>
       </div>
 
-      <a href={lang === "zh" ? "/zh/#players" : "/#players"}>
-        {lang === "zh" ? "運動員" : "Players"}
-      </a>
       <a href={lang === "zh" ? "/zh/#faq" : "/#faq"}>
         {lang === "zh" ? "常見問題" : "FAQ"}
       </a>
@@ -54,7 +66,6 @@ const { lang = "en" } = Astro.props;
       </a>
     </nav>
 
-    <!-- Language Toggle + Mobile Menu Button -->
     <div class="header-actions">
       {lang === "zh" ? (
         <a href={import.meta.env.BASE_URL} class="lang-toggle" aria-label="Switch to English">EN</a>
@@ -62,13 +73,7 @@ const { lang = "en" } = Astro.props;
         <a href={`${import.meta.env.BASE_URL}zh/`} class="lang-toggle" aria-label="Switch to Chinese">中文</a>
       )}
 
-      <button
-        class="hamburger"
-        id="hamburger-btn"
-        aria-label="Open menu"
-        aria-expanded="false"
-        type="button"
-      >
+      <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false" type="button">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
@@ -76,7 +81,6 @@ const { lang = "en" } = Astro.props;
     </div>
   </div>
 
-  <!-- Mobile Navigation -->
   <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
     <a href={lang === "zh" ? "/zh/#how-it-works" : "/#how-it-works"}>
       {lang === "zh" ? "流程" : "How It Works"}
@@ -95,9 +99,6 @@ const { lang = "en" } = Astro.props;
         <a href="/services/hk-program" class="mobile-sub">HK Program</a>
       </>
     )}
-    <a href={lang === "zh" ? "/zh/#players" : "/#players"}>
-      {lang === "zh" ? "運動員" : "Players"}
-    </a>
     <a href={lang === "zh" ? "/zh/#faq" : "/#faq"}>
       {lang === "zh" ? "常見問題" : "FAQ"}
     </a>
@@ -128,7 +129,6 @@ const { lang = "en" } = Astro.props;
     height: 4rem;
   }
 
-  /* Logo */
   .logo {
     display: flex;
     align-items: baseline;
@@ -138,10 +138,7 @@ const { lang = "en" } = Astro.props;
     flex-shrink: 0;
   }
 
-  .logo:hover {
-    text-decoration: none;
-    color: var(--rise-black);
-  }
+  .logo:hover { text-decoration: none; color: var(--rise-black); }
 
   .logo-text {
     font-family: var(--font-heading);
@@ -162,9 +159,7 @@ const { lang = "en" } = Astro.props;
   }
 
   /* Desktop nav */
-  .nav-desktop {
-    display: none;
-  }
+  .nav-desktop { display: none; }
 
   @media (min-width: 768px) {
     .nav-desktop {
@@ -202,45 +197,80 @@ const { lang = "en" } = Astro.props;
   }
 
   /* Dropdown */
-  .nav-dropdown {
-    position: relative;
+  .nav-dropdown { position: relative; }
+
+  .dropdown-chevron {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-dropdown.open .dropdown-chevron {
+    transform: rotate(180deg);
   }
 
   .nav-dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     left: 50%;
-    transform: translateX(-50%);
-    margin-top: var(--space-2);
+    transform: translateX(-50%) translateY(-4px);
     background-color: var(--rise-white);
     border: 1px solid var(--rise-neutral-100);
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    min-width: 180px;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    min-width: 220px;
     z-index: 200;
     display: flex;
     flex-direction: column;
     padding: var(--space-2) 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .nav-dropdown-menu[hidden] {
-    display: none;
+  .nav-dropdown.open .nav-dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Invisible bridge so cursor doesn't lose hover between trigger and menu */
+  .nav-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
   }
 
   .nav-dropdown-menu a {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--rise-neutral-700);
     text-decoration: none;
-    padding: var(--space-2) var(--space-4);
-    transition: background-color 0.15s, color 0.15s;
+    padding: var(--space-3) var(--space-4);
+    transition: background-color 0.15s;
   }
 
   .nav-dropdown-menu a:hover {
     background-color: var(--rise-neutral-50);
-    color: var(--rise-red);
     text-decoration: none;
+  }
+
+  .dropdown-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--rise-black);
+  }
+
+  .nav-dropdown-menu a:hover .dropdown-label {
+    color: var(--rise-red);
+  }
+
+  .dropdown-desc {
+    font-size: 0.75rem;
+    color: var(--rise-neutral-400);
+    font-weight: 400;
   }
 
   /* Header actions */
@@ -279,11 +309,7 @@ const { lang = "en" } = Astro.props;
     padding: 4px;
   }
 
-  @media (min-width: 768px) {
-    .hamburger {
-      display: none;
-    }
-  }
+  @media (min-width: 768px) { .hamburger { display: none; } }
 
   .hamburger-line {
     display: block;
@@ -304,9 +330,7 @@ const { lang = "en" } = Astro.props;
     gap: 0;
   }
 
-  .nav-mobile[hidden] {
-    display: none;
-  }
+  .nav-mobile[hidden] { display: none; }
 
   .nav-mobile a {
     font-family: var(--font-body);
@@ -363,34 +387,47 @@ const { lang = "en" } = Astro.props;
     }
   });
 
-  // Desktop dropdown
+  // Desktop dropdown — hover + click
   const dropdown = document.querySelector(".nav-dropdown");
   const trigger = dropdown?.querySelector(".nav-dropdown-trigger");
-  const menu = dropdown?.querySelector(".nav-dropdown-menu");
+  let hoverTimeout: ReturnType<typeof setTimeout>;
 
+  function openDropdown() {
+    clearTimeout(hoverTimeout);
+    dropdown?.classList.add("open");
+    trigger?.setAttribute("aria-expanded", "true");
+  }
+
+  function closeDropdown() {
+    hoverTimeout = setTimeout(() => {
+      dropdown?.classList.remove("open");
+      trigger?.setAttribute("aria-expanded", "false");
+    }, 150);
+  }
+
+  // Hover open
+  dropdown?.addEventListener("mouseenter", openDropdown);
+  dropdown?.addEventListener("mouseleave", closeDropdown);
+
+  // Click toggle
   trigger?.addEventListener("click", () => {
-    const isOpen = !menu?.hasAttribute("hidden");
-    if (isOpen) {
-      menu?.setAttribute("hidden", "");
-      trigger.setAttribute("aria-expanded", "false");
-    } else {
-      menu?.removeAttribute("hidden");
-      trigger.setAttribute("aria-expanded", "true");
-    }
+    const isOpen = dropdown?.classList.contains("open");
+    if (isOpen) closeDropdown();
+    else openDropdown();
   });
 
-  // Close dropdown when clicking outside
+  // Close on outside click
   document.addEventListener("click", (e) => {
     if (dropdown && !dropdown.contains(e.target as Node)) {
-      menu?.setAttribute("hidden", "");
+      dropdown.classList.remove("open");
       trigger?.setAttribute("aria-expanded", "false");
     }
   });
 
-  // Close dropdown on Escape
+  // Close on Escape
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      menu?.setAttribute("hidden", "");
+      dropdown?.classList.remove("open");
       trigger?.setAttribute("aria-expanded", "false");
     }
   });

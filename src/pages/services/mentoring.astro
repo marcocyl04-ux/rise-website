@@ -6,80 +6,64 @@ import SectionHeader from "../../components/SectionHeader.astro";
 import ServiceNav from "../../components/ServiceNav.astro";
 ---
 
-<BaseLayout title="Mentoring" description="Season-long development program for young hockey players. Video review, skill skates, nutrition, mental skills, and weekly check-ins.">
+<BaseLayout title="Mentoring" description="Season-long development program for young hockey players.">
   <Header slot="header" />
 
-  <div class="container" style="max-width: 960px; margin: 0 auto;">
-    <ServiceNav current="mentoring" />
-  </div>
+  <section class="service-hero section"><div class="container">
+    <p class="hero-eyebrow">Service</p>
+    <h1 class="hero-title">Mentoring</h1>
+    <p class="hero-lead">Season-long development program. Pick the services your kid needs. We work with them all season.</p>
+    <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="btn-primary">Get Started</a>
+  </div></section>
 
-  <section class="service-hero section">
-    <div class="container">
-      <p class="hero-eyebrow">Service</p>
-      <h1 class="hero-title">Mentoring</h1>
-      <p class="hero-lead">Season-long development program. Pick the services your kid needs. We work with them all season, every week, until the final buzzer.</p>
-      <a href="/#contact" class="btn-primary">Get Started</a>
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
+    <SectionHeader title="How It Works" subtitle="Your kid. Our coaches. The full season." />
+    <div class="steps-grid">
+      <div class="step"><div class="step-number">1</div><h3>Sign On</h3><p>Onboarding, assessment, goals, development plan.</p></div>
+      <div class="step"><div class="step-number">2</div><h3>Choose</h3><p>Pick what your kid needs. Mix and match.</p></div>
+      <div class="step"><div class="step-number">3</div><h3>Check-ins</h3><p>Weekly progress updates and coach communication.</p></div>
+      <div class="step"><div class="step-number">4</div><h3>Wrap</h3><p>Exit interview. What worked, what's next.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
-      <SectionHeader title="How It Works" subtitle="Your kid. Our coaches. The full season." />
-      <div class="steps-grid">
-        <div class="step"><div class="step-number">1</div><h3>Sign On</h3><p>We onboard your kid. Assess their game, set goals, and build a development plan for the season.</p></div>
-        <div class="step"><div class="step-number">2</div><h3>Choose Services</h3><p>Pick what your kid needs. Video review, skill skates, exercise plans, nutrition, mental skills, school help. Mix and match.</p></div>
-        <div class="step"><div class="step-number">3</div><h3>Weekly Check-ins</h3><p>Every week, we check in. Progress updates, adjustments, coach communication. You always know how your kid is doing.</p></div>
-        <div class="step"><div class="step-number">4</div><h3>Season Wrap</h3><p>Exit interview at season end. What worked, what didn't, what's next. Your kid leaves with a clear picture of their development.</p></div>
-      </div>
+  <section class="section"><div class="container">
+    <SectionHeader title="Choose What Your Kid Needs" />
+    <div class="services-list">
+      <div class="service-item"><h3>Video Review</h3><p>One-on-one game breakdowns.</p></div>
+      <div class="service-item"><h3>Skill Skates</h3><p>On-ice sessions, small groups.</p></div>
+      <div class="service-item"><h3>Exercise Plans</h3><p>Custom training, updated bi-weekly.</p></div>
+      <div class="service-item"><h3>Nutrition</h3><p>Meal plans for performance.</p></div>
+      <div class="service-item"><h3>Mental Skills</h3><p>Confidence, focus, pressure.</p></div>
+      <div class="service-item"><h3>School Help</h3><p>Academic support.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section">
-    <div class="container">
-      <SectionHeader title="Choose What Your Kid Needs" subtitle="Mix and match. No two players are the same." />
-      <div class="services-list">
-        <div class="service-item"><h3>Video Review Sessions</h3><p>One-on-one video breakdowns of your kid's games. We identify what's working, what's not, and what to focus on next.</p></div>
-        <div class="service-item"><h3>Skill Skates</h3><p>On-ice sessions focused on specific skills. Skating, shooting, puck handling, positioning. Small groups, high reps.</p></div>
-        <div class="service-item"><h3>Exercise Plans</h3><p>Custom training programs updated bi-weekly. Hockey-specific strength, conditioning, and mobility work.</p></div>
-        <div class="service-item"><h3>Nutritional Coaching</h3><p>Meal plans and guidance to fuel your kid's performance. Age-appropriate, sport-specific nutrition.</p></div>
-        <div class="service-item"><h3>Mental Skills Coaching</h3><p>Confidence, focus, dealing with pressure. The mental game is what separates good from great.</p></div>
-        <div class="service-item"><h3>School Help</h3><p>Academic support to keep your kid on track in the classroom. Because hockey players are students first.</p></div>
-      </div>
+  <section class="section"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="Two Levels" subtitle="Same commitment. Different starting points." />
+    <div class="tiers">
+      <div class="tier"><h3>Elite</h3><p>For players at Elite or AAA level.</p></div>
+      <div class="tier"><h3>AA to AAA</h3><p>For players developing toward competitive hockey.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 640px;">
-      <SectionHeader title="Two Levels" subtitle="Same commitment. Different starting points." />
-      <div class="tiers">
-        <div class="tier"><h3>Elite</h3><p>For players currently at the Elite or AAA level. Focused on fine-tuning and taking the next step.</p></div>
-        <div class="tier"><h3>AA to AAA</h3><p>For players developing toward AA or AAA. Building foundations, closing gaps, and preparing for competitive hockey.</p></div>
-      </div>
+  <section class="section"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="Questions" />
+    <div class="faq-list">
+      <div class="faq-item"><h3>Can I pick individual services?</h3><p>Yes. That's the whole point.</p></div>
+      <div class="faq-item"><h3>How often are check-ins?</h3><p>Weekly.</p></div>
+      <div class="faq-item"><h3>What if my kid is struggling?</h3><p>We adjust the plan and support them through it.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section class="section">
-    <div class="container" style="max-width: 640px;">
-      <SectionHeader title="Questions" />
-      <div class="faq-list">
-        <div class="faq-item"><h3>Can I pick individual services?</h3><p>Yes. That's the whole point. Your kid doesn't need everything, they need what's right for their game. Pick what matters.</p></div>
-        <div class="faq-item"><h3>How often are check-ins?</h3><p>Weekly. You'll know exactly how your kid is progressing, what they're working on, and what's coming next.</p></div>
-        <div class="faq-item"><h3>What if my kid is struggling?</h3><p>That's what we're here for. Struggling is part of development. We adjust the plan, communicate with coaches, and support your kid through it.</p></div>
-        <div class="faq-item"><h3>Do I need to be in Canada?</h3><p>No. We work directly with your kid in Canada. You stay connected through weekly updates and the WhatsApp group.</p></div>
-      </div>
-    </div>
-  </section>
+  <ServiceNav current="mentoring" />
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);">
-    <div class="container" style="text-align: center;">
-      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to start developing?</h2>
-      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">No commitment. Just a conversation about your kid's game.</p>
-      <div class="cta-actions">
-        <a href="/#contact" class="btn-primary">Contact Us</a>
-        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-      </div>
+  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to start developing?</h2>
+    <div class="cta-actions">
+      <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="btn-primary">Email Us</a>
+      <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
-  </section>
+  </div></section>
 
   <Footer slot="footer" />
 </BaseLayout>

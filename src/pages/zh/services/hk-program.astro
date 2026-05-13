@@ -6,60 +6,40 @@ import SectionHeader from "../../../components/SectionHeader.astro";
 import ServiceNav from "../../../components/ServiceNav.astro";
 ---
 
-<BaseLayout title="香港體能訓練計劃" description="為期10週的夏季冰球訓練計劃。" lang="zh-HK">
+<BaseLayout title="香港體能訓練計劃" lang="zh-HK">
   <Header slot="header" lang="zh" />
-  <div class="container" style="max-width: 960px; margin: 0 auto;"><ServiceNav lang="zh" current="hk-program" /></div>
-
   <section class="service-hero section"><div class="container">
     <p class="hero-eyebrow">2026 夏季</p>
     <h1 class="hero-title">香港體能<span class="red">訓練計劃</span></h1>
-    <p class="hero-lead">為期10週的夏季訓練計劃。冰球專項訓練、陸地射門和冰上訓練。與 EJ Elite Shooting 合作。</p>
-    <a href="/zh/#contact" class="btn-primary">報名參加</a>
+    <p class="hero-lead">為期10週的夏季訓練計劃。與 EJ Elite Shooting 合作。</p>
+    <a href="mailto:riseadvancements@gmail.com?subject=香港體能訓練 - 報名" class="btn-primary">報名參加</a>
   </div></section>
-
   <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
     <SectionHeader title="詳細資料" subtitle="6月8日至8月16日。10週。4個地點。" />
     <div class="details-grid">
-      <div class="detail-card"><h3>ONYX 健身中心</h3><p>太古坊，鰂魚涌。冰球專項力量和體能訓練。</p></div>
-      <div class="detail-card"><h3>The Flying Puck</h3><p>陸地射門訓練。技術、準確度、出手。</p></div>
-      <div class="detail-card"><h3>鰂魚涌公園</h3><p>戶外訓練。體能、敏捷、自重訓練。</p></div>
-      <div class="detail-card"><h3>愉景灣冰場</h3><p>冰上訓練。通過 WhatsApp 協調。</p></div>
+      <div class="detail-card"><h3>ONYX 健身中心</h3><p>太古坊。冰球專項訓練。</p></div>
+      <div class="detail-card"><h3>The Flying Puck</h3><p>陸地射門訓練。</p></div>
+      <div class="detail-card"><h3>鰂魚涌公園</h3><p>戶外訓練。</p></div>
+      <div class="detail-card"><h3>愉景灣冰場</h3><p>冰上訓練。</p></div>
     </div>
   </div></section>
-
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="每週時間表" subtitle="練6天休1天。" />
-    <div class="schedule">
-      <div class="schedule-day"><span class="day">週一</span><span class="activity">2.5公里跑 + 健身</span></div>
-      <div class="schedule-day"><span class="day">週二</span><span class="activity">3公里單車 + 比賽日</span></div>
-      <div class="schedule-day"><span class="day">週三</span><span class="activity">健身 + 陸地射門</span></div>
-      <div class="schedule-day"><span class="day">週四</span><span class="activity">2.5公里跑 + 健身</span></div>
-      <div class="schedule-day"><span class="day">週五</span><span class="activity">健身</span></div>
-      <div class="schedule-day"><span class="day">週六</span><span class="activity">健身 + 冰上訓練</span></div>
-      <div class="schedule-day"><span class="day">週日</span><span class="activity">公園訓練 + 陸地射門</span></div>
-    </div>
-  </div></section>
-
   <section class="section"><div class="container" style="max-width: 640px;">
     <SectionHeader title="常見問題" />
     <div class="faq-list">
-      <div class="faq-item"><h3>什麼年齡段？</h3><p>10至18歲。訓練根據年齡定制。</p></div>
-      <div class="faq-item"><h3>需要自備裝備嗎？</h3><p>包含定制裝備。冰上訓練需要自備冰球裝備。</p></div>
-      <div class="faq-item"><h3>家長可以觀看嗎？</h3><p>WhatsApp 群組每日更新。公園訓練對家長開放。</p></div>
+      <div class="faq-item"><h3>什麼年齡段？</h3><p>10至18歲。</p></div>
+      <div class="faq-item"><h3>需要自備裝備嗎？</h3><p>包含定制裝備。</p></div>
     </div>
   </div></section>
-
+  <ServiceNav lang="zh" current="hk-program" />
   <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">2026 夏季。名額有限。</h2>
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">名額有限。</h2>
     <div class="cta-actions">
-      <a href="/zh/#contact" class="btn-primary">聯繫我們</a>
+      <a href="mailto:riseadvancements@gmail.com?subject=香港體能訓練 - 報名" class="btn-primary">發送電子郵件</a>
       <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </div></section>
-
   <Footer slot="footer" />
 </BaseLayout>
-
 <style>
   .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
   .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
@@ -71,10 +51,6 @@ import ServiceNav from "../../../components/ServiceNav.astro";
   .detail-card { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
   .detail-card h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .detail-card p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .schedule { display: flex; flex-direction: column; }
-  .schedule-day { display: flex; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--rise-neutral-100); }
-  .day { font-family: var(--font-heading); font-weight: 600; width: 50px; flex-shrink: 0; font-size: var(--text-sm); }
-  .activity { font-size: var(--text-sm); color: var(--rise-neutral-500); }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }

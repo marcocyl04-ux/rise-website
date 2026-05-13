@@ -1,5 +1,5 @@
 ---
-// ServiceNav.astro — Navigation bar for service subpages
+// ServiceNav.astro — "Explore Other Services" section for bottom of service pages
 export interface Props {
   lang?: string;
   current: string;
@@ -7,90 +7,101 @@ export interface Props {
 const { lang = "en", current } = Astro.props;
 
 const services = lang === "zh" ? [
-  { slug: "the-move", label: "球員安置" },
-  { slug: "mentoring", label: "訓練指導" },
-  { slug: "hk-program", label: "香港體能訓練" },
+  { slug: "the-move", label: "球員安置", desc: "全面安置到加拿大" },
+  { slug: "mentoring", label: "訓練指導", desc: "賽季發展計劃" },
+  { slug: "hk-program", label: "香港體能訓練", desc: "2026 夏季計劃" },
 ] : [
-  { slug: "the-move", label: "The Move" },
-  { slug: "mentoring", label: "Mentoring" },
-  { slug: "hk-program", label: "HK Program" },
+  { slug: "the-move", label: "The Move", desc: "Full placement to Canada" },
+  { slug: "mentoring", label: "Mentoring", desc: "Season-long development" },
+  { slug: "hk-program", label: "HK Program", desc: "Summer 2026 training" },
 ];
 
 const prefix = lang === "zh" ? "/zh/services" : "/services";
-const backLabel = lang === "zh" ? "← 所有服務" : "← All Services";
+const title = lang === "zh" ? "探索其他服務" : "Explore Other Services";
+const others = services.filter(s => s.slug !== current);
 ---
 
-<nav class="service-nav">
-  <a href={`${prefix}/`} class="service-nav-back">{backLabel}</a>
-  <div class="service-nav-links">
-    {services.map((s) => (
-      <a
-        href={`${prefix}/${s.slug}`}
-        class:list={["service-nav-link", { active: s.slug === current }]}
-      >
-        {s.label}
-      </a>
-    ))}
+<section class="explore-section section" style="background-color: var(--rise-neutral-50);">
+  <div class="container" style="max-width: 640px;">
+    <h2 class="explore-title">{title}</h2>
+    <div class="explore-grid">
+      {others.map((s) => (
+        <a href={`${prefix}/${s.slug}`} class="explore-card">
+          <span class="explore-label">{s.label}</span>
+          <span class="explore-desc">{s.desc}</span>
+          <span class="explore-arrow">→</span>
+        </a>
+      ))}
+    </div>
   </div>
-</nav>
+</section>
 
 <style>
-  .service-nav {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4) 0;
-    margin-bottom: var(--space-4);
-    border-bottom: 1px solid var(--rise-neutral-100);
+  .explore-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--space-8);
   }
 
-  .service-nav-back {
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
+  .explore-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .explore-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .explore-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-6);
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 6px;
     text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .explore-card:hover {
+    border-color: var(--rise-red);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+  }
+
+  .explore-label {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--rise-black);
     transition: color 0.2s;
   }
 
-  .service-nav-back:hover {
+  .explore-card:hover .explore-label {
     color: var(--rise-red);
-    text-decoration: none;
   }
 
-  .service-nav-links {
-    display: flex;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-  }
-
-  .service-nav-link {
-    font-family: var(--font-heading);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-2) var(--space-4);
-    border-radius: 4px;
-    text-decoration: none;
+  .explore-desc {
+    font-size: var(--text-sm);
     color: var(--rise-neutral-500);
-    border: 1px solid var(--rise-neutral-200);
-    transition: all 0.2s;
   }
 
-  .service-nav-link:hover {
+  .explore-arrow {
+    position: absolute;
+    top: var(--space-6);
+    right: var(--space-6);
+    font-size: var(--text-lg);
+    color: var(--rise-neutral-300);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .explore-card:hover .explore-arrow {
     color: var(--rise-red);
-    border-color: var(--rise-red);
-    text-decoration: none;
-  }
-
-  .service-nav-link.active {
-    color: var(--rise-white);
-    background-color: var(--rise-red);
-    border-color: var(--rise-red);
-  }
-
-  .service-nav-link.active:hover {
-    color: var(--rise-white);
-    text-decoration: none;
+    transform: translateX(4px);
   }
 </style>
