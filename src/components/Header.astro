@@ -395,6 +395,7 @@ const { lang = "en" } = Astro.props;
 
   function openDropdown() {
     clearTimeout(hoverTimeout);
+    menu?.removeAttribute("hidden");
     dropdown?.classList.add("open");
     trigger?.setAttribute("aria-expanded", "true");
   }
@@ -402,6 +403,7 @@ const { lang = "en" } = Astro.props;
   function closeDropdown() {
     hoverTimeout = setTimeout(() => {
       dropdown?.classList.remove("open");
+      menu?.setAttribute("hidden", "");
       trigger?.setAttribute("aria-expanded", "false");
     }, 150);
   }
@@ -421,6 +423,7 @@ const { lang = "en" } = Astro.props;
   document.addEventListener("click", (e) => {
     if (dropdown && !dropdown.contains(e.target as Node)) {
       dropdown.classList.remove("open");
+      menu?.setAttribute("hidden", "");
       trigger?.setAttribute("aria-expanded", "false");
     }
   });
@@ -429,6 +432,7 @@ const { lang = "en" } = Astro.props;
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       dropdown?.classList.remove("open");
+      menu?.setAttribute("hidden", "");
       trigger?.setAttribute("aria-expanded", "false");
     }
   });
