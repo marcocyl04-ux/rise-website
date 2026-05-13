@@ -9,27 +9,66 @@ import ServiceCard from "../components/ServiceCard.astro";
 import ContactForm from "../components/ContactForm.astro";
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Home" description="RISE Advancement: elite hockey training and player placement for Hong Kong youth. Summer program, mentoring, and full placement services to Canada.">
   <Header slot="header" />
 
-  <!-- 1. HERO — What is this? -->
+  <!-- JSON-LD Structured Data -->
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SportsActivityLocation",
+    "name": "RISE Advancement",
+    "description": "Elite hockey player development and placement agency. We get young players from Hong Kong onto teams in Canada.",
+    "url": "https://riseadvancement.com",
+    "email": "riseadvancements@gmail.com",
+    "telephone": "+852-9095-0387",
+    "areaServed": ["Hong Kong", "Canada"],
+    "sport": "Ice Hockey",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "The Move",
+        "description": "Full player placement and transition service to Canada"
+      },
+      {
+        "@type": "Offer",
+        "name": "Mentoring",
+        "description": "Season-long hockey development program with dedicated mentors"
+      },
+      {
+        "@type": "Offer",
+        "name": "HK Off-Ice Summer Program",
+        "description": "10-week summer hockey training program in Hong Kong"
+      }
+    ]
+  })} />
+
+  <!-- 1. HERO — Summer program urgency + what is RISE -->
   <section class="hero section">
     <div class="container">
       <div class="hero-content">
-        <p class="hero-eyebrow">Hong Kong &bull; Canada</p>
+        <p class="hero-eyebrow">Summer 2026 &bull; Hong Kong</p>
         <h1 class="hero-title">
-          RISE <span class="hero-title-red">Advancement</span>
+          Summer Hockey <span class="hero-title-red">Training</span>
         </h1>
         <p class="hero-lead">
-          We get young hockey players from Hong Kong onto teams in Canada.
-          We evaluate them, place them, and develop them through the season.
-          Real players. Real results.
+          10 weeks of elite off-ice training in Hong Kong. Gym, shooting, skating, and mental skills. Built by players who went through the pipeline themselves. June 8 to August 16.
         </p>
         <div class="hero-actions">
-          <a href="#how-it-works" class="btn-primary">See How It Works</a>
-          <a href="#contact" class="btn-secondary">Contact Us</a>
+          <a href="/services/hk-program" class="btn-primary">View Summer Program</a>
+          <a href="#contact" class="btn-secondary">Talk to Us</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- 1b. RISE INTRO — What else do we do? -->
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container" style="max-width: 720px; text-align: center;">
+      <h2 style="margin-bottom: var(--space-4);">Not just a summer camp.</h2>
+      <p style="font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; margin-bottom: var(--space-6);">
+        RISE Advancement is a hockey development and placement agency. We get young players from Hong Kong onto teams in Canada. We evaluate them, place them, and develop them through the season. Founded by players who lived the pipeline themselves.
+      </p>
+      <a href="/why-us" class="btn-secondary">Why RISE?</a>
     </div>
   </section>
 
@@ -78,28 +117,28 @@ import ContactForm from "../components/ContactForm.astro";
       <div class="services-grid">
         <ServiceCard
           title="The Move"
-          description="Full player placement and transition service. We evaluate game footage, determine the right level, find teams and schools, handle VISA and transfer paperwork."
+          description="Full player placement and transition service. We manage the entire process, from initial assessment to first skate with your new team, so nothing falls through the cracks."
           price="Contact us"
           features={[
-            "Game footage evaluation",
-            "Level determination (AA/AAA/Elite)",
-            "Team and school placement",
-            "VISA and GTHL transfer support",
-            "Post-move wrap-up conversation",
+            "Thorough evaluation of game footage and skill level",
+            "Identification of coaches and teams suited to your goals",
+            "Facilitation of introductions with coaching staff",
+            "Exposure opportunities at the right level of play",
+            "Guidance and support at every step of the process",
           ]}
           ctaText="Learn More"
           ctaLink="/services/the-move"
         />
         <ServiceCard
           title="Mentoring"
-          description="Season-long development program. Choose the services that fit your kid's game. Video review, skill skates, exercise plans, nutrition, mental skills, school help."
+          description="Season-long development program. You choose the services that fit your game and your goals. Every engagement starts with an onboarding session, goal-setting, and regular check-ins throughout."
           price="Contact us"
           features={[
-            "Onboarding + weekly check-ins",
-            "Video review sessions",
-            "Skill skates",
-            "Exercise and nutrition plans",
-            "Mental skills coaching",
+            "Weekly check-ins with your dedicated mentor",
+            "One-on-one video review sessions",
+            "In-person skill skates with your Rise mentor",
+            "Custom exercise and nutrition plans",
+            "Mental skills coaching with a professional",
           ]}
           ctaText="Learn More"
           ctaLink="/services/mentoring"

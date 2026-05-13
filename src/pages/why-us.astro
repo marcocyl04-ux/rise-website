@@ -1,0 +1,117 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import ContactForm from "../components/ContactForm.astro";
+import ServiceNav from "../components/ServiceNav.astro";
+---
+
+<BaseLayout title="Why RISE" description="RISE Advancement was founded by hockey players who went through the pipeline themselves. We understand what works, what's broken, and how to fix it.">
+  <Header slot="header" />
+
+  <section class="service-hero section"><div class="container">
+    <p class="hero-eyebrow">About Us</p>
+    <h1 class="hero-title">Why <span class="red">RISE?</span></h1>
+    <p class="hero-lead">We're not an agency that studied the hockey pipeline from the outside. We lived it. Every founder played elite hockey, went through the placement process, and saw firsthand what works and what's broken. RISE exists because we know we can do it better.</p>
+  </div></section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
+    <SectionHeader title="Built by Players, for Players" subtitle="We've been where your kid is now." />
+    <div class="founders-grid">
+      <div class="founder">
+        <h3>Ryan Cheuk</h3>
+        <p class="founder-role">Co-Founder</p>
+        <p>Played competitive hockey in Canada. Went through the placement process himself. Now coaches and mentors the next generation of HK players heading to Canada. Knows the coaches, the programs, and the system from the inside.</p>
+      </div>
+      <div class="founder">
+        <h3>Eddie Jaansoo</h3>
+        <p class="founder-role">Co-Founder</p>
+        <p>Former elite hockey player with deep connections in the Canadian hockey system. Understands the development pathway from youth to junior to college hockey. Built RISE to give HK players the support he wished existed.</p>
+      </div>
+      <div class="founder">
+        <h3>Markus Lam</h3>
+        <p class="founder-role">Co-Founder</p>
+        <p>Grew up playing hockey in Hong Kong. Experienced the challenges of developing as a player in a market with a ceiling. Bridges the gap between HK hockey families and the Canadian system.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container">
+    <SectionHeader title="What Makes Us Different" />
+    <div class="diff-grid">
+      <div class="diff-item">
+        <h3>We lived the pipeline</h3>
+        <p>Other agencies hire consultants who read about hockey placement. Every RISE founder played elite hockey and went through the placement process personally. We don't guess, we know.</p>
+      </div>
+      <div class="diff-item">
+        <h3>We know what's broken</h3>
+        <p>We've seen agencies place kids on the wrong teams, ignore the emotional side, and disappear after the move. We built RISE to fix exactly those problems.</p>
+      </div>
+      <div class="diff-item">
+        <h3>We treat every player like our own</h3>
+        <p>Small roster, personal relationships. Ryan knows every kid's name, skill level, and goals. We're not a factory. We're a team.</p>
+      </div>
+      <div class="diff-item">
+        <h3>We're honest about what works</h3>
+        <p>We don't guarantee placement. We guarantee effort. If your kid isn't ready, we'll tell you. If the team isn't the right fit, we'll address it. No hidden steps, just results.</p>
+      </div>
+      <div class="diff-item">
+        <h3>We're here for the whole journey</h3>
+        <p>Placement is just the start. Our mentoring program supports players all season long. Weekly check-ins, video review, skill development, mental skills. Your kid is never alone in Canada.</p>
+      </div>
+      <div class="diff-item">
+        <h3>We understand HK parents</h3>
+        <p>Two of us grew up in the HK hockey community. We know the culture, the anxieties, and the expectations. We speak your language, literally and figuratively.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px; text-align: center;">
+    <h2 style="margin-bottom: var(--space-4);">21 players and counting.</h2>
+    <p style="font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; margin-bottom: var(--space-6);">
+      We've placed 21 players on teams across Canada. Each one evaluated, matched, and supported personally. No two placements are the same, because no two players are the same.
+    </p>
+  </div></section>
+
+  <ServiceNav current="why-us" />
+
+  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to talk?</h2>
+    <div class="cta-actions">
+      <a href="mailto:riseadvancements@gmail.com?subject=RISE Inquiry" class="btn-primary">Email Us</a>
+      <a href="https://wa.me/85290950387?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+  </div></section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
+  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
+  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
+  .red { color: var(--rise-red); }
+  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 700px; margin: 0 auto var(--space-8); }
+
+  .founders-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .founders-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .founders-grid { grid-template-columns: repeat(3, 1fr); } }
+  .founder { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
+  .founder h3 { font-size: var(--text-xl); margin-bottom: var(--space-1); }
+  .founder-role { font-size: var(--text-sm); color: var(--rise-red); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--space-3); }
+  .founder p:last-child { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+
+  .diff-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .diff-grid { grid-template-columns: repeat(2, 1fr); } }
+  .diff-item { padding: var(--space-6); }
+  .diff-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .diff-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+
+  .cta-banner { padding: var(--space-16) 0; }
+  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
+  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
+  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
+  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
+</style>

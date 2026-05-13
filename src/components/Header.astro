@@ -57,6 +57,9 @@ const { lang = "en" } = Astro.props;
         </div>
       </div>
 
+      <a href={lang === "zh" ? "/zh/why-us" : "/why-us"}>
+        {lang === "zh" ? "為什麼我們" : "Why RISE"}
+      </a>
       <a href={lang === "zh" ? "/zh/#faq" : "/#faq"}>
         {lang === "zh" ? "常見問題" : "FAQ"}
       </a>
@@ -98,6 +101,9 @@ const { lang = "en" } = Astro.props;
         <a href="/services/hk-program" class="mobile-sub">HK Program</a>
       </>
     )}
+    <a href={lang === "zh" ? "/zh/why-us" : "/why-us"}>
+      {lang === "zh" ? "為什麼我們" : "Why RISE"}
+    </a>
     <a href={lang === "zh" ? "/zh/#faq" : "/#faq"}>
       {lang === "zh" ? "常見問題" : "FAQ"}
     </a>

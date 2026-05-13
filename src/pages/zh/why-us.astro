@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import ContactForm from "../../components/ContactForm.astro";
+---
+
+<BaseLayout title="為什麼選擇我們" lang="zh-HK" description="RISE Advancement 由親身經歷過冰球發展管道的球員創立。我們了解什麼有效、什麼有問題，以及如何改進。">
+  <Header slot="header" lang="zh" />
+
+  <section class="service-hero section"><div class="container">
+    <p class="hero-eyebrow">關於我們</p>
+    <h1 class="hero-title">為什麼選擇<span class="red">RISE?</span></h1>
+    <p class="hero-lead">我們不是從外面研究冰球管道的機構。我們走過這條路。每位創辦人都打過精英冰球，親身經歷過安置過程，親眼看到什麼有效、什麼有問題。RISE 的存在，是因為我們知道自己能做得更好。</p>
+  </div></section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
+    <SectionHeader title="由球員創立，為球員服務" subtitle="我們曾經就是你孩子現在的位置。" />
+    <div class="founders-grid">
+      <div class="founder">
+        <h3>Ryan Cheuk</h3>
+        <p class="founder-role">聯合創辦人</p>
+        <p>在加拿大打過競技冰球，親身經歷過安置過程。現在指導和培訓新一代前往加拿大發展的香港球員。從內部了解教練、課程和整個系統。</p>
+      </div>
+      <div class="founder">
+        <h3>Eddie Jaansoo</h3>
+        <p class="founder-role">聯合創辦人</p>
+        <p>前精英冰球運動員，在加拿大冰球系統中擁有深厚人脈。了解從青少年到初中到大學冰球的發展路徑。創立 RISE，是為了給香港球員提供他曾期望得到的支持。</p>
+      </div>
+      <div class="founder">
+        <h3>Markus Lam</h3>
+        <p class="founder-role">聯合創辦人</p>
+        <p>在香港長大並打冰球。親身體驗過在一個有天花板的市場中發展的挑戰。在冰球家庭和加拿大系統之間架起橋樑。</p>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container">
+    <SectionHeader title="我們的優勢" />
+    <div class="diff-grid">
+      <div class="diff-item">
+        <h3>我們走過這條路</h3>
+        <p>其他機構聘請從外面研究冰球安置的顧問。每位 RISE 創辦人都打過精英冰球，親身經歷過安置過程。我們不是猜測，我們知道。</p>
+      </div>
+      <div class="diff-item">
+        <h3>我們知道哪裡有問題</h3>
+        <p>我們見過機構把孩子放在錯誤的球隊、忽視情感需求、安置後就消失。RISE 就是為了修復這些問題而建立的。</p>
+      </div>
+      <div class="diff-item">
+        <h3>我們把每個球員當作自己的孩子</h3>
+        <p>小規模陣容，個人關係。Ryan 知道每個孩子的名字、技術水平和目標。我們不是工廠，我們是一個團隊。</p>
+      </div>
+      <div class="diff-item">
+        <h3>我們坦誠面對現實</h3>
+        <p>我們不保證安置，但保證全力以赴。如果你的孩子還沒準備好，我們會告訴你。如果球隊不合適，我們會處理。沒有隱藏步驟，只有結果。</p>
+      </div>
+      <div class="diff-item">
+        <h3>我們陪伴整個旅程</h3>
+        <p>安置只是開始。我們的訓練指導計劃整個賽季都在支持球員。每週跟進、影片分析、技術訓練、心理訓練。你的孩子在加拿大永遠不會孤單。</p>
+      </div>
+      <div class="diff-item">
+        <h3>我們了解香港家長</h3>
+        <p>我們中有兩位在香港冰球社區長大。我們了解文化、焦慮和期望。我們說你的語言，無論是字面意義上還是比喻意義上。</p>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px; text-align: center;">
+    <h2 style="margin-bottom: var(--space-4);">21 位球員，而且還在增加。</h2>
+    <p style="font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; margin-bottom: var(--space-6);">
+      我們已經將 21 位球員安置到加拿大的球隊。每一位都經過個人評估、配對和支持。沒有兩次安置是相同的，因為沒有兩個球員是相同的。
+    </p>
+  </div></section>
+
+  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好聊聊了嗎？</h2>
+    <div class="cta-actions">
+      <a href="mailto:riseadvancements@gmail.com?subject=RISE 查詢" class="btn-primary">發送電子郵件</a>
+      <a href="https://wa.me/85290950387?text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E5%AF%B9RISE%E7%9A%84%E5%86%B0%E7%90%83%E8%AF%BE%E7%A8%8B%E6%84%9F%E5%85%B4%E8%B6%A3%E3%80%82" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+  </div></section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
+  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
+  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
+  .red { color: var(--rise-red); }
+  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 700px; margin: 0 auto var(--space-8); }
+
+  .founders-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .founders-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .founders-grid { grid-template-columns: repeat(3, 1fr); } }
+  .founder { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
+  .founder h3 { font-size: var(--text-xl); margin-bottom: var(--space-1); }
+  .founder-role { font-size: var(--text-sm); color: var(--rise-red); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--space-3); }
+  .founder p:last-child { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+
+  .diff-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .diff-grid { grid-template-columns: repeat(2, 1fr); } }
+  .diff-item { padding: var(--space-6); }
+  .diff-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .diff-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+
+  .cta-banner { padding: var(--space-16) 0; }
+  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
+  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
+  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
+  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
+</style>
