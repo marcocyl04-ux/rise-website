@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import SectionHeader from "../../../components/SectionHeader.astro";
+---
+
+<BaseLayout title="訓練指導" description="賽季發展計劃。視頻回顧、技術訓練、營養指導、心理技能和每週跟進。" lang="zh-HK">
+  <Header slot="header" lang="zh" />
+
+  <section class="service-hero section">
+    <div class="container">
+      <p class="hero-eyebrow">服務</p>
+      <h1 class="hero-title">訓練<span class="red">指導</span></h1>
+      <p class="hero-lead">賽季發展計劃。選擇孩子需要的服務。我們整個賽季每週與他們一起工作。</p>
+      <a href="/zh/#contact" class="btn-primary">立即開始</a>
+    </div>
+  </section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader title="運作方式" subtitle="你的孩子。我們的教練。整個賽季。" />
+      <div class="steps-grid">
+        <div class="step"><div class="step-number">1</div><h3>簽約</h3><p>我們為孩子進行入職培訓。評估他們的比賽，設定目標，制定賽季發展計劃。</p></div>
+        <div class="step"><div class="step-number">2</div><h3>選擇服務</h3><p>選擇孩子需要的。視頻回顧、技術訓練、運動計劃、營養、心理技能、學業幫助。自由搭配。</p></div>
+        <div class="step"><div class="step-number">3</div><h3>每週跟進</h3><p>每週我們都會跟進。進度更新、調整、教練溝通。你隨時知道孩子的狀況。</p></div>
+        <div class="step"><div class="step-number">4</div><h3>賽季總結</h3><p>賽季結束時進行總結面談。什麼有效、什麼無效、下一步是什麼。孩子帶著清晰的發展藍圖離開。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="選擇孩子需要的" subtitle="自由搭配。沒有兩個球員是一樣的。" />
+      <div class="services-list">
+        <div class="service-item"><h3>視頻回顧課程</h3><p>一對一的比賽視頻分析。我們找出什麼有效、什麼無效、下一步該專注什麼。</p></div>
+        <div class="service-item"><h3>技術訓練</h3><p>專注於特定技能的冰上訓練。滑行、射門、控球、位置。小組制，高強度。</p></div>
+        <div class="service-item"><h3>運動計劃</h3><p>每兩週更新的定制訓練計劃。冰球專項力量、體能和靈活性訓練。</p></div>
+        <div class="service-item"><h3>營養指導</h3><p>為孩子表現提供能量的膳食計劃和指導。適合年齡、針對運動的營養方案。</p></div>
+        <div class="service-item"><h3>心理技能指導</h3><p>自信、專注、應對壓力。心理層面是區分優秀和卓越的關鍵。</p></div>
+        <div class="service-item"><h3>學業幫助</h3><p>學術支持，確保孩子在課堂上保持進度。因為冰球運動員首先是學生。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader title="兩個級別" subtitle="同樣的承諾。不同的起點。" />
+      <div class="tiers">
+        <div class="tier"><h3>精英</h3><p>針對目前處於精英或 AAA 水平的球員。專注於微調和邁出下一步。</p></div>
+        <div class="tier"><h3>AA 至 AAA</h3><p>針對正在向 AA 或 AAA 發展的球員。建立基礎，彌補差距，為競技冰球做準備。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader title="常見問題" />
+      <div class="faq-list">
+        <div class="faq-item"><h3>可以只選擇個別服務嗎？</h3><p>可以。這就是重點。你的孩子不需要所有東西，他們需要適合他們比賽的東西。選擇重要的。</p></div>
+        <div class="faq-item"><h3>多久跟進一次？</h3><p>每週。你會清楚知道孩子的進展、他們在練什麼、下一步是什麼。</p></div>
+        <div class="faq-item"><h3>如果孩子遇到困難怎麼辦？</h3><p>這就是我們在這裡的原因。遇到困難是發展的一部分。我們調整計劃，與教練溝通，支持孩子度過難關。</p></div>
+        <div class="faq-item"><h3>我需要在加拿大嗎？</h3><p>不需要。我們直接在加拿大與你的孩子合作。你通過每週更新和 WhatsApp 群組保持聯繫。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner section" style="background-color: var(--rise-black);">
+    <div class="container" style="text-align: center;">
+      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好開始發展了嗎？</h2>
+      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">沒有承諾。只是聊聊孩子的比賽。</p>
+      <div class="cta-actions">
+        <a href="/zh/#contact" class="btn-primary">聯繫我們</a>
+        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .service-hero { padding-top: var(--space-20); padding-bottom: var(--space-16); text-align: center; }
+  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
+  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
+  .red { color: var(--rise-red); }
+  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
+  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(4, 1fr); } }
+  .step { text-align: center; padding: var(--space-6); }
+  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
+  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .services-list { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .services-list { grid-template-columns: repeat(2, 1fr); } }
+  .service-item { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; }
+  .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .service-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .tiers { display: flex; flex-direction: column; gap: var(--space-6); }
+  .tier { padding: var(--space-8); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
+  .tier h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+  .tier p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
+  .cta-banner { padding: var(--space-16) 0; }
+  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
+  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
+  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
+  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
+</style>

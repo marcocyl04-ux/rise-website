@@ -1,0 +1,158 @@
+---
+// Services overview — EN
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import ServiceCard from "../../components/ServiceCard.astro";
+---
+
+<BaseLayout title="Services" description="RISE Advancement services: player placement to Canada, season-long mentoring, and summer training in Hong Kong.">
+  <Header slot="header" />
+
+  <section class="hero section">
+    <div class="container">
+      <SectionHeader
+        title="Our Services"
+        subtitle="Three ways we help your kid reach the next level. From full placement to Canada, to season-long development, to off-season training in Hong Kong."
+      />
+      <div class="services-grid">
+        <ServiceCard
+          title="The Move"
+          description="Full player placement and transition service to Canada. We evaluate, place, and support your kid's move."
+          price="Contact us"
+          features={[
+            "Game footage evaluation",
+            "Level determination (AA/AAA/Elite)",
+            "Team and school placement",
+            "VISA and GTHL transfer support",
+            "Post-move wrap-up",
+          ]}
+          ctaText="Learn More"
+          ctaLink="/services/the-move"
+        />
+        <ServiceCard
+          title="Mentoring"
+          description="Season-long development program. Choose the services your kid needs. Video review, skill skates, nutrition, mental skills."
+          price="Contact us"
+          features={[
+            "Onboarding + weekly check-ins",
+            "Video review sessions",
+            "Skill skates",
+            "Exercise and nutrition plans",
+            "Mental skills coaching",
+          ]}
+          ctaText="Learn More"
+          ctaLink="/services/mentoring"
+        />
+        <ServiceCard
+          title="HK Off-Ice Program"
+          description="10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting."
+          price="Summer 2026"
+          features={[
+            "June 8 to August 16",
+            "ONYX Gym, Taikoo Place",
+            "The Flying Puck shooting sessions",
+            "Quarry Bay Park training",
+            "Discovery Bay Ice Rink",
+            "Custom merch included",
+          ]}
+          ctaText="Learn More"
+          ctaLink="/services/hk-program"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner section" style="background-color: var(--rise-black);">
+    <div class="container" style="text-align: center;">
+      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to talk?</h2>
+      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">No commitment. Just a conversation about your kid's hockey future.</p>
+      <div class="cta-actions">
+        <a href="/#contact" class="btn-primary">Contact Us</a>
+        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .cta-banner {
+    padding: var(--space-16) 0;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+    transition: background-color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+
+  .btn-secondary-light {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: transparent;
+    color: var(--rise-white);
+    border: 2px solid var(--rise-neutral-500);
+    transition: border-color 0.2s;
+  }
+
+  .btn-secondary-light:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+</style>

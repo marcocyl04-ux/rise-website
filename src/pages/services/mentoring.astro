@@ -1,0 +1,323 @@
+---
+// Mentoring — Season-long development
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+---
+
+<BaseLayout title="Mentoring" description="Season-long development program for young hockey players. Video review, skill skates, nutrition, mental skills, and weekly check-ins.">
+  <Header slot="header" />
+
+  <!-- Hero -->
+  <section class="service-hero section">
+    <div class="container">
+      <p class="hero-eyebrow">Service</p>
+      <h1 class="hero-title">Mentoring</h1>
+      <p class="hero-lead">
+        Season-long development program. Pick the services your kid needs. We work with them all season, every week, until the final buzzer.
+      </p>
+      <a href="/#contact" class="btn-primary">Get Started</a>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="How It Works"
+        subtitle="Your kid. Our coaches. The full season."
+      />
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Sign On</h3>
+          <p>We onboard your kid. Assess their game, set goals, and build a development plan for the season.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Choose Services</h3>
+          <p>Pick what your kid needs. Video review, skill skates, exercise plans, nutrition, mental skills, school help. Mix and match.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Weekly Check-ins</h3>
+          <p>Every week, we check in. Progress updates, adjustments, coach communication. You always know how your kid is doing.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Season Wrap</h3>
+          <p>Exit interview at season end. What worked, what didn't, what's next. Your kid leaves with a clear picture of their development.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Available -->
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Choose What Your Kid Needs"
+        subtitle="Mix and match. No two players are the same."
+      />
+      <div class="services-list">
+        <div class="service-item">
+          <h3>Video Review Sessions</h3>
+          <p>One-on-one video breakdowns of your kid's games. We identify what's working, what's not, and what to focus on next.</p>
+        </div>
+        <div class="service-item">
+          <h3>Skill Skates</h3>
+          <p>On-ice sessions focused on specific skills. Skating, shooting, puck handling, positioning. Small groups, high reps.</p>
+        </div>
+        <div class="service-item">
+          <h3>Exercise Plans</h3>
+          <p>Custom training programs updated bi-weekly. Hockey-specific strength, conditioning, and mobility work.</p>
+        </div>
+        <div class="service-item">
+          <h3>Nutritional Coaching</h3>
+          <p>Meal plans and guidance to fuel your kid's performance. Age-appropriate, sport-specific nutrition.</p>
+        </div>
+        <div class="service-item">
+          <h3>Mental Skills Coaching</h3>
+          <p>Confidence, focus, dealing with pressure. The mental game is what separates good from great.</p>
+        </div>
+        <div class="service-item">
+          <h3>School Help</h3>
+          <p>Academic support to keep your kid on track in the classroom. Because hockey players are students first.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two Tiers -->
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader
+        title="Two Levels"
+        subtitle="Same commitment. Different starting points."
+      />
+      <div class="tiers">
+        <div class="tier">
+          <h3>Elite</h3>
+          <p>For players currently at the Elite or AAA level. Focused on fine-tuning and taking the next step.</p>
+        </div>
+        <div class="tier">
+          <h3>AA to AAA</h3>
+          <p>For players developing toward AA or AAA. Building foundations, closing gaps, and preparing for competitive hockey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader title="Questions" />
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>Can I pick individual services?</h3>
+          <p>Yes. That's the whole point. Your kid doesn't need everything, they need what's right for their game. Pick what matters.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How often are check-ins?</h3>
+          <p>Weekly. You'll know exactly how your kid is progressing, what they're working on, and what's coming next.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What if my kid is struggling?</h3>
+          <p>That's what we're here for. Struggling is part of development. We adjust the plan, communicate with coaches, and support your kid through it.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I need to be in Canada?</h3>
+          <p>No. We work directly with your kid in Canada. You stay connected through weekly updates and the WhatsApp group.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner section" style="background-color: var(--rise-black);">
+    <div class="container" style="text-align: center;">
+      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to start developing?</h2>
+      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">No commitment. Just a conversation about your kid's game.</p>
+      <div class="cta-actions">
+        <a href="/#contact" class="btn-primary">Contact Us</a>
+        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .service-hero {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-16);
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: var(--text-5xl);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-lead {
+    font-size: var(--text-lg);
+    color: var(--rise-neutral-500);
+    max-width: 600px;
+    margin: 0 auto var(--space-8);
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .steps-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .step { text-align: center; padding: var(--space-6); }
+
+  .step-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--rise-red);
+    margin-bottom: var(--space-3);
+  }
+
+  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+
+  .step p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
+  }
+
+  .services-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .services-list { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .service-item {
+    padding: var(--space-6);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+  }
+
+  .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+
+  .service-item p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
+  }
+
+  .tiers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .tier {
+    padding: var(--space-8);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    background-color: var(--rise-white);
+  }
+
+  .tier h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+
+  .tier p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+
+  .faq-item p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.7;
+  }
+
+  .cta-banner { padding: var(--space-16) 0; }
+
+  .cta-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+    transition: background-color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+
+  .btn-secondary-light {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: transparent;
+    color: var(--rise-white);
+    border: 2px solid var(--rise-neutral-500);
+    transition: border-color 0.2s;
+  }
+
+  .btn-secondary-light:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+// 服務總覽 — 中文
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import SectionHeader from "../../../components/SectionHeader.astro";
+import ServiceCard from "../../../components/ServiceCard.astro";
+---
+
+<BaseLayout title="服務" description="RISE Advancement 服務：球員安置到加拿大、賽季指導、香港夏季訓練。" lang="zh-HK">
+  <Header slot="header" lang="zh" />
+
+  <section class="hero section">
+    <div class="container">
+      <SectionHeader
+        title="我們的服務"
+        subtitle="三種方式幫助你的孩子提升到下一個水平。從全面安置到加拿大，到賽季發展指導，再到香港的休賽期訓練。"
+      />
+      <div class="services-grid">
+        <ServiceCard
+          title="球員安置"
+          description="全面的球員安置和過渡服務到加拿大。我們評估、安置，並支持孩子的搬遷。"
+          price="請聯繫我們"
+          features={[
+            "比賽錄像評估",
+            "水平確定 (AA/AAA/精英)",
+            "球隊和學校安置",
+            "VISA 和 GTHL 轉會支援",
+            "安置後總結",
+          ]}
+          ctaText="了解更多"
+          ctaLink="/zh/services/the-move"
+        />
+        <ServiceCard
+          title="訓練指導"
+          description="整個賽季的發展計劃。選擇孩子需要的服務。視頻回顧、技術訓練、營養指導、心理技能。"
+          price="請聯繫我們"
+          features={[
+            "入職培訓 + 每週跟進",
+            "視頻回顧課程",
+            "技術訓練",
+            "運動和營養計劃",
+            "心理技能指導",
+          ]}
+          ctaText="了解更多"
+          ctaLink="/zh/services/mentoring"
+        />
+        <ServiceCard
+          title="香港體能訓練計劃"
+          description="為期10週的夏季訓練計劃，在香港舉行。與 EJ Elite Shooting 合作。"
+          price="2026 夏季"
+          features={[
+            "6月8日至8月16日",
+            "ONYX 健身中心，太古坊",
+            "The Flying Puck 射門訓練",
+            "鰂魚涌公園訓練",
+            "愉景灣冰場",
+            "包含定制裝備",
+          ]}
+          ctaText="了解更多"
+          ctaLink="/zh/services/hk-program"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner section" style="background-color: var(--rise-black);">
+    <div class="container" style="text-align: center;">
+      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好聊聊了嗎？</h2>
+      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">沒有承諾。只是聊聊孩子的冰球未來。</p>
+      <div class="cta-actions">
+        <a href="/zh/#contact" class="btn-primary">聯繫我們</a>
+        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .hero { padding-top: var(--space-20); padding-bottom: var(--space-20); }
+  .services-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+  .cta-banner { padding: var(--space-16) 0; }
+  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
+  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
+  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
+  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
+</style>

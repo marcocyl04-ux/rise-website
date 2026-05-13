@@ -1,0 +1,323 @@
+---
+// HK Off-Ice Program — Summer training in Hong Kong
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+---
+
+<BaseLayout title="HK Off-Ice Program" description="10-week summer hockey training program in Hong Kong. Partnership with EJ Elite Shooting. Gym, off-ice shooting, park training, on-ice sessions.">
+  <Header slot="header" />
+
+  <!-- Hero -->
+  <section class="service-hero section">
+    <div class="container">
+      <p class="hero-eyebrow">Summer 2026</p>
+      <h1 class="hero-title">HK Off-Ice <span class="red">Program</span></h1>
+      <p class="hero-lead">
+        10-week summer training program in Hong Kong. Hockey-specific workouts, off-ice shooting, and on-ice sessions. Partnership with EJ Elite Shooting.
+      </p>
+      <a href="/#contact" class="btn-primary">Sign Up</a>
+    </div>
+  </section>
+
+  <!-- Details -->
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="The Details"
+        subtitle="June 8 to August 16, 2026. 10 weeks. 4 locations."
+      />
+      <div class="details-grid">
+        <div class="detail-card">
+          <h3>ONYX Gym</h3>
+          <p>Taikoo Place, Quarry Bay. Hockey-specific strength and conditioning. Supervised sessions, progressive programming.</p>
+        </div>
+        <div class="detail-card">
+          <h3>The Flying Puck</h3>
+          <p>Off-ice shooting sessions. Technique, accuracy, release. Work on your shot without stepping on the ice.</p>
+        </div>
+        <div class="detail-card">
+          <h3>Quarry Bay Park</h3>
+          <p>Outdoor training. Cardio, agility, bodyweight work. Fresh air and hard work.</p>
+        </div>
+        <div class="detail-card">
+          <h3>Discovery Bay Ice Rink</h3>
+          <p>On-ice sessions when available. Coordinated via WhatsApp. Real ice time to apply what you've built off-ice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Weekly Schedule -->
+  <section class="section">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader
+        title="Weekly Schedule"
+        subtitle="6 days on, 1 day off. No shortcuts."
+      />
+      <div class="schedule">
+        <div class="schedule-day">
+          <span class="day">Mon</span>
+          <span class="activity">2.5km run + Gym</span>
+        </div>
+        <div class="schedule-day">
+          <span class="day">Tue</span>
+          <span class="activity">3km bike + Game day (RISE Elite)</span>
+        </div>
+        <div class="schedule-day">
+          <span class="day">Wed</span>
+          <span class="activity">Gym + Off-ice shooting</span>
+        </div>
+        <div class="schedule-day">
+          <span class="day">Thu</span>
+          <span class="activity">2.5km run + Gym</span>
+        </div>
+        <div class="schedule-day">
+          <span class="day">Fri</span>
+          <span class="activity">Gym</span>
+        </div>
+        <div class="schedule-day">
+          <span class="day">Sat</span>
+          <span class="activity">Gym + On-ice (if available)</span>
+        </div>
+        <div class="schedule-day">
+          <span class="day">Sun</span>
+          <span class="activity">Park workout + Off-ice shooting</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Makes It Special -->
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader
+        title="Why This Program"
+        subtitle="Not a gym membership. Not a camp. A development system."
+      />
+      <div class="special-list">
+        <div class="special-item">
+          <span class="check">✔</span>
+          <span>Hockey-specific workouts designed to prepare for next season</span>
+        </div>
+        <div class="special-item">
+          <span class="check">✔</span>
+          <span>Constant supervision and constant contact with coaches</span>
+        </div>
+        <div class="special-item">
+          <span class="check">✔</span>
+          <span>Low coach-to-player ratio to critique the little parts of your game</span>
+        </div>
+        <div class="special-item">
+          <span class="check">✔</span>
+          <span>Custom merch included</span>
+        </div>
+        <div class="special-item">
+          <span class="check">✔</span>
+          <span>WhatsApp group for families. You see everything.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader title="Questions" />
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>What age group?</h3>
+          <p>Players ages 10-18. Workouts are customized by age. Younger kids do resistance bands and bodyweight. Older kids lift weights.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I need my own equipment?</h3>
+          <p>Custom merch is included. For on-ice sessions, bring your own gear. We'll tell you exactly what you need.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can parents watch?</h3>
+          <p>You'll be in the WhatsApp group with daily updates, photos, and progress reports. Park sessions are open for parents to watch.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What if my kid misses a session?</h3>
+          <p>Life happens. Let us know in advance and we'll adjust. Consistency matters more than perfection.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner section" style="background-color: var(--rise-black);">
+    <div class="container" style="text-align: center;">
+      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Summer 2026. Spots are limited.</h2>
+      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">Contact us to reserve your kid's spot.</p>
+      <div class="cta-actions">
+        <a href="/#contact" class="btn-primary">Contact Us</a>
+        <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .service-hero {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-16);
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
+  .red { color: var(--rise-red); }
+
+  .hero-lead {
+    font-size: var(--text-lg);
+    color: var(--rise-neutral-500);
+    max-width: 600px;
+    margin: 0 auto var(--space-8);
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .details-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .detail-card {
+    padding: var(--space-6);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    background-color: var(--rise-white);
+  }
+
+  .detail-card h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+
+  .detail-card p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
+  }
+
+  .schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .schedule-day {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--rise-neutral-100);
+  }
+
+  .day {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    width: 50px;
+    flex-shrink: 0;
+    font-size: var(--text-sm);
+  }
+
+  .activity {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+  }
+
+  .special-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .special-item {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-size: var(--text-base);
+  }
+
+  .check {
+    color: var(--rise-red);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    flex-shrink: 0;
+  }
+
+  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+
+  .faq-item p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.7;
+  }
+
+  .cta-banner { padding: var(--space-16) 0; }
+
+  .cta-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: var(--rise-red);
+    color: var(--rise-white);
+    transition: background-color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--rise-red-dark);
+    color: var(--rise-white);
+    text-decoration: none;
+  }
+
+  .btn-secondary-light {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-8);
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: transparent;
+    color: var(--rise-white);
+    border: 2px solid var(--rise-neutral-500);
+    transition: border-color 0.2s;
+  }
+
+  .btn-secondary-light:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+</style>
