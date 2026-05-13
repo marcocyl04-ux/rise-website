@@ -1,6 +1,7 @@
 ---
 // BaseLayout.astro — HTML shell with meta tags, font loading, header/footer slots
 import "../styles/global.css";
+import FloatingWhatsApp from "../components/FloatingWhatsApp.astro";
 
 export interface Props {
   title: string;
@@ -45,5 +46,7 @@ const {
     </main>
 
     <slot name="footer" />
+
+    <FloatingWhatsApp lang={lang} />
   </body>
 </html>

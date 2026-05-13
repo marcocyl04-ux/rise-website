@@ -24,6 +24,7 @@ const { lang = "en" } = Astro.props;
       <a href="https://wa.me/85290950387" class="whatsapp-cta" target="_blank" rel="noopener noreferrer">
         WhatsApp
       </a>
+      <span class="wechat-info">{lang === "zh" ? "微信: RISE-Advancement" : "WeChat: RISE-Advancement"}</span>
     </div>
 
     <!-- Quick Links -->
@@ -31,18 +32,20 @@ const { lang = "en" } = Astro.props;
       <h4>{lang === "zh" ? "連結" : "Links"}</h4>
       {lang === "zh" ? (
         <>
-          <a href="#about">關於</a>
-          <a href="#services">服務</a>
-          <a href="#players">運動員</a>
-          <a href="#contact">聯繫</a>
+          <a href="/zh/#how-it-works">流程</a>
+          <a href="/zh/services/">服務</a>
+          <a href="/zh/#players">運動員</a>
+          <a href="/zh/#faq">常見問題</a>
+          <a href="/zh/#contact">聯繫</a>
           <a href={import.meta.env.BASE_URL}>EN</a>
         </>
       ) : (
         <>
-          <a href="#about">About</a>
-          <a href="#services">Services</a>
-          <a href="#players">Players</a>
-          <a href="#contact">Contact</a>
+          <a href="/#how-it-works">How It Works</a>
+          <a href="/services/">Services</a>
+          <a href="/#players">Players</a>
+          <a href="/#faq">FAQ</a>
+          <a href="/#contact">Contact</a>
           <a href={`${import.meta.env.BASE_URL}zh/`}>中文</a>
         </>
       )}
@@ -134,6 +137,13 @@ const { lang = "en" } = Astro.props;
   .footer-social a:hover {
     color: var(--rise-red);
     text-decoration: none;
+  }
+
+  .wechat-info {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-300);
+    padding: 0.2rem 0;
   }
 
   .whatsapp-cta {

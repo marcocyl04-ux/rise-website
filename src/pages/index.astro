@@ -1,5 +1,5 @@
 ---
-// Home page — EN
+// Home page — EN (Phase 2: user flow restructure)
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -12,7 +12,7 @@ import ContactForm from "../components/ContactForm.astro";
 <BaseLayout title="Home">
   <Header slot="header" />
 
-  <!-- Hero Section -->
+  <!-- 1. HERO — What is this? -->
   <section class="hero section">
     <div class="container">
       <div class="hero-content">
@@ -26,54 +26,54 @@ import ContactForm from "../components/ContactForm.astro";
           Real players. Real results.
         </p>
         <div class="hero-actions">
-          <a href="#contact" class="btn-primary">Get Started</a>
-          <a href="#services" class="btn-secondary">Our Services</a>
+          <a href="#how-it-works" class="btn-primary">See How It Works</a>
+          <a href="#contact" class="btn-secondary">Contact Us</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
-  <section id="about" class="section" style="background-color: var(--rise-neutral-50);">
+  <!-- 2. HOW IT WORKS — How does it work? -->
+  <section id="how-it-works" class="section" style="background-color: var(--rise-neutral-50);">
     <div class="container">
       <SectionHeader
-        title="About RISE Advancement"
-        subtitle="Three coaches who evaluate your kid, find the right team, and mentor them through the season. Not an agency. Advisors who've done it before."
+        title="How It Works"
+        subtitle="Four steps from Hong Kong to the ice in Canada."
       />
-      <div class="about-grid">
-        <div class="about-card">
-          <h3>Placement</h3>
-          <p>
-            We find the right team and school in Canada. AA, AAA, or Elite.
-            We handle the scouting, introductions, VISA paperwork, and GTHL
-            transfers.
-          </p>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>We Evaluate</h3>
+          <p>Game footage, skill assessment, level determination. We figure out where your kid fits: AA, AAA, or Elite.</p>
         </div>
-        <div class="about-card">
-          <h3>Development</h3>
-          <p>
-            Video review, skill skates, exercise plans, nutritional coaching,
-            mental skills support. Pick what your kid needs.
-          </p>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>We Match</h3>
+          <p>We find the right team and school. We know the coaches, the programs, and the levels across Canada.</p>
         </div>
-        <div class="about-card">
-          <h3>Family</h3>
-          <p>
-            We treat every player like our own. Weekly check-ins, coach
-            communication, group chat with all three mentors. Your kid is
-            never alone.
-          </p>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>We Move</h3>
+          <p>VISA, GTHL transfers, school enrollment, introductions. We handle the logistics so you don't have to.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>We Develop</h3>
+          <p>Weekly check-ins, video review, skill skates, nutrition, mental skills. Your kid is never alone.</p>
         </div>
       </div>
     </div>
+    <div class="mid-cta">
+      <a href="#contact" class="btn-primary">Talk to Us</a>
+    </div>
   </section>
 
-  <!-- Services Section -->
+  <!-- 3. SERVICES — What can you do for my kid? -->
   <section id="services" class="section">
     <div class="container">
       <SectionHeader
         title="Our Services"
-        subtitle="Three ways we help. From full placement to season-long mentoring to off-season training in Hong Kong."
+        subtitle="Three ways we help. Each one designed for a different stage of the journey."
       />
       <div class="services-grid">
         <ServiceCard
@@ -95,12 +95,11 @@ import ContactForm from "../components/ContactForm.astro";
           description="Season-long development program. Choose the services that fit your kid's game. Video review, skill skates, exercise plans, nutrition, mental skills, school help."
           price="Contact us"
           features={[
-            "Signing fee covers onboarding + weekly check-ins",
+            "Onboarding + weekly check-ins",
             "Video review sessions",
             "Skill skates",
             "Exercise and nutrition plans",
             "Mental skills coaching",
-            "Exit interview at season end",
           ]}
           ctaText="Learn More"
           ctaLink="/services/mentoring"
@@ -124,12 +123,12 @@ import ContactForm from "../components/ContactForm.astro";
     </div>
   </section>
 
-  <!-- Players Section -->
+  <!-- 4. PLAYERS — Has it worked for others? -->
   <section id="players" class="section" style="background-color: var(--rise-neutral-50);">
     <div class="container">
       <SectionHeader
         title="Our Players"
-        subtitle="Our players. Placed on teams in Canada. Developing every season."
+        subtitle="Real kids. Real teams. Real progress."
       />
       <div class="players-grid">
         <PlayerCard
@@ -152,26 +151,69 @@ import ContactForm from "../components/ContactForm.astro";
         />
       </div>
     </div>
+    <div class="mid-cta">
+      <a href="#contact" class="btn-primary">Start Your Kid's Journey</a>
+    </div>
   </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="section">
+  <!-- 5. FAQ — What about my concerns? -->
+  <section id="faq" class="section">
+    <div class="container" style="max-width: 640px;">
+      <SectionHeader
+        title="Questions Parents Ask"
+        subtitle="The honest answers."
+      />
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>What if my kid is homesick?</h3>
+          <p>We check in weekly. Group chat with all three mentors. We treat every player like our own. Your kid is never alone in Canada.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What if the team isn't the right fit?</h3>
+          <p>We evaluate before placement. We know the coaches. We've done this before. If something isn't working, we address it early.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do you guarantee placement?</h3>
+          <p>No. We guarantee effort. We don't make promises we can't keep. But we've placed players because we do the work.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do I stay connected with my kid?</h3>
+          <p>Weekly updates from us. Coach communication. WhatsApp group. You'll know what's happening every step of the way.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How much does it cost?</h3>
+          <p>It depends on the service. <a href="/#contact">Contact us</a> for a conversation about your kid's needs and what makes sense.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CONTACT — I'm ready to reach out -->
+  <section id="contact" class="contact-section section" style="background-color: var(--rise-neutral-50);">
     <div class="container">
       <SectionHeader
         title="Get In Touch"
-        subtitle="Ready to take the next step? Contact us for a confidential consultation."
+        subtitle="No commitment. Just a conversation about your kid's hockey future. We reply within 24 hours on WhatsApp."
       />
-      <ContactForm />
-
-      <div class="whatsapp-cta-wrapper">
-        <a
-          href="https://wa.me/85290950387"
-          class="whatsapp-cta-btn"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Or message us on WhatsApp
-        </a>
+      <div class="contact-grid">
+        <div class="contact-form-wrapper">
+          <ContactForm />
+        </div>
+        <div class="contact-side">
+          <div class="contact-person">
+            <h3>Talk to Ryan</h3>
+            <p>Co-founder, RISE Advancement. Former player, now coaching. He'll answer your questions honestly.</p>
+          </div>
+          <a
+            href="https://wa.me/85290950387"
+            class="whatsapp-cta-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Message us on WhatsApp
+          </a>
+          <p class="contact-note">Prefer WhatsApp? Same number. Same person. Faster reply.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -269,35 +311,43 @@ import ContactForm from "../components/ContactForm.astro";
     text-decoration: none;
   }
 
-  /* ========== ABOUT ========== */
-  .about-grid {
+  /* ========== HOW IT WORKS ========== */
+  .steps-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-4);
+    gap: var(--space-6);
   }
 
   @media (min-width: 640px) {
-    .about-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  .about-card {
-    background-color: var(--rise-white);
-    border: 1px solid var(--rise-neutral-100);
-    border-radius: 4px;
-    padding: var(--space-8);
+  @media (min-width: 1024px) {
+    .steps-grid { grid-template-columns: repeat(4, 1fr); }
   }
 
-  .about-card h3 {
-    font-size: var(--text-xl);
+  .step {
+    text-align: center;
+    padding: var(--space-6);
+  }
+
+  .step-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--rise-red);
     margin-bottom: var(--space-3);
   }
 
-  .about-card p {
-    color: var(--rise-neutral-500);
+  .step h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-2);
+  }
+
+  .step p {
     font-size: var(--text-sm);
-    max-width: 65ch;
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
   }
 
   /* ========== SERVICES ========== */
@@ -308,15 +358,11 @@ import ContactForm from "../components/ContactForm.astro";
   }
 
   @media (min-width: 640px) {
-    .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (min-width: 1024px) {
-    .services-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    .services-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   /* ========== PLAYERS ========== */
@@ -327,21 +373,63 @@ import ContactForm from "../components/ContactForm.astro";
   }
 
   @media (min-width: 640px) {
-    .players-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .players-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (min-width: 1024px) {
-    .players-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    .players-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ========== FAQ ========== */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .faq-item h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+  }
+
+  .faq-item p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.7;
+  }
+
+  .faq-item a {
+    color: var(--rise-red);
+    text-decoration: underline;
   }
 
   /* ========== CONTACT ========== */
-  .whatsapp-cta-wrapper {
-    text-align: center;
-    margin-top: var(--space-8);
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .contact-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    justify-content: center;
+  }
+
+  .contact-person h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-2);
+  }
+
+  .contact-person p {
+    font-size: var(--text-sm);
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
   }
 
   .whatsapp-cta-btn {
@@ -354,14 +442,26 @@ import ContactForm from "../components/ContactForm.astro";
     padding: var(--space-3) var(--space-8);
     border-radius: 4px;
     text-decoration: none;
-    background-color: var(--rise-black);
+    background-color: #25D366;
     color: var(--rise-white);
+    text-align: center;
     transition: background-color 0.2s;
   }
 
   .whatsapp-cta-btn:hover {
-    background-color: var(--rise-neutral-700);
+    background-color: #1da851;
     color: var(--rise-white);
     text-decoration: none;
+  }
+
+  .contact-note {
+    font-size: var(--text-xs);
+    color: var(--rise-neutral-400);
+  }
+
+  /* ========== MID-PAGE CTAs ========== */
+  .mid-cta {
+    text-align: center;
+    margin-top: var(--space-8);
   }
 </style>

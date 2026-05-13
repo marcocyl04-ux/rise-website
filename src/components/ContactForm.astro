@@ -1,12 +1,12 @@
 ---
-// ContactForm.astro — Simple contact form, no backend (mailto action)
+// ContactForm.astro — Contact form with Formspree (no backend needed)
 export interface Props {
   lang?: string;
 }
 const { lang = "en" } = Astro.props;
 ---
 
-<form class="contact-form" action="mailto:info@riseadvancement.com" method="POST" enctype="text/plain">
+<form class="contact-form" action="https://formspree.io/f/PLACEHOLDER" method="POST">
   <div class="form-group">
     <label for="name">{lang === "zh" ? "姓名" : "Name"}</label>
     <input type="text" id="name" name="name" required placeholder={lang === "zh" ? "你的全名" : "Your full name"} />
@@ -28,8 +28,12 @@ const { lang = "en" } = Astro.props;
       {lang === "zh" ? (
         <>
           <option value="">請選擇...</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="WeChat">微信</option>
           <option value="Instagram">Instagram</option>
           <option value="Facebook">Facebook</option>
+          <option value="Xiaohongshu">小紅書</option>
+          <option value="Douyin">抖音</option>
           <option value="Word of mouth">口碑推薦</option>
           <option value="Coach referral">教練推薦</option>
           <option value="Hockey tournament">冰球比賽</option>
@@ -38,8 +42,11 @@ const { lang = "en" } = Astro.props;
       ) : (
         <>
           <option value="">Select one...</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="WeChat">WeChat</option>
           <option value="Instagram">Instagram</option>
           <option value="Facebook">Facebook</option>
+          <option value="Xiaohongshu">Xiaohongshu (RedNote)</option>
           <option value="Word of mouth">Word of mouth</option>
           <option value="Coach referral">Coach referral</option>
           <option value="Hockey tournament">Hockey tournament</option>
@@ -55,12 +62,12 @@ const { lang = "en" } = Astro.props;
   </div>
 
   <button type="submit" class="btn-submit">{lang === "zh" ? "發送訊息" : "Send Message"}</button>
+  <p class="form-note">{lang === "zh" ? "我們會在 24 小時內回复。" : "We reply within 24 hours."}</p>
 </form>
 
 <style>
   .contact-form {
     max-width: 600px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
@@ -133,5 +140,11 @@ const { lang = "en" } = Astro.props;
 
   .btn-submit:hover {
     background-color: var(--rise-red-dark);
+  }
+
+  .form-note {
+    font-size: var(--text-xs);
+    color: var(--rise-neutral-400);
+    margin-top: calc(-1 * var(--space-2));
   }
 </style>

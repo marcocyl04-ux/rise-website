@@ -1,5 +1,5 @@
 ---
-// Home page — 中文 (Chinese)
+// Home page — 中文 (Phase 2: user flow restructure)
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
@@ -12,7 +12,7 @@ import ContactForm from "../../components/ContactForm.astro";
 <BaseLayout title="首頁" lang="zh-HK">
   <Header slot="header" lang="zh" />
 
-  <!-- Hero Section -->
+  <!-- 1. HERO -->
   <section class="hero section">
     <div class="container">
       <div class="hero-content">
@@ -26,52 +26,54 @@ import ContactForm from "../../components/ContactForm.astro";
           真實的球員。真實的成果。
         </p>
         <div class="hero-actions">
-          <a href="#contact" class="btn-primary">立即開始</a>
-          <a href="#services" class="btn-secondary">了解服務</a>
+          <a href="#how-it-works" class="btn-primary">了解流程</a>
+          <a href="#contact" class="btn-secondary">聯繫我們</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
-  <section id="about" class="section" style="background-color: var(--rise-neutral-50);">
+  <!-- 2. HOW IT WORKS -->
+  <section id="how-it-works" class="section" style="background-color: var(--rise-neutral-50);">
     <div class="container">
       <SectionHeader
-        title="關於 RISE Advancement"
-        subtitle="三位教練評估你的孩子，找到合適的球隊，並在整個賽季中指導他們。不是中介。是有經驗的顧問。"
+        title="運作方式"
+        subtitle="從香港到加拿大冰場的四個步驟。"
       />
-      <div class="about-grid">
-        <div class="about-card">
-          <h3>置入</h3>
-          <p>
-            我們在加拿大為你的孩子找到最合適的球隊和學校。AA、AAA 或精英級別。
-            我們負責球探聯繫、介紹、VISA 文件和 GTHL 轉會手續。
-          </p>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>評估</h3>
+          <p>比賽錄像、技能評估、水平確定。我們找出孩子適合的級別：AA、AAA 或精英。</p>
         </div>
-        <div class="about-card">
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>配對</h3>
+          <p>我們找到合適的球隊和學校。我們了解加拿大的教練、課程和各個級別。</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>搬遷</h3>
+          <p>VISA、GTHL 轉會、學校註冊、介紹。我們處理後勤事務，你不需要操心。</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
           <h3>發展</h3>
-          <p>
-            視頻分析、技術訓練、運動計劃、營養指導、心理技能支援。
-            選擇你的孩子需要的服務。
-          </p>
-        </div>
-        <div class="about-card">
-          <h3>家庭</h3>
-          <p>
-            我們把每位球員當作自己的孩子。每週跟進、教練溝通、與三位導師的群組聊天。
-            你的孩子絕不孤單。
-          </p>
+          <p>每週跟進、視頻回顧、技術訓練、營養、心理技能。你的孩子絕不孤單。</p>
         </div>
       </div>
     </div>
+    <div class="mid-cta">
+      <a href="#contact" class="btn-primary">和我們聊聊</a>
+    </div>
   </section>
 
-  <!-- Services Section -->
+  <!-- 3. SERVICES -->
   <section id="services" class="section">
     <div class="container">
       <SectionHeader
         title="我們的服務"
-        subtitle="三種方式幫助你的孩子。從全面安置到賽季指導，再到香港的休賽期訓練。"
+        subtitle="三種方式幫助你的孩子。每個服務針對旅程的不同階段。"
       />
       <div class="services-grid">
         <ServiceCard
@@ -93,12 +95,11 @@ import ContactForm from "../../components/ContactForm.astro";
           description="整個賽季的發展計劃。選擇適合你孩子需求的服務。視頻回顧、技術訓練、運動計劃、營養指導、心理技能、學業幫助。"
           price="請聯繫我們"
           features={[
-            "簽約費包含入職培訓 + 每週跟進",
+            "入職培訓 + 每週跟進",
             "視頻回顧課程",
             "技術訓練",
             "運動和營養計劃",
             "心理技能指導",
-            "賽季結束面談",
           ]}
           ctaText="了解更多"
           ctaLink="/zh/services/mentoring"
@@ -122,12 +123,12 @@ import ContactForm from "../../components/ContactForm.astro";
     </div>
   </section>
 
-  <!-- Players Section -->
+  <!-- 4. PLAYERS -->
   <section id="players" class="section" style="background-color: var(--rise-neutral-50);">
     <div class="container">
       <SectionHeader
         title="我們的運動員"
-        subtitle="我們的運動員。已安置到加拿大的球隊。每個賽季都在進步。"
+        subtitle="真實的孩子。真實的球隊。真實的進步。"
       />
       <div class="players-grid">
         <PlayerCard
@@ -150,217 +151,114 @@ import ContactForm from "../../components/ContactForm.astro";
         />
       </div>
     </div>
+    <div class="mid-cta">
+      <a href="#contact" class="btn-primary">開始孩子的旅程</a>
+    </div>
   </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="section">
-    <div class="container">
+  <!-- 5. FAQ -->
+  <section id="faq" class="section">
+    <div class="container" style="max-width: 640px;">
       <SectionHeader
-        title="聯繫我們"
-        subtitle="準備好邁出下一步？聯繫我們進行保密諮詢。"
+        title="家長常問的問題"
+        subtitle="坦白的回答。"
       />
-      <ContactForm lang="zh" />
-
-      <div class="whatsapp-cta-wrapper">
-        <a
-          href="https://wa.me/85290950387"
-          class="whatsapp-cta-btn"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          或通過 WhatsApp 聯繫我們
-        </a>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>如果孩子想家怎麼辦？</h3>
+          <p>我們每週跟進。與三位導師的群組聊天。我們把每位球員當作自己的孩子。你的孩子在加拿大絕不孤單。</p>
+        </div>
+        <div class="faq-item">
+          <h3>如果球隊不合適怎麼辦？</h3>
+          <p>我們在安置前就進行評估。我們了解教練。我們做過很多次了。如果有問題，我們會及早處理。</p>
+        </div>
+        <div class="faq-item">
+          <h3>你們保證安置嗎？</h3>
+          <p>不。我們保證努力。我們不做出無法兌現的承諾。但我們安置球員是因為我們做好工作。</p>
+        </div>
+        <div class="faq-item">
+          <h3>我怎麼和孩子保持聯繫？</h3>
+          <p>我們的每週更新。教練溝通。WhatsApp 群組。你會知道每一步的情況。</p>
+        </div>
+        <div class="faq-item">
+          <h3>費用是多少？</h3>
+          <p>這取決於服務。<a href="/zh/#contact">聯繫我們</a>聊聊孩子的需求和適合的方案。</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <Footer slot="footer" lang="zh" />
+  <!-- 6. CONTACT -->
+  <section id="contact" class="contact-section section" style="background-color: var(--rise-neutral-50);">
+    <div class="container">
+      <SectionHeader
+        title="聯繫我們"
+        subtitle="沒有承諾。只是聊聊孩子的冰球未來。我們在 WhatsApp 上 24 小時內回复。"
+      />
+      <div class="contact-grid">
+        <div class="contact-form-wrapper">
+          <ContactForm />
+        </div>
+        <div class="contact-side">
+          <div class="contact-person">
+            <h3>和 Ryan 聊聊</h3>
+            <p>RISE Advancement 聯合創始人。前球員，現任教練。他會坦白回答你的問題。</p>
+          </div>
+          <a
+            href="https://wa.me/85290950387"
+            class="whatsapp-cta-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            通過 WhatsApp 聯繫我們
+          </a>
+          <p class="contact-note">喜歡 WhatsApp？同一個號碼。同一個人。更快回复。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
 </BaseLayout>
 
 <style>
-  /* ========== HERO ========== */
-  .hero {
-    padding-top: var(--space-20);
-    padding-bottom: var(--space-20);
-  }
-
-  .hero-content {
-    max-width: 720px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .hero-eyebrow {
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--rise-neutral-500);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: var(--space-4);
-  }
-
-  .hero-title {
-    font-size: var(--text-5xl);
-    margin-bottom: var(--space-6);
-  }
-
-  @media (max-width: 639px) {
-    .hero-title {
-      font-size: var(--text-3xl);
-    }
-  }
-
-  .hero-title-red {
-    color: var(--rise-red);
-  }
-
-  .hero-lead {
-    font-size: var(--text-lg);
-    color: var(--rise-neutral-500);
-    margin-bottom: var(--space-8);
-    max-width: none;
-    line-height: 1.7;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: var(--space-4);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  /* ========== BUTTONS ========== */
-  .btn-primary,
-  .btn-secondary {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-
-  .btn-primary {
-    background-color: var(--rise-red);
-    color: var(--rise-white);
-  }
-
-  .btn-primary:hover {
-    background-color: var(--rise-red-dark);
-    color: var(--rise-white);
-    text-decoration: none;
-  }
-
-  .btn-secondary {
-    background-color: transparent;
-    color: var(--rise-black);
-    border: 2px solid var(--rise-neutral-300);
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--rise-red);
-    color: var(--rise-red);
-    text-decoration: none;
-  }
-
-  /* ========== ABOUT ========== */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  @media (min-width: 640px) {
-    .about-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .about-card {
-    background-color: var(--rise-white);
-    border: 1px solid var(--rise-neutral-100);
-    border-radius: 4px;
-    padding: var(--space-8);
-  }
-
-  .about-card h3 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-3);
-  }
-
-  .about-card p {
-    color: var(--rise-neutral-500);
-    font-size: var(--text-sm);
-    max-width: 65ch;
-  }
-
-  /* ========== SERVICES ========== */
-  .services-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  @media (min-width: 640px) {
-    .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .services-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* ========== PLAYERS ========== */
-  .players-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  @media (min-width: 640px) {
-    .players-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .players-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* ========== CONTACT ========== */
-  .whatsapp-cta-wrapper {
-    text-align: center;
-    margin-top: var(--space-8);
-  }
-
-  .whatsapp-cta-btn {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: var(--rise-black);
-    color: var(--rise-white);
-    transition: background-color 0.2s;
-  }
-
-  .whatsapp-cta-btn:hover {
-    background-color: var(--rise-neutral-700);
-    color: var(--rise-white);
-    text-decoration: none;
-  }
+  .hero { padding-top: var(--space-20); padding-bottom: var(--space-20); }
+  .hero-content { max-width: 720px; margin: 0 auto; text-align: center; }
+  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
+  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
+  @media (max-width: 639px) { .hero-title { font-size: var(--text-3xl); } }
+  .hero-title-red { color: var(--rise-red); }
+  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); margin-bottom: var(--space-8); max-width: none; }
+  .hero-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; transition: all 0.2s; }
+  .btn-primary { background-color: var(--rise-red); color: var(--rise-white); }
+  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
+  .btn-secondary { background-color: transparent; color: var(--rise-black); border: 2px solid var(--rise-neutral-300); }
+  .btn-secondary:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
+  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(4, 1fr); } }
+  .step { text-align: center; padding: var(--space-6); }
+  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
+  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .services-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+  .players-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
+  @media (min-width: 640px) { .players-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .players-grid { grid-template-columns: repeat(3, 1fr); } }
+  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
+  .faq-item a { color: var(--rise-red); text-decoration: underline; }
+  .contact-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-8); }
+  @media (min-width: 768px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+  .contact-side { display: flex; flex-direction: column; gap: var(--space-6); justify-content: center; }
+  .contact-person h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+  .contact-person p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .whatsapp-cta-btn { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: #25D366; color: var(--rise-white); text-align: center; transition: background-color 0.2s; }
+  .whatsapp-cta-btn:hover { background-color: #1da851; color: var(--rise-white); text-decoration: none; }
+  .contact-note { font-size: var(--text-xs); color: var(--rise-neutral-400); }
+  .mid-cta { text-align: center; margin-top: var(--space-8); }
 </style>
