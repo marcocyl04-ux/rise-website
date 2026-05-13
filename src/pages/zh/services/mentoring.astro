@@ -8,38 +8,75 @@ import ServiceNav from "../../../components/ServiceNav.astro";
 
 <BaseLayout title="訓練指導" lang="zh-HK">
   <Header slot="header" lang="zh" />
+
   <section class="service-hero section"><div class="container">
     <p class="hero-eyebrow">服務</p>
     <h1 class="hero-title">訓練<span class="red">指導</span></h1>
-    <p class="hero-lead">賽季發展計劃。選擇孩子需要的服務。</p>
+    <p class="hero-lead">Rise Advancement 的訓練指導計劃為每位球員配對一位專屬導師，陪伴你整個賽季。你可以根據自己的需要選擇服務，無論是冰上技術、影片分析、體能訓練、營養規劃還是學業支援。每項合作都從入門會議、目標設定和定期跟進開始。</p>
     <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="btn-primary">立即開始</a>
   </div></section>
+
   <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="運作方式" />
+    <SectionHeader title="運作方式" subtitle="從第一天起，導師就在你身邊。" />
     <div class="steps-grid">
-      <div class="step"><div class="step-number">1</div><h3>簽約</h3><p>入職培訓和發展計劃。</p></div>
-      <div class="step"><div class="step-number">2</div><h3>選擇</h3><p>自由搭配服務。</p></div>
-      <div class="step"><div class="step-number">3</div><h3>跟進</h3><p>每週進度更新。</p></div>
-      <div class="step"><div class="step-number">4</div><h3>總結</h3><p>賽季結束面談。</p></div>
+      <div class="step"><div class="step-number">1</div><h3>規劃</h3><p>從規劃會議開始，制定賽季計劃，設定明確目標，決定哪些服務最適合你目前的發展階段。</p></div>
+      <div class="step"><div class="step-number">2</div><h3>選擇</h3><p>自由搭配。所有服務均可線上提供，除非特別標註。</p></div>
+      <div class="step"><div class="step-number">3</div><h3>跟進</h3><p>導師全程保持聯繫，追蹤進度、調整計劃，並給予直接、坦誠的反饋。</p></div>
+      <div class="step"><div class="step-number">4</div><h3>總結</h3><p>賽季結束面談。回顧成效，規劃下一步。</p></div>
     </div>
   </div></section>
+
+  <section class="section"><div class="container">
+    <SectionHeader title="可選服務" subtitle="自由搭配。所有服務均可線上提供，除非特別標註。" />
+    <div class="services-list">
+      <div class="service-item"><h3>每週跟進</h3><p>與導師定期溝通，涵蓋進度、挑戰和計劃調整。每項合作均包含此服務。</p></div>
+      <div class="service-item"><h3>影片分析</h3><p>與導師一對一線上影片回顧。針對你的比賽或訓練片段，提供具體、可即時應用的反饋。</p></div>
+      <div class="service-item"><h3>冰上訓練</h3><p>由 Rise 導師指導的面對面冰上訓練，專注於滑行技巧、控球、射門和位置技術。</p></div>
+      <div class="service-item"><h3>體能計劃</h3><p>根據你的位置和目標制定的場下訓練計劃。定期更新，附完整訓練說明。</p></div>
+      <div class="service-item"><h3>心理訓練</h3><p>由專業心理訓練師主持的課程，涵蓋專注力、自信心、壓力管理和競技心態。</p></div>
+      <div class="service-item"><h3>營養計劃</h3><p>根據你的身體狀況和訓練強度量身定制的營養計劃，支援整個賽季的表現和恢復。</p></div>
+      <div class="service-item"><h3>拉伸與瑜伽</h3><p>專注於運動表現、傷患預防和恢復的指導課程。根據你的時間安排調整。</p></div>
+      <div class="service-item"><h3>學業支援</h3><p>為需要兼顧學業和冰球的球員提供學業輔導。整個賽季均可使用。</p></div>
+    </div>
+  </div></section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="為什麼有效" />
+    <div class="why-list">
+      <div class="why-item"><span class="check">✔</span><span>專屬導師，了解你的球技</span></div>
+      <div class="why-item"><span class="check">✔</span><span>靈活彈性，根據你的需要定制計劃</span></div>
+      <div class="why-item"><span class="check">✔</span><span>導師團隊 24/7 回應</span></div>
+      <div class="why-item"><span class="check">✔</span><span>真實反饋，真正問責，整個賽季</span></div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="適合誰？" />
+    <p class="who-text">訓練指導面向各級精英球員，以及在新環境中需要持續支援的球員。每項計劃都是獨立定制的，沒有兩份計劃是相同的。</p>
+  </div></section>
+
   <section class="section"><div class="container" style="max-width: 640px;">
     <SectionHeader title="常見問題" />
     <div class="faq-list">
-      <div class="faq-item"><h3>可以只選個別服務嗎？</h3><p>可以。</p></div>
+      <div class="faq-item"><h3>可以只選個別服務嗎？</h3><p>可以，這正是計劃的設計理念。</p></div>
       <div class="faq-item"><h3>多久跟進一次？</h3><p>每週。</p></div>
+      <div class="faq-item"><h3>孩子遇到困難怎麼辦？</h3><p>我們會調整計劃，全程提供支援。</p></div>
     </div>
   </div></section>
+
   <ServiceNav lang="zh" current="mentoring" />
+
   <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好了嗎？</h2>
+    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好開始提升了嗎？</h2>
     <div class="cta-actions">
       <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="btn-primary">發送電子郵件</a>
       <a href="https://wa.me/85290950387" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </div></section>
+
   <Footer slot="footer" />
 </BaseLayout>
+
 <style>
   .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
   .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
@@ -53,6 +90,15 @@ import ServiceNav from "../../../components/ServiceNav.astro";
   .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
   .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
   .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .services-list { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  @media (min-width: 640px) { .services-list { grid-template-columns: repeat(2, 1fr); } }
+  .service-item { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; }
+  .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .service-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .why-list { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
+  .why-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
+  .check { color: var(--rise-red); font-weight: 700; font-size: var(--text-lg); flex-shrink: 0; }
+  .who-text { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; text-align: center; }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }

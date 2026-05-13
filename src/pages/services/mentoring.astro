@@ -12,38 +12,47 @@ import ServiceNav from "../../components/ServiceNav.astro";
   <section class="service-hero section"><div class="container">
     <p class="hero-eyebrow">Service</p>
     <h1 class="hero-title">Mentoring</h1>
-    <p class="hero-lead">Season-long development program. Pick the services your kid needs. We work with them all season.</p>
+    <p class="hero-lead">Rise Advancement's mentoring program pairs every player with a dedicated mentor for the season. You choose the services that fit your game and your goals, whether that's on-ice skills, film study, fitness, nutrition, or academic support. Every engagement starts with an onboarding session, goal-setting, and regular check-ins throughout.</p>
     <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="btn-primary">Get Started</a>
   </div></section>
 
   <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="How It Works" subtitle="Your kid. Our coaches. The full season." />
+    <SectionHeader title="How It Works" subtitle="From day one, our mentors are in your corner." />
     <div class="steps-grid">
-      <div class="step"><div class="step-number">1</div><h3>Sign On</h3><p>Onboarding, assessment, goals, development plan.</p></div>
-      <div class="step"><div class="step-number">2</div><h3>Choose</h3><p>Pick what your kid needs. Mix and match.</p></div>
-      <div class="step"><div class="step-number">3</div><h3>Check-ins</h3><p>Weekly progress updates and coach communication.</p></div>
+      <div class="step"><div class="step-number">1</div><h3>Plan</h3><p>You'll start with a planning session to map out the season, set clear goals, and decide which services make the most sense for where you are in your development.</p></div>
+      <div class="step"><div class="step-number">2</div><h3>Choose</h3><p>Pick what fits. All services can be delivered virtually unless noted.</p></div>
+      <div class="step"><div class="step-number">3</div><h3>Check-ins</h3><p>Your mentor stays connected throughout, tracking progress, making adjustments, and giving you direct, honest feedback.</p></div>
       <div class="step"><div class="step-number">4</div><h3>Wrap</h3><p>Exit interview. What worked, what's next.</p></div>
     </div>
   </div></section>
 
   <section class="section"><div class="container">
-    <SectionHeader title="Choose What Your Kid Needs" />
+    <SectionHeader title="Available Services" subtitle="Pick what fits. All services can be delivered virtually unless noted." />
     <div class="services-list">
-      <div class="service-item"><h3>Video Review</h3><p>One-on-one game breakdowns.</p></div>
-      <div class="service-item"><h3>Skill Skates</h3><p>On-ice sessions, small groups.</p></div>
-      <div class="service-item"><h3>Exercise Plans</h3><p>Custom training, updated bi-weekly.</p></div>
-      <div class="service-item"><h3>Nutrition</h3><p>Meal plans for performance.</p></div>
-      <div class="service-item"><h3>Mental Skills</h3><p>Confidence, focus, pressure.</p></div>
-      <div class="service-item"><h3>School Help</h3><p>Academic support.</p></div>
+      <div class="service-item"><h3>Weekly Check-ins</h3><p>Regular touchpoints with your mentor throughout the season covering progress, challenges, and adjustments to your plan. Included with every engagement.</p></div>
+      <div class="service-item"><h3>Video Review</h3><p>One-on-one virtual film review with your mentor. Specific, actionable feedback on game or practice footage you can apply immediately.</p></div>
+      <div class="service-item"><h3>Skill Skates</h3><p>In-person on-ice sessions focused on skating mechanics, puck handling, shooting, and position-specific skills with your Rise mentor.</p></div>
+      <div class="service-item"><h3>Exercise Plan</h3><p>Structured off-ice training built around your position and goals. Updated regularly and delivered with full workout instructions.</p></div>
+      <div class="service-item"><h3>Mental Skills</h3><p>Sessions with a professional mental skills coach covering focus, confidence, pressure management, and competitive mindset.</p></div>
+      <div class="service-item"><h3>Nutritional Plan</h3><p>A custom nutrition plan built for your body and training load, designed to support performance and recovery all season long.</p></div>
+      <div class="service-item"><h3>Stretching & Yoga</h3><p>Guided sessions focused on athletic performance, injury prevention, and recovery. Tailored to your schedule.</p></div>
+      <div class="service-item"><h3>School Help</h3><p>Academic support for players balancing a demanding school schedule alongside hockey. Available throughout the season.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px;">
+    <SectionHeader title="Why It Works" />
+    <div class="why-list">
+      <div class="why-item"><span class="check">✔</span><span>Dedicated mentors who know your game</span></div>
+      <div class="why-item"><span class="check">✔</span><span>Flexible, build the program around your needs</span></div>
+      <div class="why-item"><span class="check">✔</span><span>24/7 response time from the mentorship team</span></div>
+      <div class="why-item"><span class="check">✔</span><span>Real feedback, real accountability, all season long</span></div>
     </div>
   </div></section>
 
   <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="Two Levels" subtitle="Same commitment. Different starting points." />
-    <div class="tiers">
-      <div class="tier"><h3>Elite</h3><p>For players at Elite or AAA level.</p></div>
-      <div class="tier"><h3>AA to AAA</h3><p>For players developing toward competitive hockey.</p></div>
-    </div>
+    <SectionHeader title="Who Is It For?" />
+    <p class="who-text">Mentoring is available to elite players at any level and to players who are looking for ongoing support in their new environment. Programs are built individually; no two are the same.</p>
   </div></section>
 
   <section class="section"><div class="container" style="max-width: 640px;">
@@ -85,10 +94,9 @@ import ServiceNav from "../../components/ServiceNav.astro";
   .service-item { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; }
   .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .service-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .tiers { display: flex; flex-direction: column; gap: var(--space-6); }
-  .tier { padding: var(--space-8); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
-  .tier h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .tier p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .why-list { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
+  .why-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
+  .who-text { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; text-align: center; }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
