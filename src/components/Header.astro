@@ -1,5 +1,5 @@
 ---
-// Header.astro — Site header with logo, nav links, EN/中文 toggle, mobile hamburger
+// Header.astro — Site header with logo, nav links, Services dropdown, EN/中文 toggle, mobile hamburger
 export interface Props {
   lang?: string;
 }
@@ -16,23 +16,42 @@ const { lang = "en" } = Astro.props;
 
     <!-- Desktop Navigation -->
     <nav class="nav-desktop" aria-label="Main navigation">
-      {lang === "zh" ? (
-        <>
-          <a href="/zh/#how-it-works">流程</a>
-          <a href="/zh/services/">服務</a>
-          <a href="/zh/#players">運動員</a>
-          <a href="/zh/#faq">常見問題</a>
-          <a href="/zh/#contact">聯繫我們</a>
-        </>
-      ) : (
-        <>
-          <a href="/#how-it-works">How It Works</a>
-          <a href="/services/">Services</a>
-          <a href="/#players">Players</a>
-          <a href="/#faq">FAQ</a>
-          <a href="/#contact">Contact</a>
-        </>
-      )}
+      <a href={lang === "zh" ? "/zh/#how-it-works" : "/#how-it-works"}>
+        {lang === "zh" ? "流程" : "How It Works"}
+      </a>
+
+      <!-- Services Dropdown -->
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+          {lang === "zh" ? "服務" : "Services"}
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" hidden>
+          {lang === "zh" ? (
+            <>
+              <a href="/zh/services/the-move">球員安置</a>
+              <a href="/zh/services/mentoring">訓練指導</a>
+              <a href="/zh/services/hk-program">香港體能訓練</a>
+            </>
+          ) : (
+            <>
+              <a href="/services/the-move">The Move</a>
+              <a href="/services/mentoring">Mentoring</a>
+              <a href="/services/hk-program">HK Program</a>
+            </>
+          )}
+        </div>
+      </div>
+
+      <a href={lang === "zh" ? "/zh/#players" : "/#players"}>
+        {lang === "zh" ? "運動員" : "Players"}
+      </a>
+      <a href={lang === "zh" ? "/zh/#faq" : "/#faq"}>
+        {lang === "zh" ? "常見問題" : "FAQ"}
+      </a>
+      <a href={lang === "zh" ? "/zh/#contact" : "/#contact"}>
+        {lang === "zh" ? "聯繫我們" : "Contact"}
+      </a>
     </nav>
 
     <!-- Language Toggle + Mobile Menu Button -->
@@ -59,24 +78,36 @@ const { lang = "en" } = Astro.props;
 
   <!-- Mobile Navigation -->
   <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
+    <a href={lang === "zh" ? "/zh/#how-it-works" : "/#how-it-works"}>
+      {lang === "zh" ? "流程" : "How It Works"}
+    </a>
+    <div class="mobile-section-label">{lang === "zh" ? "服務" : "Services"}</div>
     {lang === "zh" ? (
       <>
-        <a href="/zh/#how-it-works">流程</a>
-        <a href="/zh/services/">服務</a>
-        <a href="/zh/#players">運動員</a>
-        <a href="/zh/#faq">常見問題</a>
-        <a href="/zh/#contact">聯繫我們</a>
-        <a href={import.meta.env.BASE_URL} class="mobile-lang">EN</a>
+        <a href="/zh/services/the-move" class="mobile-sub">球員安置</a>
+        <a href="/zh/services/mentoring" class="mobile-sub">訓練指導</a>
+        <a href="/zh/services/hk-program" class="mobile-sub">香港體能訓練</a>
       </>
     ) : (
       <>
-        <a href="/#how-it-works">How It Works</a>
-        <a href="/services/">Services</a>
-        <a href="/#players">Players</a>
-        <a href="/#faq">FAQ</a>
-        <a href="/#contact">Contact</a>
-        <a href={`${import.meta.env.BASE_URL}zh/`} class="mobile-lang">中文</a>
+        <a href="/services/the-move" class="mobile-sub">The Move</a>
+        <a href="/services/mentoring" class="mobile-sub">Mentoring</a>
+        <a href="/services/hk-program" class="mobile-sub">HK Program</a>
       </>
+    )}
+    <a href={lang === "zh" ? "/zh/#players" : "/#players"}>
+      {lang === "zh" ? "運動員" : "Players"}
+    </a>
+    <a href={lang === "zh" ? "/zh/#faq" : "/#faq"}>
+      {lang === "zh" ? "常見問題" : "FAQ"}
+    </a>
+    <a href={lang === "zh" ? "/zh/#contact" : "/#contact"}>
+      {lang === "zh" ? "聯繫我們" : "Contact"}
+    </a>
+    {lang === "zh" ? (
+      <a href={import.meta.env.BASE_URL} class="mobile-lang">EN</a>
+    ) : (
+      <a href={`${import.meta.env.BASE_URL}zh/`} class="mobile-lang">中文</a>
     )}
   </nav>
 </header>
@@ -142,7 +173,8 @@ const { lang = "en" } = Astro.props;
       gap: var(--space-6);
     }
 
-    .nav-desktop a {
+    .nav-desktop > a,
+    .nav-dropdown-trigger {
       font-family: var(--font-body);
       font-size: 0.875rem;
       font-weight: 500;
@@ -151,16 +183,64 @@ const { lang = "en" } = Astro.props;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       padding: 0.25rem 0;
+      border: none;
+      background: none;
+      cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: color 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
     }
 
-    .nav-desktop a:hover,
-    .nav-desktop a:focus-visible {
+    .nav-desktop > a:hover,
+    .nav-dropdown-trigger:hover {
       color: var(--rise-red);
       border-bottom-color: var(--rise-red);
       text-decoration: none;
     }
+  }
+
+  /* Dropdown */
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: var(--space-2);
+    background-color: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    min-width: 180px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) 0;
+  }
+
+  .nav-dropdown-menu[hidden] {
+    display: none;
+  }
+
+  .nav-dropdown-menu a {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--rise-neutral-700);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-4);
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .nav-dropdown-menu a:hover {
+    background-color: var(--rise-neutral-50);
+    color: var(--rise-red);
+    text-decoration: none;
   }
 
   /* Header actions */
@@ -221,7 +301,7 @@ const { lang = "en" } = Astro.props;
     padding: var(--space-4);
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 0;
   }
 
   .nav-mobile[hidden] {
@@ -240,9 +320,24 @@ const { lang = "en" } = Astro.props;
   }
 
   .nav-mobile a:hover {
-    background-color: var(--rise-red-light);
+    background-color: var(--rise-neutral-50);
     color: var(--rise-red);
     text-decoration: none;
+  }
+
+  .mobile-section-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rise-neutral-400);
+    padding: var(--space-3) var(--space-4) var(--space-1);
+  }
+
+  .mobile-sub {
+    padding-left: var(--space-8) !important;
+    font-size: 0.9375rem !important;
   }
 
   .mobile-lang {
@@ -253,6 +348,7 @@ const { lang = "en" } = Astro.props;
 </style>
 
 <script>
+  // Mobile hamburger
   const btn = document.getElementById("hamburger-btn");
   const nav = document.getElementById("mobile-nav");
 
@@ -264,6 +360,38 @@ const { lang = "en" } = Astro.props;
     } else {
       nav?.removeAttribute("hidden");
       btn.setAttribute("aria-expanded", "true");
+    }
+  });
+
+  // Desktop dropdown
+  const dropdown = document.querySelector(".nav-dropdown");
+  const trigger = dropdown?.querySelector(".nav-dropdown-trigger");
+  const menu = dropdown?.querySelector(".nav-dropdown-menu");
+
+  trigger?.addEventListener("click", () => {
+    const isOpen = !menu?.hasAttribute("hidden");
+    if (isOpen) {
+      menu?.setAttribute("hidden", "");
+      trigger.setAttribute("aria-expanded", "false");
+    } else {
+      menu?.removeAttribute("hidden");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (dropdown && !dropdown.contains(e.target as Node)) {
+      menu?.setAttribute("hidden", "");
+      trigger?.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  // Close dropdown on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      menu?.setAttribute("hidden", "");
+      trigger?.setAttribute("aria-expanded", "false");
     }
   });
 </script>
