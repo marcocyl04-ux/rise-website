@@ -1,5 +1,5 @@
 ---
-// Header.astro — Site header with animated Services dropdown
+// Header.astro — Site header with CSS-only dropdown on hover
 export interface Props {
   lang?: string;
 }
@@ -19,11 +19,11 @@ const { lang = "en" } = Astro.props;
       </a>
 
       <div class="nav-dropdown">
-        <button class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+        <a href="#" class="nav-dropdown-trigger" aria-haspopup="true">
           {lang === "zh" ? "服務" : "Services"}
           <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
-        </button>
-        <div class="nav-dropdown-menu" hidden>
+        </a>
+        <div class="nav-dropdown-menu">
           {lang === "zh" ? (
             <>
               <a href="/zh/services/the-move">
@@ -158,7 +158,6 @@ const { lang = "en" } = Astro.props;
     letter-spacing: 0.04em;
   }
 
-  /* Desktop nav */
   .nav-desktop { display: none; }
 
   @media (min-width: 768px) {
@@ -178,9 +177,6 @@ const { lang = "en" } = Astro.props;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       padding: 0.25rem 0;
-      border: none;
-      background: none;
-      cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: color 0.2s, border-color 0.2s;
       display: flex;
@@ -196,14 +192,14 @@ const { lang = "en" } = Astro.props;
     }
   }
 
-  /* Dropdown */
+  /* CSS-only dropdown on hover */
   .nav-dropdown { position: relative; }
 
   .dropdown-chevron {
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .nav-dropdown.open .dropdown-chevron {
+  .nav-dropdown:hover .dropdown-chevron {
     transform: rotate(180deg);
   }
 
@@ -226,21 +222,20 @@ const { lang = "en" } = Astro.props;
     transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .nav-dropdown.open .nav-dropdown-menu {
-    display: flex;
+  .nav-dropdown:hover .nav-dropdown-menu {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
   }
 
-  /* Invisible bridge so cursor doesn't lose hover between trigger and menu */
+  /* Invisible bridge between trigger and menu */
   .nav-dropdown-menu::before {
     content: "";
     position: absolute;
-    top: -8px;
+    top: -12px;
     left: 0;
     right: 0;
-    height: 8px;
+    height: 12px;
   }
 
   .nav-dropdown-menu a {
@@ -274,7 +269,6 @@ const { lang = "en" } = Astro.props;
     font-weight: 400;
   }
 
-  /* Header actions */
   .header-actions {
     display: flex;
     align-items: center;
@@ -299,7 +293,6 @@ const { lang = "en" } = Astro.props;
     text-decoration: none;
   }
 
-  /* Hamburger */
   .hamburger {
     display: flex;
     flex-direction: column;
@@ -318,10 +311,8 @@ const { lang = "en" } = Astro.props;
     height: 2px;
     background-color: var(--rise-black);
     border-radius: 1px;
-    transition: transform 0.2s, opacity 0.2s;
   }
 
-  /* Mobile nav */
   .nav-mobile {
     background-color: var(--rise-white);
     border-bottom: 1px solid var(--rise-neutral-100);
@@ -373,68 +364,17 @@ const { lang = "en" } = Astro.props;
 </style>
 
 <script>
-  // Mobile hamburger
-  const btn = document.getElementById("hamburger-btn");
-  const nav = document.getElementById("mobile-nav");
+  const hamburgerBtn = document.getElementById("hamburger-btn");
+  const mobileNav = document.getElementById("mobile-nav");
 
-  btn?.addEventListener("click", () => {
-    const isOpen = nav?.hasAttribute("hidden") === false;
+  hamburgerBtn?.addEventListener("click", () => {
+    const isOpen = mobileNav?.hasAttribute("hidden") === false;
     if (isOpen) {
-      nav?.setAttribute("hidden", "");
-      btn.setAttribute("aria-expanded", "false");
+      mobileNav?.setAttribute("hidden", "");
+      hamburgerBtn.setAttribute("aria-expanded", "false");
     } else {
-      nav?.removeAttribute("hidden");
-      btn.setAttribute("aria-expanded", "true");
-    }
-  });
-
-  // Desktop dropdown — hover + click
-  const dropdown = document.querySelector(".nav-dropdown");
-  const trigger = dropdown?.querySelector(".nav-dropdown-trigger");
-  const menu = dropdown?.querySelector(".nav-dropdown-menu");
-  let hoverTimeout: ReturnType<typeof setTimeout>;
-
-  function openDropdown() {
-    clearTimeout(hoverTimeout);
-    menu?.removeAttribute("hidden");
-    dropdown?.classList.add("open");
-    trigger?.setAttribute("aria-expanded", "true");
-  }
-
-  function closeDropdown() {
-    hoverTimeout = setTimeout(() => {
-      dropdown?.classList.remove("open");
-      menu?.setAttribute("hidden", "");
-      trigger?.setAttribute("aria-expanded", "false");
-    }, 150);
-  }
-
-  // Hover open
-  dropdown?.addEventListener("mouseenter", openDropdown);
-  dropdown?.addEventListener("mouseleave", closeDropdown);
-
-  // Click toggle
-  trigger?.addEventListener("click", () => {
-    const isOpen = dropdown?.classList.contains("open");
-    if (isOpen) closeDropdown();
-    else openDropdown();
-  });
-
-  // Close on outside click
-  document.addEventListener("click", (e) => {
-    if (dropdown && !dropdown.contains(e.target as Node)) {
-      dropdown.classList.remove("open");
-      menu?.setAttribute("hidden", "");
-      trigger?.setAttribute("aria-expanded", "false");
-    }
-  });
-
-  // Close on Escape
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      dropdown?.classList.remove("open");
-      menu?.setAttribute("hidden", "");
-      trigger?.setAttribute("aria-expanded", "false");
+      mobileNav?.removeAttribute("hidden");
+      hamburgerBtn.setAttribute("aria-expanded", "true");
     }
   });
 </script>
