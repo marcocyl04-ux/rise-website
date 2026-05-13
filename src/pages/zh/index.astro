@@ -1,5 +1,5 @@
 ---
-// Home page — 中文 (Phase 2: user flow restructure)
+// Home page — 中文 (aligned with EN May 13 2026)
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
@@ -9,24 +9,37 @@ import ServiceCard from "../../components/ServiceCard.astro";
 import ContactForm from "../../components/ContactForm.astro";
 ---
 
-<BaseLayout title="首頁" lang="zh-HK">
+<BaseLayout title="首頁" lang="zh-HK" description="RISE Advancement：精英冰球訓練和球員安置服務。暑期計劃、訓練指導、以及從香港到加拿大的完整安置服務。">
   <Header slot="header" lang="zh" />
+
+  <!-- JSON-LD Structured Data -->
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SportsActivityLocation",
+    "name": "RISE Advancement",
+    "description": "精英冰球球員發展和安置機構。我們將年輕球員從香港帶到加拿大的球隊。",
+    "url": "https://riseadvancement.com",
+    "email": "riseadvancements@gmail.com",
+    "telephone": "+852-9095-0387",
+    "areaServed": ["Hong Kong", "Canada"],
+    "sport": "Ice Hockey"
+  })} />
 
   <!-- 1. HERO -->
   <section class="hero section">
     <div class="container">
       <div class="hero-content">
-        <p class="hero-eyebrow">香港 &bull; 加拿大</p>
+        <p class="hero-eyebrow">RISE Advancement</p>
         <h1 class="hero-title">
-          RISE <span class="hero-title-red">Advancement</span>
+          冰球<span class="hero-title-red">發展與安置</span>
         </h1>
         <p class="hero-lead">
-          我們將香港的年輕冰球運動員帶到加拿大的球隊。
+          我們將年輕冰球運動員送到加拿大的球隊。
           我們評估他們、安置他們、在整個賽季中培養他們。
-          真實的球員。真實的成果。
+          由親身經歷過這條管道的球員創立。
         </p>
         <div class="hero-actions">
-          <a href="#how-it-works" class="btn-primary">了解流程</a>
+          <a href="/zh/services/hk-program" class="btn-primary">休賽期計劃</a>
           <a href="#contact" class="btn-secondary">聯繫我們</a>
         </div>
       </div>
@@ -38,13 +51,13 @@ import ContactForm from "../../components/ContactForm.astro";
     <div class="container">
       <SectionHeader
         title="運作方式"
-        subtitle="從香港到加拿大冰場的四個步驟。"
+        subtitle="到加拿大的四個步驟。"
       />
       <div class="steps-grid">
         <div class="step">
           <div class="step-number">1</div>
           <h3>評估</h3>
-          <p>比賽錄像、技能評估、水平確定。我們找出孩子適合的級別：AA、AAA 或精英。</p>
+          <p>比賽錄像、技能評估、水平確定。</p>
         </div>
         <div class="step">
           <div class="step-number">2</div>
@@ -54,12 +67,12 @@ import ContactForm from "../../components/ContactForm.astro";
         <div class="step">
           <div class="step-number">3</div>
           <h3>搬遷</h3>
-          <p>VISA、GTHL 轉會、學校註冊、介紹。我們處理後勤事務，你不需要操心。</p>
+          <p>VISA、文件處理、後勤支援，確保一切順利。</p>
         </div>
         <div class="step">
           <div class="step-number">4</div>
           <h3>發展</h3>
-          <p>每週跟進、視頻回顧、技術訓練、營養、心理技能。你的孩子絕不孤單。</p>
+          <p>每週跟進、比賽回顧、技術訓練、營養、心理技能。你的孩子絕不孤單。</p>
         </div>
       </div>
     </div>
@@ -78,42 +91,42 @@ import ContactForm from "../../components/ContactForm.astro";
       <div class="services-grid">
         <ServiceCard
           title="球員安置"
-          description="全面的球員安置和過渡服務。我們評估比賽錄像，確定合適的水平，尋找球隊和學校，處理 VISA 和轉會手續。"
+          description="全面的球員安置和過渡服務。我們管理整個過程，從初步評估到孩子在新球隊首次上場，確保每個環節都不出差錯。"
           price="請聯繫我們"
           features={[
-            "比賽錄像評估",
-            "水平確定 (AA/AAA/精英)",
-            "球隊和學校安置",
-            "VISA 和 GTHL 轉會支援",
-            "安置後總結對話",
+            "深入評估比賽錄像和技術水平",
+            "根據目標篩選合適的教練和球隊",
+            "安排與教練團隊的介紹和會面",
+            "在合適的競技水平提供曝光機會",
+            "整個過程中的全程指導和支持",
           ]}
           ctaText="了解更多"
           ctaLink="/zh/services/the-move"
         />
         <ServiceCard
           title="訓練指導"
-          description="整個賽季的發展計劃。選擇適合你孩子需求的服務。視頻回顧、技術訓練、運動計劃、營養指導、心理技能、學業幫助。"
+          description="賽季發展計劃。你根據自己的需要選擇服務。每項合作都從入門會議、目標設定和定期跟進開始。"
           price="請聯繫我們"
           features={[
-            "入職培訓 + 每週跟進",
-            "視頻回顧課程",
-            "技術訓練",
-            "運動和營養計劃",
-            "心理技能指導",
+            "每週與專屬導師跟進",
+            "一對一比賽回顧課程",
+            "導師指導的冰上訓練",
+            "定制體能和營養計劃",
+            "專業心理訓練指導",
           ]}
           ctaText="了解更多"
           ctaLink="/zh/services/mentoring"
         />
         <ServiceCard
           title="香港體能訓練計劃"
-          description="為期10週的夏季訓練計劃，在香港舉行。與 EJ Elite Shooting 合作。健身房、陸地射門、公園訓練、冰上訓練。"
+          description="為期10週的休賽期訓練計劃，在香港舉行。與 EJ Elite Shooting 合作。健身房、陸地射門、滑冰、心理訓練。"
           price="2026 夏季"
           features={[
             "6月8日至8月16日",
             "ONYX 健身中心，太古坊",
             "The Flying Puck 射門訓練",
             "鰂魚涌公園訓練",
-            "愉景灣冰場",
+            "愉景灣冰場/LOHAS Park",
             "包含定制裝備",
           ]}
           ctaText="了解更多"
@@ -123,8 +136,19 @@ import ContactForm from "../../components/ContactForm.astro";
     </div>
   </section>
 
+  <!-- 3b. OFF-SEASON PROGRAM -->
+  <section class="section" style="background-color: var(--rise-neutral-50);">
+    <div class="container" style="max-width: 720px; text-align: center;">
+      <h2 style="margin-bottom: var(--space-4);">不只是一个计划。</h2>
+      <p style="font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; margin-bottom: var(--space-6);">
+        我们的休赛期计划是10周的精英训练。健身房、射门、滑冰、心理训练。6月8日至8月16日。这也是进入RISE体系的第一步，球员在这里被评估、培养，并安置到加拿大的球队。
+      </p>
+      <a href="/zh/why-us" class="btn-secondary">為什麼選擇 RISE?</a>
+    </div>
+  </section>
+
   <!-- 4. PLAYERS -->
-  <section id="players" class="section" style="background-color: var(--rise-neutral-50);">
+  <section id="players" class="section">
     <div class="container">
       <SectionHeader
         title="我們的運動員"
@@ -134,20 +158,20 @@ import ContactForm from "../../components/ContactForm.astro";
         <PlayerCard
           number="#7"
           name="Wilshere Tung"
-          position='後衛 — "A" 副隊長'
-          team="Toronto Red Wings"
+          position="後衛"
+          team="2012 Toronto Titans"
         />
         <PlayerCard
-          number="#12"
+          number="#13"
           name="Felix Lloren"
           position="後衛"
-          team="Upper Canada College U15AAA"
+          team="2011 Upper Canada College"
         />
         <PlayerCard
           number="#29"
           name="Marcus Nuyen"
           position="前鋒"
-          team="HK RISE Elite"
+          team="St. George's U15 Prep"
         />
       </div>
     </div>
@@ -157,7 +181,7 @@ import ContactForm from "../../components/ContactForm.astro";
   </section>
 
   <!-- 5. FAQ -->
-  <section id="faq" class="section">
+  <section id="faq" class="section" style="background-color: var(--rise-neutral-50);">
     <div class="container" style="max-width: 640px;">
       <SectionHeader
         title="家長常問的問題"
@@ -189,7 +213,7 @@ import ContactForm from "../../components/ContactForm.astro";
   </section>
 
   <!-- 6. CONTACT -->
-  <section id="contact" class="contact-section section" style="background-color: var(--rise-neutral-50);">
+  <section id="contact" class="contact-section section">
     <div class="container" style="max-width: 640px; text-align: center;">
       <SectionHeader
         title="聯繫我們"
