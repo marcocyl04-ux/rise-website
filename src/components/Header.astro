@@ -9,8 +9,7 @@ const { lang = "en" } = Astro.props;
 <header class="site-header">
   <div class="container header-inner">
     <a href={import.meta.env.BASE_URL} class="logo" aria-label="RISE Advancement Home">
-      <span class="logo-text">RISE</span>
-      <span class="logo-subtext">Advancement</span>
+      <img src="/logo-header.png" alt="RISE Advancement" class="logo-img" />
     </a>
 
     <nav class="nav-desktop" aria-label="Main navigation">
@@ -131,31 +130,23 @@ const { lang = "en" } = Astro.props;
 
   .logo {
     display: flex;
-    align-items: baseline;
-    gap: 0.35rem;
+    align-items: center;
     text-decoration: none;
-    color: var(--rise-black);
     flex-shrink: 0;
   }
 
-  .logo:hover { text-decoration: none; color: var(--rise-black); }
+  .logo:hover { text-decoration: none; }
 
-  .logo-text {
-    font-family: var(--font-heading);
-    font-size: 1.563rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--rise-red);
-    letter-spacing: 0.02em;
+  .logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
   }
 
-  .logo-subtext {
-    font-family: var(--font-heading);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    color: var(--rise-neutral-500);
-    letter-spacing: 0.04em;
+  @media (max-width: 639px) {
+    .logo-img {
+      height: 32px;
+    }
   }
 
   .nav-desktop { display: none; }
