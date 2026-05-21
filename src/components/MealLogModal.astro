@@ -555,6 +555,72 @@
     color: var(--rise-red);
     background: var(--rise-red-light);
   }
+
+  #meal-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0;
+    border-top: 1px solid var(--rise-neutral-100);
+  }
+  #meal-items-list[hidden] { display: none !important; }
+
+  #meal-modal-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--rise-neutral-100);
+    padding-top: 12px;
+  }
+  #meal-modal-foot[hidden] { display: none !important; }
+  #meal-modal-foot .tk-row { display: flex; gap: 10px; }
+  #meal-modal-foot .tk-row .tk-btn { flex: 1; }
+  #meal-modal-foot .tk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+  #meal-modal-foot .tk-btn-primary {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+  #meal-modal-foot .tk-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  #meal-modal-foot .tk-btn-ghost {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border-color: var(--rise-neutral-200);
+  }
+  #meal-modal-foot .tk-meal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.9rem;
+    color: var(--rise-neutral-500);
+  }
+  #meal-modal-foot .tk-meal-total strong {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--rise-red);
+    font-weight: 700;
+  }
+  #meal-modal-foot .tk-form-msg {
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 0;
+    min-height: 1.1em;
+    color: var(--rise-neutral-500);
+  }
+  #meal-modal-foot .tk-form-msg.error { color: var(--rise-red-dark); }
+  #meal-modal-foot .tk-form-msg.success { color: #15803d; }
 </style>
 
 <script>
@@ -725,22 +791,6 @@
         `
       )
       .join("");
-
-    wrap.querySelectorAll<HTMLButtonElement>(".tk-food-row").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = Number(btn.dataset.foodId);
-        const row = (state.foodCache || []).find((r) => r.id === id);
-        if (!row) return;
-        state.items.push({
-          name: row.name,
-          name_zh: row.name_zh || "",
-          portion_label: row.portion_label,
-          protein_g: Number(row.protein_per_portion) || 0,
-          confidence: 1,
-        });
-        renderItems();
-      });
-    });
   }
 
   async function showSearch() {
@@ -971,6 +1021,24 @@
         const rows = await loadFoodCache();
         renderSearchResults(filterFoods(rows, searchInput.value));
       }, 120);
+    });
+
+    const searchResults = $("meal-search-results");
+    searchResults?.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement | null;
+      const btn = target?.closest<HTMLButtonElement>(".tk-food-row");
+      if (!btn) return;
+      const id = Number(btn.dataset.foodId);
+      const row = (state.foodCache || []).find((r) => r.id === id);
+      if (!row) return;
+      state.items.push({
+        name: row.name,
+        name_zh: row.name_zh || "",
+        portion_label: row.portion_label,
+        protein_g: Number(row.protein_per_portion) || 0,
+        confidence: 1,
+      });
+      renderItems();
     });
 
     document.addEventListener("keydown", (e) => {
