@@ -160,8 +160,36 @@ import MealLogModal from "../../components/MealLogModal.astro";
           <span class="tk-progress-pct" id="app-progress-pct">0%</span>
         </div>
 
+        <div class="tk-summary-card" id="app-summary-card" hidden>
+          <div class="tk-summary-head">
+            <span class="tk-summary-label">Coach's daily read</span>
+            <span class="tk-summary-mock" id="app-summary-mock" hidden>Demo</span>
+          </div>
+          <p class="tk-summary-text" id="app-summary-text"></p>
+          <div class="tk-summary-row" id="app-summary-highlight-row" hidden>
+            <span class="tk-summary-row-label">Best meal</span>
+            <p class="tk-summary-row-text" id="app-summary-highlight"></p>
+          </div>
+          <div class="tk-summary-row" id="app-summary-tip-row" hidden>
+            <span class="tk-summary-row-label">Try this</span>
+            <p class="tk-summary-row-text" id="app-summary-tip"></p>
+          </div>
+        </div>
+
         <h3 class="tk-section-title">Today's meals</h3>
         <div class="tk-meal-grid" id="meal-grid"></div>
+
+        <div class="tk-feedback-card" id="app-feedback-card" hidden role="status" aria-live="polite">
+          <button class="tk-feedback-close" type="button" id="app-feedback-close" aria-label="Dismiss">×</button>
+          <div class="tk-feedback-icon" aria-hidden="true">💬</div>
+          <div class="tk-feedback-body">
+            <div class="tk-feedback-meta">
+              <span class="tk-feedback-title">Coach</span>
+              <span class="tk-feedback-mock" id="app-feedback-mock" hidden>Demo feedback</span>
+            </div>
+            <p class="tk-feedback-text" id="app-feedback-text"></p>
+          </div>
+        </div>
       </section>
     </div>
   </section>
@@ -661,6 +689,194 @@ import MealLogModal from "../../components/MealLogModal.astro";
   .tracker-page input[type="number"] {
     color: var(--rise-black);
   }
+
+  /* ----- Daily summary card (top, below progress) ----- */
+  .tk-summary-card {
+    background: #faf7f3;
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(18, 18, 18, 0.03);
+    animation: tk-fade-in 0.3s ease;
+  }
+  .tk-summary-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .tk-summary-label {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+  .tk-summary-mock {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    color: var(--rise-neutral-400);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .tk-summary-text {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--rise-black);
+    margin: 0;
+  }
+  .tk-summary-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--rise-neutral-200);
+  }
+  .tk-summary-row-label {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    color: var(--rise-red);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .tk-summary-row-text {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--rise-neutral-700);
+    margin: 0;
+  }
+
+  /* ----- Instant feedback card (after meal log) ----- */
+  .tk-feedback-card {
+    position: relative;
+    margin-top: var(--space-5);
+    background: var(--rise-white);
+    border: 1px solid var(--rise-red-light, #fde7e9);
+    border-left: 4px solid var(--rise-red);
+    border-radius: 12px;
+    padding: 14px 16px 14px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: 0 8px 22px rgba(211, 25, 31, 0.08);
+    animation: tk-slide-up 0.32s ease;
+  }
+  .tk-feedback-card.tk-dismissing {
+    animation: tk-fade-out 0.2s ease forwards;
+  }
+  .tk-feedback-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--rise-red-light, #fde7e9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+  .tk-feedback-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .tk-feedback-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tk-feedback-title {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--rise-red);
+  }
+  .tk-feedback-mock {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    color: var(--rise-neutral-400);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--rise-neutral-100);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .tk-feedback-text {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--rise-black);
+    margin: 0;
+    white-space: pre-wrap;
+  }
+  .tk-feedback-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: transparent;
+    border: 0;
+    color: var(--rise-neutral-400);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tk-feedback-close:hover {
+    background: var(--rise-neutral-100);
+    color: var(--rise-black);
+  }
+  .tk-feedback-card.tk-feedback-loading .tk-feedback-text::after {
+    content: "▍";
+    display: inline-block;
+    margin-left: 2px;
+    animation: tk-blink 0.9s steps(2, end) infinite;
+  }
+
+  /* Subtle indicator on meal cards that have AI feedback stored */
+  .tk-slot-feedback-dot {
+    display: inline-block;
+    margin-left: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rise-red);
+    vertical-align: middle;
+    opacity: 0.7;
+  }
+
+  @keyframes tk-slide-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes tk-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes tk-fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-4px); }
+  }
+  @keyframes tk-blink {
+    50% { opacity: 0; }
+  }
 </style>
 
 <style is:global>
@@ -752,6 +968,12 @@ import MealLogModal from "../../components/MealLogModal.astro";
 </style>
 
 <script>
+  import {
+    getMealFeedback,
+    getDailySummary,
+    type FoodItem,
+  } from "../../lib/ai-feedback";
+
   // ===== Protein formula (exact, per spec) =====
   const GOAL_FACTORS: Record<string, number> = {
     maintenance: 1.6,
@@ -817,6 +1039,32 @@ import MealLogModal from "../../components/MealLogModal.astro";
   // Current daily target (cached from loadAppShell so the progress bar can
   // re-render after a meal-logged event without re-fetching).
   let currentTarget = 0;
+
+  // Cached context for AI feedback so we don't refetch baseline/profile on
+  // every meal log.
+  type UserContext = {
+    user_id: string;
+    full_name: string | null;
+    language: string;
+    weight_kg: number;
+    age: number;
+    primary_goal: string;
+    protein_target_g: number;
+  };
+  let userCtx: UserContext | null = null;
+
+  // The latest set of meals loaded — used to build the summary context and to
+  // decide when to refresh the daily summary card.
+  let currentMeals: Array<{
+    meal_slot: string;
+    total_protein_g: number;
+    food_items: FoodItem[];
+    ai_feedback?: string | null;
+  }> = [];
+
+  // Last AI summary signature (joined slots + total) so we don't refetch when
+  // nothing changed.
+  let lastSummarySig: string | null = null;
 
   // ===== View routing =====
   const VIEWS = ["tracker-loading", "tracker-anon", "tracker-intake", "tracker-app"];
@@ -1033,7 +1281,8 @@ import MealLogModal from "../../components/MealLogModal.astro";
         Array.isArray(yesterday.food_items) &&
         yesterday.food_items.length > 0;
 
-      let html = `<span class="tk-slot-name">${slot.label}</span>`;
+      const hasFeedback = !!(logged && typeof logged.ai_feedback === "string" && logged.ai_feedback.trim());
+      let html = `<span class="tk-slot-name">${slot.label}${hasFeedback ? '<span class="tk-slot-feedback-dot" aria-label="Coach feedback saved"></span>' : ''}</span>`;
       if (logged) {
         html += `<span class="tk-slot-status">✓ Logged · ${logged.total_protein_g || 0}g</span>`;
       } else {
@@ -1087,10 +1336,13 @@ import MealLogModal from "../../components/MealLogModal.astro";
       { data: meals },
       { data: yMeals },
     ] = await Promise.all([
-      sb.from("user_profiles").select("full_name, email").eq("id", user.id).maybeSingle(),
-      sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
+      sb.from("user_profiles").select("full_name, email, language").eq("id", user.id).maybeSingle(),
+      sb.from("baseline_intake")
+        .select("protein_target_g, weight_kg, age, primary_goal")
+        .eq("user_id", user.id)
+        .maybeSingle(),
       sb.from("meal_logs")
-        .select("meal_slot, total_protein_g, food_items")
+        .select("meal_slot, total_protein_g, food_items, ai_feedback")
         .eq("user_id", user.id)
         .eq("logged_date", todayISO()),
       sb.from("meal_logs")
@@ -1113,15 +1365,229 @@ import MealLogModal from "../../components/MealLogModal.astro";
     const tEl = document.getElementById("app-protein-target");
     if (tEl) tEl.textContent = String(target);
 
+    userCtx = {
+      user_id: user.id,
+      full_name: profile?.full_name || null,
+      language: profile?.language === "zh" ? "zh" : "en",
+      weight_kg: Number(baseline?.weight_kg) || 0,
+      age: Number(baseline?.age) || 0,
+      primary_goal: String(baseline?.primary_goal || "muscle_gain"),
+      protein_target_g: Number(target) || 0,
+    };
+
     const todayMeals = meals || [];
+    currentMeals = todayMeals;
     updateProgressBar(sumMealsProtein(todayMeals), target);
     renderMealGrid(todayMeals, yMeals || []);
+
+    // If the user already has 3+ logged meals, render the summary card on
+    // entry. Fetch fresh from AI only when the set of meals changed.
+    if (todayMeals.length >= 3) {
+      const sig = todayMeals
+        .map((m) => `${m.meal_slot}:${m.total_protein_g}`)
+        .sort()
+        .join("|");
+      if (sig !== lastSummarySig) {
+        lastSummarySig = sig;
+        refreshDailySummary().catch((e) => console.warn("summary refresh", e));
+      }
+    } else {
+      hideSummaryCard();
+      lastSummarySig = null;
+    }
   }
 
-  // Refresh the grid + progress bar when a meal is logged from the modal.
-  window.addEventListener("meal-logged", () => {
-    loadAppShell();
+  // ===== AI feedback card =====
+  let feedbackDismissTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function hideFeedbackCard(animate = true) {
+    const card = document.getElementById("app-feedback-card");
+    if (!card) return;
+    if (feedbackDismissTimer) {
+      clearTimeout(feedbackDismissTimer);
+      feedbackDismissTimer = null;
+    }
+    if (animate && !card.hasAttribute("hidden")) {
+      card.classList.add("tk-dismissing");
+      setTimeout(() => {
+        card.classList.remove("tk-dismissing", "tk-feedback-loading");
+        card.setAttribute("hidden", "");
+      }, 200);
+    } else {
+      card.classList.remove("tk-dismissing", "tk-feedback-loading");
+      card.setAttribute("hidden", "");
+    }
+  }
+
+  function showFeedbackCard(text: string, mock: boolean) {
+    const card = document.getElementById("app-feedback-card");
+    const textEl = document.getElementById("app-feedback-text");
+    const mockEl = document.getElementById("app-feedback-mock");
+    if (!card || !textEl || !mockEl) return;
+    card.classList.remove("tk-dismissing", "tk-feedback-loading");
+    textEl.textContent = text;
+    mockEl.toggleAttribute("hidden", !mock);
+    card.removeAttribute("hidden");
+    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+    if (feedbackDismissTimer) clearTimeout(feedbackDismissTimer);
+    feedbackDismissTimer = setTimeout(() => hideFeedbackCard(true), 10000);
+  }
+
+  function showFeedbackLoading() {
+    const card = document.getElementById("app-feedback-card");
+    const textEl = document.getElementById("app-feedback-text");
+    const mockEl = document.getElementById("app-feedback-mock");
+    if (!card || !textEl || !mockEl) return;
+    if (feedbackDismissTimer) {
+      clearTimeout(feedbackDismissTimer);
+      feedbackDismissTimer = null;
+    }
+    textEl.textContent = "Coach is thinking";
+    mockEl.setAttribute("hidden", "");
+    card.classList.add("tk-feedback-loading");
+    card.classList.remove("tk-dismissing");
+    card.removeAttribute("hidden");
+  }
+
+  // ===== AI daily summary card =====
+  function hideSummaryCard() {
+    const card = document.getElementById("app-summary-card");
+    if (card) card.setAttribute("hidden", "");
+  }
+
+  function renderSummaryCard(result: { summary: string; highlight: string; tip: string; mock: boolean }) {
+    const card = document.getElementById("app-summary-card");
+    const textEl = document.getElementById("app-summary-text");
+    const highlightRow = document.getElementById("app-summary-highlight-row");
+    const highlightEl = document.getElementById("app-summary-highlight");
+    const tipRow = document.getElementById("app-summary-tip-row");
+    const tipEl = document.getElementById("app-summary-tip");
+    const mockEl = document.getElementById("app-summary-mock");
+    if (!card || !textEl || !highlightRow || !highlightEl || !tipRow || !tipEl || !mockEl) return;
+
+    textEl.textContent = result.summary;
+    if (result.highlight) {
+      highlightEl.textContent = result.highlight;
+      highlightRow.removeAttribute("hidden");
+    } else {
+      highlightRow.setAttribute("hidden", "");
+    }
+    if (result.tip) {
+      tipEl.textContent = result.tip;
+      tipRow.removeAttribute("hidden");
+    } else {
+      tipRow.setAttribute("hidden", "");
+    }
+    mockEl.toggleAttribute("hidden", !result.mock);
+    card.removeAttribute("hidden");
+  }
+
+  async function refreshDailySummary() {
+    if (!userCtx) return;
+    if (currentMeals.length < 3) return;
+    const ctx = {
+      meals: currentMeals.map((m) => ({
+        meal_slot: m.meal_slot,
+        food_items: (m.food_items || []) as FoodItem[],
+        total_protein_g: Number(m.total_protein_g) || 0,
+      })),
+      daily_total_g: sumMealsProtein(currentMeals),
+      protein_target_g: userCtx.protein_target_g,
+      weight_kg: userCtx.weight_kg,
+      age: userCtx.age,
+      primary_goal: userCtx.primary_goal,
+      language: userCtx.language,
+      full_name: userCtx.full_name || undefined,
+    };
+    try {
+      const result = await getDailySummary(ctx);
+      renderSummaryCard(result);
+    } catch (err) {
+      console.warn("daily-summary failed:", err);
+    }
+  }
+
+  function timeOfDay(): string {
+    const d = new Date();
+    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  }
+
+  async function handleMealLogged(detail: {
+    slot: string;
+    total: number;
+    items: FoodItem[];
+  }) {
+    // Always refresh grid + progress bar first so the user sees the result of
+    // their save immediately.
+    await loadAppShell();
+
+    if (!userCtx) return;
+    if (!detail?.slot) return;
+
+    showFeedbackLoading();
+
+    const daily_total_g = sumMealsProtein(currentMeals);
+    const ctx = {
+      meal_slot: detail.slot,
+      food_items: detail.items || [],
+      total_protein_g: Number(detail.total) || 0,
+      daily_total_g,
+      protein_target_g: userCtx.protein_target_g,
+      weight_kg: userCtx.weight_kg,
+      age: userCtx.age,
+      primary_goal: userCtx.primary_goal,
+      time_of_day: timeOfDay(),
+      language: userCtx.language,
+      full_name: userCtx.full_name || undefined,
+    };
+
+    let result: { feedback: string; mock: boolean };
+    try {
+      result = await getMealFeedback(ctx);
+    } catch (err) {
+      console.warn("ai-feedback failed:", err);
+      hideFeedbackCard(false);
+      return;
+    }
+
+    showFeedbackCard(result.feedback, result.mock);
+
+    // Persist the feedback text on the meal_logs row so it survives reloads.
+    try {
+      const sb = (window as any).supabaseClient;
+      await sb
+        .from("meal_logs")
+        .update({ ai_feedback: result.feedback })
+        .eq("user_id", userCtx.user_id)
+        .eq("meal_slot", detail.slot)
+        .eq("logged_date", todayISO());
+    } catch (err) {
+      console.warn("persist ai_feedback failed:", err);
+    }
+
+    // If 3+ meals are logged now, refresh the summary card. Force refresh
+    // because the new meal changed the picture even if the signature happens
+    // to repeat.
+    if (currentMeals.length >= 3) {
+      lastSummarySig = null;
+      await refreshDailySummary();
+    }
+  }
+
+  // Refresh the grid + progress bar (and AI feedback) when a meal is logged.
+  window.addEventListener("meal-logged", (e: Event) => {
+    const detail = (e as CustomEvent).detail || {};
+    handleMealLogged({
+      slot: detail.slot,
+      total: Number(detail.total) || 0,
+      items: Array.isArray(detail.items) ? detail.items : [],
+    });
   });
+
+  function wireFeedbackCardControls() {
+    document.getElementById("app-feedback-close")?.addEventListener("click", () => hideFeedbackCard(true));
+  }
 
   async function ensureProfile(user: any) {
     const sb = (window as any).supabaseClient;
@@ -1180,5 +1646,6 @@ import MealLogModal from "../../components/MealLogModal.astro";
   }
 
   wireIntake();
+  wireFeedbackCardControls();
   routeTracker();
 </script>
