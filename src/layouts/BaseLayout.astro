@@ -54,6 +54,14 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     <link rel="apple-touch-icon" sizes="180x180" href={`${import.meta.env.BASE_URL}apple-touch-icon.png?v=2`} />
     <link rel="icon" href="/favicon.ico" />
 
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#D3191F" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="RISE" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <!-- Google Fonts: Oswald (headings) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -99,5 +107,162 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
 
     <FloatingWhatsApp lang={lang} />
     <AuthModal />
+
+    <!-- PWA service worker registration -->
+    <script is:inline>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .catch(function (err) {
+              console.warn("[pwa] sw register failed:", err);
+            });
+        });
+      }
+    </script>
+
+    <!-- PWA install banner (portal pages only) -->
+    <style is:global>
+      .pwa-install-banner {
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #121212;
+        color: #fafafa;
+        border-radius: 12px;
+        padding: 12px 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        font-family: var(--font-body, system-ui, sans-serif);
+        font-size: 0.9rem;
+        transform: translateY(120%);
+        transition: transform 0.25s ease;
+      }
+      .pwa-install-banner.is-visible {
+        transform: translateY(0);
+      }
+      .pwa-install-banner__text {
+        flex: 1;
+        line-height: 1.35;
+      }
+      .pwa-install-banner__btn {
+        background: #D3191F;
+        color: #fff;
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      .pwa-install-banner__dismiss {
+        background: transparent;
+        color: #bdbdbd;
+        border: 0;
+        padding: 6px 8px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      @media (min-width: 640px) {
+        .pwa-install-banner {
+          left: auto;
+          right: 24px;
+          bottom: 24px;
+          max-width: 380px;
+        }
+      }
+    </style>
+    <script is:inline>
+      (function () {
+        var STORAGE_KEY = "rise-pwa-install-dismissed";
+        var deferredPrompt = null;
+
+        function onPortalPage() {
+          return /^\/portal(\/|$)/.test(window.location.pathname);
+        }
+        function alreadyDismissed() {
+          try { return window.localStorage.getItem(STORAGE_KEY) === "1"; }
+          catch (e) { return false; }
+        }
+        function isStandalone() {
+          return (
+            window.matchMedia && window.matchMedia("(display-mode: standalone)").matches
+          ) || window.navigator.standalone === true;
+        }
+        function tText(key, fallback) {
+          try {
+            if (window.__t && window.__t[key]) return window.__t[key];
+          } catch (e) {}
+          return fallback;
+        }
+
+        function showBanner() {
+          if (!onPortalPage() || alreadyDismissed() || isStandalone()) return;
+          if (document.getElementById("pwa-install-banner")) return;
+
+          var banner = document.createElement("div");
+          banner.id = "pwa-install-banner";
+          banner.className = "pwa-install-banner";
+          banner.setAttribute("role", "dialog");
+          banner.setAttribute("aria-live", "polite");
+
+          var text = document.createElement("div");
+          text.className = "pwa-install-banner__text";
+          text.textContent = tText("pwa.install.text", "Add RISE to your home screen");
+
+          var installBtn = document.createElement("button");
+          installBtn.type = "button";
+          installBtn.className = "pwa-install-banner__btn";
+          installBtn.textContent = tText("pwa.install.install", "Install");
+          installBtn.addEventListener("click", async function () {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            try { await deferredPrompt.userChoice; } catch (e) {}
+            deferredPrompt = null;
+            hideBanner(true);
+          });
+
+          var dismissBtn = document.createElement("button");
+          dismissBtn.type = "button";
+          dismissBtn.className = "pwa-install-banner__dismiss";
+          dismissBtn.textContent = tText("pwa.install.dismiss", "Not now");
+          dismissBtn.addEventListener("click", function () { hideBanner(true); });
+
+          banner.appendChild(text);
+          banner.appendChild(installBtn);
+          banner.appendChild(dismissBtn);
+          document.body.appendChild(banner);
+          requestAnimationFrame(function () { banner.classList.add("is-visible"); });
+        }
+
+        function hideBanner(persist) {
+          var banner = document.getElementById("pwa-install-banner");
+          if (banner) {
+            banner.classList.remove("is-visible");
+            setTimeout(function () { if (banner.parentNode) banner.parentNode.removeChild(banner); }, 250);
+          }
+          if (persist) {
+            try { window.localStorage.setItem(STORAGE_KEY, "1"); } catch (e) {}
+          }
+        }
+
+        window.addEventListener("beforeinstallprompt", function (e) {
+          e.preventDefault();
+          deferredPrompt = e;
+          showBanner();
+        });
+
+        window.addEventListener("appinstalled", function () {
+          hideBanner(true);
+          deferredPrompt = null;
+        });
+      })();
+    </script>
   </body>
 </html>

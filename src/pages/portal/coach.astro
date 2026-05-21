@@ -9,27 +9,30 @@ import Footer from "../../components/Footer.astro";
 <BaseLayout title="Coach Dashboard" description="RISE coach dashboard — monitor your team's nutrition compliance.">
   <Header slot="header" />
 
+  <!-- Floating lang toggle -->
+  <button id="portal-lang-toggle" class="portal-lang-toggle" type="button" aria-label="Toggle language">中文</button>
+
   <section id="coach-loading" class="coach-loading">
     <div class="coach-spinner" aria-hidden="true"></div>
   </section>
 
   <section id="coach-anon" class="coach-anon section" hidden>
     <div class="container coach-narrow">
-      <h1 class="coach-anon-title">Sign in to your portal</h1>
-      <p class="coach-anon-sub">You need to be logged in as a coach to view this dashboard.</p>
+      <h1 class="coach-anon-title" data-i18n="coach.anon.title">Sign in to your portal</h1>
+      <p class="coach-anon-sub" data-i18n="coach.anon.sub">You need to be logged in as a coach to view this dashboard.</p>
       <div class="coach-anon-actions">
-        <button class="btn-primary" type="button" data-open-auth>Log in</button>
-        <a class="btn-ghost" href="/">Back to home</a>
+        <button class="btn-primary" type="button" data-open-auth data-i18n="common.login">Log in</button>
+        <a class="btn-ghost" href="/" data-i18n="common.backToHome">Back to home</a>
       </div>
     </div>
   </section>
 
   <section id="coach-not-coach" class="coach-anon section" hidden>
     <div class="container coach-narrow">
-      <h1 class="coach-anon-title">Coach access only</h1>
-      <p class="coach-anon-sub">Your account isn't a coach. Head back to your athlete portal.</p>
+      <h1 class="coach-anon-title" data-i18n="coach.notCoach.title">Coach access only</h1>
+      <p class="coach-anon-sub" id="coach-not-coach-sub" data-i18n="coach.notCoach.sub" data-i18n-replace>Your account isn't a coach. Head back to your athlete portal.</p>
       <div class="coach-anon-actions">
-        <a class="btn-primary" href="/portal">Back to portal</a>
+        <a class="btn-primary" href="/portal" data-i18n="common.backToPortal">Back to portal</a>
       </div>
     </div>
   </section>
@@ -38,12 +41,12 @@ import Footer from "../../components/Footer.astro";
     <div class="container">
 
       <header class="coach-header">
-        <p class="coach-eyebrow">RISE Coach</p>
-        <h1 class="coach-title" id="coach-title">Coach Dashboard</h1>
+        <p class="coach-eyebrow" data-i18n="coach.eyebrow">RISE Coach</p>
+        <h1 class="coach-title" id="coach-title" data-i18n="coach.title">Coach Dashboard</h1>
         <div class="coach-meta">
-          <span class="coach-meta-item" id="coach-team-name">Team</span>
+          <span class="coach-meta-item" id="coach-team-name" data-i18n-replace>Team</span>
           <span class="coach-meta-sep">•</span>
-          <span class="coach-meta-item" id="coach-athlete-count">0 athletes</span>
+          <span class="coach-meta-item" id="coach-athlete-count" data-i18n-replace>0 athletes</span>
           <span class="coach-meta-sep">•</span>
           <span class="coach-meta-item" id="coach-today-date">Today</span>
         </div>
@@ -52,19 +55,19 @@ import Footer from "../../components/Footer.astro";
       <!-- Alerts strip -->
       <div class="coach-alerts" id="coach-alerts" hidden>
         <div class="coach-alerts-head">
-          <h2 class="coach-alerts-title">Alerts</h2>
-          <button class="coach-alerts-toggle" type="button" id="coach-alerts-toggle" hidden>View all</button>
+          <h2 class="coach-alerts-title" data-i18n="coach.alerts.title">Alerts</h2>
+          <button class="coach-alerts-toggle" type="button" id="coach-alerts-toggle" hidden data-i18n-replace>View all</button>
         </div>
-        <div class="coach-alerts-list" id="coach-alerts-list"></div>
+        <div class="coach-alerts-list" id="coach-alerts-list" data-i18n-replace></div>
       </div>
 
       <!-- Athletes table -->
       <div class="coach-table-wrap">
         <div class="coach-table-head">
-          <h2 class="coach-table-title">Athletes</h2>
+          <h2 class="coach-table-title" data-i18n="coach.table.title">Athletes</h2>
         </div>
-        <div class="coach-table" id="coach-table"></div>
-        <div class="coach-empty" id="coach-empty" hidden>No athletes on this team yet.</div>
+        <div class="coach-table" id="coach-table" data-i18n-replace></div>
+        <div class="coach-empty" id="coach-empty" hidden data-i18n="coach.table.empty">No athletes on this team yet.</div>
       </div>
     </div>
   </section>
@@ -75,16 +78,16 @@ import Footer from "../../components/Footer.astro";
     <div class="coach-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="coach-drawer-name">
       <header class="coach-drawer-head">
         <div>
-          <p class="coach-drawer-eyebrow" id="coach-drawer-eyebrow">Athlete</p>
-          <h2 class="coach-drawer-name" id="coach-drawer-name">—</h2>
+          <p class="coach-drawer-eyebrow" id="coach-drawer-eyebrow" data-i18n-replace>Athlete</p>
+          <h2 class="coach-drawer-name" id="coach-drawer-name" data-i18n-replace>—</h2>
         </div>
-        <button class="coach-drawer-close" type="button" id="coach-drawer-close" aria-label="Close">
+        <button class="coach-drawer-close" type="button" id="coach-drawer-close" aria-label="Close" data-i18n-attr="common.close:aria-label">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M6 6l12 12M18 6l-12 12" />
           </svg>
         </button>
       </header>
-      <div class="coach-drawer-body" id="coach-drawer-body"></div>
+      <div class="coach-drawer-body" id="coach-drawer-body" data-i18n-replace></div>
     </div>
   </div>
 
@@ -263,6 +266,31 @@ import Footer from "../../components/Footer.astro";
     color: var(--rise-neutral-400);
     font-family: var(--font-body);
     font-size: 0.95rem;
+  }
+
+  .portal-lang-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 50;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    color: var(--rise-neutral-700);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .portal-lang-toggle:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+  }
+  @media (min-width: 640px) {
+    .portal-lang-toggle { top: 16px; right: 16px; }
   }
 </style>
 
@@ -653,6 +681,23 @@ import Footer from "../../components/Footer.astro";
 </style>
 
 <script>
+  import { getLang, setLang, getTranslation, translations, type Lang } from "../../lib/i18n";
+
+  // ===== i18n helpers =====
+  function t(key: string, params?: Record<string, string | number>): string {
+    let s = getTranslation(getLang(), key);
+    if (params) {
+      for (const k in params) s = s.replace(`{${k}}`, String(params[k]));
+    }
+    return s;
+  }
+  function isZh(): boolean { return getLang() === "zh"; }
+  // Display name for a food item, preferring zh when lang=zh and name_zh available.
+  function foodDisplayName(item: { name: string; name_zh?: string | null }): string {
+    if (isZh() && item.name_zh && typeof item.name_zh === "string" && item.name_zh.trim()) return item.name_zh;
+    return item.name;
+  }
+
   // ===== Types =====
   type Profile = {
     id: string;
@@ -680,6 +725,11 @@ import Footer from "../../components/Footer.astro";
     ai_feedback: string | null;
     created_at: string;
   };
+  type AlertSpec = {
+    level: "red" | "yellow";
+    key: string;
+    params?: Record<string, string | number>;
+  };
   type Athlete = {
     profile: Profile;
     baseline: Baseline | null;
@@ -693,7 +743,7 @@ import Footer from "../../components/Footer.astro";
     weightTrend: "up" | "down" | "flat" | null;
     weightTrendValue: number; // signed kg change vs 7d ago
     lastActive: Date | null;
-    alerts: Array<{ level: "red" | "yellow"; msg: string }>;
+    alerts: AlertSpec[];
   };
 
   // ===== Date helpers (Asia/Hong_Kong) =====
@@ -733,18 +783,18 @@ import Footer from "../../components/Footer.astro";
     });
   }
   function formatRelativeAgo(d: Date | null): string {
-    if (!d) return "Never";
+    if (!d) return t("coach.relative.never");
     const now = new Date();
     const diffMs = now.getTime() - d.getTime();
     const mins = Math.floor(diffMs / 60000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1) return t("coach.relative.justNow");
+    if (mins < 60) return t("coach.relative.minAgo", { n: mins });
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
+    if (hrs < 24) return t("coach.relative.hrAgo", { n: hrs });
     const days = Math.floor(hrs / 24);
-    if (days === 1) return "Yesterday";
-    if (days < 7) return `${days} days ago`;
-    if (days < 14) return "Last week";
+    if (days === 1) return t("coach.relative.yesterday");
+    if (days < 7) return t("coach.relative.daysAgo", { n: days });
+    if (days < 14) return t("coach.relative.lastWeek");
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
   }
   function formatDateShort(date: Date) {
@@ -847,31 +897,40 @@ import Footer from "../../components/Footer.astro";
         }
       }
 
-      // Alerts
-      const alerts: Array<{ level: "red" | "yellow"; msg: string }> = [];
+      // Alerts — store key+params so lang switch re-translates at render time.
+      const alerts: AlertSpec[] = [];
       const hoursSinceLastMeal = lastMealAt
         ? (Date.now() - lastMealAt.getTime()) / 3600000
         : Infinity;
 
       if (hoursSinceLastMeal > 48) {
-        alerts.push({ level: "red", msg: "No meals logged in 48+ hours" });
+        alerts.push({ level: "red", key: "coach.alert.noMeals48" });
       }
       if (weightDrop7d > 2) {
         alerts.push({
           level: "red",
-          msg: `Weight dropped ${weightDrop7d.toFixed(1)}kg in the last 7 days`,
+          key: "coach.alert.weightDropped",
+          params: { n: weightDrop7d.toFixed(1) },
         });
       }
       if (mealsYesterday > 0 && mealsYesterday < 3) {
-        alerts.push({ level: "yellow", msg: `Only ${mealsYesterday} meals yesterday` });
+        alerts.push({
+          level: "yellow",
+          key: "coach.alert.onlyMealsYesterday",
+          params: { n: mealsYesterday },
+        });
       }
       const daysSinceWeight = lastWeightDay
         ? Math.floor((isoToDate(today).getTime() - lastWeightDay.getTime()) / 86400000)
         : Infinity;
       if (daysSinceWeight >= 3 && daysSinceWeight !== Infinity) {
-        alerts.push({ level: "yellow", msg: `No weight logged in ${daysSinceWeight} days` });
+        alerts.push({
+          level: "yellow",
+          key: "coach.alert.noWeightDays",
+          params: { n: daysSinceWeight },
+        });
       } else if (daysSinceWeight === Infinity) {
-        alerts.push({ level: "yellow", msg: "No weight logged yet" });
+        alerts.push({ level: "yellow", key: "coach.alert.noWeightYet" });
       }
 
       // Status color
@@ -940,7 +999,7 @@ import Footer from "../../components/Footer.astro";
           level: al.level,
           msg: al.msg,
           athleteId: a.profile.id,
-          athleteName: a.profile.full_name || a.profile.email || "Athlete",
+          athleteName: a.profile.full_name || a.profile.email || t("coach.row.athlete"),
         });
       }
     }
@@ -955,7 +1014,7 @@ import Footer from "../../components/Footer.astro";
     let expanded = false;
     if (all.length > 5) {
       toggle.removeAttribute("hidden");
-      toggle.textContent = `View all (${all.length})`;
+      toggle.textContent = `${t("coach.alerts.viewAll")} (${all.length})`;
     } else {
       toggle.setAttribute("hidden", "");
     }
@@ -988,7 +1047,7 @@ import Footer from "../../components/Footer.astro";
     paint();
     toggle.onclick = () => {
       expanded = !expanded;
-      toggle.textContent = expanded ? "Show less" : `View all (${all.length})`;
+      toggle.textContent = expanded ? t("coach.alerts.showLess") : `${t("coach.alerts.viewAll")} (${all.length})`;
       paint();
     };
   }
@@ -1013,12 +1072,12 @@ import Footer from "../../components/Footer.astro";
 
     const headers = `
       <div class="coach-table-headers">
-        <div>Name</div>
-        <div>Status</div>
-        <div>Meals</div>
-        <div>Protein</div>
-        <div class="coach-header-weight">Weight</div>
-        <div class="coach-header-last">Last active</div>
+        <div>${t("coach.table.header.name")}</div>
+        <div>${t("coach.table.header.status")}</div>
+        <div>${t("coach.table.header.meals")}</div>
+        <div>${t("coach.table.header.protein")}</div>
+        <div class="coach-header-weight">${t("coach.table.header.weight")}</div>
+        <div class="coach-header-last">${t("coach.table.header.lastActive")}</div>
       </div>`;
 
     const rows = athletes
@@ -1034,9 +1093,9 @@ import Footer from "../../components/Footer.astro";
             : "";
         const weightCell = a.weightLatest
           ? `<span class="coach-row-strong">${a.weightLatest.weight_kg.toFixed(1)} kg</span> ${trendArrow}`
-          : `<span class="coach-row-secondary">No data</span>`;
+          : `<span class="coach-row-secondary">${t("coach.weight.noData")}</span>`;
         const lastActiveText = formatRelativeAgo(a.lastActive);
-        const nameLine = `${escapeHtml(a.profile.full_name || a.profile.email || "Athlete")}`;
+        const nameLine = `${escapeHtml(a.profile.full_name || a.profile.email || t("coach.row.athlete"))}`;
         return `
           <button class="coach-row" data-aid="${a.profile.id}">
             <div>
@@ -1085,8 +1144,8 @@ import Footer from "../../components/Footer.astro";
     const eyebrow = document.getElementById("coach-drawer-eyebrow");
     if (!drawer || !nameEl || !eyebrow) return;
 
-    nameEl.textContent = a.profile.full_name || a.profile.email || "Athlete";
-    const statusWord = a.status === "green" ? "On track" : a.status === "yellow" ? "Drifting" : "Off track";
+    nameEl.textContent = a.profile.full_name || a.profile.email || t("coach.drawer.athlete");
+    const statusWord = a.status === "green" ? t("coach.status.green") : a.status === "yellow" ? t("coach.status.yellow") : t("coach.status.red");
     eyebrow.textContent = `${statusWord} • ${a.profile.email || ""}`;
     drawer.removeAttribute("hidden");
     drawer.setAttribute("aria-hidden", "false");
@@ -1131,7 +1190,7 @@ import Footer from "../../components/Footer.astro";
     const recent = a.meals.slice(0, 5);
     const recentHtml =
       recent.length === 0
-        ? `<div class="coach-chart-empty" style="padding:14px;">No meals logged yet.</div>`
+        ? `<div class="coach-chart-empty" style="padding:14px;">${t("coach.drawer.noMealsYet")}</div>`
         : recent
             .map((m) => {
               const foods = Array.isArray(m.food_items)
@@ -1150,7 +1209,7 @@ import Footer from "../../components/Footer.astro";
                   <span class="coach-meal-slot">${slotLabel}</span>
                   <span class="coach-meal-date">${created.toLocaleDateString(undefined, { month: "short", day: "numeric" })} • ${created.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                 </div>
-                <div class="coach-meal-foods">${foods || "<em>No items</em>"}</div>
+                <div class="coach-meal-foods">${foods || `<em>${t("coach.drawer.noItems")}</em>`}</div>
                 <div class="coach-meal-protein">${Math.round(m.total_protein_g)}g protein</div>
                 ${fb}
               </div>`;
@@ -1163,32 +1222,32 @@ import Footer from "../../components/Footer.astro";
       ? `
         <div class="coach-baseline">
           <div class="coach-baseline-cell">
-            <div class="coach-baseline-label">Baseline weight</div>
+            <div class="coach-baseline-label">${t("coach.drawer.baselineWeight")}</div>
             <div class="coach-baseline-value">${Number(b.weight_kg).toFixed(1)}<span class="coach-baseline-unit">kg</span></div>
           </div>
           <div class="coach-baseline-cell">
-            <div class="coach-baseline-label">Age</div>
+            <div class="coach-baseline-label">${t("coach.drawer.age")}</div>
             <div class="coach-baseline-value">${b.age}<span class="coach-baseline-unit">yrs</span></div>
           </div>
           <div class="coach-baseline-cell">
-            <div class="coach-baseline-label">Growth rate</div>
-            <div class="coach-baseline-value" style="text-transform:capitalize;">${escapeHtml(b.growth_rate)}</div>
+            <div class="coach-baseline-label">${t("coach.drawer.growth")}</div>
+            <div class="coach-baseline-value">${t("coach.growth." + b.growth_rate) || escapeHtml(b.growth_rate)}</div>
           </div>
           <div class="coach-baseline-cell">
-            <div class="coach-baseline-label">Protein target</div>
+            <div class="coach-baseline-label">${t("coach.drawer.proteinTarget")}</div>
             <div class="coach-baseline-value">${Math.round(b.protein_target_g)}<span class="coach-baseline-unit">g/day</span></div>
           </div>
         </div>`
-      : `<div class="coach-chart-empty">No baseline yet.</div>`;
+      : `<div class="coach-chart-empty">${t("coach.drawer.noBaseline")}</div>`;
 
     body.innerHTML = `
       <div class="coach-drawer-section">
-        <h3 class="coach-section-title">Last 7 days — meals logged</h3>
+        <h3 class="coach-section-title">${t("coach.drawer.last7days")}</h3>
         <div class="coach-grid">${gridHtml}</div>
       </div>
 
       <div class="coach-drawer-section">
-        <h3 class="coach-section-title">Weight trend</h3>
+        <h3 class="coach-section-title">${t("coach.drawer.weightTrend")}</h3>
         <div class="coach-chart-toggle" role="tablist">
           <button class="coach-chart-btn ${drawerChartRange === 7 ? "active" : ""}" data-range="7">7d</button>
           <button class="coach-chart-btn ${drawerChartRange === 30 ? "active" : ""}" data-range="30">30d</button>
@@ -1197,12 +1256,12 @@ import Footer from "../../components/Footer.astro";
       </div>
 
       <div class="coach-drawer-section">
-        <h3 class="coach-section-title">Recent meals</h3>
+        <h3 class="coach-section-title">${t("coach.drawer.recentMeals")}</h3>
         ${recentHtml}
       </div>
 
       <div class="coach-drawer-section">
-        <h3 class="coach-section-title">Baseline</h3>
+        <h3 class="coach-section-title">${t("coach.drawer.baseline")}</h3>
         ${baselineHtml}
       </div>
     `;
@@ -1235,7 +1294,7 @@ import Footer from "../../components/Footer.astro";
       .filter((p) => typeof p.w === "number") as Array<{ iso: string; w: number }>;
 
     if (points.length === 0) {
-      root.innerHTML = `<div class="coach-chart-empty">No weight data in this range.</div>`;
+      root.innerHTML = `<div class="coach-chart-empty">${t("coach.drawer.noWeightRange")}</div>`;
       return;
     }
 
@@ -1305,6 +1364,52 @@ import Footer from "../../components/Footer.astro";
     </svg>`;
   }
 
+  // ===== i18n processing =====
+  (window as any).__t = translations[getLang()];
+  (window as any).__riseT = t;
+
+  function applyCoachTranslations() {
+    const lang = getLang();
+    (window as any).__t = translations[lang];
+
+    document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (!key) return;
+      el.textContent = getTranslation(lang, key);
+    });
+    document.querySelectorAll<HTMLElement>("[data-i18n-attr]").forEach((el) => {
+      const spec = el.getAttribute("data-i18n-attr");
+      if (!spec) return;
+      spec.split(",").forEach((pair) => {
+        const [key, attr] = pair.split(":").map((s) => s.trim());
+        if (key && attr) el.setAttribute(attr, getTranslation(lang, key));
+      });
+    });
+
+    // Lang toggle text
+    const toggle = document.getElementById("portal-lang-toggle");
+    if (toggle) {
+      toggle.textContent = lang === "zh" ? getTranslation("en", "lang.toggle.en") : getTranslation("zh", "lang.toggle.zh");
+    }
+    document.documentElement.setAttribute("lang", lang === "zh" ? "zh-HK" : "en");
+
+    // Re-render dynamic parts
+    if (athletesCache.length > 0) {
+      renderAlerts(athletesCache);
+      renderTable(athletesCache);
+    }
+  }
+
+  function wireLangToggle() {
+    const btn = document.getElementById("portal-lang-toggle");
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      const next: Lang = getLang() === "zh" ? "en" : "zh";
+      setLang(next);
+      applyCoachTranslations();
+    });
+  }
+
   // ===== Init =====
   async function initCoach() {
     const sb = (window as any).supabaseClient;
@@ -1345,7 +1450,7 @@ import Footer from "../../components/Footer.astro";
       loading?.setAttribute("hidden", "");
       notCoach?.removeAttribute("hidden");
       const sub = document.querySelector("#coach-not-coach .coach-anon-sub");
-      if (sub) sub.textContent = "Your coach account has no team assigned.";
+      if (sub) sub.textContent = t("coach.notCoach.noTeam");
       return;
     }
 
@@ -1354,11 +1459,11 @@ import Footer from "../../components/Footer.astro";
 
     // Header chrome
     const titleEl = document.getElementById("coach-title");
-    if (titleEl) titleEl.textContent = "Coach Dashboard";
+    if (titleEl) titleEl.textContent = t("coach.title");
     const teamEl = document.getElementById("coach-team-name");
-    if (teamEl) teamEl.textContent = `Team ${profile.team_id}`;
+    if (teamEl) teamEl.textContent = `${t("coach.team")} ${profile.team_id}`;
     const countEl = document.getElementById("coach-athlete-count");
-    if (countEl) countEl.textContent = `${athletes.length} athlete${athletes.length === 1 ? "" : "s"}`;
+    if (countEl) countEl.textContent = `${athletes.length} ${athletes.length === 1 ? t("coach.athlete") : t("coach.athletes")}`;
     const dateEl = document.getElementById("coach-today-date");
     if (dateEl) dateEl.textContent = formatDateLong(isoToDate(TODAY));
 
@@ -1374,6 +1479,9 @@ import Footer from "../../components/Footer.astro";
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && currentDrawerAthleteId) closeDrawer();
     });
+
+    wireLangToggle();
+    applyCoachTranslations();
   }
 
   initCoach();

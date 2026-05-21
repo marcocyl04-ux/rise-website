@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline | RISE Advancement</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <style>
+      :root {
+        --rise-red: #D3191F;
+        --rise-red-dark: #A81419;
+        --rise-black: #121212;
+        --rise-white: #FAFAFA;
+        --rise-neutral-300: #B8B2B2;
+        --rise-neutral-500: #5C5555;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: var(--rise-white);
+        color: var(--rise-black);
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      }
+      .wrap {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+      }
+      .card {
+        max-width: 400px;
+        width: 100%;
+      }
+      .logo {
+        width: 88px;
+        height: 88px;
+        border-radius: 18px;
+        background: var(--rise-red);
+        color: var(--rise-white);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Oswald", "Inter", sans-serif;
+        font-size: 56px;
+        font-weight: 700;
+        margin: 0 auto 24px;
+      }
+      h1 {
+        font-family: "Oswald", "Inter", sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin: 0 0 12px;
+        color: var(--rise-black);
+      }
+      p {
+        font-size: 1rem;
+        line-height: 1.55;
+        color: var(--rise-neutral-500);
+        margin: 0 0 24px;
+      }
+      button {
+        background: var(--rise-red);
+        color: var(--rise-white);
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.15s;
+      }
+      button:hover, button:focus { background: var(--rise-red-dark); }
+      .small {
+        margin-top: 18px;
+        font-size: 0.85rem;
+        color: var(--rise-neutral-300);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="logo" aria-hidden="true">R</div>
+        <h1>You're offline</h1>
+        <p>Connect to the internet to log meals and sync your training data.</p>
+        <button type="button" onclick="window.location.reload()">Try again</button>
+        <p class="small">RISE Nutrition Tracker</p>
+      </div>
+    </div>
+  </body>
+</html>

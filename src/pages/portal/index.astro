@@ -13,16 +13,19 @@ import Footer from "../../components/Footer.astro";
     <div class="portal-spinner" aria-hidden="true"></div>
   </section>
 
+  <!-- Floating lang toggle -->
+  <button id="portal-lang-toggle" class="portal-lang-toggle" type="button" aria-label="Toggle language">中文</button>
+
   <!-- Unauthed prompt -->
   <section id="portal-anon" class="portal-anon section" hidden>
     <div class="container portal-narrow">
-      <h1 class="portal-anon-title">Sign in to your portal</h1>
-      <p class="portal-anon-sub">
+      <h1 class="portal-anon-title" data-i18n="common.signInToPortal">Sign in to your portal</h1>
+      <p class="portal-anon-sub" data-i18n="portal.signInSub">
         Access your nutrition tracker, training tools, and personalized targets.
       </p>
       <div class="portal-anon-actions">
-        <button class="btn-primary" type="button" data-open-auth>Log in / Sign up</button>
-        <a class="btn-ghost" href="/">Back to home</a>
+        <button class="btn-primary" type="button" data-open-auth data-i18n="common.signupOrLogin">Log in / Sign up</button>
+        <a class="btn-ghost" href="/" data-i18n="common.backToHome">Back to home</a>
       </div>
     </div>
   </section>
@@ -31,20 +34,20 @@ import Footer from "../../components/Footer.astro";
   <section id="portal-dashboard" class="portal-dashboard section" hidden>
     <div class="container">
       <header class="portal-header">
-        <p class="portal-eyebrow">RISE Portal</p>
-        <h1 class="portal-title" id="portal-hello">Welcome</h1>
-        <p class="portal-sub" id="portal-sub">Pick a tool to get started.</p>
+        <p class="portal-eyebrow" data-i18n="portal.eyebrow">RISE Portal</p>
+        <h1 class="portal-title" id="portal-hello" data-i18n="portal.welcome">Welcome</h1>
+        <p class="portal-sub" id="portal-sub" data-i18n="portal.subPick">Pick a tool to get started.</p>
       </header>
 
       <div class="portal-target" id="portal-target-card" hidden>
-        <span class="portal-target-label">Your daily protein target</span>
+        <span class="portal-target-label" data-i18n="portal.dailyTargetLabel">Your daily protein target</span>
         <div class="portal-target-row">
           <span class="portal-target-number" id="portal-protein">0</span>
-          <span class="portal-target-unit">g / day</span>
+          <span class="portal-target-unit" data-i18n="portal.unitGPerDay">g / day</span>
         </div>
       </div>
 
-      <h2 class="portal-section-title">Your tools</h2>
+      <h2 class="portal-section-title" data-i18n="portal.toolsHeading">Your tools</h2>
       <div class="portal-grid">
         <a class="portal-card portal-card-active" href="/portal/tracker">
           <div class="portal-card-icon" aria-hidden="true">
@@ -55,8 +58,8 @@ import Footer from "../../components/Footer.astro";
             </svg>
           </div>
           <div class="portal-card-body">
-            <h3 class="portal-card-title">Nutrition Tracker</h3>
-            <p class="portal-card-desc">Log protein, track meals, hit your daily target.</p>
+            <h3 class="portal-card-title" data-i18n="portal.card.tracker.title">Nutrition Tracker</h3>
+            <p class="portal-card-desc" data-i18n="portal.card.tracker.desc">Log protein, track meals, hit your daily target.</p>
           </div>
           <span class="portal-card-arrow" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
@@ -70,10 +73,10 @@ import Footer from "../../components/Footer.astro";
             </svg>
           </div>
           <div class="portal-card-body">
-            <h3 class="portal-card-title">Workouts</h3>
-            <p class="portal-card-desc">Strength + on-ice plans built around your week.</p>
+            <h3 class="portal-card-title" data-i18n="portal.card.workouts.title">Workouts</h3>
+            <p class="portal-card-desc" data-i18n="portal.card.workouts.desc">Strength + on-ice plans built around your week.</p>
           </div>
-          <span class="portal-card-soon-tag">Coming soon</span>
+          <span class="portal-card-soon-tag" data-i18n="portal.card.comingSoon">Coming soon</span>
         </div>
 
         <div class="portal-card portal-card-soon">
@@ -83,10 +86,10 @@ import Footer from "../../components/Footer.astro";
             </svg>
           </div>
           <div class="portal-card-body">
-            <h3 class="portal-card-title">Game review</h3>
-            <p class="portal-card-desc">Mentor notes and clips from your games.</p>
+            <h3 class="portal-card-title" data-i18n="portal.card.game.title">Game review</h3>
+            <p class="portal-card-desc" data-i18n="portal.card.game.desc">Mentor notes and clips from your games.</p>
           </div>
-          <span class="portal-card-soon-tag">Coming soon</span>
+          <span class="portal-card-soon-tag" data-i18n="portal.card.comingSoon">Coming soon</span>
         </div>
       </div>
     </div>
@@ -341,9 +344,80 @@ import Footer from "../../components/Footer.astro";
     padding: 2px 8px;
     border-radius: 4px;
   }
+
+  .portal-lang-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 50;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    color: var(--rise-neutral-700);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .portal-lang-toggle:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+  }
+  @media (min-width: 640px) {
+    .portal-lang-toggle { top: 16px; right: 16px; }
+  }
 </style>
 
 <script>
+  import { getLang, setLang, getTranslation, translations, type Lang } from "../../lib/i18n";
+
+  function currentName(): string {
+    return (window as any).__riseFirstName || "";
+  }
+
+  function applyTranslations() {
+    const lang = getLang();
+    (window as any).__t = translations[lang];
+
+    document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (!key) return;
+      // Welcome line is dynamic — handled below
+      if (el.id === "portal-hello") return;
+      el.textContent = getTranslation(lang, key);
+    });
+
+    // Welcome string: "Welcome, {first}" or "歡迎,{first}"
+    const hello = document.getElementById("portal-hello");
+    const first = currentName();
+    if (hello) {
+      const base = getTranslation(lang, "portal.welcome");
+      hello.textContent = first ? `${base}, ${first}` : base;
+    }
+
+    // Lang toggle button text
+    const toggle = document.getElementById("portal-lang-toggle");
+    if (toggle) {
+      toggle.textContent = lang === "zh" ? getTranslation("en", "lang.toggle.en") : getTranslation("zh", "lang.toggle.zh");
+    }
+
+    // Update <html lang>
+    document.documentElement.setAttribute("lang", lang === "zh" ? "zh-HK" : "en");
+  }
+
+  function wireLangToggle() {
+    const btn = document.getElementById("portal-lang-toggle");
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      const next: Lang = getLang() === "zh" ? "en" : "zh";
+      setLang(next);
+      applyTranslations();
+    });
+  }
+
   function deriveDisplayName(user: any): string {
     if (!user) return "athlete";
     const meta = user.user_metadata || {};
@@ -366,6 +440,7 @@ import Footer from "../../components/Footer.astro";
     if (!session) {
       loading?.setAttribute("hidden", "");
       anon?.removeAttribute("hidden");
+      applyTranslations();
       // React to login from modal
       sb.auth.onAuthStateChange((_e: string, s: any) => {
         if (s) window.location.reload();
@@ -407,8 +482,7 @@ import Footer from "../../components/Footer.astro";
 
     const name = profile?.full_name || deriveDisplayName(user);
     const firstName = name.split(" ")[0];
-    const hello = document.getElementById("portal-hello");
-    if (hello) hello.textContent = `Welcome, ${firstName}`;
+    (window as any).__riseFirstName = firstName;
 
     if (baseline?.protein_target_g) {
       const target = document.getElementById("portal-target-card");
@@ -419,7 +493,10 @@ import Footer from "../../components/Footer.astro";
 
     loading?.setAttribute("hidden", "");
     dash?.removeAttribute("hidden");
+    applyTranslations();
   }
 
+  applyTranslations();
+  wireLangToggle();
   initPortal();
 </script>
