@@ -1058,13 +1058,13 @@ import MealLogModal from "../../components/MealLogModal.astro";
           open(yesterday?.food_items || []);
           return;
         }
-        open();
+        open(logged?.food_items || undefined);
       });
 
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          open();
+          open(logged?.food_items || undefined);
         }
       });
 

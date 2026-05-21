@@ -1002,7 +1002,7 @@
     state.slotLabel = slotLabel;
 
     const title = $("meal-modal-title");
-    if (title) title.textContent = `Log · ${slotLabel}`;
+    if (title) title.textContent = (prefill && prefill.length ? "Edit" : "Log") + ` · ${slotLabel}`;
 
     if (prefill && prefill.length) {
       state.items = prefill.map((it) => ({ ...it }));
