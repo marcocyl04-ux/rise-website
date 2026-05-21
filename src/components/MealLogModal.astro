@@ -654,7 +654,7 @@
   import { analyzeMealPhoto, type AnalyzedItem } from "../lib/analyze-meal";
 
   type FoodRow = {
-    id: number;
+    id: string;
     name: string;
     name_zh: string | null;
     category: string;
@@ -1079,8 +1079,8 @@
       const btn = target?.closest<HTMLButtonElement>(".tk-food-row");
       console.log("[meal-modal] closest tk-food-row", { found: !!btn, dataFoodId: btn?.dataset.foodId });
       if (!btn) return;
-      const id = Number(btn.dataset.foodId);
-      const row = (state.foodCache || []).find((r) => r.id === id);
+      const id = btn.dataset.foodId;
+      const row = (state.foodCache || []).find((r) => String(r.id) === id);
       console.log("[meal-modal] row lookup", { id, found: !!row, cacheSize: state.foodCache?.length || 0 });
       if (!row) return;
       state.items.push({
