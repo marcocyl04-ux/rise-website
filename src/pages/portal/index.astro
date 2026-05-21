@@ -1,0 +1,419 @@
+---
+// Portal dashboard — entry point for authenticated users.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<BaseLayout title="Portal" description="Your RISE Advancement portal — access training tools, nutrition tracking, and more.">
+  <Header slot="header" />
+
+  <!-- Loading state while we check auth -->
+  <section id="portal-loading" class="portal-loading">
+    <div class="portal-spinner" aria-hidden="true"></div>
+  </section>
+
+  <!-- Unauthed prompt -->
+  <section id="portal-anon" class="portal-anon section" hidden>
+    <div class="container portal-narrow">
+      <h1 class="portal-anon-title">Sign in to your portal</h1>
+      <p class="portal-anon-sub">
+        Access your nutrition tracker, training tools, and personalized targets.
+      </p>
+      <div class="portal-anon-actions">
+        <button class="btn-primary" type="button" data-open-auth>Log in / Sign up</button>
+        <a class="btn-ghost" href="/">Back to home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Authed dashboard -->
+  <section id="portal-dashboard" class="portal-dashboard section" hidden>
+    <div class="container">
+      <header class="portal-header">
+        <p class="portal-eyebrow">RISE Portal</p>
+        <h1 class="portal-title" id="portal-hello">Welcome</h1>
+        <p class="portal-sub" id="portal-sub">Pick a tool to get started.</p>
+      </header>
+
+      <div class="portal-target" id="portal-target-card" hidden>
+        <span class="portal-target-label">Your daily protein target</span>
+        <div class="portal-target-row">
+          <span class="portal-target-number" id="portal-protein">0</span>
+          <span class="portal-target-unit">g / day</span>
+        </div>
+      </div>
+
+      <h2 class="portal-section-title">Your tools</h2>
+      <div class="portal-grid">
+        <a class="portal-card portal-card-active" href="/portal/tracker">
+          <div class="portal-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7h16M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" />
+              <path d="M9 11v6M12 11v6M15 11v6" />
+              <path d="M9 4h6l1 3H8z" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Nutrition Tracker</h3>
+            <p class="portal-card-desc">Log protein, track meals, hit your daily target.</p>
+          </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
+          </span>
+        </a>
+
+        <div class="portal-card portal-card-soon">
+          <div class="portal-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Workouts</h3>
+            <p class="portal-card-desc">Strength + on-ice plans built around your week.</p>
+          </div>
+          <span class="portal-card-soon-tag">Coming soon</span>
+        </div>
+
+        <div class="portal-card portal-card-soon">
+          <div class="portal-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v18M3 12h18" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Game review</h3>
+            <p class="portal-card-desc">Mentor notes and clips from your games.</p>
+          </div>
+          <span class="portal-card-soon-tag">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .portal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+  .portal-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--rise-neutral-100);
+    border-top-color: var(--rise-red);
+    border-radius: 50%;
+    animation: portal-spin 0.8s linear infinite;
+  }
+  @keyframes portal-spin { to { transform: rotate(360deg); } }
+
+  .portal-anon {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  .portal-narrow { max-width: 520px; }
+  .portal-anon-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    color: var(--rise-black);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 var(--space-3);
+  }
+  .portal-anon-sub {
+    font-family: var(--font-body);
+    color: var(--rise-neutral-500);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 var(--space-6);
+  }
+  .portal-anon-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary, .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .btn-primary {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+  .btn-primary:hover {
+    background: var(--rise-red-dark);
+    text-decoration: none;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border-color: var(--rise-neutral-200);
+  }
+  .btn-ghost:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    text-decoration: none;
+  }
+
+  .portal-dashboard {
+    padding: var(--space-12) 0;
+  }
+
+  .portal-header {
+    margin-bottom: var(--space-8);
+  }
+  .portal-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--rise-red);
+    margin: 0 0 var(--space-2);
+  }
+  .portal-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--rise-black);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 var(--space-2);
+  }
+  .portal-sub {
+    font-family: var(--font-body);
+    color: var(--rise-neutral-500);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .portal-target {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, var(--rise-red), var(--rise-red-dark));
+    color: var(--rise-white);
+    border-radius: 12px;
+    padding: var(--space-5) var(--space-6);
+    margin-bottom: var(--space-8);
+    box-shadow: 0 8px 24px rgba(211, 25, 31, 0.18);
+    max-width: 420px;
+  }
+  .portal-target[hidden] { display: none; }
+  .portal-target-label {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+  .portal-target-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .portal-target-number {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .portal-target-unit {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+
+  .portal-section-title {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--rise-neutral-400);
+    margin: 0 0 var(--space-4);
+  }
+
+  .portal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .portal-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 960px) {
+    .portal-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .portal-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: var(--space-5);
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    color: inherit;
+  }
+  .portal-card-active:hover {
+    border-color: var(--rise-red);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(18, 18, 18, 0.08);
+    text-decoration: none;
+  }
+  .portal-card-soon {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .portal-card-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--rise-red-light);
+    color: var(--rise-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portal-card-soon .portal-card-icon {
+    background: var(--rise-neutral-50);
+    color: var(--rise-neutral-400);
+  }
+  .portal-card-body { flex: 1; }
+  .portal-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+    margin: 0 0 4px;
+  }
+  .portal-card-desc {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--rise-neutral-500);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .portal-card-arrow {
+    color: var(--rise-neutral-300);
+    transition: color 0.15s, transform 0.15s;
+  }
+  .portal-card-active:hover .portal-card-arrow {
+    color: var(--rise-red);
+    transform: translateX(2px);
+  }
+  .portal-card-soon-tag {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--rise-neutral-400);
+    background: var(--rise-neutral-50);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+</style>
+
+<script>
+  function deriveDisplayName(user: any): string {
+    if (!user) return "athlete";
+    const meta = user.user_metadata || {};
+    return (meta.full_name || meta.name || user.email?.split("@")[0] || "athlete").trim();
+  }
+
+  async function initPortal() {
+    const sb = (window as any).supabaseClient;
+    if (!sb) {
+      setTimeout(initPortal, 100);
+      return;
+    }
+
+    const loading = document.getElementById("portal-loading");
+    const anon = document.getElementById("portal-anon");
+    const dash = document.getElementById("portal-dashboard");
+
+    const { data: { session } } = await sb.auth.getSession();
+
+    if (!session) {
+      loading?.setAttribute("hidden", "");
+      anon?.removeAttribute("hidden");
+      // React to login from modal
+      sb.auth.onAuthStateChange((_e: string, s: any) => {
+        if (s) window.location.reload();
+      });
+      return;
+    }
+
+    const user = session.user;
+
+    // ensure user_profiles row exists
+    try {
+      const { data: existing } = await sb
+        .from("user_profiles")
+        .select("id")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (!existing) {
+        await sb.from("user_profiles").insert({
+          id: user.id,
+          email: user.email,
+          full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
+        });
+      }
+    } catch (err) {
+      console.warn("ensureProfile", err);
+    }
+
+    // Load baseline + profile in parallel for hello + target card
+    const [{ data: profile }, { data: baseline }] = await Promise.all([
+      sb.from("user_profiles").select("full_name").eq("id", user.id).maybeSingle(),
+      sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
+    ]);
+
+    const name = profile?.full_name || deriveDisplayName(user);
+    const firstName = name.split(" ")[0];
+    const hello = document.getElementById("portal-hello");
+    if (hello) hello.textContent = `Welcome, ${firstName}`;
+
+    if (baseline?.protein_target_g) {
+      const target = document.getElementById("portal-target-card");
+      const num = document.getElementById("portal-protein");
+      if (target) target.removeAttribute("hidden");
+      if (num) num.textContent = String(baseline.protein_target_g);
+    }
+
+    loading?.setAttribute("hidden", "");
+    dash?.removeAttribute("hidden");
+  }
+
+  initPortal();
+</script>

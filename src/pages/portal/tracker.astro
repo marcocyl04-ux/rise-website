@@ -1,0 +1,896 @@
+---
+// Nutrition Tracker — Day 1 intake + meal grid.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<BaseLayout title="Nutrition Tracker" description="Track your daily protein and meals — RISE Nutrition Tracker.">
+  <Header slot="header" />
+
+  <section class="tracker-page">
+    <div class="tracker-shell">
+      <!-- Loading -->
+      <div id="tracker-loading" class="tracker-view loading-view">
+        <div class="tracker-spinner" aria-hidden="true"></div>
+      </div>
+
+      <!-- Unauthed -->
+      <section id="tracker-anon" class="tracker-view tracker-anon" hidden>
+        <h2 class="tracker-anon-title">Sign in to start tracking</h2>
+        <p class="tracker-anon-sub">Your protein target and meals live with your account.</p>
+        <button class="tk-btn tk-btn-primary" type="button" data-open-auth>Log in / Sign up</button>
+        <a class="tk-btn tk-btn-ghost" href="/portal">Back to portal</a>
+      </section>
+
+      <!-- INTAKE VIEW: Day 1 -->
+      <section id="tracker-intake" class="tracker-view" hidden>
+        <header class="tk-topbar">
+          <h2 class="tk-h2">Day 1 Setup</h2>
+          <div class="tk-progress">
+            <span class="tk-dot" data-step="1"></span>
+            <span class="tk-dot" data-step="2"></span>
+            <span class="tk-dot" data-step="3"></span>
+            <span class="tk-dot" data-step="4"></span>
+            <span class="tk-dot" data-step="5"></span>
+          </div>
+        </header>
+
+        <div class="tk-intake-wrap">
+          <!-- Step 1: weight -->
+          <div class="tk-step active" data-step="1">
+            <h3 class="tk-h3">What's your weight?</h3>
+            <p class="tk-sub">In kilograms</p>
+            <div class="tk-number-input">
+              <input type="number" id="intake-weight" min="20" max="200" step="0.1" placeholder="60" inputmode="decimal" />
+              <span class="tk-unit">kg</span>
+            </div>
+            <button class="tk-btn tk-btn-primary tk-next-btn" data-next="2" type="button">Next</button>
+          </div>
+
+          <!-- Step 2: age -->
+          <div class="tk-step" data-step="2">
+            <h3 class="tk-h3">How old are you?</h3>
+            <p class="tk-sub">Years</p>
+            <div class="tk-number-input">
+              <input type="number" id="intake-age" min="8" max="25" step="1" placeholder="15" inputmode="numeric" />
+              <span class="tk-unit">yrs</span>
+            </div>
+            <div class="tk-row">
+              <button class="tk-btn tk-btn-ghost" data-back="1" type="button">Back</button>
+              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="3" type="button">Next</button>
+            </div>
+          </div>
+
+          <!-- Step 3: growth -->
+          <div class="tk-step" data-step="3">
+            <h3 class="tk-h3">How fast are you growing?</h3>
+            <p class="tk-sub">How much have you grown in the last year?</p>
+            <div class="tk-choice-list" id="growth-choices">
+              <button class="tk-choice" data-value="fast" type="button">
+                <strong>Growing fast</strong>
+                <small>5+ cm/yr</small>
+              </button>
+              <button class="tk-choice" data-value="moderate" type="button">
+                <strong>Moderate</strong>
+                <small>2-5 cm/yr</small>
+              </button>
+              <button class="tk-choice" data-value="slow" type="button">
+                <strong>Slow</strong>
+                <small>Less than 2 cm/yr</small>
+              </button>
+            </div>
+            <div class="tk-row">
+              <button class="tk-btn tk-btn-ghost" data-back="2" type="button">Back</button>
+              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="4" type="button" disabled>Next</button>
+            </div>
+          </div>
+
+          <!-- Step 4: goal -->
+          <div class="tk-step" data-step="4">
+            <h3 class="tk-h3">What's your main goal?</h3>
+            <p class="tk-sub">Pick one</p>
+            <div class="tk-choice-list" id="goal-choices">
+              <button class="tk-choice" data-value="muscle_gain" type="button">
+                <strong>Build muscle</strong>
+                <small>Add lean mass</small>
+              </button>
+              <button class="tk-choice" data-value="maintenance" type="button">
+                <strong>Stay the same</strong>
+                <small>Maintain weight</small>
+              </button>
+              <button class="tk-choice" data-value="recomposition" type="button">
+                <strong>Lose fat + build muscle</strong>
+                <small>Body recomposition</small>
+              </button>
+              <button class="tk-choice" data-value="fat_loss" type="button">
+                <strong>Lose fat</strong>
+                <small>Cut down</small>
+              </button>
+            </div>
+            <div class="tk-row">
+              <button class="tk-btn tk-btn-ghost" data-back="3" type="button">Back</button>
+              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="5" type="button" disabled>Calculate</button>
+            </div>
+          </div>
+
+          <!-- Step 5: result -->
+          <div class="tk-step" data-step="5">
+            <h3 class="tk-h3">Your daily protein target</h3>
+            <div class="tk-result-card">
+              <span class="tk-result-number" id="result-protein">0</span>
+              <span class="tk-result-unit">g protein / day</span>
+            </div>
+            <p class="tk-result-detail" id="result-detail"></p>
+            <button class="tk-btn tk-btn-primary" id="intake-finish" type="button">Start tracking</button>
+            <p class="tk-form-msg" id="intake-msg"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MAIN APP -->
+      <section id="tracker-app" class="tracker-view" hidden>
+        <header class="tk-topbar tk-app-bar">
+          <div>
+            <p class="tk-hello" id="app-hello">Welcome back</p>
+            <p class="tk-date" id="app-date"></p>
+          </div>
+          <a class="tk-btn tk-btn-ghost tk-btn-small" href="/portal">Portal</a>
+        </header>
+
+        <div class="tk-target-card">
+          <span class="tk-target-label">Your target</span>
+          <div class="tk-target-row">
+            <span class="tk-target-number" id="app-protein-target">0</span>
+            <span class="tk-target-unit">g protein / day</span>
+          </div>
+        </div>
+
+        <h3 class="tk-section-title">Today's meals</h3>
+        <div class="tk-meal-grid" id="meal-grid"></div>
+
+        <p class="tk-footer-note">Photo logging arrives in the next update.</p>
+      </section>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Scoped light-theme tracker styles, matched to the RISE portal aesthetic.
+     Prefixed with .tk- / tracker- to avoid collisions with the surrounding site. */
+  .tracker-page {
+    background: var(--rise-white);
+    color: var(--rise-black);
+    font-family: var(--font-body);
+    min-height: calc(100vh - 6rem);
+    padding: var(--space-8) var(--space-4);
+  }
+  .tracker-shell {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .tracker-view {
+    background: transparent;
+  }
+  .tracker-view[hidden] { display: none !important; }
+
+  .loading-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+  }
+  .tracker-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--rise-neutral-100);
+    border-top-color: var(--rise-red);
+    border-radius: 50%;
+    animation: tk-spin 0.8s linear infinite;
+  }
+  @keyframes tk-spin { to { transform: rotate(360deg); } }
+
+  .tracker-anon {
+    text-align: center;
+    padding: var(--space-8) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .tracker-anon-title {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+    margin: 0;
+  }
+  .tracker-anon-sub {
+    color: var(--rise-neutral-500);
+    margin: 0 0 var(--space-3);
+  }
+
+  /* ----- Typography ----- */
+  .tk-h2 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+    color: var(--rise-black);
+  }
+  .tk-h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+    margin: var(--space-3) 0 0;
+  }
+  .tk-sub {
+    color: var(--rise-neutral-500);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    margin: 0 0 var(--space-3);
+  }
+
+  /* ----- Topbar ----- */
+  .tk-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-5);
+    gap: var(--space-3);
+  }
+  .tk-app-bar { margin-bottom: var(--space-6); }
+  .tk-hello {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: var(--rise-black);
+  }
+  .tk-date {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--rise-neutral-500);
+    margin: 2px 0 0;
+  }
+
+  .tk-progress { display: flex; gap: 6px; }
+  .tk-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rise-neutral-200);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .tk-dot.active { background: var(--rise-red); transform: scale(1.2); }
+  .tk-dot.done { background: var(--rise-red-dark); }
+
+  /* ----- Buttons ----- */
+  .tk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+    width: 100%;
+    text-decoration: none;
+  }
+  .tk-btn:active { transform: scale(0.98); }
+  .tk-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .tk-btn-primary {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+  .tk-btn-primary:hover:not(:disabled) { background: var(--rise-red-dark); }
+  .tk-btn-ghost {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border-color: var(--rise-neutral-200);
+  }
+  .tk-btn-ghost:hover:not(:disabled) {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+  }
+  .tk-btn-small {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    width: auto;
+  }
+  .tk-row {
+    display: flex;
+    gap: 10px;
+  }
+  .tk-row .tk-btn { flex: 1; }
+
+  /* ----- Intake steps ----- */
+  .tk-intake-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  .tk-step {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    animation: tk-fade 0.2s ease;
+  }
+  .tk-step.active { display: flex; }
+  @keyframes tk-fade {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .tk-number-input {
+    display: flex;
+    align-items: center;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 12px;
+    padding: 0 18px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .tk-number-input:focus-within {
+    border-color: var(--rise-red);
+    box-shadow: 0 0 0 3px var(--rise-red-light);
+  }
+  .tk-number-input input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    padding: 22px 0;
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--rise-black);
+    outline: none;
+    width: 100%;
+    -moz-appearance: textfield;
+  }
+  .tk-number-input input::-webkit-outer-spin-button,
+  .tk-number-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .tk-unit {
+    color: var(--rise-neutral-400);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .tk-choice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .tk-choice {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 12px;
+    padding: 16px 18px;
+    color: var(--rise-black);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  }
+  .tk-choice strong { font-size: 1.05rem; font-weight: 600; }
+  .tk-choice small {
+    color: var(--rise-neutral-500);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+  .tk-choice:hover {
+    border-color: var(--rise-red);
+    box-shadow: 0 4px 12px rgba(18, 18, 18, 0.06);
+  }
+  .tk-choice.selected {
+    border-color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-choice.selected:hover { border-color: var(--rise-red); }
+
+  /* ----- Result ----- */
+  .tk-result-card {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 32px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 8px 20px rgba(18, 18, 18, 0.06);
+  }
+  .tk-result-number {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--rise-red);
+    line-height: 1;
+  }
+  .tk-result-unit {
+    color: var(--rise-neutral-500);
+    font-size: 0.95rem;
+  }
+  .tk-result-detail {
+    text-align: center;
+    color: var(--rise-neutral-500);
+    font-size: 0.9rem;
+  }
+  .tk-form-msg {
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+    min-height: 1.2em;
+    color: var(--rise-neutral-500);
+  }
+  .tk-form-msg.error { color: var(--rise-red-dark); }
+  .tk-form-msg.success { color: #15803d; }
+
+  /* ----- App shell ----- */
+  .tk-target-card {
+    background: linear-gradient(135deg, var(--rise-red), var(--rise-red-dark));
+    border-radius: 12px;
+    padding: var(--space-5) var(--space-6);
+    margin-bottom: var(--space-6);
+    color: var(--rise-white);
+    box-shadow: 0 8px 24px rgba(211, 25, 31, 0.18);
+  }
+  .tk-target-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .tk-target-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tk-target-number {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .tk-target-unit {
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+
+  .tk-section-title {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--rise-neutral-400);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    margin: 0 0 var(--space-3);
+  }
+
+  .tk-meal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .tk-meal-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .tk-meal-slot {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 110px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .tk-meal-slot:hover {
+    border-color: var(--rise-red);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(18, 18, 18, 0.08);
+  }
+  .tk-meal-slot.logged {
+    border-color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-slot-name {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+  }
+  .tk-slot-status {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--rise-neutral-500);
+    margin-top: auto;
+  }
+  .tk-meal-slot.logged .tk-slot-status { color: var(--rise-red); }
+
+  .tk-footer-note {
+    margin-top: var(--space-6);
+    text-align: center;
+    color: var(--rise-neutral-400);
+    font-size: 0.8rem;
+  }
+
+  /* Tracker inputs — override site defaults */
+  .tracker-page input[type="number"] {
+    color: var(--rise-black);
+  }
+</style>
+
+<script>
+  // ===== Protein formula (exact, per spec) =====
+  const GOAL_FACTORS: Record<string, number> = {
+    maintenance: 1.6,
+    muscle_gain: 1.8,
+    recomposition: 2.0,
+    fat_loss: 2.2,
+  };
+  const GROWTH_ADJUSTMENT: Record<string, number> = {
+    fast: 0.2,
+    moderate: 0.1,
+    slow: 0.0,
+  };
+
+  function calculateProteinTarget(weightKg: number, growthRate: string, goal: string): number {
+    const goalFactor = GOAL_FACTORS[goal];
+    const growthAdj = GROWTH_ADJUSTMENT[growthRate];
+    if (goalFactor == null || growthAdj == null) {
+      throw new Error("Invalid goal or growth rate");
+    }
+    let protein = weightKg * (goalFactor + growthAdj);
+    const floor = weightKg * 1.6;
+    const ceiling = weightKg * 2.4;
+    protein = Math.max(floor, Math.min(ceiling, protein));
+    protein = Math.min(protein, 200);
+    return Math.round(protein * 10) / 10;
+  }
+
+  // ===== State =====
+  const intakeState = {
+    step: 1,
+    weight: null as number | null,
+    age: null as number | null,
+    growth: null as string | null,
+    goal: null as string | null,
+    protein: null as number | null,
+  };
+
+  const MEAL_SLOTS = [
+    { key: "breakfast", label: "Breakfast" },
+    { key: "snack_1", label: "Snack 1" },
+    { key: "lunch", label: "Lunch" },
+    { key: "snack_2", label: "Snack 2" },
+    { key: "dinner", label: "Dinner" },
+    { key: "snack_3", label: "Snack 3" },
+  ];
+
+  function todayISO() {
+    return new Date().toISOString().slice(0, 10);
+  }
+  function formatDateLong(date: Date) {
+    return date.toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  // ===== View routing =====
+  const VIEWS = ["tracker-loading", "tracker-anon", "tracker-intake", "tracker-app"];
+  function showView(id: string) {
+    VIEWS.forEach((v) => {
+      const el = document.getElementById(v);
+      if (!el) return;
+      el.toggleAttribute("hidden", v !== id);
+    });
+  }
+
+  // ===== Intake step UI =====
+  function showStep(n: number) {
+    intakeState.step = n;
+    document.querySelectorAll<HTMLElement>("#tracker-intake .tk-step").forEach((el) => {
+      el.classList.toggle("active", Number(el.dataset.step) === n);
+    });
+    document.querySelectorAll<HTMLElement>("#tracker-intake .tk-dot").forEach((dot) => {
+      const s = Number(dot.dataset.step);
+      dot.classList.toggle("active", s === n);
+      dot.classList.toggle("done", s < n);
+    });
+  }
+
+  function validateStep(n: number): boolean {
+    if (n === 1) {
+      const v = Number((document.getElementById("intake-weight") as HTMLInputElement).value);
+      return v >= 20 && v <= 200;
+    }
+    if (n === 2) {
+      const v = Number((document.getElementById("intake-age") as HTMLInputElement).value);
+      return v >= 8 && v <= 25;
+    }
+    if (n === 3) return !!intakeState.growth;
+    if (n === 4) return !!intakeState.goal;
+    return true;
+  }
+
+  function refreshNextButtons() {
+    const step = intakeState.step;
+    const next = document.querySelector<HTMLButtonElement>(
+      `#tracker-intake .tk-step[data-step="${step}"] .tk-next-btn`
+    );
+    if (next) next.disabled = !validateStep(step);
+  }
+
+  function resetIntake() {
+    intakeState.step = 1;
+    intakeState.weight = null;
+    intakeState.age = null;
+    intakeState.growth = null;
+    intakeState.goal = null;
+    intakeState.protein = null;
+    const w = document.getElementById("intake-weight") as HTMLInputElement | null;
+    const a = document.getElementById("intake-age") as HTMLInputElement | null;
+    if (w) w.value = "";
+    if (a) a.value = "";
+    document.querySelectorAll("#tracker-intake .tk-choice").forEach((b) => b.classList.remove("selected"));
+    document.querySelectorAll<HTMLButtonElement>("#tracker-intake .tk-next-btn").forEach((b) => (b.disabled = false));
+    refreshNextButtons();
+    showStep(1);
+  }
+
+  function wireIntake() {
+    document.querySelectorAll<HTMLButtonElement>("#tracker-intake .tk-next-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const current = intakeState.step;
+        if (!validateStep(current)) return;
+
+        if (current === 1) {
+          intakeState.weight = Number((document.getElementById("intake-weight") as HTMLInputElement).value);
+        } else if (current === 2) {
+          intakeState.age = Number((document.getElementById("intake-age") as HTMLInputElement).value);
+        }
+
+        const nextStep = Number(btn.dataset.next);
+
+        if (nextStep === 5) {
+          intakeState.protein = calculateProteinTarget(
+            intakeState.weight as number,
+            intakeState.growth as string,
+            intakeState.goal as string
+          );
+          const proteinEl = document.getElementById("result-protein");
+          if (proteinEl) proteinEl.textContent = String(intakeState.protein);
+          const goalLabels: Record<string, string> = {
+            muscle_gain: "Build muscle",
+            maintenance: "Stay the same",
+            recomposition: "Lose fat + build muscle",
+            fat_loss: "Lose fat",
+          };
+          const growthLabels: Record<string, string> = {
+            fast: "growing fast",
+            moderate: "moderate growth",
+            slow: "slow growth",
+          };
+          const detail = document.getElementById("result-detail");
+          if (detail) {
+            detail.textContent = `Based on ${intakeState.weight}kg, ${growthLabels[intakeState.growth!]}, goal: ${goalLabels[intakeState.goal!]}.`;
+          }
+        }
+
+        showStep(nextStep);
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>("#tracker-intake [data-back]").forEach((btn) => {
+      btn.addEventListener("click", () => showStep(Number(btn.dataset.back)));
+    });
+
+    ["intake-weight", "intake-age"].forEach((id) => {
+      document.getElementById(id)?.addEventListener("input", refreshNextButtons);
+    });
+
+    document.querySelectorAll<HTMLButtonElement>("#growth-choices .tk-choice").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#growth-choices .tk-choice").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        intakeState.growth = btn.dataset.value as string;
+        refreshNextButtons();
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>("#goal-choices .tk-choice").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#goal-choices .tk-choice").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        intakeState.goal = btn.dataset.value as string;
+        refreshNextButtons();
+      });
+    });
+
+    document.getElementById("intake-finish")?.addEventListener("click", async () => {
+      const msg = document.getElementById("intake-msg");
+      const btn = document.getElementById("intake-finish") as HTMLButtonElement;
+      if (!msg || !btn) return;
+      msg.textContent = "";
+      msg.className = "tk-form-msg";
+      btn.disabled = true;
+
+      try {
+        const sb = (window as any).supabaseClient;
+        const { data: { user } } = await sb.auth.getUser();
+        if (!user) throw new Error("Not signed in");
+
+        const { error } = await sb.from("baseline_intake").upsert(
+          {
+            user_id: user.id,
+            weight_kg: intakeState.weight,
+            age: intakeState.age,
+            growth_rate: intakeState.growth,
+            primary_goal: intakeState.goal,
+            protein_target_g: intakeState.protein,
+          },
+          { onConflict: "user_id" }
+        );
+        if (error) throw error;
+
+        await sb.from("daily_weight").upsert(
+          {
+            user_id: user.id,
+            weight_kg: intakeState.weight,
+            logged_date: todayISO(),
+          },
+          { onConflict: "user_id,logged_date" }
+        );
+
+        await loadAppShell();
+        showView("tracker-app");
+      } catch (err: any) {
+        console.error(err);
+        msg.textContent = err.message || "Could not save your intake.";
+        msg.classList.add("error");
+        btn.disabled = false;
+      }
+    });
+  }
+
+  function renderMealGrid(loggedMeals: any[]) {
+    const grid = document.getElementById("meal-grid");
+    if (!grid) return;
+    const loggedBySlot: Record<string, any> = {};
+    loggedMeals.forEach((m: any) => { loggedBySlot[m.meal_slot] = m; });
+    grid.innerHTML = "";
+    MEAL_SLOTS.forEach((slot) => {
+      const logged = loggedBySlot[slot.key];
+      const card = document.createElement("div");
+      card.className = "tk-meal-slot" + (logged ? " logged" : "");
+      card.innerHTML = `
+        <span class="tk-slot-name">${slot.label}</span>
+        <span class="tk-slot-status">${
+          logged ? `Logged · ${logged.total_protein_g || 0}g` : "Tap to log (soon)"
+        }</span>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  async function loadAppShell() {
+    const sb = (window as any).supabaseClient;
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return;
+
+    const [{ data: profile }, { data: baseline }, { data: meals }] = await Promise.all([
+      sb.from("user_profiles").select("full_name, email").eq("id", user.id).maybeSingle(),
+      sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
+      sb.from("meal_logs").select("meal_slot, total_protein_g").eq("user_id", user.id).eq("logged_date", todayISO()),
+    ]);
+
+    const name = profile?.full_name
+      || user.user_metadata?.full_name
+      || (user.email ? user.email.split("@")[0] : "athlete");
+
+    const hello = document.getElementById("app-hello");
+    const dateEl = document.getElementById("app-date");
+    if (hello) hello.textContent = `Welcome back, ${name}`;
+    if (dateEl) dateEl.textContent = formatDateLong(new Date());
+
+    const target = baseline?.protein_target_g || 0;
+    const tEl = document.getElementById("app-protein-target");
+    if (tEl) tEl.textContent = String(target);
+
+    renderMealGrid(meals || []);
+  }
+
+  async function ensureProfile(user: any) {
+    const sb = (window as any).supabaseClient;
+    const { data: existing } = await sb
+      .from("user_profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (existing) return;
+    const full_name =
+      (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || null;
+    await sb.from("user_profiles").insert({
+      id: user.id,
+      email: user.email,
+      full_name,
+    });
+  }
+
+  async function hasBaseline(userId: string): Promise<boolean> {
+    const sb = (window as any).supabaseClient;
+    const { data } = await sb
+      .from("baseline_intake")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+    return !!data;
+  }
+
+  async function routeTracker() {
+    const sb = (window as any).supabaseClient;
+    if (!sb) {
+      setTimeout(routeTracker, 100);
+      return;
+    }
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      showView("tracker-anon");
+      sb.auth.onAuthStateChange((_e: string, s: any) => {
+        if (s) window.location.reload();
+      });
+      return;
+    }
+
+    await ensureProfile(session.user);
+    const done = await hasBaseline(session.user.id);
+
+    if (!done) {
+      resetIntake();
+      showView("tracker-intake");
+      return;
+    }
+
+    await loadAppShell();
+    showView("tracker-app");
+  }
+
+  wireIntake();
+  routeTracker();
+</script>

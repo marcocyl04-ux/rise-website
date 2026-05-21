@@ -12,14 +12,13 @@ const { lang = "en" } = Astro.props;
     <div class="footer-brand">
       <span class="footer-logo">RISE Advancement</span>
       <p class="footer-tagline">
-        Elite hockey player development and placement.<br />
-        Hong Kong &bull; Canada
+        Elite hockey player development and placement.
       </p>
     </div>
 
     <!-- Contact -->
     <div class="footer-contact">
-      <h4>{lang === "zh" ? "聯繫我們" : "Contact"}</h4>
+      <h4>{lang === "zh" ? "聯繫" : "Contact"}</h4>
       <a href="mailto:riseadvancements@gmail.com">riseadvancements@gmail.com</a>
       <a href="https://wa.me/85290950387?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="whatsapp-cta" target="_blank" rel="noopener noreferrer">
         WhatsApp
@@ -29,14 +28,14 @@ const { lang = "en" } = Astro.props;
 
     <!-- Quick Links -->
     <div class="footer-links">
-      <h4>{lang === "zh" ? "連結" : "Links"}</h4>
+      <h4>{lang === "zh" ? "鏈接" : "Links"}</h4>
       {lang === "zh" ? (
         <>
           <a href="/zh/#how-it-works">流程</a>
           <a href="/zh/services/">服務</a>
-          <a href="/zh/#players">運動員</a>
+          <a href="/zh/#players">球員</a>
           <a href="/zh/#faq">常見問題</a>
-          <a href="/zh/#contact">聯繫</a>
+          <a href="/zh/#contact">聯繫我們</a>
           <a href={import.meta.env.BASE_URL}>EN</a>
         </>
       ) : (
@@ -53,7 +52,7 @@ const { lang = "en" } = Astro.props;
 
     <!-- Social -->
     <div class="footer-social">
-      <h4>{lang === "zh" ? "追蹤" : "Follow"}</h4>
+      <h4>{lang === "zh" ? "關注" : "Follow"}</h4>
       <a href="https://instagram.com/riseadvancement" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
         Instagram
       </a>
@@ -106,7 +105,7 @@ const { lang = "en" } = Astro.props;
   .footer-tagline {
     margin-top: var(--space-2);
     line-height: 1.5;
-    color: var(--rise-neutral-400);
+    color: var(--rise-neutral-300);
   }
 
   .footer-contact h4,
@@ -128,7 +127,8 @@ const { lang = "en" } = Astro.props;
     font-size: var(--text-sm);
     color: var(--rise-neutral-300);
     text-decoration: none;
-    padding: 0.2rem 0;
+    padding: 0.75rem 0;
+    min-height: 44px;
     transition: color 0.2s;
   }
 
@@ -152,7 +152,8 @@ const { lang = "en" } = Astro.props;
     gap: 0.35rem;
     background-color: var(--rise-red);
     color: var(--rise-white) !important;
-    padding: var(--space-2) var(--space-4) !important;
+    padding: var(--space-3) var(--space-4) !important;
+    min-height: 44px;
     border-radius: 4px;
     font-weight: 600;
     margin-top: var(--space-3);

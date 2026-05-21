@@ -100,7 +100,7 @@ import ContactForm from "../../components/ContactForm.astro";
             "在合適的競技水平提供曝光機會",
             "整個過程中的全程指導和支持",
           ]}
-          ctaText="了解更多"
+          ctaText="了解球員安置"
           ctaLink="/zh/services/the-move"
         />
         <ServiceCard
@@ -114,7 +114,7 @@ import ContactForm from "../../components/ContactForm.astro";
             "定制體能和營養計劃",
             "專業心理訓練指導",
           ]}
-          ctaText="了解更多"
+          ctaText="了解訓練指導"
           ctaLink="/zh/services/mentoring"
         />
         <ServiceCard
@@ -129,7 +129,7 @@ import ContactForm from "../../components/ContactForm.astro";
             "愉景灣冰場/LOHAS Park",
             "包含定制裝備",
           ]}
-          ctaText="了解更多"
+          ctaText="了解香港體能訓練"
           ctaLink="/zh/services/hk-program"
         />
       </div>
@@ -229,7 +229,7 @@ import ContactForm from "../../components/ContactForm.astro";
     </div>
   </section>
 
-  <Footer slot="footer" />
+  <Footer slot="footer" lang="zh" />
 </BaseLayout>
 
 <style>
@@ -262,9 +262,9 @@ import ContactForm from "../../components/ContactForm.astro";
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .faq-item a { color: var(--rise-red); text-decoration: underline; }
+  .faq-item a { color: var(--rise-red); text-decoration: underline; display: inline-block; padding: 0.5rem 0; min-height: 44px; }
   .contact-center { display: flex; flex-direction: column; gap: var(--space-8); align-items: center; }
   .contact-person h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .contact-person p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
+  .contact-person p { font-size: var(--text-sm); color: var(--rise-neutral-700); line-height: 1.6; }
   .mid-cta { text-align: center; margin-top: var(--space-8); }
 </style>

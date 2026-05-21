@@ -46,7 +46,6 @@ import ContactForm from "../components/ContactForm.astro";
   <section class="hero section">
     <div class="container">
       <div class="hero-content">
-        <p class="hero-eyebrow">Hong Kong &bull; Canada</p>
         <h1 class="hero-title">
           RISE <span class="hero-title-red">Advancement</span>
         </h1>
@@ -117,7 +116,7 @@ import ContactForm from "../components/ContactForm.astro";
             "Exposure opportunities at the right level of play",
             "Guidance and support at every step of the process",
           ]}
-          ctaText="Learn More"
+          ctaText="Explore The Move"
           ctaLink="/services/the-move"
         />
         <ServiceCard
@@ -131,7 +130,7 @@ import ContactForm from "../components/ContactForm.astro";
             "Custom exercise and nutrition plans",
             "Mental skills coaching with a professional",
           ]}
-          ctaText="Learn More"
+          ctaText="Explore Mentoring"
           ctaLink="/services/mentoring"
         />
         <ServiceCard
@@ -146,7 +145,7 @@ import ContactForm from "../components/ContactForm.astro";
             "Discovery Bay Ice Rink/Lohas Park",
             "Custom merch included",
           ]}
-          ctaText="Learn More"
+          ctaText="Explore HK Program"
           ctaLink="/services/hk-program"
         />
       </div>
@@ -429,6 +428,9 @@ import ContactForm from "../components/ContactForm.astro";
   .faq-item a {
     color: var(--rise-red);
     text-decoration: underline;
+    display: inline-block;
+    padding: 0.5rem 0;
+    min-height: 44px;
   }
 
   /* ========== CONTACT ========== */
@@ -446,7 +448,7 @@ import ContactForm from "../components/ContactForm.astro";
 
   .contact-person p {
     font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
+    color: var(--rise-neutral-700);
     line-height: 1.6;
   }
 
