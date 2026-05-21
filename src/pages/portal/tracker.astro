@@ -132,9 +132,14 @@ import MealLogModal from "../../components/MealLogModal.astro";
       <!-- MAIN APP -->
       <section id="tracker-app" class="tracker-view" hidden>
         <header class="tk-topbar tk-app-bar">
-          <div>
+          <div class="tk-topbar-main">
             <p class="tk-hello" id="app-hello">Welcome back</p>
-            <p class="tk-date" id="app-date"></p>
+            <div class="tk-date-nav">
+              <button class="tk-date-arrow" type="button" id="app-date-prev" aria-label="Previous day">‹</button>
+              <p class="tk-date" id="app-date"></p>
+              <button class="tk-date-arrow" type="button" id="app-date-next" aria-label="Next day" disabled>›</button>
+              <span class="tk-past-badge" id="app-past-badge" hidden>Past day</span>
+            </div>
           </div>
           <a class="tk-btn tk-btn-ghost tk-btn-small" href="/portal">Portal</a>
         </header>
@@ -160,6 +165,51 @@ import MealLogModal from "../../components/MealLogModal.astro";
           <span class="tk-progress-pct" id="app-progress-pct">0%</span>
         </div>
 
+        <div class="tk-weight-card" id="app-weight-card">
+          <div class="tk-weight-head">
+            <span class="tk-weight-label">Today's weight</span>
+            <span class="tk-weight-notice" id="app-weight-notice" hidden></span>
+          </div>
+          <div class="tk-weight-body" id="app-weight-body">
+            <div class="tk-weight-input-row" id="app-weight-input-row">
+              <input
+                type="number"
+                id="app-weight-input"
+                min="20"
+                max="200"
+                step="0.1"
+                inputmode="decimal"
+                placeholder="kg"
+              />
+              <button class="tk-weight-log-btn" id="app-weight-log-btn" type="button">Log weight</button>
+            </div>
+            <div class="tk-weight-logged-row" id="app-weight-logged-row" hidden>
+              <span class="tk-weight-value" id="app-weight-value">— kg today</span>
+              <button class="tk-weight-edit-btn" id="app-weight-edit-btn" type="button" aria-label="Edit weight">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"></path>
+                </svg>
+                Edit
+              </button>
+            </div>
+            <p class="tk-form-msg" id="app-weight-msg"></p>
+          </div>
+        </div>
+
+        <div class="tk-chart-card" id="app-chart-card">
+          <div class="tk-chart-head">
+            <span class="tk-chart-label">Weight trend</span>
+            <div class="tk-chart-toggle">
+              <button class="tk-chart-toggle-btn active" type="button" data-range="7">7 days</button>
+              <button class="tk-chart-toggle-btn" type="button" data-range="30">30 days</button>
+            </div>
+          </div>
+          <div class="tk-chart-body" id="app-chart-body">
+            <p class="tk-chart-empty" id="app-chart-empty">Log your weight daily to see trends</p>
+          </div>
+        </div>
+
         <div class="tk-summary-card" id="app-summary-card" hidden>
           <div class="tk-summary-head">
             <span class="tk-summary-label">Coach's daily read</span>
@@ -176,7 +226,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
           </div>
         </div>
 
-        <h3 class="tk-section-title">Today's meals</h3>
+        <h3 class="tk-section-title" id="app-meals-title">Today's meals</h3>
         <div class="tk-meal-grid" id="meal-grid"></div>
 
         <div class="tk-feedback-card" id="app-feedback-card" hidden role="status" aria-live="polite">
@@ -595,6 +645,237 @@ import MealLogModal from "../../components/MealLogModal.astro";
     margin: 0 0 var(--space-3);
   }
 
+  /* ----- Date navigation ----- */
+  .tk-topbar-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+  }
+  .tk-date-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tk-date-nav .tk-date { margin: 0; }
+  .tk-date-arrow {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--rise-neutral-200);
+    background: var(--rise-white);
+    color: var(--rise-neutral-700);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .tk-date-arrow:hover:not(:disabled) {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+  }
+  .tk-date-arrow:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .tk-past-badge {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--rise-neutral-100);
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-weight: 600;
+  }
+
+  /* ----- Weight log widget ----- */
+  .tk-weight-card {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(18, 18, 18, 0.04);
+  }
+  .tk-weight-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tk-weight-label {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+  .tk-weight-notice {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--rise-red);
+    font-weight: 600;
+  }
+  .tk-weight-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .tk-weight-input-row input {
+    flex: 1;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--rise-black);
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .tk-weight-input-row input:focus {
+    border-color: var(--rise-red);
+    box-shadow: 0 0 0 3px var(--rise-red-light);
+  }
+  .tk-weight-input-row input::-webkit-outer-spin-button,
+  .tk-weight-input-row input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .tk-weight-log-btn {
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: 0;
+    border-radius: 10px;
+    padding: 0 18px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tk-weight-log-btn:hover:not(:disabled) { background: var(--rise-red-dark); }
+  .tk-weight-log-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .tk-weight-logged-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .tk-weight-value {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--rise-black);
+  }
+  .tk-weight-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 999px;
+    padding: 6px 12px;
+    color: var(--rise-neutral-700);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .tk-weight-edit-btn:hover:not(:disabled) {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+  }
+  .tk-weight-edit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .tk-weight-card .tk-form-msg { text-align: left; min-height: 0; }
+  .tk-weight-card .tk-form-msg:empty { display: none; }
+
+  /* ----- Weight chart ----- */
+  .tk-chart-card {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(18, 18, 18, 0.04);
+  }
+  .tk-chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .tk-chart-label {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+  .tk-chart-toggle {
+    display: inline-flex;
+    background: var(--rise-neutral-100);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .tk-chart-toggle-btn {
+    background: transparent;
+    border: 0;
+    color: var(--rise-neutral-500);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tk-chart-toggle-btn.active {
+    background: var(--rise-white);
+    color: var(--rise-red);
+    box-shadow: 0 1px 3px rgba(18, 18, 18, 0.08);
+  }
+  .tk-chart-body {
+    width: 100%;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tk-chart-body svg {
+    width: 100%;
+    height: 160px;
+    display: block;
+  }
+  .tk-chart-empty {
+    color: var(--rise-neutral-400);
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 0;
+    padding: 20px 10px;
+  }
+
   .tk-meal-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -913,6 +1194,17 @@ import MealLogModal from "../../components/MealLogModal.astro";
     border-color: var(--rise-red);
     background: var(--rise-red-light);
   }
+  .tk-meal-slot.tk-meal-slot-readonly {
+    cursor: default;
+  }
+  .tk-meal-slot.tk-meal-slot-readonly:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--rise-neutral-100);
+  }
+  .tk-meal-slot.tk-meal-slot-readonly.logged:hover {
+    border-color: var(--rise-red);
+  }
   .tk-slot-name {
     font-family: var(--font-heading);
     font-size: 0.95rem;
@@ -1028,9 +1320,31 @@ import MealLogModal from "../../components/MealLogModal.astro";
     d.setDate(d.getDate() - 1);
     return d.toISOString().slice(0, 10);
   }
+  function isoToDate(iso: string): Date {
+    const [y, m, d] = iso.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }
+  function dateToISO(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+  function addDaysISO(iso: string, n: number): string {
+    const d = isoToDate(iso);
+    d.setDate(d.getDate() + n);
+    return dateToISO(d);
+  }
   function formatDateLong(date: Date) {
     return date.toLocaleDateString(undefined, {
       weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+  }
+  function formatDateShort(date: Date) {
+    return date.toLocaleDateString(undefined, {
+      weekday: "short",
       month: "short",
       day: "numeric",
     });
@@ -1049,9 +1363,17 @@ import MealLogModal from "../../components/MealLogModal.astro";
     weight_kg: number;
     age: number;
     primary_goal: string;
+    growth_rate: string;
     protein_target_g: number;
   };
   let userCtx: UserContext | null = null;
+
+  // Date currently being viewed in the tracker (defaults to today).
+  let viewingDate: string = todayISO();
+  // Current chart range in days.
+  let chartRange: number = 7;
+  // Cached daily_weight rows for the active user (keyed by logged_date).
+  let weightHistory: Record<string, number> = {};
 
   // The latest set of meals loaded — used to build the summary context and to
   // decide when to refresh the daily summary card.
@@ -1257,7 +1579,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     if (pctEl) pctEl.textContent = pct + "%";
   }
 
-  function renderMealGrid(loggedMeals: any[], yesterdayMeals: any[] = []) {
+  function renderMealGrid(loggedMeals: any[], yesterdayMeals: any[] = [], readOnly: boolean = false) {
     const grid = document.getElementById("meal-grid");
     if (!grid) return;
     const loggedBySlot: Record<string, any> = {};
@@ -1270,12 +1592,19 @@ import MealLogModal from "../../components/MealLogModal.astro";
       const logged = loggedBySlot[slot.key];
       const yesterday = yesterdayBySlot[slot.key];
       const card = document.createElement("div");
-      card.className = "tk-meal-slot" + (logged ? " logged" : "");
-      card.setAttribute("role", "button");
-      card.setAttribute("tabindex", "0");
-      card.setAttribute("aria-label", `Log ${slot.label}`);
+      const interactive = !readOnly || !!logged;
+      card.className =
+        "tk-meal-slot" +
+        (logged ? " logged" : "") +
+        (readOnly ? " tk-meal-slot-readonly" : "");
+      if (interactive) {
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
+      }
+      card.setAttribute("aria-label", logged ? `${slot.label} (logged)` : `Log ${slot.label}`);
 
       const showRepeat =
+        !readOnly &&
         !logged &&
         yesterday &&
         Array.isArray(yesterday.food_items) &&
@@ -1285,6 +1614,8 @@ import MealLogModal from "../../components/MealLogModal.astro";
       let html = `<span class="tk-slot-name">${slot.label}${hasFeedback ? '<span class="tk-slot-feedback-dot" aria-label="Coach feedback saved"></span>' : ''}</span>`;
       if (logged) {
         html += `<span class="tk-slot-status">✓ Logged · ${logged.total_protein_g || 0}g</span>`;
+      } else if (readOnly) {
+        html += `<span class="tk-slot-status">Not logged</span>`;
       } else {
         html += `<button class="tk-log-btn" type="button">+ Log meal</button>`;
         if (showRepeat) {
@@ -1299,23 +1630,28 @@ import MealLogModal from "../../components/MealLogModal.astro";
         if (typeof fn === "function") fn(slot.key, slot.label, prefill);
       };
 
-      card.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-        const repeatEl = target.closest("[data-repeat]") as HTMLElement | null;
-        if (repeatEl) {
-          e.stopPropagation();
-          open(yesterday?.food_items || []);
-          return;
-        }
-        open(logged?.food_items || undefined);
-      });
-
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
+      if (interactive) {
+        card.addEventListener("click", (e) => {
+          const target = e.target as HTMLElement;
+          const repeatEl = target.closest("[data-repeat]") as HTMLElement | null;
+          if (repeatEl) {
+            e.stopPropagation();
+            if (!readOnly) open(yesterday?.food_items || []);
+            return;
+          }
+          // Past days are read-only — only allow viewing logged meals.
+          if (readOnly && !logged) return;
           open(logged?.food_items || undefined);
-        }
-      });
+        });
+
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            if (readOnly && !logged) return;
+            open(logged?.food_items || undefined);
+          }
+        });
+      }
 
       grid.appendChild(card);
     });
@@ -1330,25 +1666,36 @@ import MealLogModal from "../../components/MealLogModal.astro";
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return;
 
+    const today = todayISO();
+    const isToday = viewingDate === today;
+    // Always reference yesterday relative to the viewing date for the
+    // "repeat yesterday" button.
+    const yISO = addDaysISO(viewingDate, -1);
+
     const [
       { data: profile },
       { data: baseline },
       { data: meals },
       { data: yMeals },
+      { data: weights },
     ] = await Promise.all([
       sb.from("user_profiles").select("full_name, email, language").eq("id", user.id).maybeSingle(),
       sb.from("baseline_intake")
-        .select("protein_target_g, weight_kg, age, primary_goal")
+        .select("protein_target_g, weight_kg, age, primary_goal, growth_rate")
         .eq("user_id", user.id)
         .maybeSingle(),
       sb.from("meal_logs")
         .select("meal_slot, total_protein_g, food_items, ai_feedback")
         .eq("user_id", user.id)
-        .eq("logged_date", todayISO()),
+        .eq("logged_date", viewingDate),
       sb.from("meal_logs")
         .select("meal_slot, total_protein_g, food_items")
         .eq("user_id", user.id)
-        .eq("logged_date", yesterdayISO()),
+        .eq("logged_date", yISO),
+      sb.from("daily_weight")
+        .select("logged_date, weight_kg")
+        .eq("user_id", user.id)
+        .order("logged_date", { ascending: true }),
     ]);
 
     const name = profile?.full_name
@@ -1358,7 +1705,17 @@ import MealLogModal from "../../components/MealLogModal.astro";
     const hello = document.getElementById("app-hello");
     const dateEl = document.getElementById("app-date");
     if (hello) hello.textContent = `Welcome back, ${name}`;
-    if (dateEl) dateEl.textContent = formatDateLong(new Date());
+    if (dateEl) dateEl.textContent = formatDateShort(isoToDate(viewingDate));
+
+    // Past day badge + disable next arrow when at today.
+    const pastBadge = document.getElementById("app-past-badge");
+    if (pastBadge) pastBadge.toggleAttribute("hidden", isToday);
+    const nextBtn = document.getElementById("app-date-next") as HTMLButtonElement | null;
+    if (nextBtn) nextBtn.disabled = isToday;
+
+    // Meals section title reflects the viewing date.
+    const mealsTitle = document.getElementById("app-meals-title");
+    if (mealsTitle) mealsTitle.textContent = isToday ? "Today's meals" : "Meals";
 
     const target = baseline?.protein_target_g || 0;
     currentTarget = target;
@@ -1372,18 +1729,27 @@ import MealLogModal from "../../components/MealLogModal.astro";
       weight_kg: Number(baseline?.weight_kg) || 0,
       age: Number(baseline?.age) || 0,
       primary_goal: String(baseline?.primary_goal || "muscle_gain"),
+      growth_rate: String(baseline?.growth_rate || "moderate"),
       protein_target_g: Number(target) || 0,
     };
 
-    const todayMeals = meals || [];
-    currentMeals = todayMeals;
-    updateProgressBar(sumMealsProtein(todayMeals), target);
-    renderMealGrid(todayMeals, yMeals || []);
+    // Cache weight history and render widget + chart.
+    weightHistory = {};
+    (weights || []).forEach((row: any) => {
+      if (row?.logged_date) weightHistory[row.logged_date] = Number(row.weight_kg);
+    });
+    renderWeightWidget();
+    renderWeightChart();
 
-    // If the user already has 3+ logged meals, render the summary card on
-    // entry. Fetch fresh from AI only when the set of meals changed.
-    if (todayMeals.length >= 3) {
-      const sig = todayMeals
+    const viewMeals = meals || [];
+    currentMeals = viewMeals;
+    updateProgressBar(sumMealsProtein(viewMeals), target);
+    renderMealGrid(viewMeals, yMeals || [], !isToday);
+
+    // Only show / refresh the AI daily summary on today's view. Past days
+    // get a static, non-AI experience.
+    if (isToday && viewMeals.length >= 3) {
+      const sig = viewMeals
         .map((m) => `${m.meal_slot}:${m.total_protein_g}`)
         .sort()
         .join("|");
@@ -1395,6 +1761,308 @@ import MealLogModal from "../../components/MealLogModal.astro";
       hideSummaryCard();
       lastSummarySig = null;
     }
+  }
+
+  // ===== Weight widget =====
+  function setWeightMsg(text: string, kind: "" | "error" | "success" = "") {
+    const msg = document.getElementById("app-weight-msg");
+    if (!msg) return;
+    msg.textContent = text;
+    msg.className = "tk-form-msg" + (kind ? ` ${kind}` : "");
+  }
+
+  function showWeightNotice(text: string) {
+    const el = document.getElementById("app-weight-notice");
+    if (!el) return;
+    el.textContent = text;
+    el.removeAttribute("hidden");
+    setTimeout(() => el.setAttribute("hidden", ""), 6000);
+  }
+
+  function renderWeightWidget() {
+    const card = document.getElementById("app-weight-card");
+    const label = card?.querySelector(".tk-weight-label") as HTMLElement | null;
+    const inputRow = document.getElementById("app-weight-input-row");
+    const loggedRow = document.getElementById("app-weight-logged-row");
+    const valueEl = document.getElementById("app-weight-value");
+    const input = document.getElementById("app-weight-input") as HTMLInputElement | null;
+    const logBtn = document.getElementById("app-weight-log-btn") as HTMLButtonElement | null;
+    const editBtn = document.getElementById("app-weight-edit-btn") as HTMLButtonElement | null;
+    if (!card || !inputRow || !loggedRow) return;
+
+    const today = todayISO();
+    const isToday = viewingDate === today;
+    const weight = weightHistory[viewingDate];
+
+    if (label) label.textContent = isToday ? "Today's weight" : "Weight";
+
+    // Past days: read-only. Show value if logged, otherwise show empty state.
+    if (!isToday) {
+      inputRow.setAttribute("hidden", "");
+      if (typeof weight === "number") {
+        loggedRow.removeAttribute("hidden");
+        if (valueEl) valueEl.textContent = `${weight.toFixed(1)} kg`;
+        if (editBtn) editBtn.disabled = true;
+      } else {
+        loggedRow.setAttribute("hidden", "");
+      }
+      setWeightMsg(typeof weight === "number" ? "" : "No weight logged this day.");
+      return;
+    }
+
+    // Today: editable.
+    if (editBtn) editBtn.disabled = false;
+    if (typeof weight === "number") {
+      inputRow.setAttribute("hidden", "");
+      loggedRow.removeAttribute("hidden");
+      if (valueEl) valueEl.textContent = `${weight.toFixed(1)} kg today`;
+      if (input) input.value = String(weight);
+    } else {
+      loggedRow.setAttribute("hidden", "");
+      inputRow.removeAttribute("hidden");
+      if (input) input.value = "";
+    }
+    setWeightMsg("");
+    if (logBtn) logBtn.disabled = false;
+  }
+
+  async function saveWeight(newWeight: number) {
+    if (!userCtx) return;
+    const sb = (window as any).supabaseClient;
+    const logBtn = document.getElementById("app-weight-log-btn") as HTMLButtonElement | null;
+
+    if (!(newWeight >= 20 && newWeight <= 200)) {
+      setWeightMsg("Enter a weight between 20 and 200 kg.", "error");
+      return;
+    }
+
+    if (logBtn) logBtn.disabled = true;
+    setWeightMsg("Saving…");
+
+    try {
+      // Upsert daily_weight for today.
+      const today = todayISO();
+      const { error: wErr } = await sb.from("daily_weight").upsert(
+        {
+          user_id: userCtx.user_id,
+          weight_kg: newWeight,
+          logged_date: today,
+        },
+        { onConflict: "user_id,logged_date" }
+      );
+      if (wErr) throw wErr;
+
+      // If the new weight differs from the baseline weight, recalculate the
+      // protein target and update baseline_intake.
+      const baselineWeight = Number(userCtx.weight_kg) || 0;
+      let newTarget = userCtx.protein_target_g;
+      let recalculated = false;
+      if (Math.abs(newWeight - baselineWeight) >= 0.05) {
+        newTarget = calculateProteinTarget(newWeight, userCtx.growth_rate, userCtx.primary_goal);
+        recalculated = true;
+
+        const { error: bErr } = await sb.from("baseline_intake").upsert(
+          {
+            user_id: userCtx.user_id,
+            weight_kg: newWeight,
+            age: userCtx.age,
+            growth_rate: userCtx.growth_rate,
+            primary_goal: userCtx.primary_goal,
+            protein_target_g: newTarget,
+          },
+          { onConflict: "user_id" }
+        );
+        if (bErr) throw bErr;
+
+        // Update cached context + UI.
+        userCtx.weight_kg = newWeight;
+        userCtx.protein_target_g = newTarget;
+        currentTarget = newTarget;
+        const tEl = document.getElementById("app-protein-target");
+        if (tEl) tEl.textContent = String(newTarget);
+        updateProgressBar(sumMealsProtein(currentMeals), newTarget);
+      }
+
+      weightHistory[today] = newWeight;
+      renderWeightWidget();
+      renderWeightChart();
+
+      if (recalculated) {
+        showWeightNotice(`Target updated: ${newTarget}g protein/day`);
+      } else {
+        setWeightMsg("Weight logged.", "success");
+        setTimeout(() => setWeightMsg(""), 2500);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setWeightMsg(err.message || "Could not save weight.", "error");
+    } finally {
+      if (logBtn) logBtn.disabled = false;
+    }
+  }
+
+  function wireWeightWidget() {
+    const logBtn = document.getElementById("app-weight-log-btn");
+    const input = document.getElementById("app-weight-input") as HTMLInputElement | null;
+    const editBtn = document.getElementById("app-weight-edit-btn");
+
+    logBtn?.addEventListener("click", () => {
+      const v = Number(input?.value);
+      if (!v) {
+        setWeightMsg("Enter your weight in kg.", "error");
+        return;
+      }
+      saveWeight(v);
+    });
+
+    input?.addEventListener("keydown", (e) => {
+      if ((e as KeyboardEvent).key === "Enter") {
+        e.preventDefault();
+        logBtn?.dispatchEvent(new Event("click"));
+      }
+    });
+
+    editBtn?.addEventListener("click", () => {
+      if (viewingDate !== todayISO()) return;
+      const inputRow = document.getElementById("app-weight-input-row");
+      const loggedRow = document.getElementById("app-weight-logged-row");
+      if (!inputRow || !loggedRow || !input) return;
+      loggedRow.setAttribute("hidden", "");
+      inputRow.removeAttribute("hidden");
+      const today = todayISO();
+      const existing = weightHistory[today];
+      if (typeof existing === "number") input.value = String(existing);
+      input.focus();
+      input.select();
+    });
+  }
+
+  // ===== Weight trend chart =====
+  function renderWeightChart() {
+    const body = document.getElementById("app-chart-body");
+    const empty = document.getElementById("app-chart-empty");
+    if (!body || !empty) return;
+
+    // Build the date range ending at today.
+    const today = todayISO();
+    const days: string[] = [];
+    for (let i = chartRange - 1; i >= 0; i--) {
+      days.push(addDaysISO(today, -i));
+    }
+    const points = days
+      .map((iso) => ({ iso, w: weightHistory[iso] }))
+      .filter((p) => typeof p.w === "number") as Array<{ iso: string; w: number }>;
+
+    if (points.length === 0) {
+      body.innerHTML = "";
+      empty.removeAttribute("hidden");
+      body.appendChild(empty);
+      return;
+    }
+
+    empty.setAttribute("hidden", "");
+
+    // SVG geometry. The viewBox is fixed; the container scales it to 100%.
+    const W = 520;
+    const H = 160;
+    const padL = 36;
+    const padR = 12;
+    const padT = 16;
+    const padB = 28;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+
+    const weights = points.map((p) => p.w);
+    let minW = Math.min(...weights);
+    let maxW = Math.max(...weights);
+    if (minW === maxW) {
+      minW -= 1;
+      maxW += 1;
+    } else {
+      const pad = (maxW - minW) * 0.15;
+      minW -= pad;
+      maxW += pad;
+    }
+
+    const xFor = (iso: string) => {
+      const idx = days.indexOf(iso);
+      if (days.length === 1) return padL + innerW / 2;
+      return padL + (idx / (days.length - 1)) * innerW;
+    };
+    const yFor = (w: number) => {
+      const t = (w - minW) / (maxW - minW);
+      return padT + (1 - t) * innerH;
+    };
+
+    // Gridlines (3 horizontal).
+    const gridLines: string[] = [];
+    const labels: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      const y = padT + (i / 2) * innerH;
+      const w = maxW - (i / 2) * (maxW - minW);
+      gridLines.push(
+        `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${padL + innerW}" y2="${y.toFixed(1)}" stroke="var(--rise-neutral-100)" stroke-width="1" />`
+      );
+      labels.push(
+        `<text x="${padL - 6}" y="${(y + 3).toFixed(1)}" text-anchor="end" font-size="10" font-family="var(--font-body)" fill="var(--rise-neutral-400)">${w.toFixed(1)}</text>`
+      );
+    }
+
+    // X-axis date labels: first, middle, last.
+    const xLabelIndices = days.length <= 2 ? [0, days.length - 1] : [0, Math.floor((days.length - 1) / 2), days.length - 1];
+    const xLabels = xLabelIndices.map((idx) => {
+      const iso = days[idx];
+      const d = isoToDate(iso);
+      const text = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      const x = xFor(iso);
+      return `<text x="${x.toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10" font-family="var(--font-body)" fill="var(--rise-neutral-400)">${text}</text>`;
+    });
+
+    const path = points
+      .map((p, i) => `${i === 0 ? "M" : "L"} ${xFor(p.iso).toFixed(1)} ${yFor(p.w).toFixed(1)}`)
+      .join(" ");
+
+    const dots = points
+      .map(
+        (p) =>
+          `<circle cx="${xFor(p.iso).toFixed(1)}" cy="${yFor(p.w).toFixed(1)}" r="3.5" fill="var(--rise-red)" stroke="var(--rise-white)" stroke-width="1.5"><title>${p.iso}: ${p.w.toFixed(1)} kg</title></circle>`
+      )
+      .join("");
+
+    const svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="Weight trend chart" role="img">
+      ${gridLines.join("")}
+      ${labels.join("")}
+      <path d="${path}" fill="none" stroke="var(--rise-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      ${dots}
+      ${xLabels.join("")}
+    </svg>`;
+
+    body.innerHTML = svg;
+  }
+
+  function wireChartToggle() {
+    document.querySelectorAll<HTMLButtonElement>(".tk-chart-toggle-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tk-chart-toggle-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        chartRange = Number(btn.dataset.range) || 7;
+        renderWeightChart();
+      });
+    });
+  }
+
+  // ===== Date navigation =====
+  function wireDateNav() {
+    document.getElementById("app-date-prev")?.addEventListener("click", () => {
+      viewingDate = addDaysISO(viewingDate, -1);
+      loadAppShell().catch((e) => console.warn("loadAppShell prev", e));
+    });
+    document.getElementById("app-date-next")?.addEventListener("click", () => {
+      const next = addDaysISO(viewingDate, 1);
+      if (next > todayISO()) return;
+      viewingDate = next;
+      loadAppShell().catch((e) => console.warn("loadAppShell next", e));
+    });
   }
 
   // ===== AI feedback card =====
@@ -1647,5 +2315,8 @@ import MealLogModal from "../../components/MealLogModal.astro";
 
   wireIntake();
   wireFeedbackCardControls();
+  wireWeightWidget();
+  wireChartToggle();
+  wireDateNav();
   routeTracker();
 </script>

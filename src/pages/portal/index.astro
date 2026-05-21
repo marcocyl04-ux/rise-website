@@ -395,9 +395,15 @@ import Footer from "../../components/Footer.astro";
 
     // Load baseline + profile in parallel for hello + target card
     const [{ data: profile }, { data: baseline }] = await Promise.all([
-      sb.from("user_profiles").select("full_name").eq("id", user.id).maybeSingle(),
+      sb.from("user_profiles").select("full_name, role").eq("id", user.id).maybeSingle(),
       sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
     ]);
+
+    // Coaches see a different dashboard.
+    if (profile?.role === "coach") {
+      window.location.replace("/portal/coach");
+      return;
+    }
 
     const name = profile?.full_name || deriveDisplayName(user);
     const firstName = name.split(" ")[0];
