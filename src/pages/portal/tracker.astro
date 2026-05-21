@@ -663,6 +663,94 @@ import MealLogModal from "../../components/MealLogModal.astro";
   }
 </style>
 
+<style is:global>
+  /* Global styles for meal grid cards — these elements are created dynamically
+     by JS (document.createElement) and therefore don't carry Astro's
+     [data-astro-cid-*] attribute, so scoped styles would not apply to them. */
+  .tk-meal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .tk-meal-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .tk-meal-slot {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 110px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .tk-meal-slot:hover {
+    border-color: var(--rise-red);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(18, 18, 18, 0.08);
+  }
+  .tk-meal-slot.logged {
+    border-color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-slot-name {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+  }
+  .tk-slot-status {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--rise-neutral-500);
+    margin-top: auto;
+  }
+  .tk-meal-slot.logged .tk-slot-status { color: var(--rise-red); }
+
+  .tk-log-btn {
+    align-self: flex-start;
+    margin-top: auto;
+    background: var(--rise-white);
+    color: var(--rise-red);
+    border: 1.5px solid var(--rise-red);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tk-log-btn:hover {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+
+  .tk-repeat-btn {
+    background: transparent;
+    border: 0;
+    padding: 4px 0 0;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--rise-red);
+    text-align: left;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: color 0.15s;
+  }
+  .tk-repeat-btn:hover {
+    color: var(--rise-red-dark);
+    text-decoration: underline;
+  }
+</style>
+
 <script>
   // ===== Protein formula (exact, per spec) =====
   const GOAL_FACTORS: Record<string, number> = {
