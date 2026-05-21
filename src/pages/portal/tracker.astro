@@ -1,8 +1,9 @@
 ---
-// Nutrition Tracker — Day 1 intake + meal grid.
+// Nutrition Tracker — Day 1 intake + meal grid + photo meal logging.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
+import MealLogModal from "../../components/MealLogModal.astro";
 ---
 
 <BaseLayout title="Nutrition Tracker" description="Track your daily protein and meals — RISE Nutrition Tracker.">
@@ -146,13 +147,26 @@ import Footer from "../../components/Footer.astro";
           </div>
         </div>
 
+        <div class="tk-progress-card" id="app-progress-card">
+          <div class="tk-progress-head">
+            <span class="tk-progress-label">Today's progress</span>
+            <span class="tk-progress-amounts">
+              <strong id="app-progress-current">0</strong>g / <span id="app-progress-target">0</span>g
+            </span>
+          </div>
+          <div class="tk-progress-track">
+            <div class="tk-progress-fill" id="app-progress-fill"></div>
+          </div>
+          <span class="tk-progress-pct" id="app-progress-pct">0%</span>
+        </div>
+
         <h3 class="tk-section-title">Today's meals</h3>
         <div class="tk-meal-grid" id="meal-grid"></div>
-
-        <p class="tk-footer-note">Photo logging arrives in the next update.</p>
       </section>
     </div>
   </section>
+
+  <MealLogModal />
 
   <Footer slot="footer" />
 </BaseLayout>
@@ -484,6 +498,65 @@ import Footer from "../../components/Footer.astro";
     opacity: 0.9;
   }
 
+  /* ----- Daily progress bar ----- */
+  .tk-progress-card {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(18, 18, 18, 0.04);
+  }
+  .tk-progress-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tk-progress-label {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--rise-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .tk-progress-amounts {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--rise-neutral-700);
+  }
+  .tk-progress-amounts strong {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--rise-red);
+  }
+  .tk-progress-track {
+    width: 100%;
+    height: 10px;
+    background: var(--rise-neutral-100);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .tk-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--rise-red), var(--rise-red-dark));
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .tk-progress-pct {
+    align-self: flex-end;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--rise-neutral-500);
+    font-weight: 600;
+  }
+
   .tk-section-title {
     font-family: var(--font-body);
     font-size: 0.75rem;
@@ -539,6 +612,24 @@ import Footer from "../../components/Footer.astro";
     margin-top: auto;
   }
   .tk-meal-slot.logged .tk-slot-status { color: var(--rise-red); }
+
+  .tk-repeat-btn {
+    background: transparent;
+    border: 0;
+    padding: 4px 0 0;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--rise-red);
+    text-align: left;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: color 0.15s;
+  }
+  .tk-repeat-btn:hover {
+    color: var(--rise-red-dark);
+    text-decoration: underline;
+  }
 
   .tk-footer-note {
     margin-top: var(--space-6);
@@ -603,6 +694,11 @@ import Footer from "../../components/Footer.astro";
   function todayISO() {
     return new Date().toISOString().slice(0, 10);
   }
+  function yesterdayISO() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().slice(0, 10);
+  }
   function formatDateLong(date: Date) {
     return date.toLocaleDateString(undefined, {
       weekday: "long",
@@ -610,6 +706,10 @@ import Footer from "../../components/Footer.astro";
       day: "numeric",
     });
   }
+
+  // Current daily target (cached from loadAppShell so the progress bar can
+  // re-render after a meal-logged event without re-fetching).
+  let currentTarget = 0;
 
   // ===== View routing =====
   const VIEWS = ["tracker-loading", "tracker-anon", "tracker-intake", "tracker-app"];
@@ -788,24 +888,85 @@ import Footer from "../../components/Footer.astro";
     });
   }
 
-  function renderMealGrid(loggedMeals: any[]) {
+  function updateProgressBar(currentG: number, targetG: number) {
+    const curEl = document.getElementById("app-progress-current");
+    const targetEl = document.getElementById("app-progress-target");
+    const fillEl = document.getElementById("app-progress-fill") as HTMLElement | null;
+    const pctEl = document.getElementById("app-progress-pct");
+    const current = Math.round(currentG * 10) / 10;
+    const target = Math.max(0, Math.round(targetG * 10) / 10);
+    const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+    if (curEl) curEl.textContent = String(current);
+    if (targetEl) targetEl.textContent = String(target);
+    if (fillEl) fillEl.style.width = pct + "%";
+    if (pctEl) pctEl.textContent = pct + "%";
+  }
+
+  function renderMealGrid(loggedMeals: any[], yesterdayMeals: any[] = []) {
     const grid = document.getElementById("meal-grid");
     if (!grid) return;
     const loggedBySlot: Record<string, any> = {};
     loggedMeals.forEach((m: any) => { loggedBySlot[m.meal_slot] = m; });
+    const yesterdayBySlot: Record<string, any> = {};
+    yesterdayMeals.forEach((m: any) => { yesterdayBySlot[m.meal_slot] = m; });
+
     grid.innerHTML = "";
     MEAL_SLOTS.forEach((slot) => {
       const logged = loggedBySlot[slot.key];
+      const yesterday = yesterdayBySlot[slot.key];
       const card = document.createElement("div");
       card.className = "tk-meal-slot" + (logged ? " logged" : "");
-      card.innerHTML = `
-        <span class="tk-slot-name">${slot.label}</span>
-        <span class="tk-slot-status">${
-          logged ? `Logged · ${logged.total_protein_g || 0}g` : "Tap to log (soon)"
-        }</span>
-      `;
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", `Log ${slot.label}`);
+
+      const showRepeat =
+        !logged &&
+        yesterday &&
+        Array.isArray(yesterday.food_items) &&
+        yesterday.food_items.length > 0;
+
+      let html = `<span class="tk-slot-name">${slot.label}</span>`;
+      if (logged) {
+        html += `<span class="tk-slot-status">Logged · ${logged.total_protein_g || 0}g</span>`;
+      } else {
+        html += `<span class="tk-slot-status">Tap to log</span>`;
+        if (showRepeat) {
+          const total = Math.round((yesterday.total_protein_g || 0) * 10) / 10;
+          html += `<button class="tk-repeat-btn" type="button" data-repeat="${slot.key}">↻ Repeat yesterday · ${total}g</button>`;
+        }
+      }
+      card.innerHTML = html;
+
+      const open = (prefill?: any[]) => {
+        const fn = (window as any).openMealLog;
+        if (typeof fn === "function") fn(slot.key, slot.label, prefill);
+      };
+
+      card.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        const repeatEl = target.closest("[data-repeat]") as HTMLElement | null;
+        if (repeatEl) {
+          e.stopPropagation();
+          open(yesterday?.food_items || []);
+          return;
+        }
+        open();
+      });
+
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open();
+        }
+      });
+
       grid.appendChild(card);
     });
+  }
+
+  function sumMealsProtein(meals: any[]): number {
+    return meals.reduce((acc: number, m: any) => acc + (Number(m.total_protein_g) || 0), 0);
   }
 
   async function loadAppShell() {
@@ -813,10 +974,22 @@ import Footer from "../../components/Footer.astro";
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return;
 
-    const [{ data: profile }, { data: baseline }, { data: meals }] = await Promise.all([
+    const [
+      { data: profile },
+      { data: baseline },
+      { data: meals },
+      { data: yMeals },
+    ] = await Promise.all([
       sb.from("user_profiles").select("full_name, email").eq("id", user.id).maybeSingle(),
       sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
-      sb.from("meal_logs").select("meal_slot, total_protein_g").eq("user_id", user.id).eq("logged_date", todayISO()),
+      sb.from("meal_logs")
+        .select("meal_slot, total_protein_g, food_items")
+        .eq("user_id", user.id)
+        .eq("logged_date", todayISO()),
+      sb.from("meal_logs")
+        .select("meal_slot, total_protein_g, food_items")
+        .eq("user_id", user.id)
+        .eq("logged_date", yesterdayISO()),
     ]);
 
     const name = profile?.full_name
@@ -829,11 +1002,19 @@ import Footer from "../../components/Footer.astro";
     if (dateEl) dateEl.textContent = formatDateLong(new Date());
 
     const target = baseline?.protein_target_g || 0;
+    currentTarget = target;
     const tEl = document.getElementById("app-protein-target");
     if (tEl) tEl.textContent = String(target);
 
-    renderMealGrid(meals || []);
+    const todayMeals = meals || [];
+    updateProgressBar(sumMealsProtein(todayMeals), target);
+    renderMealGrid(todayMeals, yMeals || []);
   }
+
+  // Refresh the grid + progress bar when a meal is logged from the modal.
+  window.addEventListener("meal-logged", () => {
+    loadAppShell();
+  });
 
   async function ensureProfile(user: any) {
     const sb = (window as any).supabaseClient;

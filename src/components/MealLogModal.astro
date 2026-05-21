@@ -1,0 +1,878 @@
+---
+// Meal logging modal — overlay for capturing or searching a meal entry.
+// Opens via window.openMealLog(slotKey, slotLabel, prefillItems?).
+// Closes via window.closeMealLog(). Fires a 'meal-logged' CustomEvent on
+// window when a meal is saved (detail: { slot, total, items, photo_url }).
+//
+// IMPORTANT: assumes a Supabase Storage bucket named "meal-photos" exists.
+// Create it manually in the Supabase dashboard (Storage > New Bucket,
+// private, 5 MB limit, allowed: image/jpeg, image/png, image/webp). Add an
+// RLS policy on storage.objects so users can only access their own folder.
+---
+
+<div id="meal-modal" class="tk-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="meal-modal-title">
+  <div class="tk-modal-backdrop" data-meal-modal-close></div>
+
+  <div class="tk-modal-card">
+    <header class="tk-modal-head">
+      <h3 class="tk-modal-title" id="meal-modal-title">Log meal</h3>
+      <button class="tk-modal-x" type="button" data-meal-modal-close aria-label="Close">×</button>
+    </header>
+
+    <!-- CHOICE: two input methods -->
+    <div class="tk-modal-body" data-view="choice">
+      <button class="tk-photo-cta" id="meal-photo-cta" type="button">
+        <span class="tk-photo-icon" aria-hidden="true">▣</span>
+        <span class="tk-photo-cta-label">Take photo</span>
+        <span class="tk-photo-cta-sub">Snap your meal, AI estimates protein</span>
+      </button>
+      <button class="tk-search-cta" id="meal-search-cta" type="button">
+        <span aria-hidden="true">⌕</span>
+        <span>Search food</span>
+      </button>
+    </div>
+
+    <!-- PHOTO: preview + analyzing + results -->
+    <div class="tk-modal-body" data-view="photo" hidden>
+      <div class="tk-photo-preview">
+        <img id="meal-photo-img" alt="Meal photo" />
+      </div>
+      <p class="tk-analyze-status" id="meal-analyze-status">Analyzing…</p>
+    </div>
+
+    <!-- SEARCH: text input + results -->
+    <div class="tk-modal-body" data-view="search" hidden>
+      <div class="tk-search-wrap">
+        <input
+          type="search"
+          id="meal-search-input"
+          class="tk-search-input"
+          placeholder="Search food (English or 中文)…"
+          autocomplete="off"
+          inputmode="search"
+        />
+      </div>
+      <div class="tk-search-results" id="meal-search-results"></div>
+    </div>
+
+    <!-- Items list (shared) -->
+    <div class="tk-meal-items" id="meal-items-list" hidden></div>
+
+    <!-- Footer: total + actions -->
+    <footer class="tk-modal-foot" id="meal-modal-foot" hidden>
+      <div class="tk-meal-total">
+        <span>Total protein</span>
+        <strong><span id="meal-total">0</span>g</strong>
+      </div>
+      <div class="tk-row">
+        <button class="tk-btn tk-btn-ghost" type="button" id="meal-add-more">+ Add more</button>
+        <button class="tk-btn tk-btn-primary" type="button" id="meal-confirm">Confirm</button>
+      </div>
+      <p class="tk-form-msg" id="meal-modal-msg"></p>
+    </footer>
+
+    <!-- Hidden file input for camera/photo -->
+    <input
+      type="file"
+      id="meal-photo-input"
+      accept="image/jpeg,image/png,image/webp"
+      capture="environment"
+      hidden
+    />
+  </div>
+</div>
+
+<style>
+  .tk-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    animation: tk-modal-in 0.2s ease;
+  }
+  @media (min-width: 640px) {
+    .tk-modal { align-items: center; }
+  }
+  .tk-modal[hidden] { display: none !important; }
+
+  @keyframes tk-modal-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .tk-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 18, 18, 0.55);
+    backdrop-filter: blur(2px);
+  }
+
+  .tk-modal-card {
+    position: relative;
+    background: var(--rise-white);
+    width: 100%;
+    max-width: 520px;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+    padding: 18px 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 -20px 60px rgba(18, 18, 18, 0.25);
+    overflow-y: auto;
+    color: var(--rise-black);
+    font-family: var(--font-body);
+  }
+  @media (min-width: 640px) {
+    .tk-modal-card {
+      border-radius: 16px;
+      box-shadow: 0 30px 60px rgba(18, 18, 18, 0.25);
+    }
+  }
+
+  .tk-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--rise-neutral-100);
+  }
+  .tk-modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: var(--rise-black);
+  }
+  .tk-modal-x {
+    background: transparent;
+    border: 0;
+    font-size: 1.8rem;
+    line-height: 1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--rise-neutral-500);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tk-modal-x:hover { background: var(--rise-neutral-100); color: var(--rise-black); }
+
+  .tk-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tk-modal-body[hidden] { display: none !important; }
+
+  /* ----- Choice CTAs ----- */
+  .tk-photo-cta {
+    background: linear-gradient(135deg, var(--rise-red), var(--rise-red-dark));
+    color: var(--rise-white);
+    border: 0;
+    border-radius: 14px;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    box-shadow: 0 8px 22px rgba(211, 25, 31, 0.22);
+    transition: transform 0.1s, box-shadow 0.15s;
+  }
+  .tk-photo-cta:hover { box-shadow: 0 10px 26px rgba(211, 25, 31, 0.3); }
+  .tk-photo-cta:active { transform: scale(0.98); }
+  .tk-photo-icon {
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .tk-photo-cta-label {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .tk-photo-cta-sub {
+    font-size: 0.85rem;
+    opacity: 0.9;
+  }
+
+  .tk-search-cta {
+    background: var(--rise-white);
+    color: var(--rise-black);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .tk-search-cta:hover { border-color: var(--rise-red); color: var(--rise-red); }
+
+  /* ----- Photo preview ----- */
+  .tk-photo-preview {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--rise-neutral-100);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tk-photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tk-analyze-status {
+    text-align: center;
+    color: var(--rise-neutral-500);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .tk-analyze-status.error { color: var(--rise-red-dark); }
+  .tk-analyze-status.mock { color: var(--rise-neutral-400); font-style: italic; }
+
+  /* ----- Search ----- */
+  .tk-search-wrap {
+    position: relative;
+  }
+  .tk-search-input {
+    width: 100%;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--rise-black);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .tk-search-input:focus {
+    border-color: var(--rise-red);
+    box-shadow: 0 0 0 3px var(--rise-red-light);
+  }
+  .tk-search-results {
+    max-height: 240px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tk-search-empty {
+    color: var(--rise-neutral-400);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 16px;
+    margin: 0;
+  }
+  .tk-food-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+    width: 100%;
+    font-family: var(--font-body);
+    color: var(--rise-black);
+  }
+  .tk-food-row:hover {
+    border-color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-food-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .tk-food-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--rise-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tk-food-meta {
+    font-size: 0.78rem;
+    color: var(--rise-neutral-500);
+  }
+  .tk-food-protein {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--rise-red);
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  /* ----- Items list (shared review) ----- */
+  .tk-meal-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0;
+    border-top: 1px solid var(--rise-neutral-100);
+  }
+  .tk-meal-items[hidden] { display: none !important; }
+  .tk-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+  }
+  .tk-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .tk-item-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--rise-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tk-item-meta {
+    font-size: 0.78rem;
+    color: var(--rise-neutral-500);
+  }
+  .tk-item-protein {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--rise-red);
+    font-size: 1rem;
+    min-width: 44px;
+    text-align: right;
+  }
+  .tk-item-remove {
+    background: transparent;
+    border: 1px solid var(--rise-neutral-200);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--rise-neutral-500);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .tk-item-remove:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+
+  /* ----- Footer ----- */
+  .tk-modal-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--rise-neutral-100);
+    padding-top: 12px;
+  }
+  .tk-modal-foot[hidden] { display: none !important; }
+  .tk-meal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.9rem;
+    color: var(--rise-neutral-500);
+  }
+  .tk-meal-total strong {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--rise-red);
+    font-weight: 700;
+  }
+  /* Reuse .tk-row / .tk-btn from tracker page styles, but reaffirm here so
+     the modal still looks right if ever rendered outside that page. */
+  .tk-modal-foot .tk-row { display: flex; gap: 10px; }
+  .tk-modal-foot .tk-row .tk-btn { flex: 1; }
+  .tk-modal-foot .tk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+  .tk-modal-foot .tk-btn-primary {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+  .tk-modal-foot .tk-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .tk-modal-foot .tk-btn-ghost {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border-color: var(--rise-neutral-200);
+  }
+  .tk-form-msg {
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 0;
+    min-height: 1.1em;
+    color: var(--rise-neutral-500);
+  }
+  .tk-form-msg.error { color: var(--rise-red-dark); }
+  .tk-form-msg.success { color: #15803d; }
+</style>
+
+<script>
+  import { analyzeMealPhoto, type AnalyzedItem } from "../lib/analyze-meal";
+
+  type FoodRow = {
+    id: number;
+    name: string;
+    name_zh: string | null;
+    category: string;
+    portion_label: string;
+    protein_per_portion: number;
+    common_in_hk: boolean;
+  };
+
+  type ModalState = {
+    open: boolean;
+    slotKey: string | null;
+    slotLabel: string | null;
+    items: AnalyzedItem[];
+    photoFile: File | null;
+    photoDataUrl: string | null;
+    foodCache: FoodRow[] | null;
+  };
+
+  const state: ModalState = {
+    open: false,
+    slotKey: null,
+    slotLabel: null,
+    items: [],
+    photoFile: null,
+    photoDataUrl: null,
+    foodCache: null,
+  };
+
+  const modal = () => document.getElementById("meal-modal") as HTMLDivElement | null;
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T | null;
+
+  function setView(view: "choice" | "photo" | "search") {
+    document.querySelectorAll<HTMLElement>("#meal-modal [data-view]").forEach((el) => {
+      el.toggleAttribute("hidden", el.dataset.view !== view);
+    });
+  }
+
+  function setMsg(text: string, kind: "" | "error" | "success" = "") {
+    const m = $("meal-modal-msg");
+    if (!m) return;
+    m.textContent = text;
+    m.className = "tk-form-msg" + (kind ? " " + kind : "");
+  }
+
+  function totalProtein(): number {
+    const t = state.items.reduce((acc, it) => acc + (Number(it.protein_g) || 0), 0);
+    return Math.round(t * 10) / 10;
+  }
+
+  function renderItems() {
+    const list = $("meal-items-list");
+    const foot = $("meal-modal-foot");
+    if (!list || !foot) return;
+
+    if (state.items.length === 0) {
+      list.hidden = true;
+      foot.hidden = true;
+      list.innerHTML = "";
+      return;
+    }
+
+    list.hidden = false;
+    foot.hidden = false;
+
+    list.innerHTML = state.items
+      .map((it, i) => {
+        const protein = Number(it.protein_g) || 0;
+        return `
+          <div class="tk-item-row">
+            <div class="tk-item-info">
+              <span class="tk-item-name">${escapeHtml(it.name)}${
+                it.name_zh ? ` · ${escapeHtml(it.name_zh)}` : ""
+              }</span>
+              <span class="tk-item-meta">${escapeHtml(it.portion_label || "")}</span>
+            </div>
+            <span class="tk-item-protein">${protein}g</span>
+            <button class="tk-item-remove" type="button" data-remove-idx="${i}" aria-label="Remove">×</button>
+          </div>
+        `;
+      })
+      .join("");
+
+    list.querySelectorAll<HTMLButtonElement>("[data-remove-idx]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const idx = Number(btn.dataset.removeIdx);
+        if (!Number.isFinite(idx)) return;
+        state.items.splice(idx, 1);
+        renderItems();
+      });
+    });
+
+    const totalEl = $("meal-total");
+    if (totalEl) totalEl.textContent = String(totalProtein());
+
+    const confirmBtn = $("meal-confirm") as HTMLButtonElement | null;
+    if (confirmBtn) confirmBtn.disabled = state.items.length === 0;
+  }
+
+  function escapeHtml(s: string): string {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[c] as string));
+  }
+
+  // --- Food cache + search ----------------------------------------------------
+  async function loadFoodCache(): Promise<FoodRow[]> {
+    if (state.foodCache) return state.foodCache;
+    const sb = (window as any).supabaseClient;
+    if (!sb) return [];
+    const { data, error } = await sb
+      .from("food_database")
+      .select("id, name, name_zh, category, portion_label, protein_per_portion, common_in_hk")
+      .eq("active", true)
+      .order("common_in_hk", { ascending: false })
+      .order("name");
+    if (error) {
+      console.warn("food_database", error);
+      return [];
+    }
+    state.foodCache = (data || []) as FoodRow[];
+    return state.foodCache;
+  }
+
+  function filterFoods(rows: FoodRow[], q: string): FoodRow[] {
+    const term = q.trim().toLowerCase();
+    if (!term) {
+      return rows.slice(0, 40);
+    }
+    return rows
+      .filter((r) => {
+        const n = r.name.toLowerCase();
+        const z = (r.name_zh || "").toLowerCase();
+        return n.includes(term) || z.includes(term);
+      })
+      .slice(0, 40);
+  }
+
+  function renderSearchResults(rows: FoodRow[]) {
+    const wrap = $("meal-search-results");
+    if (!wrap) return;
+    if (!rows.length) {
+      wrap.innerHTML = '<p class="tk-search-empty">No matches. Try another name.</p>';
+      return;
+    }
+    wrap.innerHTML = rows
+      .map(
+        (r) => `
+          <button class="tk-food-row" type="button" data-food-id="${r.id}">
+            <div class="tk-food-info">
+              <span class="tk-food-name">${escapeHtml(r.name)}${
+                r.name_zh ? ` · ${escapeHtml(r.name_zh)}` : ""
+              }</span>
+              <span class="tk-food-meta">${escapeHtml(r.portion_label)}</span>
+            </div>
+            <span class="tk-food-protein">${Number(r.protein_per_portion)}g</span>
+          </button>
+        `
+      )
+      .join("");
+
+    wrap.querySelectorAll<HTMLButtonElement>(".tk-food-row").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = Number(btn.dataset.foodId);
+        const row = (state.foodCache || []).find((r) => r.id === id);
+        if (!row) return;
+        state.items.push({
+          name: row.name,
+          name_zh: row.name_zh || "",
+          portion_label: row.portion_label,
+          protein_g: Number(row.protein_per_portion) || 0,
+          confidence: 1,
+        });
+        renderItems();
+      });
+    });
+  }
+
+  async function showSearch() {
+    setView("search");
+    setMsg("");
+    const input = $("meal-search-input") as HTMLInputElement | null;
+    const results = $("meal-search-results");
+    if (results) results.innerHTML = '<p class="tk-search-empty">Loading…</p>';
+    const rows = await loadFoodCache();
+    renderSearchResults(filterFoods(rows, input?.value || ""));
+    setTimeout(() => input?.focus(), 30);
+  }
+
+  // --- Photo flow -------------------------------------------------------------
+  function pickPhoto() {
+    const input = $("meal-photo-input") as HTMLInputElement | null;
+    if (!input) return;
+    input.value = "";
+    input.click();
+  }
+
+  async function handlePhoto(file: File) {
+    setView("photo");
+    setMsg("");
+
+    const reader = new FileReader();
+    const dataUrl: string = await new Promise((resolve) => {
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.readAsDataURL(file);
+    });
+    state.photoFile = file;
+    state.photoDataUrl = dataUrl;
+
+    const img = $("meal-photo-img") as HTMLImageElement | null;
+    if (img) img.src = dataUrl;
+
+    const status = $("meal-analyze-status");
+    if (status) {
+      status.textContent = "Analyzing…";
+      status.className = "tk-analyze-status";
+    }
+
+    try {
+      const result = await analyzeMealPhoto(file);
+      // Replace items with AI result (user can still edit / add more).
+      state.items = result.items.slice();
+      renderItems();
+      if (status) {
+        if (result.mock) {
+          status.textContent = result.notice || "Mock analysis — adjust as needed";
+          status.className = "tk-analyze-status mock";
+        } else {
+          status.textContent = "Adjust if needed, then confirm";
+          status.className = "tk-analyze-status";
+        }
+      }
+    } catch (err: any) {
+      console.error("analyze", err);
+      if (status) {
+        status.textContent = "Could not analyze photo. Search foods manually.";
+        status.className = "tk-analyze-status error";
+      }
+    }
+  }
+
+  // --- Confirm + upload + save ------------------------------------------------
+  async function uploadPhoto(userId: string, slotKey: string, dateISO: string): Promise<string | null> {
+    if (!state.photoFile) return null;
+    const sb = (window as any).supabaseClient;
+    if (!sb) return null;
+
+    const ext = (state.photoFile.type.split("/")[1] || "jpg").replace("jpeg", "jpg");
+    const path = `${userId}/${dateISO}/${slotKey}.${ext}`;
+
+    try {
+      const { error } = await sb.storage
+        .from("meal-photos")
+        .upload(path, state.photoFile, {
+          upsert: true,
+          contentType: state.photoFile.type || "image/jpeg",
+        });
+      if (error) {
+        console.warn("storage upload", error);
+        return null;
+      }
+      return path;
+    } catch (e) {
+      console.warn("storage upload threw", e);
+      return null;
+    }
+  }
+
+  async function confirmMeal() {
+    if (state.items.length === 0) return;
+    const btn = $("meal-confirm") as HTMLButtonElement | null;
+    if (btn) btn.disabled = true;
+    setMsg("Saving…");
+
+    try {
+      const sb = (window as any).supabaseClient;
+      if (!sb) throw new Error("Supabase not available");
+
+      const { data: { user } } = await sb.auth.getUser();
+      if (!user) throw new Error("Not signed in");
+
+      const dateISO = new Date().toISOString().slice(0, 10);
+      const photoPath = await uploadPhoto(user.id, state.slotKey || "meal", dateISO);
+
+      const total = totalProtein();
+      const foodItems = state.items.map((it) => ({
+        name: it.name,
+        name_zh: it.name_zh || "",
+        portion_label: it.portion_label,
+        protein_g: Number(it.protein_g) || 0,
+        confidence: typeof it.confidence === "number" ? it.confidence : 1,
+      }));
+
+      const { error } = await sb.from("meal_logs").upsert(
+        {
+          user_id: user.id,
+          meal_slot: state.slotKey,
+          logged_date: dateISO,
+          photo_url: photoPath,
+          food_items: foodItems,
+          total_protein_g: total,
+        },
+        { onConflict: "user_id,meal_slot,logged_date" }
+      );
+      if (error) throw error;
+
+      setMsg("Saved", "success");
+      window.dispatchEvent(
+        new CustomEvent("meal-logged", {
+          detail: {
+            slot: state.slotKey,
+            total,
+            items: foodItems,
+            photo_url: photoPath,
+          },
+        })
+      );
+
+      setTimeout(closeModal, 400);
+    } catch (err: any) {
+      console.error("confirm meal", err);
+      setMsg(err?.message || "Could not save meal", "error");
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // --- Open / close -----------------------------------------------------------
+  function resetState() {
+    state.items = [];
+    state.photoFile = null;
+    state.photoDataUrl = null;
+    const img = $("meal-photo-img") as HTMLImageElement | null;
+    if (img) img.src = "";
+    const input = $("meal-search-input") as HTMLInputElement | null;
+    if (input) input.value = "";
+    const results = $("meal-search-results");
+    if (results) results.innerHTML = "";
+    setMsg("");
+    renderItems();
+  }
+
+  function openModal(slotKey: string, slotLabel: string, prefill?: AnalyzedItem[]) {
+    const m = modal();
+    if (!m) return;
+    resetState();
+    state.open = true;
+    state.slotKey = slotKey;
+    state.slotLabel = slotLabel;
+
+    const title = $("meal-modal-title");
+    if (title) title.textContent = `Log · ${slotLabel}`;
+
+    if (prefill && prefill.length) {
+      state.items = prefill.map((it) => ({ ...it }));
+      renderItems();
+      // Skip choice screen — go straight to search so user can add more.
+      setView("search");
+      const status = $("meal-search-results");
+      if (status) status.innerHTML = "";
+      loadFoodCache().then((rows) => renderSearchResults(filterFoods(rows, "")));
+    } else {
+      setView("choice");
+    }
+
+    m.hidden = false;
+    m.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    const m = modal();
+    if (!m) return;
+    m.hidden = true;
+    m.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    state.open = false;
+  }
+
+  function wireModal() {
+    const m = modal();
+    if (!m) return;
+
+    document.querySelectorAll<HTMLElement>("#meal-modal [data-meal-modal-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+
+    $("meal-photo-cta")?.addEventListener("click", pickPhoto);
+    $("meal-search-cta")?.addEventListener("click", showSearch);
+
+    $("meal-add-more")?.addEventListener("click", showSearch);
+    $("meal-confirm")?.addEventListener("click", confirmMeal);
+
+    const photoInput = $("meal-photo-input") as HTMLInputElement | null;
+    photoInput?.addEventListener("change", () => {
+      const f = photoInput.files?.[0];
+      if (f) handlePhoto(f);
+    });
+
+    const searchInput = $("meal-search-input") as HTMLInputElement | null;
+    let searchTimer: number | null = null;
+    searchInput?.addEventListener("input", () => {
+      if (searchTimer) window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(async () => {
+        const rows = await loadFoodCache();
+        renderSearchResults(filterFoods(rows, searchInput.value));
+      }, 120);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && state.open) closeModal();
+    });
+  }
+
+  // Expose to global scope for tracker.astro to invoke.
+  (window as any).openMealLog = openModal;
+  (window as any).closeMealLog = closeModal;
+
+  wireModal();
+</script>
