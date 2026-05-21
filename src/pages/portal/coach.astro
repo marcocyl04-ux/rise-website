@@ -296,6 +296,8 @@ import Footer from "../../components/Footer.astro";
 
 <!-- Global styles for JS-created elements (Astro CSS scoping pitfall). -->
 <style is:global>
+  /* Hide Header lang toggle — portal pages use their own floating toggle */
+  .lang-toggle { display: none !important; }
   /* Alert cards */
   .coach-alert {
     display: flex;
@@ -997,7 +999,7 @@ import Footer from "../../components/Footer.astro";
       for (const al of a.alerts) {
         all.push({
           level: al.level,
-          msg: al.msg,
+          msg: t(al.key, al.params),
           athleteId: a.profile.id,
           athleteName: a.profile.full_name || a.profile.email || t("coach.row.athlete"),
         });

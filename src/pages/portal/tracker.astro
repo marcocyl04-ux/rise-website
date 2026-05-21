@@ -1190,6 +1190,8 @@ import MealLogModal from "../../components/MealLogModal.astro";
 </style>
 
 <style is:global>
+  /* Hide Header lang toggle — portal pages use their own floating toggle */
+  .lang-toggle { display: none !important; }
   /* Global styles for meal grid cards — these elements are created dynamically
      by JS (document.createElement) and therefore don't carry Astro's
      [data-astro-cid-*] attribute, so scoped styles would not apply to them. */

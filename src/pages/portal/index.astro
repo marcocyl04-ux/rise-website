@@ -98,6 +98,11 @@ import Footer from "../../components/Footer.astro";
   <Footer slot="footer" />
 </BaseLayout>
 
+<style is:global>
+  /* Hide Header lang toggle — portal pages use their own floating toggle */
+  .lang-toggle { display: none !important; }
+</style>
+
 <style>
   .portal-loading {
     display: flex;
