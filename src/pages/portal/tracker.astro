@@ -613,6 +613,25 @@ import MealLogModal from "../../components/MealLogModal.astro";
   }
   .tk-meal-slot.logged .tk-slot-status { color: var(--rise-red); }
 
+  .tk-log-btn {
+    align-self: flex-start;
+    margin-top: auto;
+    background: var(--rise-white);
+    color: var(--rise-red);
+    border: 1.5px solid var(--rise-red);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tk-log-btn:hover {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+
   .tk-repeat-btn {
     background: transparent;
     border: 0;
@@ -928,9 +947,9 @@ import MealLogModal from "../../components/MealLogModal.astro";
 
       let html = `<span class="tk-slot-name">${slot.label}</span>`;
       if (logged) {
-        html += `<span class="tk-slot-status">Logged · ${logged.total_protein_g || 0}g</span>`;
+        html += `<span class="tk-slot-status">✓ Logged · ${logged.total_protein_g || 0}g</span>`;
       } else {
-        html += `<span class="tk-slot-status">Tap to log</span>`;
+        html += `<button class="tk-log-btn" type="button">+ Log meal</button>`;
         if (showRepeat) {
           const total = Math.round((yesterday.total_protein_g || 0) * 10) / 10;
           html += `<button class="tk-repeat-btn" type="button" data-repeat="${slot.key}">↻ Repeat yesterday · ${total}g</button>`;
