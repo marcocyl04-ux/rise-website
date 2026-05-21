@@ -1,0 +1,795 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Track your daily protein and meals — RISE Nutrition Tracker."><meta name="generator" content="Astro v6.3.1"><!-- Open Graph / WhatsApp / Social --><meta property="og:type" content="website"><meta property="og:url" content="https://riseadvancement.com/portal/tracker"><meta property="og:title" content="Nutrition Tracker | RISE Advancement"><meta property="og:description" content="Track your daily protein and meals — RISE Nutrition Tracker."><meta property="og:image" content="https://riseadvancement.com/og-image.png"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="RISE Advancement"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Nutrition Tracker | RISE Advancement"><meta name="twitter:description" content="Track your daily protein and meals — RISE Nutrition Tracker."><meta name="twitter:image" content="https://riseadvancement.com/og-image.png"><!-- Canonical --><link rel="canonical" href="https://riseadvancement.com/portal/tracker"><!-- Favicon --><link rel="icon" type="image/png" href="/favicon.png?v=2"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2"><link rel="icon" href="/favicon.ico"><!-- Google Fonts: Oswald (headings) + Inter (body) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Oswald:wght@500;600;700&display=block" rel="stylesheet"><title>Nutrition Tracker | RISE Advancement</title><!-- Supabase JS v2 (for auth + portal) --><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(function(){const SUPABASE_URL = "https://zeczlwypqqvvpraosodv.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplY3psd3lwcXF2dnByYW9zb2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNDEyMDgsImV4cCI6MjA5NDkxNzIwOH0.I7HWRsBOXDH2UG0u6NMEkXlosrlkuMkY6w9g5RtV_KM";
+
+      // Initialize the Supabase client once, attach to window.
+      (function () {
+        if (window.supabaseClient) return;
+        if (!window.supabase) return;
+        window.supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true,
+            },
+          }
+        );
+      })();
+    })();</script><style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/styles/global.css">/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */
+@layer properties;
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.563rem;
+    --text-2xl: 1.953rem;
+    --text-3xl: 2.441rem;
+    --text-4xl: 3.052rem;
+    --text-5xl: 3.815rem;
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+}
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html, :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+  b, strong {
+    font-weight: bolder;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+  :-moz-focusring {
+    outline: auto;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  summary {
+    display: list-item;
+  }
+  ol, ul, menu {
+    list-style: none;
+  }
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+  }
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  button, input, select, optgroup, textarea, ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+  ::placeholder {
+    opacity: 1;
+  }
+  @supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentcolor;
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+  ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+  button, input:where([type="button"], [type="reset"], [type="submit"]), ::file-selector-button {
+    appearance: button;
+  }
+  ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+@layer utilities {
+  .visible {
+    visibility: visible;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .static {
+    position: static;
+  }
+  .container {
+    width: 100%;
+    @media (width >= 40rem) {
+      max-width: 40rem;
+    }
+    @media (width >= 48rem) {
+      max-width: 48rem;
+    }
+    @media (width >= 64rem) {
+      max-width: 64rem;
+    }
+    @media (width >= 80rem) {
+      max-width: 80rem;
+    }
+    @media (width >= 96rem) {
+      max-width: 96rem;
+    }
+  }
+  .block {
+    display: block;
+  }
+  .contents {
+    display: contents;
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .hidden {
+    display: none;
+  }
+  .inline-flex {
+    display: inline-flex;
+  }
+  .table {
+    display: table;
+  }
+  .flex-shrink {
+    flex-shrink: 1;
+  }
+  .transform {
+    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .outline {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
+  }
+  .backdrop-filter {
+    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  }
+  .transition {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+}
+:root {
+  --rise-red: #D3191F;
+  --rise-red-dark: #A81419;
+  --rise-red-light: #F4D5D6;
+  --rise-black: #121212;
+  --rise-white: #FAFAFA;
+  --rise-neutral-50: #F7F5F5;
+  --rise-neutral-100: #EEECEC;
+  --rise-neutral-200: #D9D5D5;
+  --rise-neutral-300: #B8B2B2;
+  --rise-neutral-400: #8A8282;
+  --rise-neutral-500: #5C5555;
+  --rise-neutral-700: #3A3333;
+  --rise-neutral-900: #1A1515;
+  --font-heading: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-9: 2.25rem;
+  --space-10: 2.5rem;
+  --space-11: 2.75rem;
+  --space-12: 3rem;
+  --space-13: 3.25rem;
+  --space-14: 3.5rem;
+  --space-15: 3.75rem;
+  --space-16: 4rem;
+  --space-17: 4.25rem;
+  --space-18: 4.5rem;
+  --space-19: 4.75rem;
+  --space-20: 5rem;
+  --space-21: 5.25rem;
+  --space-22: 5.5rem;
+  --space-23: 5.75rem;
+  --space-24: 6rem;
+  --max-content-width: 1200px;
+  --grid-columns: 12;
+  --grid-gutter: 1rem;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--rise-black);
+  background-color: var(--rise-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--rise-black);
+  margin: 0 0 0.5em;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: var(--text-5xl);
+}
+h2 {
+  font-size: var(--text-4xl);
+}
+h3 {
+  font-size: var(--text-3xl);
+}
+h4 {
+  font-size: var(--text-2xl);
+}
+h5 {
+  font-size: var(--text-xl);
+}
+h6 {
+  font-size: var(--text-lg);
+}
+p {
+  margin: 0 0 1em;
+  max-width: 65ch;
+}
+a {
+  color: var(--rise-red);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover, a:focus-visible {
+  color: var(--rise-red-dark);
+  text-decoration: underline;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.container {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gutter);
+}
+.section {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+:focus-visible {
+  outline: 2px solid var(--rise-red);
+  outline-offset: 2px;
+}
+::selection {
+  background-color: var(--rise-red);
+  color: var(--rise-white);
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-backdrop-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
+      --tw-border-style: solid;
+      --tw-outline-style: solid;
+      --tw-backdrop-blur: initial;
+      --tw-backdrop-brightness: initial;
+      --tw-backdrop-contrast: initial;
+      --tw-backdrop-grayscale: initial;
+      --tw-backdrop-hue-rotate: initial;
+      --tw-backdrop-invert: initial;
+      --tw-backdrop-opacity: initial;
+      --tw-backdrop-saturate: initial;
+      --tw-backdrop-sepia: initial;
+    }
+  }
+}
+</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/components/FloatingWhatsApp.astro?astro&#38;type=style&#38;index=0&#38;lang.css">.floating-whatsapp[data-astro-cid-ce2tfxup]{position:fixed;bottom:var(--space-6);right:var(--space-6);z-index:999;display:flex;align-items:center;gap:var(--space-2);background-color:#043A2C;color:var(--rise-white);padding:var(--space-3) var(--space-5);border-radius:50px;text-decoration:none;font-family:var(--font-heading);font-size:var(--text-sm);font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:transform 0.2s,box-shadow 0.2s}.floating-whatsapp[data-astro-cid-ce2tfxup]:hover{transform:scale(1.05);box-shadow:0 6px 16px rgba(0,0,0,0.25);color:var(--rise-white);text-decoration:none}.floating-whatsapp[data-astro-cid-ce2tfxup] svg[data-astro-cid-ce2tfxup]{flex-shrink:0}@media (max-width: 639px){.floating-whatsapp[data-astro-cid-ce2tfxup]{bottom:var(--space-4);right:var(--space-4);padding:var(--space-3)}.floating-whatsapp-label[data-astro-cid-ce2tfxup]{display:none}}</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro?astro&#38;type=style&#38;index=0&#38;lang.css">.auth-modal[data-astro-cid-6iignqru][hidden]{display:none!important}.auth-modal[data-astro-cid-6iignqru]{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:var(--space-4)}.auth-backdrop[data-astro-cid-6iignqru]{position:absolute;inset:0;background:rgba(18,18,18,0.6);backdrop-filter:blur(2px)}.auth-panel[data-astro-cid-6iignqru]{position:relative;background:var(--rise-white);border-radius:12px;box-shadow:0 24px 60px rgba(0,0,0,0.25),0 4px 12px rgba(0,0,0,0.08);width:100%;max-width:420px;padding:32px 28px;max-height:calc(100vh - 32px);overflow-y:auto;animation:authFadeIn 0.2s ease}@keyframes authFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.auth-close[data-astro-cid-6iignqru]{position:absolute;top:12px;right:12px;background:transparent;border:0;color:var(--rise-neutral-500);cursor:pointer;padding:8px;border-radius:6px;transition:background 0.15s,color 0.15s}.auth-close[data-astro-cid-6iignqru]:hover{background:var(--rise-neutral-50);color:var(--rise-black)}.auth-brand[data-astro-cid-6iignqru]{text-align:center;margin-bottom:20px}.auth-title[data-astro-cid-6iignqru]{font-family:var(--font-heading);font-size:1.75rem;font-weight:700;color:var(--rise-black);letter-spacing:0.04em;margin:0 0 4px;text-transform:uppercase}.auth-tagline[data-astro-cid-6iignqru]{color:var(--rise-neutral-500);font-family:var(--font-body);font-size:0.9rem;margin:0}.auth-tabs[data-astro-cid-6iignqru]{display:flex;background:var(--rise-neutral-50);border:1px solid var(--rise-neutral-100);border-radius:10px;padding:4px;gap:4px;margin-bottom:20px}.auth-tab[data-astro-cid-6iignqru]{flex:1;padding:10px;background:transparent;color:var(--rise-neutral-500);border:0;border-radius:7px;font-family:var(--font-body);font-size:0.9rem;font-weight:600;cursor:pointer;transition:background 0.15s,color 0.15s}.auth-tab[data-astro-cid-6iignqru].active{background:var(--rise-white);color:var(--rise-black);box-shadow:0 1px 3px rgba(0,0,0,0.08)}.auth-form[data-astro-cid-6iignqru]{display:flex;flex-direction:column;gap:14px}.auth-form[data-astro-cid-6iignqru][hidden]{display:none}.auth-field[data-astro-cid-6iignqru]{display:flex;flex-direction:column;gap:6px}.auth-field[data-astro-cid-6iignqru]>span[data-astro-cid-6iignqru]{font-family:var(--font-body);font-size:0.8rem;font-weight:500;color:var(--rise-neutral-500)}.auth-field[data-astro-cid-6iignqru] small[data-astro-cid-6iignqru]{font-family:var(--font-body);font-size:0.75rem;color:var(--rise-neutral-400)}.auth-field[data-astro-cid-6iignqru] input[data-astro-cid-6iignqru]{background:var(--rise-white);border:1px solid var(--rise-neutral-200);color:var(--rise-black);padding:12px 14px;font-size:0.95rem;font-family:var(--font-body);border-radius:8px;outline:none;width:100%;transition:border-color 0.15s,box-shadow 0.15s}.auth-field[data-astro-cid-6iignqru] input[data-astro-cid-6iignqru]:focus{border-color:var(--rise-red);box-shadow:0 0 0 3px rgba(211,25,31,0.12)}.auth-btn[data-astro-cid-6iignqru]{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:8px;border:1px solid transparent;font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;width:100%;transition:background 0.15s,border-color 0.15s,color 0.15s,transform 0.05s}.auth-btn[data-astro-cid-6iignqru]:active{transform:scale(0.99)}.auth-btn[data-astro-cid-6iignqru]:disabled{opacity:0.5;cursor:not-allowed}.auth-btn[data-astro-cid-6iignqru].primary{background:var(--rise-red);color:var(--rise-white)}.auth-btn[data-astro-cid-6iignqru].primary:hover:not(:disabled){background:var(--rise-red-dark)}.auth-btn[data-astro-cid-6iignqru].google{background:var(--rise-white);color:var(--rise-black);border-color:var(--rise-neutral-200)}.auth-btn[data-astro-cid-6iignqru].google:hover:not(:disabled){background:var(--rise-neutral-50)}.auth-divider[data-astro-cid-6iignqru]{display:flex;align-items:center;text-align:center;color:var(--rise-neutral-400);font-size:0.75rem;font-family:var(--font-body);gap:10px}.auth-divider[data-astro-cid-6iignqru]::before,.auth-divider[data-astro-cid-6iignqru]::after{content:"";flex:1;height:1px;background:var(--rise-neutral-100)}.auth-msg[data-astro-cid-6iignqru]{font-family:var(--font-body);font-size:0.875rem;text-align:center;margin:0;min-height:1.2em;color:var(--rise-neutral-500)}.auth-msg[data-astro-cid-6iignqru].error{color:var(--rise-red)}.auth-msg[data-astro-cid-6iignqru].success{color:#16a34a}</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/components/Header.astro?astro&#38;type=style&#38;index=0&#38;lang.css">.site-header[data-astro-cid-3ef6ksr2]{position:sticky;top:0;z-index:100;background-color:var(--rise-white);border-bottom:1px solid var(--rise-neutral-100)}.header-inner[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between;height:6rem}.logo[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;text-decoration:none;flex-shrink:0}.logo[data-astro-cid-3ef6ksr2]:hover{text-decoration:none}.logo-img[data-astro-cid-3ef6ksr2]{height:70px;width:auto;display:block;padding:8px 0}@media (max-width: 639px){.logo-img[data-astro-cid-3ef6ksr2]{height:60px}}.nav-desktop[data-astro-cid-3ef6ksr2]{display:none}@media (min-width: 768px){.nav-desktop[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;gap:var(--space-6)}.nav-desktop[data-astro-cid-3ef6ksr2]>a[data-astro-cid-3ef6ksr2],.nav-dropdown-trigger[data-astro-cid-3ef6ksr2]{font-family:var(--font-body);font-size:0.875rem;font-weight:500;color:var(--rise-neutral-700);text-decoration:none;text-transform:uppercase;letter-spacing:0.04em;padding:0.75rem 0.5rem;min-height:44px;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;display:inline-flex;align-items:center;gap:0.35rem}.nav-desktop[data-astro-cid-3ef6ksr2]>a[data-astro-cid-3ef6ksr2]:hover,.nav-dropdown-trigger[data-astro-cid-3ef6ksr2]:hover{color:var(--rise-red);border-bottom-color:var(--rise-red);text-decoration:none}}.nav-dropdown[data-astro-cid-3ef6ksr2]{position:relative}.dropdown-chevron[data-astro-cid-3ef6ksr2]{transition:transform 0.25s cubic-bezier(0.4,0,0.2,1)}.nav-dropdown[data-astro-cid-3ef6ksr2]:hover .dropdown-chevron[data-astro-cid-3ef6ksr2]{transform:rotate(180deg)}.nav-dropdown-menu[data-astro-cid-3ef6ksr2]{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(-4px);background-color:var(--rise-white);border:1px solid var(--rise-neutral-100);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04);min-width:220px;z-index:200;display:flex;flex-direction:column;padding:var(--space-2) 0;opacity:0;pointer-events:none;transition:opacity 0.2s cubic-bezier(0.4,0,0.2,1),transform 0.2s cubic-bezier(0.4,0,0.2,1)}.nav-dropdown[data-astro-cid-3ef6ksr2]:hover .nav-dropdown-menu[data-astro-cid-3ef6ksr2]{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}.nav-dropdown-menu[data-astro-cid-3ef6ksr2]::before{content:"";position:absolute;top:-12px;left:0;right:0;height:12px}.nav-dropdown-menu[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex;flex-direction:column;gap:2px;font-family:var(--font-body);text-decoration:none;padding:var(--space-3) var(--space-4);transition:background-color 0.15s}.nav-dropdown-menu[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{background-color:var(--rise-neutral-50);text-decoration:none}.dropdown-label[data-astro-cid-3ef6ksr2]{font-size:0.875rem;font-weight:600;color:var(--rise-black)}.nav-dropdown-menu[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover .dropdown-label[data-astro-cid-3ef6ksr2]{color:var(--rise-red)}.dropdown-desc[data-astro-cid-3ef6ksr2]{font-size:0.75rem;color:var(--rise-neutral-400);font-weight:400}.header-actions[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;gap:var(--space-4)}.lang-toggle[data-astro-cid-3ef6ksr2]{font-family:var(--font-body);font-size:0.875rem;font-weight:500;color:var(--rise-neutral-500);text-decoration:none;padding:0.25rem 0.5rem;border:1px solid var(--rise-neutral-200);border-radius:4px;transition:all 0.2s}.lang-toggle[data-astro-cid-3ef6ksr2]:hover{color:var(--rise-red);border-color:var(--rise-red);text-decoration:none}.hamburger[data-astro-cid-3ef6ksr2]{display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}@media (min-width: 768px){.hamburger[data-astro-cid-3ef6ksr2]{display:none}}.hamburger-line[data-astro-cid-3ef6ksr2]{display:block;width:24px;height:2px;background-color:var(--rise-black);border-radius:1px}.nav-mobile[data-astro-cid-3ef6ksr2]{background-color:var(--rise-white);border-bottom:1px solid var(--rise-neutral-100);padding:var(--space-4);display:flex;flex-direction:column;gap:0}.nav-mobile[data-astro-cid-3ef6ksr2][hidden]{display:none}.nav-mobile[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{font-family:var(--font-body);font-size:1rem;font-weight:500;color:var(--rise-neutral-700);text-decoration:none;padding:var(--space-2) var(--space-4);border-radius:4px;transition:background-color 0.2s,color 0.2s}.nav-mobile[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{background-color:var(--rise-neutral-50);color:var(--rise-red);text-decoration:none}.mobile-section-label[data-astro-cid-3ef6ksr2]{font-family:var(--font-heading);font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--rise-neutral-400);padding:var(--space-3) var(--space-4) var(--space-1)}.mobile-sub[data-astro-cid-3ef6ksr2]{padding-left:var(--space-8)!important;font-size:0.9375rem!important}.mobile-lang[data-astro-cid-3ef6ksr2]{border-top:1px solid var(--rise-neutral-100);margin-top:var(--space-2);padding-top:var(--space-3)!important}.auth-login-btn[data-astro-cid-3ef6ksr2]{display:none;font-family:var(--font-body);font-size:0.875rem;font-weight:600;color:var(--rise-white);background:var(--rise-red);border:1px solid var(--rise-red);border-radius:6px;padding:0.5rem 1rem;cursor:pointer;transition:background 0.15s,border-color 0.15s}.auth-login-btn[data-astro-cid-3ef6ksr2]:hover{background:var(--rise-red-dark);border-color:var(--rise-red-dark)}.auth-login-btn[data-astro-cid-3ef6ksr2][hidden]{display:none!important}@media (min-width: 768px){.auth-login-btn[data-astro-cid-3ef6ksr2]:not([hidden]){display:inline-flex}}.user-menu[data-astro-cid-3ef6ksr2]{position:relative;display:none}.user-menu[data-astro-cid-3ef6ksr2][hidden]{display:none!important}@media (min-width: 768px){.user-menu[data-astro-cid-3ef6ksr2]:not([hidden]){display:inline-flex}}.user-menu-trigger[data-astro-cid-3ef6ksr2]{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid var(--rise-neutral-200);border-radius:6px;padding:0.35rem 0.75rem 0.35rem 0.35rem;cursor:pointer;font-family:var(--font-body);font-size:0.875rem;font-weight:500;color:var(--rise-neutral-700);transition:border-color 0.15s,color 0.15s}.user-menu-trigger[data-astro-cid-3ef6ksr2]:hover{border-color:var(--rise-red);color:var(--rise-red)}.user-avatar[data-astro-cid-3ef6ksr2]{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--rise-red);color:var(--rise-white);font-family:var(--font-heading);font-size:0.875rem;font-weight:700;text-transform:uppercase}.user-name[data-astro-cid-3ef6ksr2]{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.user-chevron[data-astro-cid-3ef6ksr2]{transition:transform 0.2s}.user-menu-trigger[data-astro-cid-3ef6ksr2][aria-expanded=true] .user-chevron[data-astro-cid-3ef6ksr2]{transform:rotate(180deg)}.user-menu-panel[data-astro-cid-3ef6ksr2]{position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:var(--rise-white);border:1px solid var(--rise-neutral-100);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04);z-index:200;padding:var(--space-2) 0;display:flex;flex-direction:column}.user-menu-panel[data-astro-cid-3ef6ksr2][hidden]{display:none}.user-menu-item[data-astro-cid-3ef6ksr2]{display:block;text-align:left;background:transparent;border:0;font-family:var(--font-body);font-size:0.875rem;font-weight:500;color:var(--rise-neutral-700);text-decoration:none;padding:var(--space-3) var(--space-4);cursor:pointer;transition:background 0.15s,color 0.15s;width:100%}.user-menu-item[data-astro-cid-3ef6ksr2]:hover{background:var(--rise-neutral-50);color:var(--rise-red);text-decoration:none}.user-menu-item[data-astro-cid-3ef6ksr2].logout{border-top:1px solid var(--rise-neutral-100);margin-top:var(--space-1);padding-top:var(--space-3);color:var(--rise-neutral-500)}.mobile-auth-btn[data-astro-cid-3ef6ksr2]{display:block;margin:var(--space-3) var(--space-4) var(--space-2);padding:0.75rem 1rem;background:var(--rise-red);color:var(--rise-white);border:0;border-radius:6px;font-family:var(--font-body);font-size:1rem;font-weight:600;cursor:pointer;text-align:center}.mobile-auth-btn[data-astro-cid-3ef6ksr2][hidden]{display:none!important}.mobile-auth-user[data-astro-cid-3ef6ksr2][hidden]{display:none}.mobile-auth-user[data-astro-cid-3ef6ksr2]{display:flex;flex-direction:column;border-top:1px solid var(--rise-neutral-100);margin-top:var(--space-2);padding-top:var(--space-2)}.mobile-logout[data-astro-cid-3ef6ksr2]{text-align:left;background:transparent;border:0;font-family:var(--font-body);font-size:1rem;font-weight:500;color:var(--rise-neutral-500);padding:var(--space-2) var(--space-4);cursor:pointer;border-radius:4px;transition:background 0.15s,color 0.15s}.mobile-logout[data-astro-cid-3ef6ksr2]:hover{background:var(--rise-neutral-50);color:var(--rise-red)}</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro?astro&#38;type=style&#38;index=0&#38;lang.css">.site-footer[data-astro-cid-sz7xmlte]{background-color:var(--rise-neutral-900);color:var(--rise-neutral-200);padding-top:var(--space-16);padding-bottom:var(--space-8)}.footer-inner[data-astro-cid-sz7xmlte]{display:grid;grid-template-columns:1fr;gap:var(--space-8);margin-bottom:var(--space-12)}@media (min-width: 640px){.footer-inner[data-astro-cid-sz7xmlte]{grid-template-columns:1fr 1fr}}@media (min-width: 1024px){.footer-inner[data-astro-cid-sz7xmlte]{grid-template-columns:2fr 1fr 1fr 1fr}}.footer-logo[data-astro-cid-sz7xmlte]{font-family:var(--font-heading);font-size:var(--text-xl);font-weight:700;color:var(--rise-white);text-transform:uppercase}.footer-tagline[data-astro-cid-sz7xmlte]{margin-top:var(--space-2);line-height:1.5;color:var(--rise-neutral-300)}.footer-contact[data-astro-cid-sz7xmlte] h4[data-astro-cid-sz7xmlte],.footer-links[data-astro-cid-sz7xmlte] h4[data-astro-cid-sz7xmlte],.footer-social[data-astro-cid-sz7xmlte] h4[data-astro-cid-sz7xmlte]{font-family:var(--font-heading);font-size:var(--text-sm);font-weight:600;color:var(--rise-white);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-3)}.footer-contact[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte],.footer-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte],.footer-social[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{display:block;font-size:var(--text-sm);color:var(--rise-neutral-300);text-decoration:none;padding:0.75rem 0;min-height:44px;transition:color 0.2s}.footer-contact[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover,.footer-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover,.footer-social[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:var(--rise-red);text-decoration:none}.wechat-info[data-astro-cid-sz7xmlte]{display:block;font-size:var(--text-sm);color:var(--rise-neutral-300);padding:0.2rem 0}.whatsapp-cta[data-astro-cid-sz7xmlte]{display:inline-flex!important;align-items:center;gap:0.35rem;background-color:var(--rise-red);color:var(--rise-white)!important;padding:var(--space-3) var(--space-4)!important;min-height:44px;border-radius:4px;font-weight:600;margin-top:var(--space-3);transition:background-color 0.2s}.whatsapp-cta[data-astro-cid-sz7xmlte]:hover{background-color:var(--rise-red-dark);color:var(--rise-white)!important;text-decoration:none}.footer-bottom[data-astro-cid-sz7xmlte]{border-top:1px solid var(--rise-neutral-700);padding-top:var(--space-6);text-align:center}.footer-bottom[data-astro-cid-sz7xmlte] p[data-astro-cid-sz7xmlte]{font-size:var(--text-xs);color:var(--rise-neutral-500);margin:0;max-width:none}</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro?astro&#38;type=style&#38;index=0&#38;lang.css">.tk-modal[data-astro-cid-bws6pnek]{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center;animation:tk-modal-in 0.2s ease}@media (min-width: 640px){.tk-modal[data-astro-cid-bws6pnek]{align-items:center}}.tk-modal[data-astro-cid-bws6pnek][hidden]{display:none!important}@keyframes tk-modal-in{from{opacity:0}to{opacity:1}}.tk-modal-backdrop[data-astro-cid-bws6pnek]{position:absolute;inset:0;background:rgba(18,18,18,0.55);backdrop-filter:blur(2px)}.tk-modal-card[data-astro-cid-bws6pnek]{position:relative;background:var(--rise-white);width:100%;max-width:520px;max-height:92vh;border-radius:16px 16px 0 0;padding:18px 18px 22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -20px 60px rgba(18,18,18,0.25);overflow-y:auto;color:var(--rise-black);font-family:var(--font-body)}@media (min-width: 640px){.tk-modal-card[data-astro-cid-bws6pnek]{border-radius:16px;box-shadow:0 30px 60px rgba(18,18,18,0.25)}}.tk-modal-head[data-astro-cid-bws6pnek]{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:4px;border-bottom:1px solid var(--rise-neutral-100)}.tk-modal-title[data-astro-cid-bws6pnek]{font-family:var(--font-heading);font-size:1.25rem;font-weight:600;text-transform:uppercase;letter-spacing:0.02em;margin:0;color:var(--rise-black)}.tk-modal-x[data-astro-cid-bws6pnek]{background:transparent;border:0;font-size:1.8rem;line-height:1;width:36px;height:36px;border-radius:50%;color:var(--rise-neutral-500);cursor:pointer;transition:background 0.15s,color 0.15s}.tk-modal-x[data-astro-cid-bws6pnek]:hover{background:var(--rise-neutral-100);color:var(--rise-black)}.tk-modal-body[data-astro-cid-bws6pnek]{display:flex;flex-direction:column;gap:12px}.tk-modal-body[data-astro-cid-bws6pnek][hidden]{display:none!important}.tk-photo-cta[data-astro-cid-bws6pnek]{background:linear-gradient(135deg,var(--rise-red),var(--rise-red-dark));color:var(--rise-white);border:0;border-radius:14px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-family:var(--font-body);box-shadow:0 8px 22px rgba(211,25,31,0.22);transition:transform 0.1s,box-shadow 0.15s}.tk-photo-cta[data-astro-cid-bws6pnek]:hover{box-shadow:0 10px 26px rgba(211,25,31,0.3)}.tk-photo-cta[data-astro-cid-bws6pnek]:active{transform:scale(0.98)}.tk-photo-icon[data-astro-cid-bws6pnek]{font-size:2.4rem;line-height:1;margin-bottom:2px}.tk-photo-cta-label[data-astro-cid-bws6pnek]{font-family:var(--font-heading);font-size:1.4rem;font-weight:600;text-transform:uppercase;letter-spacing:0.02em}.tk-photo-cta-sub[data-astro-cid-bws6pnek]{font-size:0.85rem;opacity:0.9}.tk-search-cta[data-astro-cid-bws6pnek]{background:var(--rise-white);color:var(--rise-black);border:1px solid var(--rise-neutral-200);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font-body);font-size:1rem;font-weight:600;cursor:pointer;transition:border-color 0.15s,color 0.15s}.tk-search-cta[data-astro-cid-bws6pnek]:hover{border-color:var(--rise-red);color:var(--rise-red)}.tk-photo-preview[data-astro-cid-bws6pnek]{width:100%;aspect-ratio:4 / 3;background:var(--rise-neutral-100);border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center}.tk-photo-preview[data-astro-cid-bws6pnek] img[data-astro-cid-bws6pnek]{width:100%;height:100%;object-fit:cover}.tk-analyze-status[data-astro-cid-bws6pnek]{text-align:center;color:var(--rise-neutral-500);font-size:0.9rem;margin:0}.tk-analyze-status[data-astro-cid-bws6pnek].error{color:var(--rise-red-dark)}.tk-analyze-status[data-astro-cid-bws6pnek].mock{color:var(--rise-neutral-400);font-style:italic}.tk-search-wrap[data-astro-cid-bws6pnek]{position:relative}.tk-search-input[data-astro-cid-bws6pnek]{width:100%;background:var(--rise-white);border:1px solid var(--rise-neutral-200);border-radius:12px;padding:14px 16px;font-family:var(--font-body);font-size:1rem;color:var(--rise-black);outline:none;transition:border-color 0.15s,box-shadow 0.15s}.tk-search-input[data-astro-cid-bws6pnek]:focus{border-color:var(--rise-red);box-shadow:0 0 0 3px var(--rise-red-light)}.tk-search-results[data-astro-cid-bws6pnek]{max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}.tk-search-empty[data-astro-cid-bws6pnek]{color:var(--rise-neutral-400);font-size:0.9rem;text-align:center;padding:16px;margin:0}.tk-food-row[data-astro-cid-bws6pnek]{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--rise-white);border:1px solid var(--rise-neutral-100);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color 0.15s,background 0.15s;text-align:left;width:100%;font-family:var(--font-body);color:var(--rise-black)}.tk-food-row[data-astro-cid-bws6pnek]:hover{border-color:var(--rise-red);background:var(--rise-red-light)}.tk-food-info[data-astro-cid-bws6pnek]{display:flex;flex-direction:column;gap:2px;min-width:0}.tk-food-name[data-astro-cid-bws6pnek]{font-size:0.95rem;font-weight:600;color:var(--rise-black);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tk-food-meta[data-astro-cid-bws6pnek]{font-size:0.78rem;color:var(--rise-neutral-500)}.tk-food-protein[data-astro-cid-bws6pnek]{font-family:var(--font-heading);font-weight:700;color:var(--rise-red);font-size:1rem;white-space:nowrap}.tk-meal-items[data-astro-cid-bws6pnek]{display:flex;flex-direction:column;gap:6px;padding:8px 0;border-top:1px solid var(--rise-neutral-100)}.tk-meal-items[data-astro-cid-bws6pnek][hidden]{display:none!important}.tk-item-row[data-astro-cid-bws6pnek]{display:flex;align-items:center;gap:10px;padding:8px 0}.tk-item-info[data-astro-cid-bws6pnek]{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}.tk-item-name[data-astro-cid-bws6pnek]{font-size:0.95rem;font-weight:600;color:var(--rise-black);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tk-item-meta[data-astro-cid-bws6pnek]{font-size:0.78rem;color:var(--rise-neutral-500)}.tk-item-protein[data-astro-cid-bws6pnek]{font-family:var(--font-heading);font-weight:700;color:var(--rise-red);font-size:1rem;min-width:44px;text-align:right}.tk-item-remove[data-astro-cid-bws6pnek]{background:transparent;border:1px solid var(--rise-neutral-200);width:28px;height:28px;border-radius:6px;color:var(--rise-neutral-500);cursor:pointer;font-size:1rem;line-height:1;transition:border-color 0.15s,color 0.15s,background 0.15s}.tk-item-remove[data-astro-cid-bws6pnek]:hover{border-color:var(--rise-red);color:var(--rise-red);background:var(--rise-red-light)}.tk-modal-foot[data-astro-cid-bws6pnek]{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--rise-neutral-100);padding-top:12px}.tk-modal-foot[data-astro-cid-bws6pnek][hidden]{display:none!important}.tk-meal-total[data-astro-cid-bws6pnek]{display:flex;justify-content:space-between;align-items:baseline;font-size:0.9rem;color:var(--rise-neutral-500)}.tk-meal-total[data-astro-cid-bws6pnek] strong[data-astro-cid-bws6pnek]{font-family:var(--font-heading);font-size:1.6rem;color:var(--rise-red);font-weight:700}.tk-modal-foot[data-astro-cid-bws6pnek] .tk-row[data-astro-cid-bws6pnek]{display:flex;gap:10px}.tk-modal-foot[data-astro-cid-bws6pnek] .tk-row[data-astro-cid-bws6pnek] .tk-btn[data-astro-cid-bws6pnek]{flex:1}.tk-modal-foot[data-astro-cid-bws6pnek] .tk-btn[data-astro-cid-bws6pnek]{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 18px;border-radius:10px;border:1px solid transparent;font-family:var(--font-body);font-size:1rem;font-weight:600;cursor:pointer;width:100%}.tk-modal-foot[data-astro-cid-bws6pnek] .tk-btn-primary[data-astro-cid-bws6pnek]{background:var(--rise-red);color:var(--rise-white)}.tk-modal-foot[data-astro-cid-bws6pnek] .tk-btn-primary[data-astro-cid-bws6pnek]:disabled{opacity:0.5;cursor:not-allowed}.tk-modal-foot[data-astro-cid-bws6pnek] .tk-btn-ghost[data-astro-cid-bws6pnek]{background:transparent;color:var(--rise-neutral-700);border-color:var(--rise-neutral-200)}.tk-form-msg[data-astro-cid-bws6pnek]{font-size:0.85rem;text-align:center;margin:0;min-height:1.1em;color:var(--rise-neutral-500)}.tk-form-msg[data-astro-cid-bws6pnek].error{color:var(--rise-red-dark)}.tk-form-msg[data-astro-cid-bws6pnek].success{color:#15803d}</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro?astro&#38;type=style&#38;index=1&#38;lang.css">/* Global copies for elements created dynamically by the modal script.
+     Astro scoped styles don't apply to JS-created nodes, so these rules
+     mirror the scoped ones above for those classes only. */
+  .tk-search-empty {
+    color: var(--rise-neutral-400);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 16px;
+    margin: 0;
+  }
+  .tk-food-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+    width: 100%;
+    font-family: var(--font-body);
+    color: var(--rise-black);
+  }
+  .tk-food-row:hover {
+    border-color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-food-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .tk-food-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--rise-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tk-food-meta {
+    font-size: 0.78rem;
+    color: var(--rise-neutral-500);
+  }
+  .tk-food-protein {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--rise-red);
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+  .tk-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+  }
+  .tk-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .tk-item-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--rise-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tk-item-meta {
+    font-size: 0.78rem;
+    color: var(--rise-neutral-500);
+  }
+  .tk-item-protein {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--rise-red);
+    font-size: 1rem;
+    min-width: 44px;
+    text-align: right;
+  }
+  .tk-item-remove {
+    background: transparent;
+    border: 1px solid var(--rise-neutral-200);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--rise-neutral-500);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .tk-item-remove:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+
+  #meal-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0;
+    border-top: 1px solid var(--rise-neutral-100);
+  }
+  #meal-items-list[hidden] { display: none !important; }
+
+  #meal-modal-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--rise-neutral-100);
+    padding-top: 12px;
+  }
+  #meal-modal-foot[hidden] { display: none !important; }
+  #meal-modal-foot .tk-row { display: flex; gap: 10px; }
+  #meal-modal-foot .tk-row .tk-btn { flex: 1; }
+  #meal-modal-foot .tk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+  #meal-modal-foot .tk-btn-primary {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+  #meal-modal-foot .tk-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  #meal-modal-foot .tk-btn-ghost {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border-color: var(--rise-neutral-200);
+  }
+  #meal-modal-foot .tk-meal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.9rem;
+    color: var(--rise-neutral-500);
+  }
+  #meal-modal-foot .tk-meal-total strong {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--rise-red);
+    font-weight: 700;
+  }
+  #meal-modal-foot .tk-form-msg {
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 0;
+    min-height: 1.1em;
+    color: var(--rise-neutral-500);
+  }
+  #meal-modal-foot .tk-form-msg.error { color: var(--rise-red-dark); }
+  #meal-modal-foot .tk-form-msg.success { color: #15803d; }</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro?astro&#38;type=style&#38;index=0&#38;lang.css">.tracker-page[data-astro-cid-5d5af5nw]{background:var(--rise-white);color:var(--rise-black);font-family:var(--font-body);min-height:calc(100vh - 6rem);padding:var(--space-8) var(--space-4)}.tracker-shell[data-astro-cid-5d5af5nw]{width:100%;max-width:520px;margin:0 auto}.tracker-view[data-astro-cid-5d5af5nw]{background:transparent}.tracker-view[data-astro-cid-5d5af5nw][hidden]{display:none!important}.loading-view[data-astro-cid-5d5af5nw]{display:flex;align-items:center;justify-content:center;min-height:50vh}.tracker-spinner[data-astro-cid-5d5af5nw]{width:36px;height:36px;border:3px solid var(--rise-neutral-100);border-top-color:var(--rise-red);border-radius:50%;animation:tk-spin 0.8s linear infinite}@keyframes tk-spin{to{transform:rotate(360deg)}}.tracker-anon[data-astro-cid-5d5af5nw]{text-align:center;padding:var(--space-8) 0;display:flex;flex-direction:column;gap:var(--space-3);align-items:center}.tracker-anon-title[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:1.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.02em;color:var(--rise-black);margin:0}.tracker-anon-sub[data-astro-cid-5d5af5nw]{color:var(--rise-neutral-500);margin:0 0 var(--space-3)}.tk-h2[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin:0;color:var(--rise-black)}.tk-h3[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:1.5rem;font-weight:600;text-transform:uppercase;letter-spacing:0.02em;color:var(--rise-black);margin:var(--space-3) 0 0}.tk-sub[data-astro-cid-5d5af5nw]{color:var(--rise-neutral-500);font-family:var(--font-body);font-size:0.9rem;margin:0 0 var(--space-3)}.tk-topbar[data-astro-cid-5d5af5nw]{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);gap:var(--space-3)}.tk-app-bar[data-astro-cid-5d5af5nw]{margin-bottom:var(--space-6)}.tk-hello[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:1.25rem;font-weight:600;text-transform:uppercase;letter-spacing:0.02em;margin:0;color:var(--rise-black)}.tk-date[data-astro-cid-5d5af5nw]{font-family:var(--font-body);font-size:0.85rem;color:var(--rise-neutral-500);margin:2px 0 0}.tk-progress[data-astro-cid-5d5af5nw]{display:flex;gap:6px}.tk-dot[data-astro-cid-5d5af5nw]{width:8px;height:8px;border-radius:50%;background:var(--rise-neutral-200);transition:background 0.2s,transform 0.2s}.tk-dot[data-astro-cid-5d5af5nw].active{background:var(--rise-red);transform:scale(1.2)}.tk-dot[data-astro-cid-5d5af5nw].done{background:var(--rise-red-dark)}.tk-btn[data-astro-cid-5d5af5nw]{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 18px;border-radius:10px;border:1px solid transparent;font-family:var(--font-body);font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s,transform 0.05s;width:100%;text-decoration:none}.tk-btn[data-astro-cid-5d5af5nw]:active{transform:scale(0.98)}.tk-btn[data-astro-cid-5d5af5nw]:disabled{opacity:0.5;cursor:not-allowed}.tk-btn-primary[data-astro-cid-5d5af5nw]{background:var(--rise-red);color:var(--rise-white)}.tk-btn-primary[data-astro-cid-5d5af5nw]:hover:not(:disabled){background:var(--rise-red-dark)}.tk-btn-ghost[data-astro-cid-5d5af5nw]{background:transparent;color:var(--rise-neutral-700);border-color:var(--rise-neutral-200)}.tk-btn-ghost[data-astro-cid-5d5af5nw]:hover:not(:disabled){border-color:var(--rise-red);color:var(--rise-red)}.tk-btn-small[data-astro-cid-5d5af5nw]{padding:8px 14px;font-size:0.85rem;width:auto}.tk-row[data-astro-cid-5d5af5nw]{display:flex;gap:10px}.tk-row[data-astro-cid-5d5af5nw] .tk-btn[data-astro-cid-5d5af5nw]{flex:1}.tk-intake-wrap[data-astro-cid-5d5af5nw]{display:flex;flex-direction:column}.tk-step[data-astro-cid-5d5af5nw]{display:none;flex-direction:column;gap:16px;animation:tk-fade 0.2s ease}.tk-step[data-astro-cid-5d5af5nw].active{display:flex}@keyframes tk-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.tk-number-input[data-astro-cid-5d5af5nw]{display:flex;align-items:center;background:var(--rise-white);border:1px solid var(--rise-neutral-200);border-radius:12px;padding:0 18px;transition:border-color 0.15s,box-shadow 0.15s}.tk-number-input[data-astro-cid-5d5af5nw]:focus-within{border-color:var(--rise-red);box-shadow:0 0 0 3px var(--rise-red-light)}.tk-number-input[data-astro-cid-5d5af5nw] input[data-astro-cid-5d5af5nw]{flex:1;background:transparent;border:0;padding:22px 0;font-family:var(--font-heading);font-size:2.4rem;font-weight:700;text-align:center;color:var(--rise-black);outline:none;width:100%;-moz-appearance:textfield}.tk-number-input[data-astro-cid-5d5af5nw] input[data-astro-cid-5d5af5nw]::-webkit-outer-spin-button,.tk-number-input[data-astro-cid-5d5af5nw] input[data-astro-cid-5d5af5nw]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.tk-unit[data-astro-cid-5d5af5nw]{color:var(--rise-neutral-400);font-size:1rem;font-weight:600}.tk-choice-list[data-astro-cid-5d5af5nw]{display:flex;flex-direction:column;gap:10px}.tk-choice[data-astro-cid-5d5af5nw]{display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:var(--rise-white);border:1px solid var(--rise-neutral-200);border-radius:12px;padding:16px 18px;color:var(--rise-black);cursor:pointer;font-family:var(--font-body);transition:border-color 0.15s,background 0.15s,box-shadow 0.15s}.tk-choice[data-astro-cid-5d5af5nw] strong[data-astro-cid-5d5af5nw]{font-size:1.05rem;font-weight:600}.tk-choice[data-astro-cid-5d5af5nw] small[data-astro-cid-5d5af5nw]{color:var(--rise-neutral-500);font-size:0.85rem;margin-top:2px}.tk-choice[data-astro-cid-5d5af5nw]:hover{border-color:var(--rise-red);box-shadow:0 4px 12px rgba(18,18,18,0.06)}.tk-choice[data-astro-cid-5d5af5nw].selected{border-color:var(--rise-red);background:var(--rise-red-light)}.tk-choice[data-astro-cid-5d5af5nw].selected:hover{border-color:var(--rise-red)}.tk-result-card[data-astro-cid-5d5af5nw]{background:var(--rise-white);border:1px solid var(--rise-neutral-100);border-radius:12px;padding:32px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 8px 20px rgba(18,18,18,0.06)}.tk-result-number[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:4rem;font-weight:700;color:var(--rise-red);line-height:1}.tk-result-unit[data-astro-cid-5d5af5nw]{color:var(--rise-neutral-500);font-size:0.95rem}.tk-result-detail[data-astro-cid-5d5af5nw]{text-align:center;color:var(--rise-neutral-500);font-size:0.9rem}.tk-form-msg[data-astro-cid-5d5af5nw]{font-size:0.9rem;text-align:center;margin:0;min-height:1.2em;color:var(--rise-neutral-500)}.tk-form-msg[data-astro-cid-5d5af5nw].error{color:var(--rise-red-dark)}.tk-form-msg[data-astro-cid-5d5af5nw].success{color:#15803d}.tk-target-card[data-astro-cid-5d5af5nw]{background:linear-gradient(135deg,var(--rise-red),var(--rise-red-dark));border-radius:12px;padding:var(--space-5) var(--space-6);margin-bottom:var(--space-6);color:var(--rise-white);box-shadow:0 8px 24px rgba(211,25,31,0.18)}.tk-target-label[data-astro-cid-5d5af5nw]{display:block;font-family:var(--font-body);font-size:0.85rem;opacity:0.9;margin-bottom:4px;font-weight:500}.tk-target-row[data-astro-cid-5d5af5nw]{display:flex;align-items:baseline;gap:8px}.tk-target-number[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:2.75rem;font-weight:700;line-height:1}.tk-target-unit[data-astro-cid-5d5af5nw]{font-size:0.95rem;opacity:0.9}.tk-progress-card[data-astro-cid-5d5af5nw]{background:var(--rise-white);border:1px solid var(--rise-neutral-100);border-radius:12px;padding:16px 18px;margin-bottom:var(--space-6);display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 12px rgba(18,18,18,0.04)}.tk-progress-head[data-astro-cid-5d5af5nw]{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.tk-progress-label[data-astro-cid-5d5af5nw]{font-family:var(--font-body);font-size:0.78rem;color:var(--rise-neutral-500);text-transform:uppercase;letter-spacing:0.1em;font-weight:600}.tk-progress-amounts[data-astro-cid-5d5af5nw]{font-family:var(--font-body);font-size:0.95rem;color:var(--rise-neutral-700)}.tk-progress-amounts[data-astro-cid-5d5af5nw] strong[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--rise-red)}.tk-progress-track[data-astro-cid-5d5af5nw]{width:100%;height:10px;background:var(--rise-neutral-100);border-radius:999px;overflow:hidden}.tk-progress-fill[data-astro-cid-5d5af5nw]{height:100%;width:0%;background:linear-gradient(90deg,var(--rise-red),var(--rise-red-dark));border-radius:999px;transition:width 0.4s ease}.tk-progress-pct[data-astro-cid-5d5af5nw]{align-self:flex-end;font-family:var(--font-body);font-size:0.8rem;color:var(--rise-neutral-500);font-weight:600}.tk-section-title[data-astro-cid-5d5af5nw]{font-family:var(--font-body);font-size:0.75rem;color:var(--rise-neutral-400);text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin:0 0 var(--space-3)}.tk-meal-grid[data-astro-cid-5d5af5nw]{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (min-width: 640px){.tk-meal-grid[data-astro-cid-5d5af5nw]{grid-template-columns:repeat(3,1fr)}}.tk-meal-slot[data-astro-cid-5d5af5nw]{background:var(--rise-white);border:1px solid var(--rise-neutral-100);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;min-height:110px;cursor:pointer;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s,transform 0.15s}.tk-meal-slot[data-astro-cid-5d5af5nw]:hover{border-color:var(--rise-red);transform:translateY(-2px);box-shadow:0 8px 20px rgba(18,18,18,0.08)}.tk-meal-slot[data-astro-cid-5d5af5nw].logged{border-color:var(--rise-red);background:var(--rise-red-light)}.tk-slot-name[data-astro-cid-5d5af5nw]{font-family:var(--font-heading);font-size:0.95rem;font-weight:600;text-transform:uppercase;letter-spacing:0.02em;color:var(--rise-black)}.tk-slot-status[data-astro-cid-5d5af5nw]{font-family:var(--font-body);font-size:0.8rem;color:var(--rise-neutral-500);margin-top:auto}.tk-meal-slot[data-astro-cid-5d5af5nw].logged .tk-slot-status[data-astro-cid-5d5af5nw]{color:var(--rise-red)}.tk-log-btn[data-astro-cid-5d5af5nw]{align-self:flex-start;margin-top:auto;background:var(--rise-white);color:var(--rise-red);border:1.5px solid var(--rise-red);border-radius:999px;padding:6px 14px;font-family:var(--font-body);font-size:0.8rem;font-weight:600;cursor:pointer;transition:background 0.15s,color 0.15s}.tk-log-btn[data-astro-cid-5d5af5nw]:hover{background:var(--rise-red);color:var(--rise-white)}.tk-repeat-btn[data-astro-cid-5d5af5nw]{background:transparent;border:0;padding:4px 0 0;margin-top:2px;font-family:var(--font-body);font-size:0.75rem;color:var(--rise-red);text-align:left;cursor:pointer;align-self:flex-start;transition:color 0.15s}.tk-repeat-btn[data-astro-cid-5d5af5nw]:hover{color:var(--rise-red-dark);text-decoration:underline}.tk-footer-note[data-astro-cid-5d5af5nw]{margin-top:var(--space-6);text-align:center;color:var(--rise-neutral-400);font-size:0.8rem}.tracker-page[data-astro-cid-5d5af5nw] input[data-astro-cid-5d5af5nw][type=number]{color:var(--rise-black)}</style>
+<style data-vite-dev-id="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro?astro&#38;type=style&#38;index=1&#38;lang.css">/* Global styles for meal grid cards — these elements are created dynamically
+     by JS (document.createElement) and therefore don't carry Astro's
+     [data-astro-cid-*] attribute, so scoped styles would not apply to them. */
+  .tk-meal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .tk-meal-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .tk-meal-slot {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 110px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .tk-meal-slot:hover {
+    border-color: var(--rise-red);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(18, 18, 18, 0.08);
+  }
+  .tk-meal-slot.logged {
+    border-color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-slot-name {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+  }
+  .tk-slot-status {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--rise-neutral-500);
+    margin-top: auto;
+  }
+  .tk-meal-slot.logged .tk-slot-status { color: var(--rise-red); }
+
+  .tk-log-btn {
+    align-self: flex-start;
+    margin-top: auto;
+    background: var(--rise-white);
+    color: var(--rise-red);
+    border: 1.5px solid var(--rise-red);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tk-log-btn:hover {
+    background: var(--rise-red);
+    color: var(--rise-white);
+  }
+
+  .tk-repeat-btn {
+    background: transparent;
+    border: 0;
+    padding: 4px 0 0;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--rise-red);
+    text-align: left;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: color 0.15s;
+  }
+  .tk-repeat-btn:hover {
+    color: var(--rise-red-dark);
+    text-decoration: underline;
+  }</style><script type="module" src="/@vite/client"></script>
+<script type="module" src="/@id/astro/runtime/client/dev-toolbar/entrypoint.js"></script>
+<script>window.__astro_dev_toolbar__ = {"root":"/Users/marcol04/Desktop/rise-website/","version":"6.3.1","debugInfo":"Astro                    v6.3.1\nNode                     v24.11.0\nSystem                   macOS (arm64)\nPackage Manager          npm\nOutput                   static\nAdapter                  none\nIntegrations             none"}</script>
+<script type="module" src="/src/styles/global.css"></script>
+<script type="module" src="/src/components/FloatingWhatsApp.astro?astro&type=style&index=0&lang.css"></script>
+<script type="module" src="/src/components/AuthModal.astro?astro&type=style&index=0&lang.css"></script>
+<script type="module" src="/src/components/Header.astro?astro&type=style&index=0&lang.css"></script>
+<script type="module" src="/src/components/Footer.astro?astro&type=style&index=0&lang.css"></script>
+<script type="module" src="/src/components/MealLogModal.astro?astro&type=style&index=0&lang.css"></script>
+<script type="module" src="/src/components/MealLogModal.astro?astro&type=style&index=1&lang.css"></script>
+<script type="module" src="/src/pages/portal/tracker.astro?astro&type=style&index=0&lang.css"></script>
+<script type="module" src="/src/pages/portal/tracker.astro?astro&type=style&index=1&lang.css"></script></head> <body data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/layouts/BaseLayout.astro" data-astro-source-loc="91:9"> <header class="site-header" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="9:29"> <div class="container header-inner" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="10:39"> <a href="/" class="logo" aria-label="RISE Advancement Home" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="11:88"> <img src="/logo-header.png" alt="RISE Advancement" class="logo-img" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="12:8"> </a> <nav class="nav-desktop" aria-label="Main navigation" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="15:59"> <a href="/#how-it-works" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="16:72"> How It Works </a> <div class="nav-dropdown" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="20:33"> <a href="#" class="nav-dropdown-trigger" aria-haspopup="true" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="21:71"> Services <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="23:136"><path d="M1 1l4 4 4-4" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="23:136"></path></svg> </a> <div class="nav-dropdown-menu" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="25:40">  <a href="/services/the-move" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="43:44"> <span class="dropdown-label" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="44:46">The Move</span> <span class="dropdown-desc" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="45:45">Full placement to Canada</span> </a> <a href="/services/mentoring" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="47:45"> <span class="dropdown-label" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="48:46">Mentoring</span> <span class="dropdown-desc" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="49:45">Season-long development</span> </a> <a href="/services/hk-program" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="51:46"> <span class="dropdown-label" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="52:46">HK Program</span> <span class="dropdown-desc" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="53:45">Summer 2026 training</span> </a>  </div> </div> <a href="/why-us" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="60:58"> Why RISE </a> <a href="/#faq" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="63:54"> FAQ </a> <a href="/#contact" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="66:62"> Contact </a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="71:33"> <button class="auth-login-btn" type="button" data-open-auth data-auth-anon hidden data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="72:89"> Log in </button> <div class="user-menu" data-auth-user hidden data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="76:52"> <button class="user-menu-trigger" type="button" id="user-menu-btn" aria-haspopup="true" aria-expanded="false" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="77:119"> <span class="user-avatar" id="user-avatar" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="78:54">?</span> <span class="user-name" id="user-name-label" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="79:12"></span> <svg class="user-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="80:132"><path d="M1 1l4 4 4-4" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="80:132"></path></svg> </button> <div class="user-menu-panel" id="user-menu-panel" hidden data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="82:66"> <a href="/portal" class="user-menu-item" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="83:52">My Portal</a> <a href="/portal/tracker" class="user-menu-item" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="84:60">Nutrition Tracker</a> <button type="button" class="user-menu-item logout" id="header-logout-btn" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="85:86">Log out</button> </div> </div> <a href="/zh/" class="lang-toggle" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="92:73"><span class="sr-only" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="92:94">Switch to </span>中文</a> <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false" type="button" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="95:111"> <span class="hamburger-line" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="96:10"></span> <span class="hamburger-line" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="97:10"></span> <span class="hamburger-line" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="98:10"></span> </button> </div> </div> <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="103:81"> <a href="/#how-it-works" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="104:70"> How It Works </a> <div class="mobile-section-label" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="107:39">Services</div>  <a href="/services/the-move" class="mobile-sub" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="116:57">The Move</a> <a href="/services/mentoring" class="mobile-sub" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="117:58">Mentoring</a> <a href="/services/hk-program" class="mobile-sub" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="118:59">HK Program</a>  <a href="/why-us" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="121:56"> Why RISE </a> <a href="/#faq" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="124:52"> FAQ </a> <a href="/#contact" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="127:60"> Contact </a> <button class="mobile-auth-btn" type="button" data-open-auth data-auth-anon hidden data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="130:88"> Log in </button> <div class="mobile-auth-user" data-auth-user hidden data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="133:57"> <a href="/portal" class="mobile-sub" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="134:44">My Portal</a> <a href="/portal/tracker" class="mobile-sub" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="135:52">Nutrition Tracker</a> <button type="button" class="mobile-logout" id="mobile-logout-btn" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="136:74">Log out</button> </div> <a href="/zh/" class="mobile-lang" data-astro-cid-3ef6ksr2 data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Header.astro" data-astro-source-loc="142:70">中文</a> </nav> </header>  <script type="module" src="/src/components/Header.astro?astro&type=script&index=0&lang.ts"></script> <main data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/layouts/BaseLayout.astro" data-astro-source-loc="94:11">   <section class="tracker-page" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="12:33"> <div class="tracker-shell" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="13:32"> <!-- Loading --> <div id="tracker-loading" class="tracker-view loading-view" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="15:67"> <div class="tracker-spinner" aria-hidden="true" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="16:10"></div> </div> <!-- Unauthed --> <section id="tracker-anon" class="tracker-view tracker-anon" hidden data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="20:75"> <h2 class="tracker-anon-title" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="21:40">Sign in to start tracking</h2> <p class="tracker-anon-sub" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="22:37">Your protein target and meals live with your account.</p> <button class="tk-btn tk-btn-primary" type="button" data-open-auth data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="23:76">Log in / Sign up</button> <a class="tk-btn tk-btn-ghost" href="/portal" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="24:55">Back to portal</a> </section> <!-- INTAKE VIEW: Day 1 --> <section id="tracker-intake" class="tracker-view" hidden data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="28:64"> <header class="tk-topbar" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="29:35"> <h2 class="tk-h2" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="30:29">Day 1 Setup</h2> <div class="tk-progress" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="31:36"> <span class="tk-dot" data-step="1" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="32:14"></span> <span class="tk-dot" data-step="2" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="33:14"></span> <span class="tk-dot" data-step="3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="34:14"></span> <span class="tk-dot" data-step="4" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="35:14"></span> <span class="tk-dot" data-step="5" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="36:14"></span> </div> </header> <div class="tk-intake-wrap" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="40:37"> <!-- Step 1: weight --> <div class="tk-step active" data-step="1" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="42:53"> <h3 class="tk-h3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="43:31">What's your weight?</h3> <p class="tk-sub" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="44:31">In kilograms</p> <div class="tk-number-input" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="45:42"> <input type="number" id="intake-weight" min="20" max="200" step="0.1" placeholder="60" inputmode="decimal" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="46:16"> <span class="tk-unit" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="47:37">kg</span> </div> <button class="tk-btn tk-btn-primary tk-next-btn" data-next="2" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="49:91">Next</button> </div> <!-- Step 2: age --> <div class="tk-step" data-step="2" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="53:46"> <h3 class="tk-h3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="54:31">How old are you?</h3> <p class="tk-sub" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="55:31">Years</p> <div class="tk-number-input" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="56:42"> <input type="number" id="intake-age" min="8" max="25" step="1" placeholder="15" inputmode="numeric" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="57:16"> <span class="tk-unit" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="58:37">yrs</span> </div> <div class="tk-row" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="60:33"> <button class="tk-btn tk-btn-ghost" data-back="1" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="61:79">Back</button> <button class="tk-btn tk-btn-primary tk-next-btn" data-next="3" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="62:93">Next</button> </div> </div> <!-- Step 3: growth --> <div class="tk-step" data-step="3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="67:46"> <h3 class="tk-h3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="68:31">How fast are you growing?</h3> <p class="tk-sub" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="69:31">How much have you grown in the last year?</p> <div class="tk-choice-list" id="growth-choices" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="70:61"> <button class="tk-choice" data-value="fast" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="71:73"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="72:25">Growing fast</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="73:24">5+ cm/yr</small> </button> <button class="tk-choice" data-value="moderate" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="75:77"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="76:25">Moderate</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="77:24">2-5 cm/yr</small> </button> <button class="tk-choice" data-value="slow" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="79:73"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="80:25">Slow</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="81:24">Less than 2 cm/yr</small> </button> </div> <div class="tk-row" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="84:33"> <button class="tk-btn tk-btn-ghost" data-back="2" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="85:79">Back</button> <button class="tk-btn tk-btn-primary tk-next-btn" data-next="4" type="button" disabled data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="86:102">Next</button> </div> </div> <!-- Step 4: goal --> <div class="tk-step" data-step="4" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="91:46"> <h3 class="tk-h3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="92:31">What's your main goal?</h3> <p class="tk-sub" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="93:31">Pick one</p> <div class="tk-choice-list" id="goal-choices" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="94:59"> <button class="tk-choice" data-value="muscle_gain" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="95:80"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="96:25">Build muscle</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="97:24">Add lean mass</small> </button> <button class="tk-choice" data-value="maintenance" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="99:80"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="100:25">Stay the same</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="101:24">Maintain weight</small> </button> <button class="tk-choice" data-value="recomposition" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="103:82"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="104:25">Lose fat + build muscle</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="105:24">Body recomposition</small> </button> <button class="tk-choice" data-value="fat_loss" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="107:77"> <strong data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="108:25">Lose fat</strong> <small data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="109:24">Cut down</small> </button> </div> <div class="tk-row" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="112:33"> <button class="tk-btn tk-btn-ghost" data-back="3" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="113:79">Back</button> <button class="tk-btn tk-btn-primary tk-next-btn" data-next="5" type="button" disabled data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="114:102">Calculate</button> </div> </div> <!-- Step 5: result --> <div class="tk-step" data-step="5" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="119:46"> <h3 class="tk-h3" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="120:31">Your daily protein target</h3> <div class="tk-result-card" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="121:41"> <span class="tk-result-number" id="result-protein" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="122:66">0</span> <span class="tk-result-unit" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="123:44">g protein / day</span> </div> <p class="tk-result-detail" id="result-detail" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="125:14"></p> <button class="tk-btn tk-btn-primary" id="intake-finish" type="button" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="126:84">Start tracking</button> <p class="tk-form-msg" id="intake-msg" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="127:14"></p> </div> </div> </section> <!-- MAIN APP --> <section id="tracker-app" class="tracker-view" hidden data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="133:61"> <header class="tk-topbar tk-app-bar" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="134:46"> <div data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="135:16"> <p class="tk-hello" id="app-hello" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="136:48">Welcome back</p> <p class="tk-date" id="app-date" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="137:14"></p> </div> <a class="tk-btn tk-btn-ghost tk-btn-small" href="/portal" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="139:70">Portal</a> </header> <div class="tk-target-card" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="142:37"> <span class="tk-target-label" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="143:41">Your target</span> <div class="tk-target-row" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="144:38"> <span class="tk-target-number" id="app-protein-target" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="145:68">0</span> <span class="tk-target-unit" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="146:42">g protein / day</span> </div> </div> <div class="tk-progress-card" id="app-progress-card" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="150:62"> <div class="tk-progress-head" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="151:41"> <span class="tk-progress-label" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="152:45">Today's progress</span> <span class="tk-progress-amounts" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="153:47"> <strong id="app-progress-current" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="154:49">0</strong>g / <span id="app-progress-target" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="154:94">0</span>g
+</span> </div> <div class="tk-progress-track" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="157:42"> <div class="tk-progress-fill" id="app-progress-fill" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="158:14"></div> </div> <span class="tk-progress-pct" id="app-progress-pct" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="160:63">0%</span> </div> <h3 class="tk-section-title" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="163:38">Today's meals</h3> <div class="tk-meal-grid" id="meal-grid" data-astro-cid-5d5af5nw data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/pages/portal/tracker.astro" data-astro-source-loc="164:10"></div> </section> </div> </section> <div id="meal-modal" class="tk-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="meal-modal-title" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="13:132"> <div class="tk-modal-backdrop" data-meal-modal-close data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="14:4"></div> <div class="tk-modal-card" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="16:30"> <header class="tk-modal-head" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="17:35"> <h3 class="tk-modal-title" id="meal-modal-title" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="18:56">Log meal</h3> <button class="tk-modal-x" type="button" data-meal-modal-close aria-label="Close" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="19:89">×</button> </header> <!-- CHOICE: two input methods --> <div class="tk-modal-body" data-view="choice" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="23:51"> <button class="tk-photo-cta" id="meal-photo-cta" type="button" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="24:70"> <span class="tk-photo-icon" aria-hidden="true" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="25:56">▣</span> <span class="tk-photo-cta-label" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="26:42">Take photo</span> <span class="tk-photo-cta-sub" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="27:40">Snap your meal, AI estimates protein</span> </button> <button class="tk-search-cta" id="meal-search-cta" type="button" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="29:72"> <span aria-hidden="true" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="30:34">⌕</span> <span data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="31:15">Search food</span> </button> </div> <!-- PHOTO: preview + analyzing + results --> <div class="tk-modal-body" data-view="photo" hidden data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="36:57"> <div class="tk-photo-preview" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="37:37"> <img id="meal-photo-img" alt="Meal photo" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="38:10"> </div> <p class="tk-analyze-status" id="meal-analyze-status" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="40:61">Analyzing…</p> </div> <!-- SEARCH: text input + results --> <div class="tk-modal-body" data-view="search" hidden data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="44:58"> <div class="tk-search-wrap" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="45:35"> <input type="search" id="meal-search-input" class="tk-search-input" placeholder="Search food (English or 中文)…" autocomplete="off" inputmode="search" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="46:10"> </div> <div class="tk-search-results" id="meal-search-results" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="55:8"></div> </div> <!-- Items list (shared) --> <div class="tk-meal-items" id="meal-items-list" hidden data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="59:6"></div> <!-- Footer: total + actions --> <footer class="tk-modal-foot" id="meal-modal-foot" hidden data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="62:63"> <div class="tk-meal-total" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="63:34"> <span data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="64:15">Total protein</span> <strong data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="65:18"><span id="meal-total" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="65:39">0</span>g</strong> </div> <div class="tk-row" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="67:27"> <button class="tk-btn tk-btn-ghost" type="button" id="meal-add-more" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="68:78">+ Add more</button> <button class="tk-btn tk-btn-primary" type="button" id="meal-confirm" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="69:79">Confirm</button> </div> <p class="tk-form-msg" id="meal-modal-msg" data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="71:8"></p> </footer> <!-- Hidden file input for camera/photo --> <input type="file" id="meal-photo-input" accept="image/jpeg,image/png,image/webp" capture="environment" hidden data-astro-cid-bws6pnek data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/MealLogModal.astro" data-astro-source-loc="75:6"> </div> </div>   <script type="module" src="/src/components/MealLogModal.astro?astro&type=script&index=0&lang.ts"></script>   </main> <footer class="site-footer" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="9:29"> <div class="container footer-inner" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="10:39"> <!-- Brand --> <div class="footer-brand" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="12:31"> <span class="footer-logo" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="13:33">RISE Advancement</span> <p class="footer-tagline" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="14:33">
+Elite hockey player development and placement.
+</p> </div> <!-- Contact --> <div class="footer-contact" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="20:33"> <h4 data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="21:11">Contact</h4> <a href="mailto:riseadvancements@gmail.com" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="22:51">riseadvancements@gmail.com</a> <a href="https://wa.me/85290950387?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="whatsapp-cta" target="_blank" rel="noopener noreferrer" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="23:190">
+WhatsApp
+</a> <span class="wechat-info" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="26:33">WeChat: RISE-Advancement</span> </div> <!-- Quick Links --> <div class="footer-links" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="30:31"> <h4 data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="31:11">Links</h4>  <a href="/#how-it-works" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="43:36">How It Works</a> <a href="/services/" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="44:32">Services</a> <a href="/#players" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="45:31">Players</a> <a href="/#faq" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="46:27">FAQ</a> <a href="/#contact" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="47:31">Contact</a> <a href="/zh/" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="48:54">中文</a>  </div> <!-- Social --> <div class="footer-social" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="54:32"> <h4 data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="55:11">Follow</h4> <a href="https://instagram.com/riseadvancement" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="56:120">
+Instagram
+</a> <a href="https://facebook.com/riseadvancement" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="59:118">
+Facebook
+</a> </div> </div> <div class="container footer-bottom" data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="65:40"> <p data-astro-cid-sz7xmlte data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/Footer.astro" data-astro-source-loc="66:8">&copy; 2026 RISE Advancement. All rights reserved.</p> </div> </footer> <a href="https://wa.me/85290950387?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp us" data-astro-cid-ce2tfxup data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/FloatingWhatsApp.astro" data-astro-source-loc="16:2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-ce2tfxup data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/FloatingWhatsApp.astro" data-astro-source-loc="17:71"> <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" data-astro-cid-ce2tfxup data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/FloatingWhatsApp.astro" data-astro-source-loc="18:6"></path> </svg> <span class="floating-whatsapp-label" data-astro-cid-ce2tfxup data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/FloatingWhatsApp.astro" data-astro-source-loc="20:41">WhatsApp us</span> </a> <div class="auth-modal" id="auth-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="7:134"> <div class="auth-backdrop" data-close-auth data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="8:4"></div> <div class="auth-panel" role="document" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="9:43"> <button class="auth-close" id="auth-close-btn" type="button" aria-label="Close" data-close-auth data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="10:101"> <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="11:129"> <path d="M4 4l12 12M16 4L4 16" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="12:10"></path> </svg> </button> <header class="auth-brand" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="16:32"> <h2 class="auth-title" id="auth-modal-title" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="17:52">RISE Portal</h2> <p class="auth-tagline" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="18:31">Sign in to access your tools</p> </header> <div class="auth-tabs" role="tablist" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="21:43"> <button class="auth-tab active" data-auth-tab="login" type="button" role="tab" aria-selected="true" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="22:107">Log in</button> <button class="auth-tab" data-auth-tab="signup" type="button" role="tab" aria-selected="false" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="23:102">Sign up</button> </div> <form id="auth-login-form" class="auth-form" novalidate data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="26:61"> <label class="auth-field" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="27:33"> <span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="28:15">Email</span> <input type="email" name="email" required autocomplete="email" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="29:10"> </label> <label class="auth-field" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="31:33"> <span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="32:15">Password</span> <input type="password" name="password" required autocomplete="current-password" minlength="6" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="33:10"> </label> <button class="auth-btn primary" type="submit" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="35:54">Log in</button> <div class="auth-divider" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="36:34"><span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="36:39">or</span></div> <button class="auth-btn google" type="button" id="auth-login-google" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="37:76"> <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="38:76"> <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="39:12"></path> <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.99.66-2.25 1.05-3.72 1.05-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="40:12"></path> <path fill="#FBBC05" d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.1V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94l3.66-2.84z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="41:12"></path> <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.2 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="42:12"></path> </svg>
+Continue with Google
+</button> <p class="auth-msg" id="auth-login-msg" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="46:8"></p> </form> <form id="auth-signup-form" class="auth-form" hidden novalidate data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="49:69"> <label class="auth-field" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="50:33"> <span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="51:15">Full name</span> <input type="text" name="full_name" required autocomplete="name" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="52:10"> </label> <label class="auth-field" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="54:33"> <span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="55:15">Email</span> <input type="email" name="email" required autocomplete="email" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="56:10"> </label> <label class="auth-field" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="58:33"> <span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="59:15">Password</span> <input type="password" name="password" required autocomplete="new-password" minlength="6" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="60:10"> <small data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="61:16">At least 6 characters</small> </label> <button class="auth-btn primary" type="submit" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="63:54">Create account</button> <div class="auth-divider" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="64:34"><span data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="64:39">or</span></div> <button class="auth-btn google" type="button" id="auth-signup-google" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="65:77"> <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="66:76"> <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="67:12"></path> <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.99.66-2.25 1.05-3.72 1.05-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="68:12"></path> <path fill="#FBBC05" d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.1V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94l3.66-2.84z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="69:12"></path> <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.2 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="70:12"></path> </svg>
+Continue with Google
+</button> <p class="auth-msg" id="auth-signup-msg" data-astro-cid-6iignqru data-astro-source-file="/Users/marcol04/Desktop/rise-website/src/components/AuthModal.astro" data-astro-source-loc="74:8"></p> </form> </div> </div>  <script type="module" src="/src/components/AuthModal.astro?astro&type=script&index=0&lang.ts"></script> </body></html>   <script type="module" src="/src/pages/portal/tracker.astro?astro&type=script&index=0&lang.ts"></script>

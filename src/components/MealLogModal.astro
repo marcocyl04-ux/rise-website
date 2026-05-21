@@ -19,12 +19,16 @@
       <button class="tk-modal-x" type="button" data-meal-modal-close aria-label="Close">×</button>
     </header>
 
-    <!-- CHOICE: two input methods -->
+    <!-- CHOICE: three input methods -->
     <div class="tk-modal-body" data-view="choice">
       <button class="tk-photo-cta" id="meal-photo-cta" type="button">
         <span class="tk-photo-icon" aria-hidden="true">▣</span>
         <span class="tk-photo-cta-label">Take photo</span>
         <span class="tk-photo-cta-sub">Snap your meal, AI estimates protein</span>
+      </button>
+      <button class="tk-search-cta" id="meal-upload-cta" type="button">
+        <span aria-hidden="true">⇪</span>
+        <span>Upload photo</span>
       </button>
       <button class="tk-search-cta" id="meal-search-cta" type="button">
         <span aria-hidden="true">⌕</span>
@@ -71,12 +75,18 @@
       <p class="tk-form-msg" id="meal-modal-msg"></p>
     </footer>
 
-    <!-- Hidden file input for camera/photo -->
+    <!-- Hidden file inputs: camera (capture) vs gallery (no capture) -->
     <input
       type="file"
       id="meal-photo-input"
       accept="image/jpeg,image/png,image/webp"
       capture="environment"
+      hidden
+    />
+    <input
+      type="file"
+      id="meal-upload-input"
+      accept="image/jpeg,image/png,image/webp"
       hidden
     />
   </div>
@@ -556,26 +566,33 @@
     background: var(--rise-red-light);
   }
 
-  #meal-items-list {
+  #meal-items-list,
+  .tk-meal-items {
     display: flex;
     flex-direction: column;
     gap: 6px;
     padding: 8px 0;
     border-top: 1px solid var(--rise-neutral-100);
   }
-  #meal-items-list[hidden] { display: none !important; }
+  #meal-items-list[hidden],
+  .tk-meal-items[hidden] { display: none !important; }
 
-  #meal-modal-foot {
+  #meal-modal-foot,
+  .tk-modal-foot {
     display: flex;
     flex-direction: column;
     gap: 10px;
     border-top: 1px solid var(--rise-neutral-100);
     padding-top: 12px;
   }
-  #meal-modal-foot[hidden] { display: none !important; }
-  #meal-modal-foot .tk-row { display: flex; gap: 10px; }
-  #meal-modal-foot .tk-row .tk-btn { flex: 1; }
-  #meal-modal-foot .tk-btn {
+  #meal-modal-foot[hidden],
+  .tk-modal-foot[hidden] { display: none !important; }
+  #meal-modal-foot .tk-row,
+  .tk-modal-foot .tk-row { display: flex; gap: 10px; }
+  #meal-modal-foot .tk-row .tk-btn,
+  .tk-modal-foot .tk-row .tk-btn { flex: 1; }
+  #meal-modal-foot .tk-btn,
+  .tk-modal-foot .tk-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -589,38 +606,48 @@
     cursor: pointer;
     width: 100%;
   }
-  #meal-modal-foot .tk-btn-primary {
+  #meal-modal-foot .tk-btn-primary,
+  .tk-modal-foot .tk-btn-primary {
     background: var(--rise-red);
     color: var(--rise-white);
   }
-  #meal-modal-foot .tk-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  #meal-modal-foot .tk-btn-ghost {
+  #meal-modal-foot .tk-btn-primary:disabled,
+  .tk-modal-foot .tk-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  #meal-modal-foot .tk-btn-ghost,
+  .tk-modal-foot .tk-btn-ghost {
     background: transparent;
     color: var(--rise-neutral-700);
     border-color: var(--rise-neutral-200);
   }
-  #meal-modal-foot .tk-meal-total {
+  #meal-modal-foot .tk-meal-total,
+  .tk-modal-foot .tk-meal-total,
+  .tk-meal-total {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     font-size: 0.9rem;
     color: var(--rise-neutral-500);
   }
-  #meal-modal-foot .tk-meal-total strong {
+  #meal-modal-foot .tk-meal-total strong,
+  .tk-modal-foot .tk-meal-total strong,
+  .tk-meal-total strong {
     font-family: var(--font-heading);
     font-size: 1.6rem;
     color: var(--rise-red);
     font-weight: 700;
   }
-  #meal-modal-foot .tk-form-msg {
+  #meal-modal-foot .tk-form-msg,
+  .tk-modal-foot .tk-form-msg {
     font-size: 0.85rem;
     text-align: center;
     margin: 0;
     min-height: 1.1em;
     color: var(--rise-neutral-500);
   }
-  #meal-modal-foot .tk-form-msg.error { color: var(--rise-red-dark); }
-  #meal-modal-foot .tk-form-msg.success { color: #15803d; }
+  #meal-modal-foot .tk-form-msg.error,
+  .tk-modal-foot .tk-form-msg.error { color: var(--rise-red-dark); }
+  #meal-modal-foot .tk-form-msg.success,
+  .tk-modal-foot .tk-form-msg.success { color: #15803d; }
 </style>
 
 <script>
@@ -680,6 +707,12 @@
   function renderItems() {
     const list = $("meal-items-list");
     const foot = $("meal-modal-foot");
+    console.log("[meal-modal] renderItems", {
+      itemsCount: state.items.length,
+      items: state.items,
+      hasList: !!list,
+      hasFoot: !!foot,
+    });
     if (!list || !foot) return;
 
     if (state.items.length === 0) {
@@ -691,6 +724,10 @@
 
     list.hidden = false;
     foot.hidden = false;
+    console.log("[meal-modal] renderItems showing list/foot", {
+      listHidden: list.hidden,
+      footHidden: foot.hidden,
+    });
 
     list.innerHTML = state.items
       .map((it, i) => {
@@ -1013,6 +1050,17 @@
       if (f) handlePhoto(f);
     });
 
+    const uploadInput = $("meal-upload-input") as HTMLInputElement | null;
+    $("meal-upload-cta")?.addEventListener("click", () => {
+      if (!uploadInput) return;
+      uploadInput.value = "";
+      uploadInput.click();
+    });
+    uploadInput?.addEventListener("change", () => {
+      const f = uploadInput.files?.[0];
+      if (f) handlePhoto(f);
+    });
+
     const searchInput = $("meal-search-input") as HTMLInputElement | null;
     let searchTimer: number | null = null;
     searchInput?.addEventListener("input", () => {
@@ -1024,12 +1072,16 @@
     });
 
     const searchResults = $("meal-search-results");
+    console.log("[meal-modal] wireModal: searchResults found?", !!searchResults);
     searchResults?.addEventListener("click", (e) => {
       const target = e.target as HTMLElement | null;
+      console.log("[meal-modal] search-results click", { target: target?.tagName, classes: target?.className });
       const btn = target?.closest<HTMLButtonElement>(".tk-food-row");
+      console.log("[meal-modal] closest tk-food-row", { found: !!btn, dataFoodId: btn?.dataset.foodId });
       if (!btn) return;
       const id = Number(btn.dataset.foodId);
       const row = (state.foodCache || []).find((r) => r.id === id);
+      console.log("[meal-modal] row lookup", { id, found: !!row, cacheSize: state.foodCache?.length || 0 });
       if (!row) return;
       state.items.push({
         name: row.name,
@@ -1038,6 +1090,7 @@
         protein_g: Number(row.protein_per_portion) || 0,
         confidence: 1,
       });
+      console.log("[meal-modal] item pushed, total items:", state.items.length);
       renderItems();
     });
 
