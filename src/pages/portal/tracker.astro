@@ -37,6 +37,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
             <span class="tk-dot" data-step="3"></span>
             <span class="tk-dot" data-step="4"></span>
             <span class="tk-dot" data-step="5"></span>
+            <span class="tk-dot" data-step="6"></span>
           </div>
         </header>
 
@@ -66,8 +67,22 @@ import MealLogModal from "../../components/MealLogModal.astro";
             </div>
           </div>
 
-          <!-- Step 3: growth -->
+          <!-- Step 3: height -->
           <div class="tk-step" data-step="3">
+            <h3 class="tk-h3">How tall are you?</h3>
+            <p class="tk-sub">In centimeters</p>
+            <div class="tk-number-input">
+              <input type="number" id="intake-height" min="100" max="220" step="0.1" placeholder="170" inputmode="decimal" />
+              <span class="tk-unit">cm</span>
+            </div>
+            <div class="tk-row">
+              <button class="tk-btn tk-btn-ghost" data-back="2" type="button" data-i18n="common.back">Back</button>
+              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="4" type="button" data-i18n="common.next">Next</button>
+            </div>
+          </div>
+
+          <!-- Step 4: growth -->
+          <div class="tk-step" data-step="4">
             <h3 class="tk-h3" data-i18n="tracker.intake.growthQ">How fast are you growing?</h3>
             <p class="tk-sub" data-i18n="tracker.intake.growthSub">How much have you grown in the last year?</p>
             <div class="tk-choice-list" id="growth-choices">
@@ -85,13 +100,13 @@ import MealLogModal from "../../components/MealLogModal.astro";
               </button>
             </div>
             <div class="tk-row">
-              <button class="tk-btn tk-btn-ghost" data-back="2" type="button" data-i18n="common.back">Back</button>
-              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="4" type="button" disabled data-i18n="common.next">Next</button>
+              <button class="tk-btn tk-btn-ghost" data-back="3" type="button" data-i18n="common.back">Back</button>
+              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="5" type="button" disabled data-i18n="common.next">Next</button>
             </div>
           </div>
 
-          <!-- Step 4: goal -->
-          <div class="tk-step" data-step="4">
+          <!-- Step 5: goal -->
+          <div class="tk-step" data-step="5">
             <h3 class="tk-h3" data-i18n="tracker.intake.goalQ">What's your main goal?</h3>
             <p class="tk-sub" data-i18n="tracker.intake.goalSub">Pick one</p>
             <div class="tk-choice-list" id="goal-choices">
@@ -113,13 +128,13 @@ import MealLogModal from "../../components/MealLogModal.astro";
               </button>
             </div>
             <div class="tk-row">
-              <button class="tk-btn tk-btn-ghost" data-back="3" type="button" data-i18n="common.back">Back</button>
-              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="5" type="button" disabled data-i18n="common.calculate">Calculate</button>
+              <button class="tk-btn tk-btn-ghost" data-back="4" type="button" data-i18n="common.back">Back</button>
+              <button class="tk-btn tk-btn-primary tk-next-btn" data-next="6" type="button" disabled data-i18n="common.calculate">Calculate</button>
             </div>
           </div>
 
-          <!-- Step 5: result -->
-          <div class="tk-step" data-step="5">
+          <!-- Step 6: result -->
+          <div class="tk-step" data-step="6">
             <h3 class="tk-h3" data-i18n="tracker.intake.result.title">Your daily protein target</h3>
             <div class="tk-result-card">
               <span class="tk-result-number" id="result-protein">0</span>
@@ -1412,6 +1427,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
   const intakeState = {
     step: 1,
     weight: null as number | null,
+    height: null as number | null,
     age: null as number | null,
     growth: null as string | null,
     goal: null as string | null,
@@ -1541,8 +1557,12 @@ import MealLogModal from "../../components/MealLogModal.astro";
       const v = Number((document.getElementById("intake-age") as HTMLInputElement).value);
       return v >= 8 && v <= 25;
     }
-    if (n === 3) return !!intakeState.growth;
-    if (n === 4) return !!intakeState.goal;
+    if (n === 3) {
+      const v = Number((document.getElementById("intake-height") as HTMLInputElement).value);
+      return v >= 100 && v <= 220;
+    }
+    if (n === 4) return !!intakeState.growth;
+    if (n === 5) return !!intakeState.goal;
     return true;
   }
 
@@ -1557,13 +1577,16 @@ import MealLogModal from "../../components/MealLogModal.astro";
   function resetIntake() {
     intakeState.step = 1;
     intakeState.weight = null;
+    intakeState.height = null;
     intakeState.age = null;
     intakeState.growth = null;
     intakeState.goal = null;
     intakeState.protein = null;
     const w = document.getElementById("intake-weight") as HTMLInputElement | null;
+    const h = document.getElementById("intake-height") as HTMLInputElement | null;
     const a = document.getElementById("intake-age") as HTMLInputElement | null;
     if (w) w.value = "";
+    if (h) h.value = "";
     if (a) a.value = "";
     document.querySelectorAll("#tracker-intake .tk-choice").forEach((b) => b.classList.remove("selected"));
     document.querySelectorAll<HTMLButtonElement>("#tracker-intake .tk-next-btn").forEach((b) => (b.disabled = false));
@@ -1581,11 +1604,13 @@ import MealLogModal from "../../components/MealLogModal.astro";
           intakeState.weight = Number((document.getElementById("intake-weight") as HTMLInputElement).value);
         } else if (current === 2) {
           intakeState.age = Number((document.getElementById("intake-age") as HTMLInputElement).value);
+        } else if (current === 3) {
+          intakeState.height = Number((document.getElementById("intake-height") as HTMLInputElement).value);
         }
 
         const nextStep = Number(btn.dataset.next);
 
-        if (nextStep === 5) {
+        if (nextStep === 6) {
           intakeState.protein = calculateProteinTarget(
             intakeState.weight as number,
             intakeState.growth as string,
@@ -1624,7 +1649,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
       btn.addEventListener("click", () => showStep(Number(btn.dataset.back)));
     });
 
-    ["intake-weight", "intake-age"].forEach((id) => {
+    ["intake-weight", "intake-age", "intake-height"].forEach((id) => {
       document.getElementById(id)?.addEventListener("input", refreshNextButtons);
     });
 
@@ -1663,6 +1688,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
           {
             user_id: user.id,
             weight_kg: intakeState.weight,
+            height_cm: intakeState.height,
             age: intakeState.age,
             growth_rate: intakeState.growth,
             primary_goal: intakeState.goal,
@@ -1756,7 +1782,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
 
       const open = (prefill?: any[]) => {
         const fn = (window as any).openMealLog;
-        if (typeof fn === "function") fn(slot.key, label, prefill);
+        if (typeof fn === "function") fn(slot.key, label, prefill, viewingDate);
       };
 
       if (interactive) {
@@ -2165,7 +2191,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
       )
       .join("");
 
-    const svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="Weight trend chart" role="img">
+    const svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-label="Weight trend chart" role="img">
       ${gridLines.join("")}
       ${labels.join("")}
       <path d="${path}" fill="none" stroke="var(--rise-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -2365,7 +2391,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
         .update({ ai_feedback: result.feedback })
         .eq("user_id", userCtx.user_id)
         .eq("meal_slot", detail.slot)
-        .eq("logged_date", todayISO());
+        .eq("logged_date", viewingDate);
     } catch (err) {
       console.warn("persist ai_feedback failed:", err);
     }
@@ -2454,5 +2480,6 @@ import MealLogModal from "../../components/MealLogModal.astro";
   wireWeightWidget();
   wireChartToggle();
   wireDateNav();
+  wireLangToggle();
   routeTracker();
 </script>

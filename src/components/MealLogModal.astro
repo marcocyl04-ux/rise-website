@@ -667,6 +667,7 @@
     open: boolean;
     slotKey: string | null;
     slotLabel: string | null;
+    dateISO: string;
     items: AnalyzedItem[];
     photoFile: File | null;
     photoDataUrl: string | null;
@@ -677,6 +678,7 @@
     open: false,
     slotKey: null,
     slotLabel: null,
+    dateISO: new Date().toISOString().slice(0, 10),
     items: [],
     photoFile: null,
     photoDataUrl: null,
@@ -933,7 +935,7 @@
       const { data: { user } } = await sb.auth.getUser();
       if (!user) throw new Error("Not signed in");
 
-      const dateISO = new Date().toISOString().slice(0, 10);
+      const dateISO = state.dateISO;
       const photoPath = await uploadPhoto(user.id, state.slotKey || "meal", dateISO);
 
       const total = totalProtein();
@@ -993,13 +995,14 @@
     renderItems();
   }
 
-  function openModal(slotKey: string, slotLabel: string, prefill?: AnalyzedItem[]) {
+  function openModal(slotKey: string, slotLabel: string, prefill?: AnalyzedItem[], dateISO?: string) {
     const m = modal();
     if (!m) return;
     resetState();
     state.open = true;
     state.slotKey = slotKey;
     state.slotLabel = slotLabel;
+    state.dateISO = dateISO || new Date().toISOString().slice(0, 10);
 
     const title = $("meal-modal-title");
     if (title) title.textContent = (prefill && prefill.length ? "Edit" : "Log") + ` · ${slotLabel}`;
@@ -1007,11 +1010,10 @@
     if (prefill && prefill.length) {
       state.items = prefill.map((it) => ({ ...it }));
       renderItems();
-      // Skip choice screen — go straight to search so user can add more.
-      setView("search");
+      // Show choice screen so user can take a photo or search.
+      setView("choice");
       const status = $("meal-search-results");
       if (status) status.innerHTML = "";
-      loadFoodCache().then((rows) => renderSearchResults(filterFoods(rows, "")));
     } else {
       setView("choice");
     }

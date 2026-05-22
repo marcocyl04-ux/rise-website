@@ -1357,7 +1357,7 @@ import Footer from "../../components/Footer.astro";
       )
       .join("");
 
-    root.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="Weight trend chart" role="img">
+    root.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-label="Weight trend chart" role="img">
       ${gridLines.join("")}
       ${labels.join("")}
       <path d="${path}" fill="none" stroke="var(--rise-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />

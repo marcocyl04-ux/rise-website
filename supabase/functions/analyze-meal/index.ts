@@ -9,7 +9,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "openai/gpt-4o-mini";
+const MODEL = "xiaomi/mimo-v2.5";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",

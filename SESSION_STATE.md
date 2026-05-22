@@ -1,53 +1,68 @@
 # RISE Nutrition Tracker — Session State
 
 ## Current Status
-ALL 6 SLICES COMPLETE AND DEPLOYED. Live at riseadvancement.com.
+REFINEMENT SESSION 1 — Critical + Medium fixes applied. Not yet deployed.
 
-## What's Built
-- Supabase project: zeczlwypqqvvpraosodv.supabase.co
-- Tables: user_profiles, baseline_intake, daily_weight, meal_logs, food_database
-- RLS + SECURITY DEFINER fix for coach recursion
-- Google OAuth + email/password auth
-- Supabase CLI logged in + linked
-- Service role key in ~/Desktop/rise-website/.env
+## Fixes Applied This Session
 
-### All Features (DONE):
-- Auth: email/password + Google OAuth, AuthModal overlay
-- Portal: /portal dashboard with protein target, product cards
-- Food database: 254 items with EN/ZH names, visual portions, HK flags
-- Meal logging: 3 input methods (photo, upload, search), edit, upsert, one-tap repeat
-- Progress bar, meal-logged event, storage bucket "meal-photos"
-- AI feedback: DeepSeek V3 via OpenRouter edge functions (coach-voice, bilingual)
-- Daily summary at 3+ meals
-- Weight log widget, 7d/30d SVG trend chart, past days navigation, auto-adjust targets
-- Coach Dashboard: role-based redirect, alerts bar, athletes table, drill-down drawer
-- Photo analysis: GPT-4o-mini vision via Supabase edge function (analyze-meal)
-- PWA: manifest, service worker, install banner, offline page
-- Bilingual: EN/ZH toggle on all portal pages (i18n.ts, 200+ translation keys)
+### C1: Photo Analysis — FIXED
+- Root cause: `openai/gpt-4o-mini` blocked from HK via OpenRouter (403)
+- Fix: Switched to `xiaomi/mimo-v2.5` in edge function (works from HK, $0.4/M tokens)
+- Updated OPENROUTER_API_KEY secret with full key
+- Redeployed analyze-meal edge function
+- Verified: returns `mock: false` with real AI analysis
 
-### 3 Edge Functions:
-1. ai-feedback (DeepSeek V3 via OpenRouter)
-2. daily-summary (DeepSeek V3 via OpenRouter)
-3. analyze-meal (GPT-4o-mini vision via OpenRouter)
+### C2: Language Toggle — FIXED
+- Root cause: `wireLangToggle()` defined but never called in tracker.astro
+- Fix: Added `wireLangToggle();` to init block (line ~2457)
+
+### C3: Height in Onboarding — FIXED
+- DB: `ALTER TABLE baseline_intake ADD COLUMN height_cm numeric;`
+- UI: New Step 3 (height in cm, 100-220), renumbered growth→4, goal→5, result→6
+- Added 6th progress dot
+- Updated intakeState, validateStep, resetIntake, wireIntake, upsert
+- Added height input listener
+
+### C4: Weight Chart — FIXED
+- Changed `preserveAspectRatio="none"` to `"xMidYMid meet"` in both tracker.astro and coach.astro
+
+### M1: Edit Meal Photo — FIXED
+- Changed edit mode from `setView("search")` to `setView("choice")`
+
+### M2+M3: Past Day Date Handling — FIXED
+- Added `dateISO` field to ModalState
+- openModal now accepts dateISO parameter
+- confirmMeal uses `state.dateISO` instead of `new Date()`
+- tracker.astro passes `viewingDate` when opening modal
+- handleMealLogged uses `viewingDate` instead of `todayISO()`
+
+## Still To Do (next session)
+- L1: Remove debug console.logs (7 in MealLogModal)
+- L2: i18n AuthModal (16+ hardcoded English strings)
+- L3: Weight widget hardcoded English messages
+- L4: Coach "thinking" text hardcoded
+- L5: "Demo" labels visible to users
+- L6: Food DB uses Simplified Chinese (should be Traditional for HK)
+- L7: PWA manifest name mismatch
+- L8: PWA precache missing /portal/tracker
+- M4: Coach queries defense-in-depth (.in("user_id", athleteIds))
+- M5: RLS policies not in repo
+- Build + deploy to Vercel
+- Browser test all fixes
+- Coach dashboard: add height display in drawer
 
 ## Deployment
-- Vercel: https://riseadvancement.com (project rise-website)
-- Supabase: zeczlwypqqvvpraosodv.supabase.co
-- Vercel CLI: logged in, project linked
-- Supabase CLI: logged in, linked
+- NOT YET DEPLOYED — changes are local only
+- Edge function analyze-meal was redeployed (model change)
+- Need: `vercel --prod` after all fixes
 
 ## Credentials
 - Supabase URL: https://zeczlwypqqvvpraosodv.supabase.co
-- Supabase Anon Key: in BaseLayout.astro
+- Supabase Anon Key: in BaseLayout.astro (real key injected by Vercel)
 - Supabase Service Role Key: in ~/Desktop/rise-website/.env
 - Supabase DB Password: -123ASDFfdsa321-
-- OpenRouter API Key: as Supabase secret (OPENROUTER_API_KEY)
+- OpenRouter API Key: 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 (as Supabase secret)
 - Google OAuth: configured in Supabase dashboard
-
-## Known Issues (to fix in refinement session)
-- Google OAuth consent screen shows Supabase project ID instead of "RISE Advancement" (needs custom Google Cloud OAuth client)
-- Some minor bugs Marco noticed during phone testing
-- Coach role management is manual SQL (fine for 1-3 coaches)
 
 ## Test Accounts
 - jason@test.rise (pw: test123456) — athlete, good compliance
@@ -55,10 +70,12 @@ ALL 6 SLICES COMPLETE AND DEPLOYED. Live at riseadvancement.com.
 - emily@test.rise (pw: test123456) — athlete, new/low compliance
 - marcocyl04@gmail.com — athlete (reverted from coach)
 
-## Files
-- RISE Website: ~/Desktop/rise-website/ (Astro 6 + Tailwind 4)
-- Edge Functions: supabase/functions/{ai-feedback,daily-summary,analyze-meal}/
-- i18n: src/lib/i18n.ts
-- PWA: public/manifest.json, public/sw.js, public/offline.html
-- Vault: ~/Documents/openclaw/RISE Advancement/RISE Nutrition Tracker.md
-- Session State: ~/Desktop/rise-website/SESSION_STATE.md
+## Files Modified This Session
+- supabase/functions/analyze-meal/index.ts (model change)
+- src/pages/portal/tracker.astro (lang toggle, height step, date handling, chart fix)
+- src/pages/portal/coach.astro (chart fix)
+- src/components/MealLogModal.astro (edit photo, date handling)
+
+## Reports
+- AUDIT_REPORT.md — full code audit (696 lines)
+- REFINEMENT_REPORT.md — combined browser + code audit findings
