@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" fill="#D3191F"/>
-  <text x="96" y="125" font-family="Oswald, Arial, sans-serif" font-weight="700" font-size="90" text-anchor="middle" fill="#FAFAFA" letter-spacing="-1">R</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E52529"/>
+      <stop offset="100%" stop-color="#B71418"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="#FFFFFF"/>
+  <rect x="80" y="100" width="352" height="8" rx="4" fill="url(#redGrad)"/>
+  <text x="256" y="320" font-family="'Oswald', 'Arial Black', sans-serif" font-weight="700" font-size="200" text-anchor="middle" fill="#1A1A1A" letter-spacing="-4">RISE</text>
+  <text x="256" y="380" font-family="'Inter', 'Helvetica', sans-serif" font-weight="500" font-size="40" text-anchor="middle" fill="#999999" letter-spacing="8">ADVANCEMENT</text>
 </svg>

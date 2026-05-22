@@ -1,4 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#D3191F"/>
-  <text x="256" y="360" font-family="Oswald, Arial, sans-serif" font-weight="700" font-size="346" text-anchor="middle" fill="#FAFAFA" letter-spacing="-6">R</text>
+  <defs>
+    <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E52529"/>
+      <stop offset="100%" stop-color="#B71418"/>
+    </linearGradient>
+  </defs>
+  <!-- White background with rounded corners -->
+  <rect width="512" height="512" rx="108" fill="#FFFFFF"/>
+  <!-- Subtle border -->
+  <rect x="4" y="4" width="504" height="504" rx="104" fill="none" stroke="#E8E8E8" stroke-width="1"/>
+  <!-- Red accent bar at top -->
+  <rect x="64" y="72" width="384" height="8" rx="4" fill="url(#redGrad)"/>
+  <!-- RISE text -->
+  <text x="256" y="340" font-family="'Oswald', 'Arial Black', sans-serif" font-weight="700" font-size="220" text-anchor="middle" fill="#1A1A1A" letter-spacing="-4">RISE</text>
+  <!-- Tagline -->
+  <text x="256" y="400" font-family="'Inter', 'Helvetica', sans-serif" font-weight="500" font-size="42" text-anchor="middle" fill="#999999" letter-spacing="8">ADVANCEMENT</text>
 </svg>
