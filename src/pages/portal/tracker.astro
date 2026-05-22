@@ -1975,9 +1975,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     if (typeof weight === "number") {
       inputRow.setAttribute("hidden", "");
       loggedRow.removeAttribute("hidden");
-      if (valueEl) valueEl.textContent = isZh()
-        ? `今日 ${weight.toFixed(1)} ${kg}`
-        : `${weight.toFixed(1)} ${kg} today`;
+      if (valueEl) valueEl.textContent = t("tracker.weight.valueToday", { n: weight.toFixed(1) });
       if (input) input.value = String(weight);
     } else {
       loggedRow.setAttribute("hidden", "");
@@ -2050,9 +2048,9 @@ import MealLogModal from "../../components/MealLogModal.astro";
       renderWeightChart();
 
       if (recalculated) {
-        showWeightNotice(`Target updated: ${newTarget}g protein/day`);
+        showWeightNotice(t("tracker.weight.targetUpdated", { n: newTarget }));
       } else {
-        setWeightMsg("Weight logged.", "success");
+        setWeightMsg(t("tracker.weight.logged"), "success");
         setTimeout(() => setWeightMsg(""), 2500);
       }
     } catch (err: any) {
@@ -2256,7 +2254,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     if (!card || !textEl || !mockEl) return;
     card.classList.remove("tk-dismissing", "tk-feedback-loading");
     textEl.textContent = text;
-    mockEl.toggleAttribute("hidden", !mock);
+    mockEl.setAttribute("hidden", "");
     card.removeAttribute("hidden");
     card.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
@@ -2273,7 +2271,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
       clearTimeout(feedbackDismissTimer);
       feedbackDismissTimer = null;
     }
-    textEl.textContent = "Coach is thinking";
+    textEl.textContent = t("tracker.feedback.thinking");
     mockEl.setAttribute("hidden", "");
     card.classList.add("tk-feedback-loading");
     card.classList.remove("tk-dismissing");
@@ -2309,7 +2307,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     } else {
       tipRow.setAttribute("hidden", "");
     }
-    mockEl.toggleAttribute("hidden", !result.mock);
+    mockEl.setAttribute("hidden", "");
     card.removeAttribute("hidden");
   }
 

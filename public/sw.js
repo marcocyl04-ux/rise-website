@@ -7,6 +7,7 @@ const RUNTIME_CACHE = `rise-runtime-${CACHE_VERSION}`;
 const PRECACHE_URLS = [
   "/",
   "/portal",
+  "/portal/tracker",
   "/offline.html",
   "/manifest.json",
   "/favicon.png",

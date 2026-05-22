@@ -14,27 +14,27 @@
     </button>
 
     <header class="auth-brand">
-      <h2 class="auth-title" id="auth-modal-title">RISE Portal</h2>
-      <p class="auth-tagline">Sign in to access your tools</p>
+      <h2 class="auth-title" id="auth-modal-title" data-i18n="auth.title">RISE Portal</h2>
+      <p class="auth-tagline" data-i18n="auth.tagline">Sign in to access your tools</p>
     </header>
 
     <div class="auth-tabs" role="tablist">
-      <button class="auth-tab active" data-auth-tab="login" type="button" role="tab" aria-selected="true">Log in</button>
-      <button class="auth-tab" data-auth-tab="signup" type="button" role="tab" aria-selected="false">Sign up</button>
+      <button class="auth-tab active" data-auth-tab="login" type="button" role="tab" aria-selected="true" data-i18n="auth.tabLogin">Log in</button>
+      <button class="auth-tab" data-auth-tab="signup" type="button" role="tab" aria-selected="false" data-i18n="auth.tabSignup">Sign up</button>
     </div>
 
     <form id="auth-login-form" class="auth-form" novalidate>
       <label class="auth-field">
-        <span>Email</span>
+        <span data-i18n="auth.email">Email</span>
         <input type="email" name="email" required autocomplete="email" />
       </label>
       <label class="auth-field">
-        <span>Password</span>
+        <span data-i18n="auth.password">Password</span>
         <input type="password" name="password" required autocomplete="current-password" minlength="6" />
       </label>
-      <button class="auth-btn primary" type="submit">Log in</button>
-      <div class="auth-divider"><span>or</span></div>
-      <button class="auth-btn google" type="button" id="auth-login-google">
+      <button class="auth-btn primary" type="submit" data-i18n="auth.loginBtn">Log in</button>
+      <div class="auth-divider"><span data-i18n="auth.or">or</span></div>
+      <button class="auth-btn google" type="button" id="auth-login-google" data-i18n="auth.google">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.99.66-2.25 1.05-3.72 1.05-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
@@ -48,21 +48,21 @@
 
     <form id="auth-signup-form" class="auth-form" hidden novalidate>
       <label class="auth-field">
-        <span>Full name</span>
+        <span data-i18n="auth.fullName">Full name</span>
         <input type="text" name="full_name" required autocomplete="name" />
       </label>
       <label class="auth-field">
-        <span>Email</span>
+        <span data-i18n="auth.email">Email</span>
         <input type="email" name="email" required autocomplete="email" />
       </label>
       <label class="auth-field">
-        <span>Password</span>
+        <span data-i18n="auth.password">Password</span>
         <input type="password" name="password" required autocomplete="new-password" minlength="6" />
-        <small>At least 6 characters</small>
+        <small data-i18n="auth.minChars">At least 6 characters</small>
       </label>
-      <button class="auth-btn primary" type="submit">Create account</button>
-      <div class="auth-divider"><span>or</span></div>
-      <button class="auth-btn google" type="button" id="auth-signup-google">
+      <button class="auth-btn primary" type="submit" data-i18n="auth.createBtn">Create account</button>
+      <div class="auth-divider"><span data-i18n="auth.or">or</span></div>
+      <button class="auth-btn google" type="button" id="auth-signup-google" data-i18n="auth.google">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.99.66-2.25 1.05-3.72 1.05-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
@@ -284,6 +284,16 @@
 </style>
 
 <script>
+  import { getLang, getTranslation } from "../lib/i18n";
+
+  function t(key: string, params?: Record<string, string | number>): string {
+    let s = getTranslation(getLang(), key);
+    if (params) {
+      for (const k in params) s = s.replace(`{${k}}`, String(params[k]));
+    }
+    return s;
+  }
+
   const modal = document.getElementById("auth-modal");
   const loginForm = document.getElementById("auth-login-form") as HTMLFormElement | null;
   const signupForm = document.getElementById("auth-signup-form") as HTMLFormElement | null;
@@ -360,11 +370,11 @@
   loginForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const sb = getSb();
-    if (!sb) return setMsg(loginMsg, "Auth service unavailable.", "error");
+    if (!sb) return setMsg(loginMsg, t("auth.unavailable"), "error");
     const form = e.currentTarget as HTMLFormElement;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-    setMsg(loginMsg, "Logging in...");
+    setMsg(loginMsg, t("auth.loggingIn"));
     const { error } = await sb.auth.signInWithPassword({ email, password });
     if (error) return setMsg(loginMsg, error.message, "error");
     setMsg(loginMsg, "");
@@ -375,12 +385,12 @@
   signupForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const sb = getSb();
-    if (!sb) return setMsg(signupMsg, "Auth service unavailable.", "error");
+    if (!sb) return setMsg(signupMsg, t("auth.unavailable"), "error");
     const form = e.currentTarget as HTMLFormElement;
     const full_name = (form.elements.namedItem("full_name") as HTMLInputElement).value.trim();
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-    setMsg(signupMsg, "Creating account...");
+    setMsg(signupMsg, t("auth.creating"));
     const { data, error } = await sb.auth.signUp({
       email,
       password,
@@ -390,7 +400,7 @@
     if (!data.session) {
       return setMsg(
         signupMsg,
-        "Check your email to confirm your account, then log in.",
+        t("auth.checkEmail"),
         "success"
       );
     }
@@ -402,8 +412,8 @@
   async function googleSignIn() {
     const sb = getSb();
     if (!sb) {
-      setMsg(loginMsg, "Auth service unavailable.", "error");
-      setMsg(signupMsg, "Auth service unavailable.", "error");
+      setMsg(loginMsg, t("auth.unavailable"), "error");
+      setMsg(signupMsg, t("auth.unavailable"), "error");
       return;
     }
     const { error } = await sb.auth.signInWithOAuth({

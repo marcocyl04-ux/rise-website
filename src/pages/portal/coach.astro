@@ -711,6 +711,7 @@ import Footer from "../../components/Footer.astro";
   type Baseline = {
     user_id: string;
     weight_kg: number;
+    height_cm: number | null;
     age: number;
     growth_rate: string;
     primary_goal: string;
@@ -807,25 +808,12 @@ import Footer from "../../components/Footer.astro";
 
   // ===== Data fetching =====
   async function loadCoachData(sb: any, coachTeamId: string): Promise<Athlete[]> {
-    const [profilesRes, baselinesRes, weightsRes, mealsRes] = await Promise.all([
-      sb
-        .from("user_profiles")
-        .select("id, email, full_name, team_id, role")
-        .eq("team_id", coachTeamId)
-        .eq("role", "athlete"),
-      sb
-        .from("baseline_intake")
-        .select("user_id, weight_kg, age, growth_rate, primary_goal, protein_target_g"),
-      sb
-        .from("daily_weight")
-        .select("user_id, logged_date, weight_kg")
-        .order("logged_date", { ascending: false }),
-      sb
-        .from("meal_logs")
-        .select("id, user_id, meal_slot, logged_date, total_protein_g, food_items, ai_feedback, created_at")
-        .order("created_at", { ascending: false })
-        .limit(500),
-    ]);
+    // First, fetch the athlete profiles to get the athlete IDs.
+    const profilesRes = await sb
+      .from("user_profiles")
+      .select("id, email, full_name, team_id, role")
+      .eq("team_id", coachTeamId)
+      .eq("role", "athlete");
 
     if (profilesRes.error) {
       console.warn("coach profiles", profilesRes.error);
@@ -833,6 +821,29 @@ import Footer from "../../components/Footer.astro";
     }
 
     const profiles = (profilesRes.data ?? []) as Profile[];
+    if (profiles.length === 0) return [];
+
+    const athleteIds = profiles.map((p) => p.id);
+
+    // Fetch related data scoped to these athletes (defense-in-depth).
+    const [baselinesRes, weightsRes, mealsRes] = await Promise.all([
+      sb
+        .from("baseline_intake")
+        .select("user_id, weight_kg, height_cm, age, growth_rate, primary_goal, protein_target_g")
+        .in("user_id", athleteIds),
+      sb
+        .from("daily_weight")
+        .select("user_id, logged_date, weight_kg")
+        .in("user_id", athleteIds)
+        .order("logged_date", { ascending: false }),
+      sb
+        .from("meal_logs")
+        .select("id, user_id, meal_slot, logged_date, total_protein_g, food_items, ai_feedback, created_at")
+        .in("user_id", athleteIds)
+        .order("created_at", { ascending: false })
+        .limit(500),
+    ]);
+
     const baselines = (baselinesRes.data ?? []) as Baseline[];
     const weights = (weightsRes.data ?? []) as Weight[];
     const meals = (mealsRes.data ?? []) as Meal[];
@@ -1226,6 +1237,10 @@ import Footer from "../../components/Footer.astro";
           <div class="coach-baseline-cell">
             <div class="coach-baseline-label">${t("coach.drawer.baselineWeight")}</div>
             <div class="coach-baseline-value">${Number(b.weight_kg).toFixed(1)}<span class="coach-baseline-unit">kg</span></div>
+          </div>
+          <div class="coach-baseline-cell">
+            <div class="coach-baseline-label">${t("coach.drawer.height")}</div>
+            <div class="coach-baseline-value">${b.height_cm != null ? `${Number(b.height_cm).toFixed(1)}<span class="coach-baseline-unit">cm</span>` : "—"}</div>
           </div>
           <div class="coach-baseline-cell">
             <div class="coach-baseline-label">${t("coach.drawer.age")}</div>

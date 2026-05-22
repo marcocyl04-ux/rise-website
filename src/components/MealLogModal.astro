@@ -709,12 +709,6 @@
   function renderItems() {
     const list = $("meal-items-list");
     const foot = $("meal-modal-foot");
-    console.log("[meal-modal] renderItems", {
-      itemsCount: state.items.length,
-      items: state.items,
-      hasList: !!list,
-      hasFoot: !!foot,
-    });
     if (!list || !foot) return;
 
     if (state.items.length === 0) {
@@ -726,11 +720,6 @@
 
     list.hidden = false;
     foot.hidden = false;
-    console.log("[meal-modal] renderItems showing list/foot", {
-      listHidden: list.hidden,
-      footHidden: foot.hidden,
-    });
-
     list.innerHTML = state.items
       .map((it, i) => {
         const protein = Number(it.protein_g) || 0;
@@ -1074,16 +1063,12 @@
     });
 
     const searchResults = $("meal-search-results");
-    console.log("[meal-modal] wireModal: searchResults found?", !!searchResults);
     searchResults?.addEventListener("click", (e) => {
       const target = e.target as HTMLElement | null;
-      console.log("[meal-modal] search-results click", { target: target?.tagName, classes: target?.className });
       const btn = target?.closest<HTMLButtonElement>(".tk-food-row");
-      console.log("[meal-modal] closest tk-food-row", { found: !!btn, dataFoodId: btn?.dataset.foodId });
       if (!btn) return;
       const id = btn.dataset.foodId;
       const row = (state.foodCache || []).find((r) => String(r.id) === id);
-      console.log("[meal-modal] row lookup", { id, found: !!row, cacheSize: state.foodCache?.length || 0 });
       if (!row) return;
       state.items.push({
         name: row.name,
@@ -1092,7 +1077,6 @@
         protein_g: Number(row.protein_per_portion) || 0,
         confidence: 1,
       });
-      console.log("[meal-modal] item pushed, total items:", state.items.length);
       renderItems();
     });
 
