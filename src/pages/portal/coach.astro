@@ -9,6 +9,11 @@ import Footer from "../../components/Footer.astro";
 <BaseLayout title="Coach Dashboard" description="RISE coach dashboard — monitor your team's nutrition compliance.">
   <Header slot="header" />
 
+  <!-- Minimal app header (standalone PWA only) -->
+  <div class="pwa-app-header" aria-hidden="true">
+    <img src="/logo-header.png" alt="RISE" class="pwa-app-header-logo" />
+  </div>
+
   <!-- Floating lang toggle -->
   <button id="portal-lang-toggle" class="portal-lang-toggle" type="button" aria-label="Toggle language">中文</button>
 
@@ -951,7 +956,7 @@ import Footer from "../../components/Footer.astro";
       let status: "green" | "yellow" | "red";
       if (hoursSinceLastMeal > 48 || mealsYesterday < 3) {
         status = "red";
-      } else if (mealsYesterday >= 5 && hasWeightToday) {
+      } else if (mealsYesterday >= 3 && hasWeightToday) {
         status = "green";
       } else {
         status = "yellow";

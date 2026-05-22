@@ -72,6 +72,21 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
 
     <title>{title} | RISE Advancement</title>
 
+    <!-- PWA standalone detection (runs early to avoid flash of marketing chrome) -->
+    <script is:inline>
+      (function () {
+        var isStandalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches)
+          || window.navigator.standalone === true;
+        if (isStandalone) {
+          document.documentElement.classList.add("pwa-standalone");
+          // Auto-redirect root to /portal when launched as installed app
+          if (window.location.pathname === "/") {
+            window.location.replace("/portal");
+          }
+        }
+      })();
+    </script>
+
     <!-- Supabase JS v2 (for auth + portal) -->
     <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script is:inline define:vars={{
@@ -203,7 +218,12 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
         }
 
         function showBanner() {
-          if (!onPortalPage() || alreadyDismissed() || isStandalone()) return;
+          // Never show in installed PWA — already have the app
+          if (isStandalone()) return;
+          // Banner is portal-focused; skip on marketing pages
+          if (!onPortalPage()) return;
+          // Respect dismissal — one-shot on portal
+          if (alreadyDismissed()) return;
           if (document.getElementById("pwa-install-banner")) return;
 
           var banner = document.createElement("div");

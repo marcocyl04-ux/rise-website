@@ -1,2 +1,64 @@
 /* Global styles — imports the design system */
 @import "./design-system.css";
+
+/* ============================================================
+   PWA Standalone Mode — hide marketing chrome, show app header
+   Applied when launched as installed PWA (display-mode: standalone)
+   ============================================================ */
+
+/* Hide marketing chrome */
+.pwa-standalone .site-header,
+.pwa-standalone .site-footer,
+.pwa-standalone .floating-whatsapp {
+  display: none !important;
+}
+
+/* Safe-area padding for notched phones (iPhone X+) */
+.pwa-standalone body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Minimal app header — hidden by default, shown in standalone mode */
+.pwa-app-header {
+  display: none;
+}
+.pwa-standalone .pwa-app-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  background: var(--rise-white);
+  border-bottom: 1px solid var(--rise-neutral-100);
+}
+.pwa-app-header-logo {
+  height: 24px;
+  width: auto;
+}
+
+/* "Install as app" hint shown only to browser users on portal pages */
+.portal-install-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--rise-neutral-500);
+  background: var(--rise-neutral-50);
+  border: 1px solid var(--rise-neutral-100);
+  border-radius: 999px;
+  padding: 6px 12px;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.portal-install-hint:hover {
+  border-color: var(--rise-red);
+  color: var(--rise-red);
+  text-decoration: none;
+}
+.pwa-standalone .portal-install-hint {
+  display: none !important;
+}

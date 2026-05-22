@@ -8,6 +8,11 @@ import Footer from "../../components/Footer.astro";
 <BaseLayout title="Portal" description="Your RISE Advancement portal — access training tools, nutrition tracking, and more.">
   <Header slot="header" />
 
+  <!-- Minimal app header (standalone PWA only) -->
+  <div class="pwa-app-header" aria-hidden="true">
+    <img src="/logo-header.png" alt="RISE" class="pwa-app-header-logo" />
+  </div>
+
   <!-- Loading state while we check auth -->
   <section id="portal-loading" class="portal-loading">
     <div class="portal-spinner" aria-hidden="true"></div>
@@ -37,6 +42,9 @@ import Footer from "../../components/Footer.astro";
         <p class="portal-eyebrow" data-i18n="portal.eyebrow">RISE Portal</p>
         <h1 class="portal-title" id="portal-hello" data-i18n="portal.welcome">Welcome</h1>
         <p class="portal-sub" id="portal-sub" data-i18n="portal.subPick">Pick a tool to get started.</p>
+        <a href="/install-guide" class="portal-install-hint" id="portal-install-hint" data-i18n="pwa.install.hint" hidden>
+          Install RISE as an app
+        </a>
       </header>
 
       <div class="portal-target" id="portal-target-card" hidden>
@@ -501,7 +509,20 @@ import Footer from "../../components/Footer.astro";
     applyTranslations();
   }
 
+  function maybeShowInstallHint() {
+    const hint = document.getElementById("portal-install-hint");
+    if (!hint) return;
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+      || (window.navigator as any).standalone === true;
+    if (isStandalone) return;
+    let dismissed = false;
+    try { dismissed = window.localStorage.getItem("rise-pwa-install-dismissed") === "1"; } catch (e) {}
+    if (dismissed) return;
+    hint.removeAttribute("hidden");
+  }
+
   applyTranslations();
   wireLangToggle();
+  maybeShowInstallHint();
   initPortal();
 </script>

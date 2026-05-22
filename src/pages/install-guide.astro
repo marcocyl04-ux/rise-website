@@ -1,0 +1,151 @@
+---
+// Install guide — step-by-step instructions for adding RISE to home screen
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Install RISE" description="Add RISE to your phone's home screen for a faster, app-like experience.">
+  <main class="install-guide section">
+    <div class="container install-guide__container">
+      <h1 class="install-guide__title">Install RISE on your phone</h1>
+      <p class="install-guide__intro">Add RISE to your home screen for a faster, app-like experience.</p>
+
+      <div class="install-guide__card">
+        <h2 class="install-guide__platform">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg>
+          iPhone / iPad (Safari)
+        </h2>
+        <ol class="install-guide__steps">
+          <li>
+            <span class="step-num">1</span>
+            <span>Tap the <strong>Share button</strong> at the bottom of Safari <span class="icon-hint">(box with arrow ↑)</span></span>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <span>Tap <strong>"Add"</strong> in the top right corner</span>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <span>RISE will appear on your home screen like a regular app</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="install-guide__card">
+        <h2 class="install-guide__platform">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          Android (Chrome)
+        </h2>
+        <ol class="install-guide__steps">
+          <li>
+            <span class="step-num">1</span>
+            <span>Tap the <strong>Install</strong> banner that appears at the bottom of the screen</span>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <span>Or open the browser menu (⋮) and tap <strong>"Install app"</strong></span>
+          </li>
+        </ol>
+        <p class="install-guide__note">Android makes it easy — one or two taps and you're done.</p>
+      </div>
+
+      <a href="/portal" class="install-guide__back">← Back to portal</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .install-guide {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FAFAFA;
+    padding: 32px 16px;
+  }
+  .install-guide__container {
+    max-width: 480px;
+    width: 100%;
+  }
+  .install-guide__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin-bottom: 8px;
+  }
+  .install-guide__intro {
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .install-guide__card {
+    background: white;
+    border: 1px solid #E5E5E5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .install-guide__platform {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .install-guide__steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .install-guide__steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0F0F0;
+    line-height: 1.5;
+  }
+  .install-guide__steps li:last-child {
+    border-bottom: none;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: #D3191F;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .icon-hint {
+    color: #999;
+    font-size: 0.9em;
+  }
+  .install-guide__note {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 12px;
+    font-style: italic;
+  }
+  .install-guide__back {
+    display: inline-block;
+    margin-top: 8px;
+    color: #D3191F;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .install-guide__back:hover {
+    text-decoration: underline;
+  }
+</style>

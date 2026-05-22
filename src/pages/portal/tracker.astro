@@ -9,6 +9,11 @@ import MealLogModal from "../../components/MealLogModal.astro";
 <BaseLayout title="Nutrition Tracker" description="Track your daily protein and meals — RISE Nutrition Tracker.">
   <Header slot="header" />
 
+  <!-- Minimal app header (standalone PWA only) -->
+  <div class="pwa-app-header" aria-hidden="true">
+    <img src="/logo-header.png" alt="RISE" class="pwa-app-header-logo" />
+  </div>
+
   <!-- Floating lang toggle -->
   <button id="portal-lang-toggle" class="portal-lang-toggle" type="button" aria-label="Toggle language">中文</button>
 
@@ -2127,7 +2132,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     const W = 520;
     const H = 160;
     const padL = 36;
-    const padR = 12;
+    const padR = 30;
     const padT = 16;
     const padB = 28;
     const innerW = W - padL - padR;
