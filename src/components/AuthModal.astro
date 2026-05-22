@@ -374,12 +374,17 @@
     const form = e.currentTarget as HTMLFormElement;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+    if (!email || !password) return setMsg(loginMsg, "Please enter email and password.", "error");
     setMsg(loginMsg, t("auth.loggingIn"));
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) return setMsg(loginMsg, error.message, "error");
-    setMsg(loginMsg, "");
-    closeModal();
-    window.location.href = "/portal";
+    try {
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) return setMsg(loginMsg, error.message, "error");
+      setMsg(loginMsg, "");
+      closeModal();
+      window.location.href = "/portal";
+    } catch (err: any) {
+      setMsg(loginMsg, err.message || "Login failed. Please try again.", "error");
+    }
   });
 
   signupForm?.addEventListener("submit", async (e) => {
@@ -390,6 +395,10 @@
     const full_name = (form.elements.namedItem("full_name") as HTMLInputElement).value.trim();
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+    if (!full_name) return setMsg(signupMsg, "Name is required.", "error");
+    if (!email) return setMsg(signupMsg, "Email is required.", "error");
+    if (!email.includes("@")) return setMsg(signupMsg, "Please enter a valid email.", "error");
+    if (password.length < 6) return setMsg(signupMsg, "Password must be at least 6 characters.", "error");
     setMsg(signupMsg, t("auth.creating"));
     const { data, error } = await sb.auth.signUp({
       email,
