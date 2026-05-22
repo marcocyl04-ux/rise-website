@@ -167,12 +167,7 @@ import ContactForm from "../../components/ContactForm.astro";
           position="後衛"
           team="2011 Upper Canada College"
         />
-        <PlayerCard
-          number="#29"
-          name="Marcus Nuyen"
-          position="前鋒"
-          team="St. George's U15 Prep"
-        />
+
       </div>
     </div>
     <div class="mid-cta">
@@ -258,7 +253,7 @@ import ContactForm from "../../components/ContactForm.astro";
   @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
   .players-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
   @media (min-width: 640px) { .players-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .players-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1024px) { .players-grid { grid-template-columns: repeat(2, 1fr); max-width: 640px; margin-inline: auto; } }
   .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
   .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
