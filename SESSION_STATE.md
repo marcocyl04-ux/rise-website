@@ -1,67 +1,41 @@
 # RISE Nutrition Tracker — Session State
 
 ## Current Status
-REFINEMENT SESSION 1 — Critical + Medium fixes applied. Not yet deployed.
+REFINEMENT PASS 2 — COMPLETE + DEPLOYED. All cleanup fixes applied. Live at riseadvancement.com.
 
-## Fixes Applied This Session
+## Refinement Pass 1 (earlier session)
+- C1: Photo analysis → xiaomi/mimo-v2.5 (HK-compatible)
+- C2: Language toggle → wireLangToggle() was never called
+- C3: Height onboarding → new step 3 + DB migration
+- C4: Weight chart → preserveAspectRatio fixed
+- M1: Edit meal photo → choice screen in edit mode
+- M2+M3: Past day dates → viewingDate handling
 
-### C1: Photo Analysis — FIXED
-- Root cause: `openai/gpt-4o-mini` blocked from HK via OpenRouter (403)
-- Fix: Switched to `xiaomi/mimo-v2.5` in edge function (works from HK, $0.4/M tokens)
-- Updated OPENROUTER_API_KEY secret with full key
-- Redeployed analyze-meal edge function
-- Verified: returns `mock: false` with real AI analysis
-
-### C2: Language Toggle — FIXED
-- Root cause: `wireLangToggle()` defined but never called in tracker.astro
-- Fix: Added `wireLangToggle();` to init block (line ~2457)
-
-### C3: Height in Onboarding — FIXED
-- DB: `ALTER TABLE baseline_intake ADD COLUMN height_cm numeric;`
-- UI: New Step 3 (height in cm, 100-220), renumbered growth→4, goal→5, result→6
-- Added 6th progress dot
-- Updated intakeState, validateStep, resetIntake, wireIntake, upsert
-- Added height input listener
-
-### C4: Weight Chart — FIXED
-- Changed `preserveAspectRatio="none"` to `"xMidYMid meet"` in both tracker.astro and coach.astro
-
-### M1: Edit Meal Photo — FIXED
-- Changed edit mode from `setView("search")` to `setView("choice")`
-
-### M2+M3: Past Day Date Handling — FIXED
-- Added `dateISO` field to ModalState
-- openModal now accepts dateISO parameter
-- confirmMeal uses `state.dateISO` instead of `new Date()`
-- tracker.astro passes `viewingDate` when opening modal
-- handleMealLogged uses `viewingDate` instead of `todayISO()`
-
-## Still To Do (next session)
-- L1: Remove debug console.logs (7 in MealLogModal)
-- L2: i18n AuthModal (16+ hardcoded English strings)
-- L3: Weight widget hardcoded English messages
-- L4: Coach "thinking" text hardcoded
-- L5: "Demo" labels visible to users
-- L6: Food DB uses Simplified Chinese (should be Traditional for HK)
-- L7: PWA manifest name mismatch
-- L8: PWA precache missing /portal/tracker
-- M4: Coach queries defense-in-depth (.in("user_id", athleteIds))
-- M5: RLS policies not in repo
-- Build + deploy to Vercel
-- Browser test all fixes
-- Coach dashboard: add height display in drawer
+## Refinement Pass 2 (this session)
+- L1: Removed 7 debug console.logs from MealLogModal
+- L2: Full i18n for AuthModal (17 new EN + ZH keys)
+- L3: Weight widget uses t() for all strings
+- L4: Coach "thinking" text uses t()
+- L5: Demo badges permanently hidden (setAttribute("hidden",""))
+- L6: Fixed 6 Simplified → Traditional Chinese items in food DB (蘭, 車, 馬)
+- L7: PWA manifest name was already correct ("RISE Nutrition Tracker")
+- L8: Added /portal/tracker to SW precache
+- M4: Coach queries scoped with .in("user_id", athleteIds)
+- M5: RLS policies exported to supabase/migrations/001_current_rls_policies.sql
+- Coach drawer: height_cm display added
 
 ## Deployment
-- NOT YET DEPLOYED — changes are local only
-- Edge function analyze-meal was redeployed (model change)
-- Need: `vercel --prod` after all fixes
+- Vercel: https://riseadvancement.com (project rise-website)
+- Supabase: zeczlwypqqvvpraosodv.supabase.co
+- Edge functions: analyze-meal (mimo-v2.5), ai-feedback (DeepSeek V3), daily-summary (DeepSeek V3)
+- Latest commit: "Refinement pass 2: i18n, cleanup, coach hardening"
 
 ## Credentials
 - Supabase URL: https://zeczlwypqqvvpraosodv.supabase.co
-- Supabase Anon Key: in BaseLayout.astro (real key injected by Vercel)
+- Supabase Anon Key: in BaseLayout.astro
 - Supabase Service Role Key: in ~/Desktop/rise-website/.env
 - Supabase DB Password: -123ASDFfdsa321-
-- OpenRouter API Key: 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 (as Supabase secret)
+- OpenRouter API Key: sk-or-...5e20 (as Supabase secret)
 - Google OAuth: configured in Supabase dashboard
 
 ## Test Accounts
@@ -70,12 +44,26 @@ REFINEMENT SESSION 1 — Critical + Medium fixes applied. Not yet deployed.
 - emily@test.rise (pw: test123456) — athlete, new/low compliance
 - marcocyl04@gmail.com — athlete (reverted from coach)
 
-## Files Modified This Session
-- supabase/functions/analyze-meal/index.ts (model change)
-- src/pages/portal/tracker.astro (lang toggle, height step, date handling, chart fix)
-- src/pages/portal/coach.astro (chart fix)
-- src/components/MealLogModal.astro (edit photo, date handling)
+## Next Session
+Design and run a comprehensive QA test suite for the nutrition tracker. Cover:
+- Auth flow (login, signup, Google OAuth, logout)
+- Onboarding intake (all 6 steps including new height step)
+- Meal logging (all 3 methods: photo, upload, search)
+- Meal editing and deletion
+- Weight logging and editing
+- Weight trend chart (7d/30d toggle)
+- Past day navigation (read-only meals, date handling)
+- Language toggle (EN ↔ ZH, all translated strings)
+- AI feedback (coach voice, daily summary)
+- Coach dashboard (athlete table, alerts, drill-down with height)
+- PWA install banner
+- Edge cases (empty states, error states, offline)
 
-## Reports
-- AUDIT_REPORT.md — full code audit (696 lines)
-- REFINEMENT_REPORT.md — combined browser + code audit findings
+## Files
+- RISE Website: ~/Desktop/rise-website/ (Astro 6 + Tailwind 4)
+- Edge Functions: supabase/functions/{ai-feedback,daily-summary,analyze-meal}/
+- i18n: src/lib/i18n.ts (200+ keys, EN + ZH Traditional)
+- PWA: public/manifest.json, public/sw.js, public/offline.html
+- RLS Migration: supabase/migrations/001_current_rls_policies.sql
+- Vault: ~/Documents/openclaw/RISE Advancement/RISE Nutrition Tracker.md
+- Session State: ~/Desktop/rise-website/SESSION_STATE.md
