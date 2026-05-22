@@ -38,27 +38,30 @@
   width: auto;
 }
 
-/* "Install as app" hint shown only to browser users on portal pages */
-.portal-install-hint {
+/* "Get the app" button shown only to browser users on portal pages */
+.portal-install-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--rise-neutral-500);
-  background: var(--rise-neutral-50);
-  border: 1px solid var(--rise-neutral-100);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rise-white);
+  background: var(--rise-red);
+  border: none;
   border-radius: 999px;
-  padding: 6px 12px;
-  text-decoration: none;
-  transition: border-color 0.15s, color 0.15s;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 12px;
 }
-.portal-install-hint:hover {
-  border-color: var(--rise-red);
-  color: var(--rise-red);
-  text-decoration: none;
+.portal-install-btn:hover {
+  background: #b5141a;
+  transform: translateY(-1px);
 }
-.pwa-standalone .portal-install-hint {
+.portal-install-btn:active {
+  transform: translateY(0);
+}
+.pwa-standalone .portal-install-btn {
   display: none !important;
 }

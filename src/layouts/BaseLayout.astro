@@ -272,9 +272,12 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
           }
         }
 
+        window.__riseDeferredPrompt = null;
+
         window.addEventListener("beforeinstallprompt", function (e) {
           e.preventDefault();
           deferredPrompt = e;
+          window.__riseDeferredPrompt = e;
           showBanner();
         });
 

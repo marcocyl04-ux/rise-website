@@ -68,3 +68,14 @@ Test and fix coach dashboard:
 - Vault: ~/Documents/openclaw/RISE Advancement/RISE Nutrition Tracker.md
 - Session State: ~/Desktop/rise-website/SESSION_STATE.md
 - QA Report: ~/Desktop/rise-website/dogfood-output/report.md
+
+## PWA App Mode (May 23)
+- Standalone detection: early script in <head> adds .pwa-standalone to <html>
+- Auto-redirect: root → /portal when launched as installed PWA
+- Marketing chrome hidden: Header, Footer, WhatsApp button hidden in standalone
+- Minimal app header: RISE logo in standalone on portal/tracker/coach pages
+- Safe-area padding for notched phones
+- Install banner: hidden in standalone, smart dismissal on portal pages
+- Install hint link on portal for browser users → /install-guide
+- /install-guide page: iOS + Android step-by-step instructions
+- Build: 16 pages, passes clean
