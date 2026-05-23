@@ -42,6 +42,26 @@
         <img id="meal-photo-img" alt="Meal photo" />
       </div>
       <p class="tk-analyze-status" id="meal-analyze-status">Analyzing…</p>
+      <button class="tk-text-fallback-cta" id="meal-not-right" type="button" hidden>
+        Not right? Tell us what you had
+      </button>
+    </div>
+
+    <!-- TEXT INPUT: describe meal as fallback -->
+    <div class="tk-modal-body" data-view="text-input" hidden>
+      <div class="tk-search-wrap">
+        <input
+          type="text"
+          id="meal-text-input"
+          class="tk-search-input"
+          placeholder="Describe what you ate... (e.g. tuna don, chicken sandwich)"
+          autocomplete="off"
+        />
+      </div>
+      <button class="tk-btn tk-btn-primary tk-text-analyze-btn" id="meal-text-analyze" type="button">
+        Analyze
+      </button>
+      <p class="tk-analyze-status" id="meal-text-status"></p>
     </div>
 
     <!-- SEARCH: text input + results -->
@@ -257,6 +277,41 @@
   }
   .tk-analyze-status.error { color: var(--rise-red-dark); }
   .tk-analyze-status.mock { color: var(--rise-neutral-400); font-style: italic; }
+
+  /* ----- Text fallback ----- */
+  .tk-text-fallback-cta {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    align-self: center;
+  }
+  .tk-text-fallback-cta:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-text-fallback-cta[hidden] { display: none !important; }
+
+  .tk-text-analyze-btn {
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+  .tk-text-analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   /* ----- Search ----- */
   .tk-search-wrap {
@@ -651,7 +706,7 @@
 </style>
 
 <script>
-  import { analyzeMealPhoto, type AnalyzedItem } from "../lib/analyze-meal";
+  import { analyzeMealPhoto, analyzeMealText, type AnalyzedItem } from "../lib/analyze-meal";
 
   type FoodRow = {
     id: string;
@@ -688,7 +743,7 @@
   const modal = () => document.getElementById("meal-modal") as HTMLDivElement | null;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
-  function setView(view: "choice" | "photo" | "search") {
+  function setView(view: "choice" | "photo" | "search" | "text-input") {
     document.querySelectorAll<HTMLElement>("#meal-modal [data-view]").forEach((el) => {
       el.toggleAttribute("hidden", el.dataset.view !== view);
     });
@@ -844,6 +899,9 @@
     setView("photo");
     setMsg("");
 
+    const notRightBtn = $("meal-not-right");
+    if (notRightBtn) notRightBtn.hidden = true;
+
     const reader = new FileReader();
     const dataUrl: string = await new Promise((resolve) => {
       reader.onload = () => resolve(String(reader.result || ""));
@@ -875,13 +933,78 @@
           status.className = "tk-analyze-status";
         }
       }
+      if (notRightBtn) notRightBtn.hidden = false;
     } catch (err: any) {
       console.error("analyze", err);
       if (status) {
         status.textContent = "Could not analyze photo. Search foods manually.";
         status.className = "tk-analyze-status error";
       }
+      if (notRightBtn) notRightBtn.hidden = false;
     }
+  }
+
+  async function handleTextAnalysis() {
+    const textInput = $("meal-text-input") as HTMLInputElement | null;
+    const status = $("meal-text-status");
+    const analyzeBtn = $("meal-text-analyze") as HTMLButtonElement | null;
+
+    const description = (textInput?.value || "").trim();
+    if (!description) {
+      if (status) {
+        status.textContent = "Type what you ate first";
+        status.className = "tk-analyze-status error";
+      }
+      return;
+    }
+
+    if (status) {
+      status.textContent = "Analyzing…";
+      status.className = "tk-analyze-status";
+    }
+    if (analyzeBtn) analyzeBtn.disabled = true;
+
+    try {
+      const result = await analyzeMealText(description);
+      state.items = result.items.slice();
+      renderItems();
+
+      const photoStatus = $("meal-analyze-status");
+      if (photoStatus) {
+        const count = state.items.length;
+        photoStatus.textContent = `AI found ${count} item${count === 1 ? "" : "s"} — tap any to adjust`;
+        photoStatus.className = "tk-analyze-status";
+      }
+
+      // If we have a photo, go back to photo view so user sees it with items below.
+      // Otherwise switch to choice so user sees the items list rendered under the footer.
+      if (state.photoDataUrl) {
+        setView("photo");
+        const notRightBtn = $("meal-not-right");
+        if (notRightBtn) notRightBtn.hidden = false;
+      } else {
+        setView("choice");
+      }
+    } catch (err: any) {
+      console.error("analyze text", err);
+      if (status) {
+        status.textContent = "Could not analyze. Try again or search manually.";
+        status.className = "tk-analyze-status error";
+      }
+    } finally {
+      if (analyzeBtn) analyzeBtn.disabled = false;
+    }
+  }
+
+  function showTextInput() {
+    setView("text-input");
+    const status = $("meal-text-status");
+    if (status) {
+      status.textContent = "";
+      status.className = "tk-analyze-status";
+    }
+    const textInput = $("meal-text-input") as HTMLInputElement | null;
+    setTimeout(() => textInput?.focus(), 30);
   }
 
   // --- Confirm + upload + save ------------------------------------------------
@@ -980,6 +1103,15 @@
     if (input) input.value = "";
     const results = $("meal-search-results");
     if (results) results.innerHTML = "";
+    const textInput = $("meal-text-input") as HTMLInputElement | null;
+    if (textInput) textInput.value = "";
+    const textStatus = $("meal-text-status");
+    if (textStatus) {
+      textStatus.textContent = "";
+      textStatus.className = "tk-analyze-status";
+    }
+    const notRightBtn = $("meal-not-right");
+    if (notRightBtn) notRightBtn.hidden = true;
     setMsg("");
     renderItems();
   }
@@ -1034,6 +1166,17 @@
 
     $("meal-add-more")?.addEventListener("click", showSearch);
     $("meal-confirm")?.addEventListener("click", confirmMeal);
+
+    $("meal-not-right")?.addEventListener("click", showTextInput);
+    $("meal-text-analyze")?.addEventListener("click", handleTextAnalysis);
+
+    const textInput = $("meal-text-input") as HTMLInputElement | null;
+    textInput?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleTextAnalysis();
+      }
+    });
 
     const photoInput = $("meal-photo-input") as HTMLInputElement | null;
     photoInput?.addEventListener("change", () => {

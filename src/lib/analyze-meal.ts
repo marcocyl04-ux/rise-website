@@ -1,6 +1,6 @@
-// Meal photo analyzer — client-side wrapper.
+// Meal analyzer — client-side wrapper.
 // Calls the Supabase Edge Function (analyze-meal) which uses OpenRouter
-// with a vision model to identify food from photos.
+// to identify food from photos OR text descriptions.
 // Falls back to mock if the edge function is unavailable.
 
 export type AnalyzedItem = {
@@ -16,6 +16,7 @@ export type AnalysisResult = {
   total_protein_g: number;
   mock: boolean;
   notice?: string;
+  source?: "photo" | "text";
 };
 
 // Mock meals for fallback when edge function is unavailable
@@ -50,33 +51,18 @@ const MOCK_MEALS: AnalyzedItem[][] = [
   ],
 ];
 
-function hashString(s: string): number {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) {
-    h = (h * 31 + s.charCodeAt(i)) | 0;
-  }
-  return Math.abs(h);
-}
-
 function sumProtein(items: AnalyzedItem[]): number {
   return Math.round(items.reduce((acc, it) => acc + it.protein_g, 0) * 10) / 10;
 }
 
-async function mockAnalysis(file: File): Promise<AnalysisResult> {
-  const buf = await file.slice(0, 4096).arrayBuffer();
-  const bytes = new Uint8Array(buf);
-  let fingerprint = "";
-  for (let i = 0; i < Math.min(64, bytes.length); i += 4) {
-    fingerprint += bytes[i].toString(16);
-  }
-  const idx = hashString(fingerprint + file.size) % MOCK_MEALS.length;
+function mockFallback(): AnalysisResult {
+  const idx = Math.floor(Math.random() * MOCK_MEALS.length);
   const items = MOCK_MEALS[idx].map((x) => ({ ...x }));
-  await new Promise((r) => setTimeout(r, 900));
   return {
     items,
     total_protein_g: sumProtein(items),
     mock: true,
-    notice: "Mock analysis (AI service unavailable)",
+    notice: "AI service unavailable — please try again or search manually",
   };
 }
 
@@ -92,7 +78,6 @@ function compressImage(file: File): Promise<string> {
       const MAX_DIM = 1024;
       let { width, height } = img;
 
-      // Scale down if larger than MAX_DIM
       if (width > MAX_DIM || height > MAX_DIM) {
         const scale = MAX_DIM / Math.max(width, height);
         width = Math.round(width * scale);
@@ -108,7 +93,6 @@ function compressImage(file: File): Promise<string> {
 
       ctx.drawImage(img, 0, 0, width, height);
 
-      // Export as JPEG, quality 0.8
       canvas.toBlob(
         (blob) => {
           if (!blob) { reject(new Error("Compression failed")); return; }
@@ -139,10 +123,9 @@ function compressImage(file: File): Promise<string> {
 // Public API: analyze a photo via Supabase Edge Function.
 export async function analyzeMealPhoto(file: File): Promise<AnalysisResult> {
   const sb = (window as any).supabaseClient;
-  if (!sb) return mockAnalysis(file);
+  if (!sb) return mockFallback();
 
   try {
-    // Compress image before sending (prevents body size limit errors)
     const imageBase64 = await compressImage(file);
 
     const { data, error } = await sb.functions.invoke("analyze-meal", {
@@ -151,7 +134,7 @@ export async function analyzeMealPhoto(file: File): Promise<AnalysisResult> {
 
     if (error) {
       console.warn("analyze-meal edge function error:", error);
-      return mockAnalysis(file);
+      return mockFallback();
     }
 
     if (data?.items && Array.isArray(data.items) && data.items.length > 0) {
@@ -159,12 +142,44 @@ export async function analyzeMealPhoto(file: File): Promise<AnalysisResult> {
         items: data.items,
         total_protein_g: data.total_protein_g ?? sumProtein(data.items),
         mock: false,
+        source: data.source || "photo",
       };
     }
 
-    return mockAnalysis(file);
+    return mockFallback();
   } catch (err) {
     console.warn("analyze-meal failed:", err);
-    return mockAnalysis(file);
+    return mockFallback();
+  }
+}
+
+// Public API: analyze a text description via Supabase Edge Function.
+export async function analyzeMealText(description: string): Promise<AnalysisResult> {
+  const sb = (window as any).supabaseClient;
+  if (!sb) return mockFallback();
+
+  try {
+    const { data, error } = await sb.functions.invoke("analyze-meal", {
+      body: { text: description },
+    });
+
+    if (error) {
+      console.warn("analyze-meal text error:", error);
+      return mockFallback();
+    }
+
+    if (data?.items && Array.isArray(data.items) && data.items.length > 0) {
+      return {
+        items: data.items,
+        total_protein_g: data.total_protein_g ?? sumProtein(data.items),
+        mock: false,
+        source: "text",
+      };
+    }
+
+    return mockFallback();
+  } catch (err) {
+    console.warn("analyze-meal text failed:", err);
+    return mockFallback();
   }
 }
