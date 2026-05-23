@@ -476,6 +476,8 @@ import Footer from "../../components/Footer.astro";
           id: user.id,
           email: user.email,
           full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
+          role: "athlete",
+          team_id: "rise-hk",
         });
       }
     } catch (err) {

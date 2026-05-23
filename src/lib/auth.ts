@@ -77,6 +77,8 @@ export async function ensureProfile(user: any) {
     id: user.id,
     email: user.email,
     full_name,
+    role: "athlete",
+    team_id: "rise-hk",
   });
   if (error) console.warn("profile insert", error);
 }
