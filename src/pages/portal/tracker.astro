@@ -165,7 +165,10 @@ import MealLogModal from "../../components/MealLogModal.astro";
               <span class="tk-past-badge" id="app-past-badge" hidden data-i18n="tracker.pastDay">Past day</span>
             </div>
           </div>
-          <a class="tk-btn tk-btn-ghost tk-btn-small" href="/portal" data-i18n="tracker.portal">Portal</a>
+          <div class="tk-topbar-actions">
+            <a class="tk-btn tk-btn-ghost tk-btn-small" href="/portal" data-i18n="tracker.portal">Portal</a>
+            <button class="tk-btn tk-btn-ghost tk-btn-small" type="button" id="tracker-logout-btn" data-i18n="common.logout">Log out</button>
+          </div>
         </header>
 
         <div class="tk-target-card">
@@ -677,6 +680,12 @@ import MealLogModal from "../../components/MealLogModal.astro";
     gap: 4px;
     min-width: 0;
     flex: 1;
+  }
+  .tk-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
   }
   .tk-date-nav {
     display: flex;
@@ -2489,4 +2498,11 @@ import MealLogModal from "../../components/MealLogModal.astro";
   wireDateNav();
   wireLangToggle();
   routeTracker();
+
+  // Logout handler
+  document.getElementById("tracker-logout-btn")?.addEventListener("click", async () => {
+    const sb = (window as any).supabaseClient;
+    if (sb) await sb.auth.signOut();
+    window.location.href = "/";
+  });
 </script>

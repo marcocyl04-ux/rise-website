@@ -46,7 +46,10 @@ import Footer from "../../components/Footer.astro";
     <div class="container">
 
       <header class="coach-header">
-        <p class="coach-eyebrow" data-i18n="coach.eyebrow">RISE Coach</p>
+        <div class="coach-header-top">
+          <p class="coach-eyebrow" data-i18n="coach.eyebrow">RISE Coach</p>
+          <button type="button" class="portal-logout-btn" id="coach-logout-btn" data-i18n="common.logout">Log out</button>
+        </div>
         <h1 class="coach-title" id="coach-title" data-i18n="coach.title">Coach Dashboard</h1>
         <div class="coach-meta">
           <span class="coach-meta-item" id="coach-team-name" data-i18n-replace>Team</span>
@@ -182,6 +185,12 @@ import Footer from "../../components/Footer.astro";
   .coach-header {
     margin-bottom: var(--space-7);
   }
+  .coach-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+  }
   .coach-eyebrow {
     font-family: var(--font-body);
     font-size: 0.75rem;
@@ -189,7 +198,23 @@ import Footer from "../../components/Footer.astro";
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--rise-red);
-    margin: 0 0 var(--space-2);
+    margin: 0;
+  }
+  .portal-logout-btn {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    background: none;
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 999px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .portal-logout-btn:hover {
+    color: var(--rise-red);
+    border-color: var(--rise-red);
   }
   .coach-title {
     font-family: var(--font-heading);
@@ -1507,4 +1532,11 @@ import Footer from "../../components/Footer.astro";
   }
 
   initCoach();
+
+  // Logout handler
+  document.getElementById("coach-logout-btn")?.addEventListener("click", async () => {
+    const sb = (window as any).supabaseClient;
+    if (sb) await sb.auth.signOut();
+    window.location.href = "/";
+  });
 </script>

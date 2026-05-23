@@ -39,7 +39,10 @@ import Footer from "../../components/Footer.astro";
   <section id="portal-dashboard" class="portal-dashboard section" hidden>
     <div class="container">
       <header class="portal-header">
-        <p class="portal-eyebrow" data-i18n="portal.eyebrow">RISE Portal</p>
+        <div class="portal-header-top">
+          <p class="portal-eyebrow" data-i18n="portal.eyebrow">RISE Portal</p>
+          <button type="button" class="portal-logout-btn" id="portal-logout-btn" data-i18n="common.logout">Log out</button>
+        </div>
         <h1 class="portal-title" id="portal-hello" data-i18n="portal.welcome">Welcome</h1>
         <p class="portal-sub" id="portal-sub" data-i18n="portal.subPick">Pick a tool to get started.</p>
         <button type="button" class="portal-install-btn" id="portal-install-btn" hidden>
@@ -198,6 +201,12 @@ import Footer from "../../components/Footer.astro";
   .portal-header {
     margin-bottom: var(--space-8);
   }
+  .portal-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+  }
   .portal-eyebrow {
     font-family: var(--font-body);
     font-size: 0.75rem;
@@ -205,7 +214,23 @@ import Footer from "../../components/Footer.astro";
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--rise-red);
-    margin: 0 0 var(--space-2);
+    margin: 0;
+  }
+  .portal-logout-btn {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    background: none;
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 999px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .portal-logout-btn:hover {
+    color: var(--rise-red);
+    border-color: var(--rise-red);
   }
   .portal-title {
     font-family: var(--font-heading);
@@ -545,4 +570,11 @@ import Footer from "../../components/Footer.astro";
   wireLangToggle();
   maybeShowInstallHint();
   initPortal();
+
+  // Logout handler
+  document.getElementById("portal-logout-btn")?.addEventListener("click", async () => {
+    const sb = (window as any).supabaseClient;
+    if (sb) await sb.auth.signOut();
+    window.location.href = "/";
+  });
 </script>
