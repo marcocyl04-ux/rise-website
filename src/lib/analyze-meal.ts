@@ -1,6 +1,6 @@
 // Meal photo analyzer — client-side wrapper.
 // Calls the Supabase Edge Function (analyze-meal) which uses OpenRouter
-// with GPT-4o-mini vision to identify food from photos.
+// with a vision model to identify food from photos.
 // Falls back to mock if the edge function is unavailable.
 
 export type AnalyzedItem = {
@@ -80,17 +80,59 @@ async function mockAnalysis(file: File): Promise<AnalysisResult> {
   };
 }
 
-function fileToBase64(file: File): Promise<string> {
+// Compress image before sending: resize to max 1024px, JPEG quality 0.8
+function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      // Strip the data:image/...;base64, prefix
-      const base64 = result.split(",")[1] || "";
-      resolve(base64);
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      const MAX_DIM = 1024;
+      let { width, height } = img;
+
+      // Scale down if larger than MAX_DIM
+      if (width > MAX_DIM || height > MAX_DIM) {
+        const scale = MAX_DIM / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { reject(new Error("Canvas not supported")); return; }
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Export as JPEG, quality 0.8
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { reject(new Error("Compression failed")); return; }
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result as string;
+            const base64 = result.split(",")[1] || "";
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        },
+        "image/jpeg",
+        0.8
+      );
     };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image"));
+    };
+
+    img.src = url;
   });
 }
 
@@ -100,7 +142,9 @@ export async function analyzeMealPhoto(file: File): Promise<AnalysisResult> {
   if (!sb) return mockAnalysis(file);
 
   try {
-    const imageBase64 = await fileToBase64(file);
+    // Compress image before sending (prevents body size limit errors)
+    const imageBase64 = await compressImage(file);
+
     const { data, error } = await sb.functions.invoke("analyze-meal", {
       body: { image: imageBase64 },
     });
