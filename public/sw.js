@@ -1,5 +1,5 @@
 // RISE Service Worker — bump CACHE_VERSION on each deploy to invalidate caches.
-const CACHE_VERSION = "rise-v6-2026-05-24";
+const CACHE_VERSION = "rise-v7-2026-05-24";
 const STATIC_CACHE = `rise-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `rise-runtime-${CACHE_VERSION}`;
 
