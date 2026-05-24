@@ -89,15 +89,15 @@ import Footer from "../../components/Footer.astro";
           <p class="coach-drawer-eyebrow" id="coach-drawer-eyebrow" data-i18n-replace>Athlete</p>
           <h2 class="coach-drawer-name" id="coach-drawer-name" data-i18n-replace>—</h2>
         </div>
-        <div class="coach-drawer-head-actions">
-          <button class="coach-drawer-dl-btn" type="button" id="coach-drawer-dl-btn" data-i18n="coach.drawer.downloadReport">Download Report</button>
-          <button class="coach-drawer-close" type="button" id="coach-drawer-close" aria-label="Close" data-i18n-attr="common.close:aria-label">
+        <button class="coach-drawer-close" type="button" id="coach-drawer-close" aria-label="Close" data-i18n-attr="common.close:aria-label">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M6 6l12 12M18 6l-12 12" />
           </svg>
         </button>
-        </div>
       </header>
+      <div class="coach-drawer-dl-wrap">
+        <button class="coach-drawer-dl-btn" type="button" id="coach-drawer-dl-btn" data-i18n="coach.drawer.downloadReport">Download Report</button>
+      </div>
       <div class="coach-drawer-body" id="coach-drawer-body" data-i18n-replace></div>
     </div>
   </div>
@@ -508,24 +508,23 @@ import Footer from "../../components/Footer.astro";
     padding: var(--space-5);
     border-bottom: 1px solid var(--rise-neutral-100);
   }
-  .coach-drawer-head-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-shrink: 0;
+  .coach-drawer-dl-wrap {
+    padding: 10px var(--space-5);
+    border-bottom: 1px solid var(--rise-neutral-100);
   }
   .coach-drawer-dl-btn {
     background: var(--rise-red);
     color: var(--rise-white);
     border: none;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 6px;
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     transition: background 0.15s;
+    width: 100%;
   }
   .coach-drawer-dl-btn:hover {
     background: #b0151a;
@@ -598,6 +597,17 @@ import Footer from "../../components/Footer.astro";
     color: var(--rise-neutral-400);
     padding: 4px 2px;
     min-height: 62px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .coach-grid-cell:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .coach-grid-cell:focus-visible {
+    outline: 2px solid var(--rise-red);
+    outline-offset: 2px;
   }
   .coach-grid-cell strong {
     font-size: 0.85rem;
@@ -611,13 +621,41 @@ import Footer from "../../components/Footer.astro";
     opacity: 0.85;
     margin-top: 1px;
   }
-  .coach-grid-cell-macros {
-    font-size: 0.52rem;
-    line-height: 1.2;
-    text-align: center;
-    margin-top: 2px;
-    opacity: 0.75;
-    word-break: break-all;
+  /* Macro detail popover below grid */
+  .coach-grid-macro-detail {
+    margin-top: 8px;
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    display: none;
+  }
+  .coach-grid-macro-detail[data-active] {
+    display: block;
+  }
+  .coach-grid-macro-detail-date {
+    font-weight: 600;
+    color: var(--rise-black);
+    margin-bottom: 6px;
+    font-size: 0.825rem;
+  }
+  .coach-grid-macro-detail-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .coach-grid-macro-detail-item {
+    background: var(--rise-neutral-50);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    color: var(--rise-neutral-600);
+  }
+  .coach-grid-macro-detail-item strong {
+    color: var(--rise-black);
+    font-weight: 600;
   }
   .coach-grid-l0 { background: var(--rise-neutral-100); }
   .coach-grid-l1 { background: rgba(211, 25, 31, 0.18); }
@@ -1377,14 +1415,11 @@ import Footer from "../../components/Footer.astro";
         const f = fatByDay[d.iso] || 0;
         const s = sugarByDay[d.iso] || 0;
         const level = c === 0 ? 0 : c <= 1 ? 1 : c <= 2 ? 2 : c <= 3 ? 3 : 4;
-        const macroLine = c > 0
-          ? `<span class="coach-grid-cell-macros">P:${p}g C:${cal}kcal F:${f}g S:${s}g</span>`
-          : `<span class="coach-grid-cell-macros">—</span>`;
-        return `<div class="coach-grid-cell coach-grid-l${level}" title="${d.iso}: ${c} meals, ${p}g protein, ${cal}kcal, ${f}g fat, ${s}g sugar">
+        const dateLabel = isoToDate(d.iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+        return `<button class="coach-grid-cell coach-grid-l${level}" data-iso="${d.iso}" data-p="${p}" data-cal="${cal}" data-f="${f}" data-s="${s}" data-c="${c}" title="${dateLabel}: ${c} meals">
           <strong>${c}</strong>
           <span class="coach-grid-cell-date">${d.label}</span>
-          ${macroLine}
-        </div>`;
+        </button>`;
       })
       .join("");
 
@@ -1453,6 +1488,7 @@ import Footer from "../../components/Footer.astro";
       <div class="coach-drawer-section">
         <h3 class="coach-section-title">${t("coach.drawer.last7days")}</h3>
         <div class="coach-grid">${gridHtml}</div>
+        <div class="coach-grid-macro-detail" id="coach-grid-macro-detail"></div>
       </div>
 
       <div class="coach-drawer-section">
@@ -1474,6 +1510,36 @@ import Footer from "../../components/Footer.astro";
         ${baselineHtml}
       </div>
     `;
+
+    // Wire grid cell clicks for macro detail popover
+    const gridDetail = body.querySelector<HTMLDivElement>("#coach-grid-macro-detail");
+    body.querySelectorAll<HTMLButtonElement>(".coach-grid-cell").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!gridDetail) return;
+        const iso = btn.getAttribute("data-iso");
+        const currentActive = gridDetail.getAttribute("data-active");
+        if (currentActive === iso) {
+          gridDetail.removeAttribute("data-active");
+        } else {
+          const p = btn.getAttribute("data-p") || "0";
+          const cal = btn.getAttribute("data-cal") || "0";
+          const f = btn.getAttribute("data-f") || "0";
+          const s = btn.getAttribute("data-s") || "0";
+          const c = btn.getAttribute("data-c") || "0";
+          const dateLabel = iso ? isoToDate(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", weekday: "short" }) : "";
+          gridDetail.innerHTML = `
+            <div class="coach-grid-macro-detail-date">${dateLabel} — ${c} meals</div>
+            <div class="coach-grid-macro-detail-row">
+              <span class="coach-grid-macro-detail-item">Protein: <strong>${p}g</strong></span>
+              <span class="coach-grid-macro-detail-item">Calories: <strong>${cal}kcal</strong></span>
+              <span class="coach-grid-macro-detail-item">Fat: <strong>${f}g</strong></span>
+              <span class="coach-grid-macro-detail-item">Sugar: <strong>${s}g</strong></span>
+            </div>
+          `;
+          gridDetail.setAttribute("data-active", iso!);
+        }
+      });
+    });
 
     // Wire chart toggle + render chart
     body.querySelectorAll<HTMLButtonElement>(".coach-chart-btn").forEach((btn) => {
