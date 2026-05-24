@@ -1,34 +1,39 @@
 # RISE Nutrition Tracker — Session State
 
 ## Current Status
-MEAL LOGGING REFINEMENT PLAN COMPLETE. 13 items across 3 phases. Plan approved. Ready to build Phase 1 next session.
+PHASE 1 COMPLETE + DEPLOYED. Meal logging refinement items 1.1, 1.2, 1.3 built, tested by Marco, working. Ready for Phase 2 next session.
 
 ## Session Log (May 24, 2026)
 
 ### What happened:
-- Discussed what's left for the nutrition tracker
-- Marco identified 3 core UX problems from real usage:
-  1. Text input buried behind photo upload
-  2. Meal slot overwrites (5pm chicken + 7pm pasta = chicken gone)
-  3. No portion editing
-- Investigated meal logging code: confirmed all 3 issues + found 10 more friction points
-- Investigated AI costs: text = $0.00016/analysis, monthly total ~$2 for 15 users
-- Decided to simplify input: Photo, Upload, Text to AI (kill Search + Protein Shake)
-- Slots become additive: append items, don't replace
-- Portion editing via re-type to AI (no stepper UI)
-- Wrote formal plan: 3 phases, 13 items, full verification criteria
+- Executed Phase 1 of Meal Logging Refinement Plan (3 items)
+- 1.1: Simplified input to 3 buttons (Photo, Upload, Describe your meal). Removed Search + Protein Shake buttons + all related JS/HTML (~200 lines removed)
+- 1.2: Additive slots. `addMode` flag in modal state. Opening a logged slot pre-populates items from DB.
+- 1.3: Add vs Correct mode. New photo/text appends when addMode=true, replaces when addMode=false.
+- Bug fix: after photo/text analysis, modal returns to choice screen (was stuck in photo view, preventing second photo)
+- Fixed stale error messages referencing removed Search feature
+- Committed macros upgrade (656 lines, was uncommitted from previous session)
+- Deployed to Vercel, service worker bumped to v5
+- Marco tested on phone, confirmed working
 
-### Plan file:
-- /Users/marcol04/Desktop/rise-website/.hermes/plans/meal-logging-refinement.md
-- Vault copy: /Users/marcol04/Documents/openclaw/RISE Advancement/Meal Logging Refinement Plan.md
+### Commits:
+- 48ecdde: Macros upgrade (protein/cal/fat/sugar on all items)
+- 014315a: Phase 1 — 3-button input, additive slots, add vs correct mode
+- 5acf9c8: Bump service worker cache to v5
+- 744fafb: Fix — return to choice screen after analysis
 
 ### Next session:
-Build Phase 1 (structural core):
-- 1.1: Simplify input to 3 paths (Photo, Upload, Text)
-- 1.2: Additive slots (append, don't replace)
-- 1.3: Portion editing via re-type to AI
+Build Phase 2 (UX polish, all independent):
+- 2.1: Unlock past-day logging
+- 2.2: Discard warning on close
+- 2.3: Cancel during AI analysis
+- 2.4: Handle silent photo upload failure
+- 2.5: Save loading spinner
+- 2.6: Repeat yesterday context
+- 2.7: Text input guidance
+- 2.8: Mock data visual marker
 
-After Phase 1 is built, tested, and deployed → Phase 2 (UX polish) → Phase 3 (performance).
+After Phase 2 → Phase 3 (performance + reliability).
 
 ## Deferred Work (future sessions)
 - One-tap repeat of yesterday's meals
@@ -44,7 +49,7 @@ After Phase 1 is built, tested, and deployed → Phase 2 (UX polish) → Phase 3
 - Vercel: https://riseadvancement.com (project rise-website)
 - Supabase: zeczlwypqqvvpraosodv.supabase.co
 - Edge functions: analyze-meal (Gemini 2.5 Flash photos, MiMo text), ai-feedback (DeepSeek V3), daily-summary (DeepSeek V3)
-- Service worker: cache v4
+- Service worker: cache v5
 
 ## Credentials
 - Supabase URL: https://zeczlwypqqvvpraosodv.supabase.co
@@ -57,5 +62,5 @@ After Phase 1 is built, tested, and deployed → Phase 2 (UX polish) → Phase 3
 - Meal Logging Plan: .hermes/plans/meal-logging-refinement.md
 - Edge Functions: supabase/functions/{ai-feedback,daily-summary,analyze-meal}/
 - i18n: src/lib/i18n.ts (200+ keys, EN + ZH Traditional)
-- Vault: ~/Documents/openclaw/RISE Advancement/RISE Nutrition Tracker.md
+- Vault: ~/Documents/openclaw/RISE Advancement/Meal Logging Refinement Plan.md
 - Session State: ~/Desktop/rise-website/SESSION_STATE.md
