@@ -1246,6 +1246,9 @@ import Footer from "../../components/Footer.astro";
               const fb = m.ai_feedback
                 ? `<div class="coach-meal-fb">${escapeHtml(m.ai_feedback)}</div>`
                 : "";
+              const cal = Math.round(m.total_calories_kcal || 0);
+              const fat = Math.round((m.total_fat_g || 0) * 10) / 10;
+              const sugar = Math.round((m.total_sugar_g || 0) * 10) / 10;
               return `
               <div class="coach-meal">
                 <div class="coach-meal-head">
@@ -1253,7 +1256,7 @@ import Footer from "../../components/Footer.astro";
                   <span class="coach-meal-date">${created.toLocaleDateString(undefined, { month: "short", day: "numeric" })} • ${created.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                 </div>
                 <div class="coach-meal-foods">${foods || `<em>${t("coach.drawer.noItems")}</em>`}</div>
-                <div class="coach-meal-protein">${Math.round(m.total_protein_g)}g protein</div>
+                <div class="coach-meal-protein">${Math.round(m.total_protein_g)}g protein · ${cal}kcal · ${fat}g fat · ${sugar}g sugar</div>
                 ${fb}
               </div>`;
             })

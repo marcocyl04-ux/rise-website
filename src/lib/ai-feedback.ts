@@ -9,6 +9,9 @@ export type FoodItem = {
   name_zh?: string;
   portion_label?: string;
   protein_g?: number;
+  calories_kcal?: number;
+  fat_g?: number;
+  sugar_g?: number;
 };
 
 export type FeedbackContext = {

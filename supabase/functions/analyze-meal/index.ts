@@ -1,15 +1,18 @@
 // Supabase Edge Function: analyze-meal
-// Accepts either a photo (base64) OR a text description.
-// Calls OpenRouter model and returns food items with protein estimates.
+// Photo: Google Gemini API directly (bypasses OpenRouter vision block)
+// Text: OpenRouter MiMo (cheap, fast)
 //
 // Deploy:
 //   supabase functions deploy analyze-meal
-// (OPENROUTER_API_KEY already set as Supabase secret)
+// Secrets needed:
+//   OPENROUTER_API_KEY  — for text analysis (MiMo)
+//   GOOGLE_AI_API_KEY   — for photo analysis (Gemini)
 
 // deno-lint-ignore-file no-explicit-any
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "xiaomi/mimo-v2.5";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+const MODEL_TEXT = "xiaomi/mimo-v2.5";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -23,6 +26,9 @@ type AnalyzedItem = {
   name_zh: string;
   portion_label: string;
   protein_g: number;
+  calories_kcal: number;
+  fat_g: number;
+  sugar_g: number;
   confidence: number;
 };
 
@@ -35,21 +41,114 @@ Return ONLY a JSON array (no markdown, no explanation). Each element:
   "name_zh": "Traditional Chinese name (Cantonese style)",
   "portion_label": "portion estimate (e.g. 1 bowl, 1 palm, 2 pieces)",
   "protein_g": estimated protein in grams (number),
+  "calories_kcal": estimated calories in kilocalories (number),
+  "fat_g": estimated fat in grams (number),
+  "sugar_g": estimated sugar in grams (number),
   "confidence": 0.0-1.0 how confident you are
 }
 
 Rules:
 - Be realistic with portions (HK teen meal sizes)
-- Round protein to nearest 0.5g
+- Round protein to nearest 0.5g; round calories to nearest 10 kcal; round fat and sugar to nearest 0.5g
 - Include ALL food items mentioned or visible
 - For HK-style dishes, use common Cantonese names
 - If something is unclear, use lower confidence
-- If the input is not food or makes no sense, return: [{"name":"Unclear","name_zh":"无法辨认","portion_label":"N/A","protein_g":0,"confidence":0}]`;
+- If the input is not food or makes no sense, return: [{"name":"Unclear","name_zh":"无法辨认","portion_label":"N/A","protein_g":0,"calories_kcal":0,"fat_g":0,"sugar_g":0,"confidence":0}]`;
 
   if (mode === "image") {
-    return `Analyze this meal photo and identify each food item with an estimated protein amount.\n\n${base}`;
+    return `Analyze this meal photo and identify each food item with estimated protein, calories, fat, and sugar.\n\n${base}`;
   }
-  return `The user typed what they ate. Break it down into individual food items with estimated protein amounts.\n\n${base}`;
+  return `The user typed what they ate. Break it down into individual food items with estimated protein, calories, fat, and sugar.\n\n${base}`;
+}
+
+// Call Google Gemini API directly for photo analysis
+async function analyzeWithGemini(imageBase64: string, apiKey: string): Promise<any> {
+  const prompt = buildPrompt("image");
+
+  const res = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{
+        parts: [
+          { text: prompt },
+          { inline_data: { mime_type: "image/jpeg", data: imageBase64 } },
+        ],
+      }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 4000,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("Gemini error:", res.status, errText);
+    throw new Error(`Gemini API error ${res.status}: ${errText}`);
+  }
+
+  const data = await res.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "[]";
+  return text;
+}
+
+// Call OpenRouter for text analysis (MiMo)
+async function analyzeWithOpenRouter(textDescription: string, apiKey: string): Promise<any> {
+  const prompt = buildPrompt("text");
+
+  const content: any[] = [{
+    type: "text",
+    text: `${prompt}\n\nUser said: "${textDescription}"`,
+  }];
+
+  const res = await fetch(OPENROUTER_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: MODEL_TEXT,
+      messages: [{ role: "user", content }],
+      max_tokens: 4000,
+      temperature: 0.2,
+      reasoning: { exclude: true },
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("OpenRouter error:", res.status, errText);
+    throw new Error(`OpenRouter error ${res.status}: ${errText}`);
+  }
+
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content ?? "[]";
+}
+
+function parseItems(raw: string): AnalyzedItem[] {
+  let cleaned = raw.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+  }
+  try {
+    const items = JSON.parse(cleaned);
+    return Array.isArray(items) ? items : [];
+  } catch {
+    console.error("Parse failed:", raw);
+    return [];
+  }
+}
+
+function totals(items: AnalyzedItem[]) {
+  const round1 = (n: number) => Math.round(n * 10) / 10;
+  return {
+    total_protein_g: round1(items.reduce((s, i) => s + (i.protein_g || 0), 0)),
+    total_calories_kcal: Math.round(items.reduce((s, i) => s + (i.calories_kcal || 0), 0)),
+    total_fat_g: round1(items.reduce((s, i) => s + (i.fat_g || 0), 0)),
+    total_sugar_g: round1(items.reduce((s, i) => s + (i.sugar_g || 0), 0)),
+  };
 }
 
 Deno.serve(async (req) => {
@@ -58,19 +157,13 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const apiKey = Deno.env.get("OPENROUTER_API_KEY");
-    if (!apiKey) {
-      return new Response(
-        JSON.stringify({ error: "OPENROUTER_API_KEY not configured" }),
-        { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
-      );
-    }
+    const openrouterKey = Deno.env.get("OPENROUTER_API_KEY");
+    const googleKey = Deno.env.get("GOOGLE_AI_API_KEY");
 
     const body = await req.json();
     const imageBase64: string | undefined = body?.image;
     const textDescription: string | undefined = body?.text;
 
-    // Must have either image or text
     if (!imageBase64 && !textDescription) {
       return new Response(
         JSON.stringify({ error: "Missing 'image' (base64) or 'text' field" }),
@@ -79,66 +172,38 @@ Deno.serve(async (req) => {
     }
 
     const isImage = !!imageBase64;
-    const prompt = buildPrompt(isImage ? "image" : "text");
-
-    // Build message content
-    const content: any[] = [{ type: "text", text: prompt }];
+    let rawResponse: string;
 
     if (isImage) {
-      content.push({
-        type: "image_url",
-        image_url: { url: `data:image/jpeg;base64,${imageBase64}` },
-      });
+      // Photo: use Google Gemini directly
+      if (!googleKey) {
+        return new Response(
+          JSON.stringify({ error: "GOOGLE_AI_API_KEY not configured" }),
+          { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+        );
+      }
+      rawResponse = await analyzeWithGemini(imageBase64, googleKey);
     } else {
-      // Append user's text description to the prompt
-      content[0].text += `\n\nUser said: "${textDescription}"`;
+      // Text: use OpenRouter MiMo
+      if (!openrouterKey) {
+        return new Response(
+          JSON.stringify({ error: "OPENROUTER_API_KEY not configured" }),
+          { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+        );
+      }
+      rawResponse = await analyzeWithOpenRouter(textDescription!, openrouterKey);
     }
 
-    const openrouterRes = await fetch(OPENROUTER_URL, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: [{ role: "user", content }],
-        max_tokens: 1000,
-        temperature: 0.2,
-      }),
-    });
-
-    if (!openrouterRes.ok) {
-      const errText = await openrouterRes.text();
-      console.error("OpenRouter error:", openrouterRes.status, errText);
-      return new Response(
-        JSON.stringify({ error: "Vision API error", detail: errText }),
-        { status: 502, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
-      );
-    }
-
-    const data = await openrouterRes.json();
-    const responseContent: string = data?.choices?.[0]?.message?.content ?? "[]";
-
-    // Parse the JSON from the response (strip markdown fences if present)
-    let cleaned = responseContent.trim();
-    if (cleaned.startsWith("```")) {
-      cleaned = cleaned.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
-    }
-
-    let items: AnalyzedItem[];
-    try {
-      items = JSON.parse(cleaned);
-      if (!Array.isArray(items)) items = [];
-    } catch {
-      console.error("Parse failed:", responseContent);
-      items = [];
-    }
-
-    const total = Math.round(items.reduce((s: number, i: any) => s + (i.protein_g || 0), 0) * 10) / 10;
+    const items = parseItems(rawResponse);
+    const t = totals(items);
 
     return new Response(
-      JSON.stringify({ items, total_protein_g: total, mock: false, source: isImage ? "photo" : "text" }),
+      JSON.stringify({
+        items,
+        ...t,
+        mock: false,
+        source: isImage ? "photo" : "text",
+      }),
       { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
     );
   } catch (err) {

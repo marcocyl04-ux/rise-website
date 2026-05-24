@@ -181,15 +181,52 @@ import MealLogModal from "../../components/MealLogModal.astro";
 
         <div class="tk-progress-card" id="app-progress-card">
           <div class="tk-progress-head">
-            <span class="tk-progress-label" data-i18n="tracker.progress.label">Today's progress</span>
-            <span class="tk-progress-amounts">
+            <span class="tk-progress-label" data-i18n="tracker.macros.title">Today's Macros</span>
+          </div>
+          <!-- Protein -->
+          <div class="tk-macro-row" id="macro-row-protein">
+            <span class="tk-macro-label" data-i18n="tracker.progress.label">Protein</span>
+            <span class="tk-macro-amounts">
               <strong id="app-progress-current">0</strong>g / <span id="app-progress-target">0</span>g
             </span>
+            <div class="tk-macro-track">
+              <div class="tk-macro-fill" id="app-progress-fill"></div>
+            </div>
+            <span class="tk-macro-pct" id="app-progress-pct">0%</span>
           </div>
-          <div class="tk-progress-track">
-            <div class="tk-progress-fill" id="app-progress-fill"></div>
+          <!-- Calories -->
+          <div class="tk-macro-row tk-macro-secondary" id="macro-row-calories">
+            <span class="tk-macro-label" data-i18n="tracker.macros.calories">Calories</span>
+            <span class="tk-macro-amounts">
+              <strong id="app-cal-current">0</strong> / <span id="app-cal-target">0</span> kcal
+            </span>
+            <div class="tk-macro-track">
+              <div class="tk-macro-fill" id="app-cal-fill"></div>
+            </div>
+            <span class="tk-macro-pct" id="app-cal-pct">0%</span>
           </div>
-          <span class="tk-progress-pct" id="app-progress-pct">0%</span>
+          <!-- Fat -->
+          <div class="tk-macro-row tk-macro-secondary" id="macro-row-fat">
+            <span class="tk-macro-label" data-i18n="tracker.macros.fat">Fat</span>
+            <span class="tk-macro-amounts">
+              <strong id="app-fat-current">0</strong>g / <span id="app-fat-target">0</span>g
+            </span>
+            <div class="tk-macro-track">
+              <div class="tk-macro-fill" id="app-fat-fill"></div>
+            </div>
+            <span class="tk-macro-pct" id="app-fat-pct">0%</span>
+          </div>
+          <!-- Sugar (max, not target) -->
+          <div class="tk-macro-row tk-macro-secondary" id="macro-row-sugar">
+            <span class="tk-macro-label"><span data-i18n="tracker.macros.sugar">Sugar</span> <span data-i18n="tracker.macros.maxLabel">(max)</span></span>
+            <span class="tk-macro-amounts">
+              <strong id="app-sugar-current">0</strong>g / <span id="app-sugar-target">0</span>g
+            </span>
+            <div class="tk-macro-track">
+              <div class="tk-macro-fill" id="app-sugar-fill"></div>
+            </div>
+            <span class="tk-macro-pct" id="app-sugar-pct">0%</span>
+          </div>
         </div>
 
         <div class="tk-weight-card" id="app-weight-card">
@@ -604,7 +641,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     opacity: 0.9;
   }
 
-  /* ----- Daily progress bar ----- */
+  /* ----- Daily macro progress card ----- */
   .tk-progress-card {
     background: var(--rise-white);
     border: 1px solid var(--rise-neutral-100);
@@ -613,14 +650,12 @@ import MealLogModal from "../../components/MealLogModal.astro";
     margin-bottom: var(--space-6);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     box-shadow: 0 4px 12px rgba(18, 18, 18, 0.04);
   }
   .tk-progress-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rise-neutral-100);
   }
   .tk-progress-label {
     font-family: var(--font-body);
@@ -630,37 +665,85 @@ import MealLogModal from "../../components/MealLogModal.astro";
     letter-spacing: 0.1em;
     font-weight: 600;
   }
-  .tk-progress-amounts {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--rise-neutral-700);
+
+  /* --- Macro row --- */
+  .tk-macro-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 2px 10px;
   }
-  .tk-progress-amounts strong {
+  .tk-macro-label {
     font-family: var(--font-heading);
-    font-size: 1.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rise-black);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .tk-macro-amounts {
+    grid-column: 3;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--rise-neutral-500);
+    white-space: nowrap;
+    text-align: right;
+  }
+  .tk-macro-amounts strong {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--rise-red);
   }
-  .tk-progress-track {
-    width: 100%;
-    height: 10px;
+  .tk-macro-track {
+    grid-column: 1 / span 2;
+    height: 8px;
     background: var(--rise-neutral-100);
     border-radius: 999px;
     overflow: hidden;
   }
-  .tk-progress-fill {
+  .tk-macro-fill {
     height: 100%;
     width: 0%;
     background: linear-gradient(90deg, var(--rise-red), var(--rise-red-dark));
     border-radius: 999px;
     transition: width 0.4s ease;
   }
-  .tk-progress-pct {
-    align-self: flex-end;
+  .tk-macro-pct {
+    grid-column: 3;
     font-family: var(--font-body);
-    font-size: 0.8rem;
-    color: var(--rise-neutral-500);
+    font-size: 0.75rem;
+    color: var(--rise-neutral-400);
     font-weight: 600;
+    text-align: right;
+  }
+  /* Secondary macro rows are smaller */
+  .tk-macro-secondary .tk-macro-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--rise-neutral-600);
+  }
+  .tk-macro-secondary .tk-macro-amounts {
+    font-size: 0.75rem;
+  }
+  .tk-macro-secondary .tk-macro-amounts strong {
+    font-size: 0.9rem;
+  }
+  .tk-macro-secondary .tk-macro-track {
+    height: 5px;
+  }
+  .tk-macro-secondary .tk-macro-pct {
+    font-size: 0.7rem;
+  }
+  /* Warning state — over limit */
+  .tk-macro-over .tk-macro-fill {
+    background: linear-gradient(90deg, #e67e22, #d35400);
+  }
+  .tk-macro-over .tk-macro-amounts strong {
+    color: #e67e22;
   }
 
   .tk-section-title {
@@ -1438,6 +1521,25 @@ import MealLogModal from "../../components/MealLogModal.astro";
     return Math.round(protein * 10) / 10;
   }
 
+  function calcCalorieTarget(weightKg: number, goal: string): number {
+    const base = weightKg * 30;
+    const activity = 1.5;
+    let adjustment = 0;
+    if (goal === "muscle_gain") adjustment = 200;
+    else if (goal === "fat_loss") adjustment = -300;
+    else if (goal === "recomposition") adjustment = -100;
+    const target = Math.round(base * activity + adjustment);
+    return Math.max(1800, Math.min(4000, target));
+  }
+
+  function calcFatTarget(calories: number): number {
+    return Math.round((calories * 0.30 / 9) / 5) * 5;
+  }
+
+  function calcSugarMax(calories: number): number {
+    return Math.round((calories * 0.10 / 4) / 5) * 5;
+  }
+
   // ===== State =====
   const intakeState = {
     step: 1,
@@ -1505,6 +1607,9 @@ import MealLogModal from "../../components/MealLogModal.astro";
   // Current daily target (cached from loadAppShell so the progress bar can
   // re-render after a meal-logged event without re-fetching).
   let currentTarget = 0;
+  let currentCalorieTarget = 0;
+  let currentFatTarget = 0;
+  let currentSugarMax = 0;
 
   // Cached context for AI feedback so we don't refetch baseline/profile on
   // every meal log.
@@ -1748,6 +1853,58 @@ import MealLogModal from "../../components/MealLogModal.astro";
     if (pctEl) pctEl.textContent = rawPct + "%";
   }
 
+  function updateAllProgressBars(
+    currentCal: number, targetCal: number,
+    currentFat: number, targetFat: number,
+    currentSugar: number, maxSugar: number
+  ) {
+    // Protein (already updated by updateProgressBar)
+    // Calories
+    const calCurEl = document.getElementById("app-cal-current");
+    const calTargetEl = document.getElementById("app-cal-target");
+    const calFillEl = document.getElementById("app-cal-fill") as HTMLElement | null;
+    const calPctEl = document.getElementById("app-cal-pct");
+    const calCurrent = Math.round(currentCal);
+    const calTarget = Math.max(0, Math.round(targetCal));
+    const calRawPct = calTarget > 0 ? Math.round((calCurrent / calTarget) * 100) : 0;
+    const calFillPct = Math.min(100, calRawPct);
+    if (calCurEl) calCurEl.textContent = String(calCurrent);
+    if (calTargetEl) calTargetEl.textContent = String(calTarget);
+    if (calFillEl) calFillEl.style.width = calFillPct + "%";
+    if (calPctEl) calPctEl.textContent = calRawPct + "%";
+
+    // Fat
+    const fatCurEl = document.getElementById("app-fat-current");
+    const fatTargetEl = document.getElementById("app-fat-target");
+    const fatFillEl = document.getElementById("app-fat-fill") as HTMLElement | null;
+    const fatPctEl = document.getElementById("app-fat-pct");
+    const fatCurrent = Math.round(currentFat * 10) / 10;
+    const fatTarget = Math.max(0, Math.round(targetFat * 10) / 10);
+    const fatRawPct = fatTarget > 0 ? Math.round((fatCurrent / fatTarget) * 100) : 0;
+    const fatFillPct = Math.min(100, fatRawPct);
+    if (fatCurEl) fatCurEl.textContent = String(fatCurrent);
+    if (fatTargetEl) fatTargetEl.textContent = String(fatTarget);
+    if (fatFillEl) fatFillEl.style.width = fatFillPct + "%";
+    if (fatPctEl) fatPctEl.textContent = fatRawPct + "%";
+
+    // Sugar (max, so show warning if over)
+    const sugarCurEl = document.getElementById("app-sugar-current");
+    const sugarTargetEl = document.getElementById("app-sugar-target");
+    const sugarFillEl = document.getElementById("app-sugar-fill") as HTMLElement | null;
+    const sugarPctEl = document.getElementById("app-sugar-pct");
+    const sugarRow = document.getElementById("macro-row-sugar");
+    const sugarCurrent = Math.round(currentSugar * 10) / 10;
+    const sugarTarget = Math.max(0, Math.round(maxSugar * 10) / 10);
+    const sugarRawPct = sugarTarget > 0 ? Math.round((sugarCurrent / sugarTarget) * 100) : 0;
+    const sugarFillPct = Math.min(100, sugarRawPct);
+    const over = sugarCurrent > sugarTarget && sugarTarget > 0;
+    if (sugarCurEl) sugarCurEl.textContent = String(sugarCurrent);
+    if (sugarTargetEl) sugarTargetEl.textContent = String(sugarTarget);
+    if (sugarFillEl) sugarFillEl.style.width = sugarFillPct + "%";
+    if (sugarPctEl) sugarPctEl.textContent = sugarRawPct + "%";
+    if (sugarRow) sugarRow.classList.toggle("tk-macro-over", over);
+  }
+
   function renderMealGrid(loggedMeals: any[], yesterdayMeals: any[] = [], readOnly: boolean = false) {
     lastRenderedMeals = { meals: loggedMeals, yesterday: yesterdayMeals, readOnly };
     const grid = document.getElementById("meal-grid");
@@ -1784,14 +1941,16 @@ import MealLogModal from "../../components/MealLogModal.astro";
       const hasFeedback = !!(logged && typeof logged.ai_feedback === "string" && logged.ai_feedback.trim());
       let html = `<span class="tk-slot-name">${label}${hasFeedback ? `<span class="tk-slot-feedback-dot" aria-label="${t("tracker.feedback.coachAriaLabel")}"></span>` : ''}</span>`;
       if (logged) {
-        html += `<span class="tk-slot-status">${t("tracker.meal.logged")} · ${logged.total_protein_g || 0}g</span>`;
+        const cal = logged.total_calories_kcal || 0;
+        html += `<span class="tk-slot-status">${t("tracker.meal.logged")} · ${logged.total_protein_g || 0}g protein · ${cal}kcal</span>`;
       } else if (readOnly) {
         html += `<span class="tk-slot-status">${t("tracker.meal.notLogged")}</span>`;
       } else {
         html += `<button class="tk-log-btn" type="button">${t("tracker.meal.logBtn")}</button>`;
         if (showRepeat) {
           const total = Math.round((yesterday.total_protein_g || 0) * 10) / 10;
-          html += `<button class="tk-repeat-btn" type="button" data-repeat="${slot.key}">${t("tracker.meal.repeatYesterday")} · ${total}g</button>`;
+          const yCal = yesterday.total_calories_kcal || 0;
+          html += `<button class="tk-repeat-btn" type="button" data-repeat="${slot.key}">${t("tracker.meal.repeatYesterday")} · ${total}g protein · ${yCal}kcal</button>`;
         }
       }
       card.innerHTML = html;
@@ -1832,6 +1991,18 @@ import MealLogModal from "../../components/MealLogModal.astro";
     return meals.reduce((acc: number, m: any) => acc + (Number(m.total_protein_g) || 0), 0);
   }
 
+  function sumMealsCalories(meals: any[]): number {
+    return meals.reduce((acc: number, m: any) => acc + (Number(m.total_calories_kcal) || 0), 0);
+  }
+
+  function sumMealsFat(meals: any[]): number {
+    return meals.reduce((acc: number, m: any) => acc + (Number(m.total_fat_g) || 0), 0);
+  }
+
+  function sumMealsSugar(meals: any[]): number {
+    return meals.reduce((acc: number, m: any) => acc + (Number(m.total_sugar_g) || 0), 0);
+  }
+
   async function loadAppShell() {
     const sb = (window as any).supabaseClient;
     const { data: { user } } = await sb.auth.getUser();
@@ -1856,11 +2027,11 @@ import MealLogModal from "../../components/MealLogModal.astro";
         .eq("user_id", user.id)
         .maybeSingle(),
       sb.from("meal_logs")
-        .select("meal_slot, total_protein_g, food_items, ai_feedback")
+        .select("meal_slot, total_protein_g, total_calories_kcal, total_fat_g, total_sugar_g, food_items, ai_feedback")
         .eq("user_id", user.id)
         .eq("logged_date", viewingDate),
       sb.from("meal_logs")
-        .select("meal_slot, total_protein_g, food_items")
+        .select("meal_slot, total_protein_g, total_calories_kcal, total_fat_g, total_sugar_g, food_items")
         .eq("user_id", user.id)
         .eq("logged_date", yISO),
       sb.from("daily_weight")
@@ -1895,6 +2066,20 @@ import MealLogModal from "../../components/MealLogModal.astro";
     const tEl = document.getElementById("app-protein-target");
     if (tEl) tEl.textContent = String(target);
 
+    // Compute macro targets from baseline data
+    const weightKg = Number(baseline?.weight_kg) || 70;
+    const goal = String(baseline?.primary_goal || "muscle_gain");
+    currentCalorieTarget = calcCalorieTarget(weightKg, goal);
+    currentFatTarget = calcFatTarget(currentCalorieTarget);
+    currentSugarMax = calcSugarMax(currentCalorieTarget);
+
+    const calTargetEl = document.getElementById("app-cal-target");
+    if (calTargetEl) calTargetEl.textContent = String(currentCalorieTarget);
+    const fatTargetElId = document.getElementById("app-fat-target");
+    if (fatTargetElId) fatTargetElId.textContent = String(currentFatTarget);
+    const sugarTargetElId = document.getElementById("app-sugar-target");
+    if (sugarTargetElId) sugarTargetElId.textContent = String(currentSugarMax);
+
     userCtx = {
       user_id: user.id,
       full_name: profile?.full_name || null,
@@ -1919,6 +2104,11 @@ import MealLogModal from "../../components/MealLogModal.astro";
     const viewMeals = meals || [];
     currentMeals = viewMeals;
     updateProgressBar(sumMealsProtein(viewMeals), target);
+    updateAllProgressBars(
+      sumMealsCalories(viewMeals), currentCalorieTarget,
+      sumMealsFat(viewMeals), currentFatTarget,
+      sumMealsSugar(viewMeals), currentSugarMax
+    );
     renderMealGrid(viewMeals, yMeals || [], !isToday);
 
     // Only show / refresh the AI daily summary on today's view. Past days
@@ -2056,7 +2246,16 @@ import MealLogModal from "../../components/MealLogModal.astro";
         currentTarget = newTarget;
         const tEl = document.getElementById("app-protein-target");
         if (tEl) tEl.textContent = String(newTarget);
+        // Recalculate all macro targets on weight change
+        currentCalorieTarget = calcCalorieTarget(newWeight, userCtx.primary_goal);
+        currentFatTarget = calcFatTarget(currentCalorieTarget);
+        currentSugarMax = calcSugarMax(currentCalorieTarget);
         updateProgressBar(sumMealsProtein(currentMeals), newTarget);
+        updateAllProgressBars(
+          sumMealsCalories(currentMeals), currentCalorieTarget,
+          sumMealsFat(currentMeals), currentFatTarget,
+          sumMealsSugar(currentMeals), currentSugarMax
+        );
       }
 
       weightHistory[today] = newWeight;
