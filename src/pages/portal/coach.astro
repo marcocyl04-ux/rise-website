@@ -89,11 +89,14 @@ import Footer from "../../components/Footer.astro";
           <p class="coach-drawer-eyebrow" id="coach-drawer-eyebrow" data-i18n-replace>Athlete</p>
           <h2 class="coach-drawer-name" id="coach-drawer-name" data-i18n-replace>—</h2>
         </div>
-        <button class="coach-drawer-close" type="button" id="coach-drawer-close" aria-label="Close" data-i18n-attr="common.close:aria-label">
+        <div class="coach-drawer-head-actions">
+          <button class="coach-drawer-dl-btn" type="button" id="coach-drawer-dl-btn" data-i18n="coach.drawer.downloadReport">Download Report</button>
+          <button class="coach-drawer-close" type="button" id="coach-drawer-close" aria-label="Close" data-i18n-attr="common.close:aria-label">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M6 6l12 12M18 6l-12 12" />
           </svg>
         </button>
+        </div>
       </header>
       <div class="coach-drawer-body" id="coach-drawer-body" data-i18n-replace></div>
     </div>
@@ -505,6 +508,28 @@ import Footer from "../../components/Footer.astro";
     padding: var(--space-5);
     border-bottom: 1px solid var(--rise-neutral-100);
   }
+  .coach-drawer-head-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .coach-drawer-dl-btn {
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .coach-drawer-dl-btn:hover {
+    background: #b0151a;
+  }
   .coach-drawer-eyebrow {
     font-family: var(--font-body);
     font-size: 0.7rem;
@@ -561,8 +586,7 @@ import Footer from "../../components/Footer.astro";
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
   }
-  .coach-grid-cell {
-    aspect-ratio: 1;
+.coach-grid-cell {
     border-radius: 6px;
     background: var(--rise-neutral-100);
     display: flex;
@@ -572,13 +596,28 @@ import Footer from "../../components/Footer.astro";
     font-family: var(--font-body);
     font-size: 0.65rem;
     color: var(--rise-neutral-400);
+    padding: 4px 2px;
+    min-height: 62px;
   }
   .coach-grid-cell strong {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--rise-black);
     font-family: var(--font-heading);
     font-weight: 600;
     line-height: 1;
+  }
+  .coach-grid-cell-date {
+    font-size: 0.57rem;
+    opacity: 0.85;
+    margin-top: 1px;
+  }
+  .coach-grid-cell-macros {
+    font-size: 0.52rem;
+    line-height: 1.2;
+    text-align: center;
+    margin-top: 2px;
+    opacity: 0.75;
+    word-break: break-all;
   }
   .coach-grid-l0 { background: var(--rise-neutral-100); }
   .coach-grid-l1 { background: rgba(211, 25, 31, 0.18); }
@@ -588,11 +627,6 @@ import Footer from "../../components/Footer.astro";
   .coach-grid-l3 strong { color: var(--rise-white); }
   .coach-grid-l4 { background: var(--rise-red); color: var(--rise-white); }
   .coach-grid-l4 strong { color: var(--rise-white); }
-  .coach-grid-cell-date {
-    font-size: 0.6rem;
-    opacity: 0.85;
-    margin-top: 2px;
-  }
 
   /* Weight chart */
   .coach-chart-toggle {
@@ -755,6 +789,9 @@ import Footer from "../../components/Footer.astro";
     meal_slot: string;
     logged_date: string;
     total_protein_g: number;
+    total_calories_kcal: number;
+    total_fat_g: number;
+    total_sugar_g: number;
     food_items: any;
     ai_feedback: string | null;
     created_at: string;
@@ -871,7 +908,7 @@ import Footer from "../../components/Footer.astro";
         .order("logged_date", { ascending: false }),
       sb
         .from("meal_logs")
-        .select("id, user_id, meal_slot, logged_date, total_protein_g, food_items, ai_feedback, created_at")
+        .select("id, user_id, meal_slot, logged_date, total_protein_g, total_calories_kcal, total_fat_g, total_sugar_g, food_items, ai_feedback, created_at")
         .in("user_id", athleteIds)
         .order("created_at", { ascending: false })
         .limit(500),
@@ -1211,6 +1248,103 @@ import Footer from "../../components/Footer.astro";
     document.body.style.overflow = "";
   }
 
+  // ===== Excel Export =====
+  function loadXLSX(): Promise<any> {
+    if ((window as any).XLSX) return Promise.resolve((window as any).XLSX);
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
+      script.onload = () => resolve((window as any).XLSX);
+      script.onerror = () => reject(new Error("Failed to load XLSX library"));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function downloadReport() {
+    const a = athletesCache.find((x) => x.profile.id === currentDrawerAthleteId);
+    if (!a) return;
+
+    const btn = document.getElementById("coach-drawer-dl-btn");
+    if (btn) {
+      (btn as HTMLButtonElement).disabled = true;
+      (btn as HTMLButtonElement).textContent = "...";
+    }
+
+    try {
+      const XLSX = await loadXLSX();
+
+      // Last 30 days
+      const athleteTz = a.profile.timezone || "Asia/Hong_Kong";
+      const today = tzTodayISO(athleteTz);
+      const thirtyDaysAgo = addDaysISO(today, -30);
+
+      const recentMeals = a.meals.filter((m) => m.logged_date >= thirtyDaysAgo);
+
+      // Sheet 1: Meal Log — sorted by date descending
+      const sortedMeals = [...recentMeals].sort((a, b) => b.logged_date.localeCompare(a.logged_date));
+      const mealRows = sortedMeals.map((m) => {
+        const foods = Array.isArray(m.food_items)
+          ? m.food_items.map((f: any) => f.name || "Food").join(", ")
+          : "";
+        return {
+          Date: m.logged_date,
+          "Meal Slot": m.meal_slot.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+          "Food Items": foods,
+          "Protein (g)": Math.round(m.total_protein_g || 0),
+          "Calories (kcal)": Math.round(m.total_calories_kcal || 0),
+          "Fat (g)": Math.round((m.total_fat_g || 0) * 10) / 10,
+          "Sugar (g)": Math.round((m.total_sugar_g || 0) * 10) / 10,
+        };
+      });
+
+      // Sheet 2: Daily Summary — one row per day, sorted by date descending
+      const dailyMap: Record<string, { protein: number; cals: number; fat: number; sugar: number; count: number }> = {};
+      for (const m of recentMeals) {
+        if (!dailyMap[m.logged_date]) {
+          dailyMap[m.logged_date] = { protein: 0, cals: 0, fat: 0, sugar: 0, count: 0 };
+        }
+        dailyMap[m.logged_date].protein += Math.round(m.total_protein_g || 0);
+        dailyMap[m.logged_date].cals += Math.round(m.total_calories_kcal || 0);
+        dailyMap[m.logged_date].fat += Math.round((m.total_fat_g || 0) * 10) / 10;
+        dailyMap[m.logged_date].sugar += Math.round((m.total_sugar_g || 0) * 10) / 10;
+        dailyMap[m.logged_date].count += 1;
+      }
+
+      // Include all 30 days (even with 0 meals)
+      const allDays: string[] = [];
+      for (let i = 29; i >= 0; i--) allDays.push(addDaysISO(today, -i));
+
+      const dailyRows = allDays.map((iso) => {
+        const d = dailyMap[iso] || { protein: 0, cals: 0, fat: 0, sugar: 0, count: 0 };
+        return {
+          Date: iso,
+          "Total Protein (g)": d.protein,
+          "Total Calories (kcal)": d.cals,
+          "Total Fat (g)": d.fat,
+          "Total Sugar (g)": d.sugar,
+          "Meal Count": d.count,
+        };
+      });
+
+      const wb = XLSX.utils.book_new();
+      const ws1 = XLSX.utils.json_to_sheet(mealRows);
+      const ws2 = XLSX.utils.json_to_sheet(dailyRows);
+      XLSX.utils.book_append_sheet(wb, ws1, "Meal Log");
+      XLSX.utils.book_append_sheet(wb, ws2, "Daily Summary");
+
+      const athleteName = (a.profile.full_name || a.profile.email || "athlete").replace(/[^a-zA-Z0-9_\- ]/g, "_");
+      XLSX.writeFile(wb, `${athleteName}_nutrition_report.xlsx`);
+    } catch (err) {
+      console.error("Export failed:", err);
+      alert("Could not generate report. Please try again.");
+    } finally {
+      if (btn) {
+        (btn as HTMLButtonElement).disabled = false;
+        (btn as HTMLButtonElement).textContent = t("coach.drawer.downloadReport");
+      }
+    }
+  }
+
   function renderDrawerBody(a: Athlete) {
     const body = document.getElementById("coach-drawer-body");
     if (!body) return;
@@ -1224,14 +1358,32 @@ import Footer from "../../components/Footer.astro";
       days.push({ iso, label: isoToDate(iso).toLocaleDateString(undefined, { weekday: "short" }) });
     }
     const countByDay: Record<string, number> = {};
-    for (const m of a.meals) countByDay[m.logged_date] = (countByDay[m.logged_date] || 0) + 1;
+    const proteinByDay: Record<string, number> = {};
+    const calsByDay: Record<string, number> = {};
+    const fatByDay: Record<string, number> = {};
+    const sugarByDay: Record<string, number> = {};
+    for (const m of a.meals) {
+      countByDay[m.logged_date] = (countByDay[m.logged_date] || 0) + 1;
+      proteinByDay[m.logged_date] = (proteinByDay[m.logged_date] || 0) + Math.round(m.total_protein_g || 0);
+      calsByDay[m.logged_date] = (calsByDay[m.logged_date] || 0) + Math.round(m.total_calories_kcal || 0);
+      fatByDay[m.logged_date] = (fatByDay[m.logged_date] || 0) + Math.round((m.total_fat_g || 0) * 10) / 10;
+      sugarByDay[m.logged_date] = (sugarByDay[m.logged_date] || 0) + Math.round((m.total_sugar_g || 0) * 10) / 10;
+    }
     const gridHtml = days
       .map((d) => {
         const c = countByDay[d.iso] || 0;
+        const p = proteinByDay[d.iso] || 0;
+        const cal = calsByDay[d.iso] || 0;
+        const f = fatByDay[d.iso] || 0;
+        const s = sugarByDay[d.iso] || 0;
         const level = c === 0 ? 0 : c <= 1 ? 1 : c <= 2 ? 2 : c <= 3 ? 3 : 4;
-        return `<div class="coach-grid-cell coach-grid-l${level}" title="${d.iso}: ${c} meals">
+        const macroLine = c > 0
+          ? `<span class="coach-grid-cell-macros">P:${p}g C:${cal}kcal F:${f}g S:${s}g</span>`
+          : `<span class="coach-grid-cell-macros">—</span>`;
+        return `<div class="coach-grid-cell coach-grid-l${level}" title="${d.iso}: ${c} meals, ${p}g protein, ${cal}kcal, ${f}g fat, ${s}g sugar">
           <strong>${c}</strong>
           <span class="coach-grid-cell-date">${d.label}</span>
+          ${macroLine}
         </div>`;
       })
       .join("");
@@ -1534,6 +1686,7 @@ import Footer from "../../components/Footer.astro";
     // Drawer events
     document.getElementById("coach-drawer-close")?.addEventListener("click", closeDrawer);
     document.getElementById("coach-drawer-backdrop")?.addEventListener("click", closeDrawer);
+    document.getElementById("coach-drawer-dl-btn")?.addEventListener("click", downloadReport);
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && currentDrawerAthleteId) closeDrawer();
     });
