@@ -948,6 +948,8 @@
         }
       }
       if (notRightBtn) notRightBtn.hidden = false;
+      // Go back to choice screen so user can add more items or confirm.
+      setView("choice");
     } catch (err: any) {
       console.error("analyze", err);
       if (status) {
@@ -955,6 +957,7 @@
         status.className = "tk-analyze-status error";
       }
       if (notRightBtn) notRightBtn.hidden = false;
+      setView("choice");
     }
   }
 
@@ -995,13 +998,8 @@
         photoStatus.className = "tk-analyze-status";
       }
 
-      if (state.photoDataUrl) {
-        setView("photo");
-        const notRightBtn = $("meal-not-right");
-        if (notRightBtn) notRightBtn.hidden = false;
-      } else {
-        setView("choice");
-      }
+      // Always return to choice screen so user can add more or confirm.
+      setView("choice");
     } catch (err: any) {
       console.error("analyze text", err);
       if (status) {
