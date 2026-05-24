@@ -1,81 +1,61 @@
 # RISE Nutrition Tracker — Session State
 
 ## Current Status
-QA PASS — COMPLETE + DEPLOYED. 4 bugs fixed, 1 deferred, chart label fixed. Live at riseadvancement.com.
+MEAL LOGGING REFINEMENT PLAN COMPLETE. 13 items across 3 phases. Plan approved. Ready to build Phase 1 next session.
 
-## QA Pass (May 22 2026)
+## Session Log (May 24, 2026)
 
-### Issues Found (8 total)
-- Bug #1: "+ Log meal" button — browser automation artifact, works on real browser ✅
-- Bug #2: Language toggle in tracker — broken, DEFERRED (Marco says not significant enough)
-- Bug #3: Sign-up empty fields → blank page — FIXED (validation added)
-- Bug #4: Invalid login no error — ALREADY WORKING (try-catch added as safety net)
-- Bug #5: Weight value disappears — browser automation artifact, works on real browser ✅
-- Bug #6: Progress % capped at 100% — FIXED (shows actual %, e.g. 138%)
-- Bug #7: Weight spinbutton floating point — FIXED (shows 72.2 not 72.19999694824219)
-- Bug #8: Mixed Simplified/Traditional Chinese on landing page — DEFERRED (low priority)
+### What happened:
+- Discussed what's left for the nutrition tracker
+- Marco identified 3 core UX problems from real usage:
+  1. Text input buried behind photo upload
+  2. Meal slot overwrites (5pm chicken + 7pm pasta = chicken gone)
+  3. No portion editing
+- Investigated meal logging code: confirmed all 3 issues + found 10 more friction points
+- Investigated AI costs: text = $0.00016/analysis, monthly total ~$2 for 15 users
+- Decided to simplify input: Photo, Upload, Text to AI (kill Search + Protein Shake)
+- Slots become additive: append items, don't replace
+- Portion editing via re-type to AI (no stepper UI)
+- Wrote formal plan: 3 phases, 13 items, full verification criteria
 
-### Additional Fix
-- Weight trend chart x-axis label clipping — FIXED (padR 12→30px, "May 22" no longer cut off)
+### Plan file:
+- /Users/marcol04/Desktop/rise-website/.hermes/plans/meal-logging-refinement.md
+- Vault copy: /Users/marcol04/Documents/openclaw/RISE Advancement/Meal Logging Refinement Plan.md
 
-### Manual Testing Results
-- Meal logging: WORKS (confirmed on real browser)
-- Weight widget: STABLE
-- Progress %: Shows 138% correctly
-- Auth validation: Shows error messages
-- Chart labels: Should display fully now
+### Next session:
+Build Phase 1 (structural core):
+- 1.1: Simplify input to 3 paths (Photo, Upload, Text)
+- 1.2: Additive slots (append, don't replace)
+- 1.3: Portion editing via re-type to AI
 
-### Not Yet Tested
-- Coach dashboard (needs coach account)
-- Mobile responsive
-- Onboarding flow (new user)
-- Photo meal logging (AI pipeline)
+After Phase 1 is built, tested, and deployed → Phase 2 (UX polish) → Phase 3 (performance).
+
+## Deferred Work (future sessions)
+- One-tap repeat of yesterday's meals
+- Parent weekly summary
+- Coach weekly summary digest
+- Compliance streak tracking
+- Hockey-contextualized AI feedback
+- Training schedule integration
+- HK food database expansion
+- Budget/negotiation with Ryan
 
 ## Deployment
 - Vercel: https://riseadvancement.com (project rise-website)
 - Supabase: zeczlwypqqvvpraosodv.supabase.co
-- Edge functions: analyze-meal (mimo-v2.5), ai-feedback (DeepSeek V3), daily-summary (DeepSeek V3)
-- Latest commit: "QA fixes: auth validation, progress %, weight precision"
+- Edge functions: analyze-meal (Gemini 2.5 Flash photos, MiMo text), ai-feedback (DeepSeek V3), daily-summary (DeepSeek V3)
+- Service worker: cache v4
 
 ## Credentials
 - Supabase URL: https://zeczlwypqqvvpraosodv.supabase.co
-- Supabase Anon Key: in BaseLayout.astro
 - Supabase Service Role Key: in ~/Desktop/rise-website/.env
-- Supabase DB Password: -123ASDFfdsa321-
-- OpenRouter API Key: sk-or-...5e20 (as Supabase secret)
-- Google OAuth: configured in Supabase dashboard
-
-## Test Accounts
-- jason@test.rise (pw: test123456) — athlete, good compliance
-- ryan@test.rise (pw: test123456) — athlete, slipping compliance
-- emily@test.rise (pw: test123456) — athlete, new/low compliance
-- marcocyl04@gmail.com — athlete (reverted from coach)
-
-## Next Session
-Test and fix coach dashboard:
-- Coach login flow (need coach account or promote existing user)
-- Athlete table view
-- Alerts and compliance indicators
-- Drill-down with athlete details (including height)
-- Coach-specific features
+- Google AI API Key: in Supabase secrets (GOOGLE_AI_API_KEY)
+- OpenRouter API Key: in Supabase secrets (OPENROUTER_API_KEY)
 
 ## Files
 - RISE Website: ~/Desktop/rise-website/ (Astro 6 + Tailwind 4)
+- Meal Logging Plan: .hermes/plans/meal-logging-refinement.md
 - Edge Functions: supabase/functions/{ai-feedback,daily-summary,analyze-meal}/
 - i18n: src/lib/i18n.ts (200+ keys, EN + ZH Traditional)
-- PWA: public/manifest.json, public/sw.js, public/offline.html
-- RLS Migration: supabase/migrations/001_current_rls_policies.sql
 - Vault: ~/Documents/openclaw/RISE Advancement/RISE Nutrition Tracker.md
 - Session State: ~/Desktop/rise-website/SESSION_STATE.md
-- QA Report: ~/Desktop/rise-website/dogfood-output/report.md
-
-## PWA App Mode (May 23)
-- Standalone detection: early script in <head> adds .pwa-standalone to <html>
-- Auto-redirect: root → /portal when launched as installed PWA
-- Marketing chrome hidden: Header, Footer, WhatsApp button hidden in standalone
-- Minimal app header: RISE logo in standalone on portal/tracker/coach pages
-- Safe-area padding for notched phones
-- Install banner: hidden in standalone, smart dismissal on portal pages
-- Install hint link on portal for browser users → /install-guide
-- /install-guide page: iOS + Android step-by-step instructions
-- Build: 16 pages, passes clean
