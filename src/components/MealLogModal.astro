@@ -43,6 +43,9 @@
         <img id="meal-photo-img" alt="Meal photo" />
       </div>
       <p class="tk-analyze-status" id="meal-analyze-status">Analyzing…</p>
+      <button class="tk-cancel-cta" id="meal-photo-cancel" type="button" hidden>
+        Cancel
+      </button>
       <button class="tk-text-fallback-cta" id="meal-not-right" type="button" hidden>
         Not right? Tell us what you had
       </button>
@@ -61,6 +64,9 @@
       </div>
       <button class="tk-btn tk-btn-primary tk-text-analyze-btn" id="meal-text-analyze" type="button">
         Analyze
+      </button>
+      <button class="tk-cancel-cta" id="meal-text-cancel" type="button" hidden>
+        Cancel
       </button>
       <p class="tk-analyze-status" id="meal-text-status"></p>
     </div>
@@ -306,7 +312,50 @@
     margin: 0;
   }
   .tk-analyze-status.error { color: var(--rise-red-dark); }
-  .tk-analyze-status.mock { color: var(--rise-neutral-400); font-style: italic; }
+  .tk-analyze-status.mock {
+    color: #92400e;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  /* Cancel button shown during AI analysis */
+  .tk-cancel-cta {
+    background: transparent;
+    color: var(--rise-neutral-700);
+    border: 1px solid var(--rise-neutral-200);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    align-self: center;
+  }
+  .tk-cancel-cta:hover {
+    border-color: var(--rise-red);
+    color: var(--rise-red);
+    background: var(--rise-red-light);
+  }
+  .tk-cancel-cta[hidden] { display: none !important; }
+
+  /* Small inline spinner used on the Confirm button while saving */
+  .tk-btn-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: var(--rise-white);
+    border-radius: 50%;
+    animation: tk-spin 0.7s linear infinite;
+  }
+  @keyframes tk-spin {
+    to { transform: rotate(360deg); }
+  }
 
   /* ----- Text fallback ----- */
   .tk-text-fallback-cta {
@@ -796,6 +845,9 @@
     addMode: false,
   };
 
+  // Tracks the in-flight AI analysis so the user can cancel it.
+  let currentAbort: AbortController | null = null;
+
   const modal = () => document.getElementById("meal-modal") as HTMLDivElement | null;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
@@ -915,6 +967,9 @@
     const notRightBtn = $("meal-not-right");
     if (notRightBtn) notRightBtn.hidden = true;
 
+    const cancelBtn = $("meal-photo-cancel");
+    if (cancelBtn) cancelBtn.hidden = false;
+
     const reader = new FileReader();
     const dataUrl: string = await new Promise((resolve) => {
       reader.onload = () => resolve(String(reader.result || ""));
@@ -932,8 +987,13 @@
       status.className = "tk-analyze-status";
     }
 
+    const controller = new AbortController();
+    currentAbort = controller;
+
     try {
       const result = await analyzeMealPhoto(file);
+      if (controller.signal.aborted) return;
+
       if (state.addMode) {
         state.items.push(...result.items);
       } else {
@@ -941,19 +1001,22 @@
       }
       state.addMode = true;
       renderItems();
-      if (status) {
+      const photoStatus = $("meal-analyze-status");
+      if (photoStatus) {
         if (result.mock) {
-          status.textContent = result.notice || "Mock analysis, adjust as needed";
-          status.className = "tk-analyze-status mock";
+          photoStatus.textContent = result.notice
+            || "AI estimate, please adjust the values before saving";
+          photoStatus.className = "tk-analyze-status mock";
         } else {
-          status.textContent = "Adjust if needed, then confirm";
-          status.className = "tk-analyze-status";
+          photoStatus.textContent = "Adjust if needed, then confirm";
+          photoStatus.className = "tk-analyze-status";
         }
       }
       if (notRightBtn) notRightBtn.hidden = false;
       // Go back to choice screen so user can add more items or confirm.
       setView("choice");
     } catch (err: any) {
+      if (controller.signal.aborted) return;
       console.error("analyze", err);
       if (status) {
         status.textContent = "Could not analyze photo. Try describing what you ate.";
@@ -961,6 +1024,9 @@
       }
       if (notRightBtn) notRightBtn.hidden = false;
       setView("choice");
+    } finally {
+      if (cancelBtn) cancelBtn.hidden = true;
+      if (currentAbort === controller) currentAbort = null;
     }
   }
 
@@ -968,6 +1034,7 @@
     const textInput = $("meal-text-input") as HTMLInputElement | null;
     const status = $("meal-text-status");
     const analyzeBtn = $("meal-text-analyze") as HTMLButtonElement | null;
+    const cancelBtn = $("meal-text-cancel");
 
     const description = (textInput?.value || "").trim();
     if (!description) {
@@ -983,9 +1050,15 @@
       status.className = "tk-analyze-status";
     }
     if (analyzeBtn) analyzeBtn.disabled = true;
+    if (cancelBtn) cancelBtn.hidden = false;
+
+    const controller = new AbortController();
+    currentAbort = controller;
 
     try {
       const result = await analyzeMealText(description);
+      if (controller.signal.aborted) return;
+
       if (state.addMode) {
         state.items.push(...result.items);
       } else {
@@ -996,14 +1069,21 @@
 
       const photoStatus = $("meal-analyze-status");
       if (photoStatus) {
-        const count = state.items.length;
-        photoStatus.textContent = `AI found ${count} item${count === 1 ? "" : "s"}, tap any to adjust`;
-        photoStatus.className = "tk-analyze-status";
+        if (result.mock) {
+          photoStatus.textContent = result.notice
+            || "AI estimate, please adjust the values before saving";
+          photoStatus.className = "tk-analyze-status mock";
+        } else {
+          const count = state.items.length;
+          photoStatus.textContent = `AI found ${count} item${count === 1 ? "" : "s"}, tap any to adjust`;
+          photoStatus.className = "tk-analyze-status";
+        }
       }
 
       // Always return to choice screen so user can add more or confirm.
       setView("choice");
     } catch (err: any) {
+      if (controller.signal.aborted) return;
       console.error("analyze text", err);
       if (status) {
         status.textContent = "Could not analyze. Try again.";
@@ -1011,6 +1091,8 @@
       }
     } finally {
       if (analyzeBtn) analyzeBtn.disabled = false;
+      if (cancelBtn) cancelBtn.hidden = true;
+      if (currentAbort === controller) currentAbort = null;
     }
   }
 
@@ -1055,7 +1137,10 @@
   async function confirmMeal() {
     if (state.items.length === 0) return;
     const btn = $("meal-confirm") as HTMLButtonElement | null;
-    if (btn) btn.disabled = true;
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="tk-btn-spinner" aria-hidden="true"></span>';
+    }
     setMsg("Saving…");
 
     try {
@@ -1066,7 +1151,11 @@
       if (!user) throw new Error("Not signed in");
 
       const dateISO = state.dateISO;
+      const hadPhoto = !!state.photoFile;
       const photoPath = await uploadPhoto(user.id, state.slotKey || "meal", dateISO);
+      if (hadPhoto && !photoPath) {
+        setMsg("Photo upload failed, saving meal without photo");
+      }
 
       const total = totalProtein();
       const cals = totalCalories();
@@ -1111,16 +1200,24 @@
         })
       );
 
-      setTimeout(closeModal, 400);
+      if (btn) btn.textContent = "Confirm";
+      setTimeout(closeModalForced, 400);
     } catch (err: any) {
       console.error("confirm meal", err);
       setMsg(err?.message || "Could not save meal", "error");
-      if (btn) btn.disabled = false;
+      if (btn) {
+        btn.textContent = "Confirm";
+        btn.disabled = false;
+      }
     }
   }
 
   // --- Open / close -----------------------------------------------------------
   function resetState() {
+    if (currentAbort) {
+      currentAbort.abort();
+      currentAbort = null;
+    }
     state.items = [];
     state.photoFile = null;
     state.photoDataUrl = null;
@@ -1134,8 +1231,22 @@
       textStatus.textContent = "";
       textStatus.className = "tk-analyze-status";
     }
+    const photoStatus = $("meal-analyze-status");
+    if (photoStatus) {
+      photoStatus.textContent = "";
+      photoStatus.className = "tk-analyze-status";
+    }
     const notRightBtn = $("meal-not-right");
     if (notRightBtn) notRightBtn.hidden = true;
+    const photoCancel = $("meal-photo-cancel");
+    if (photoCancel) photoCancel.hidden = true;
+    const textCancel = $("meal-text-cancel");
+    if (textCancel) textCancel.hidden = true;
+    const confirmBtn = $("meal-confirm") as HTMLButtonElement | null;
+    if (confirmBtn) {
+      confirmBtn.textContent = "Confirm";
+      confirmBtn.disabled = false;
+    }
     setMsg("");
     renderItems();
   }
@@ -1170,13 +1281,25 @@
     document.body.style.overflow = "hidden";
   }
 
-  function closeModal() {
+  function closeModalForced() {
     const m = modal();
     if (!m) return;
+    if (currentAbort) {
+      currentAbort.abort();
+      currentAbort = null;
+    }
     m.hidden = true;
     m.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
     state.open = false;
+  }
+
+  function closeModal() {
+    if (state.items.length > 0) {
+      const ok = window.confirm("You have unsaved items. Discard them?");
+      if (!ok) return;
+    }
+    closeModalForced();
   }
 
   function wireModal() {
@@ -1198,6 +1321,31 @@
       showTextInput();
     });
     $("meal-text-analyze")?.addEventListener("click", handleTextAnalysis);
+
+    $("meal-photo-cancel")?.addEventListener("click", () => {
+      if (currentAbort) currentAbort.abort();
+      const cancelBtn = $("meal-photo-cancel");
+      if (cancelBtn) cancelBtn.hidden = true;
+      const status = $("meal-analyze-status");
+      if (status) {
+        status.textContent = "Cancelled";
+        status.className = "tk-analyze-status";
+      }
+      setView("choice");
+    });
+    $("meal-text-cancel")?.addEventListener("click", () => {
+      if (currentAbort) currentAbort.abort();
+      const cancelBtn = $("meal-text-cancel");
+      if (cancelBtn) cancelBtn.hidden = true;
+      const analyzeBtn = $("meal-text-analyze") as HTMLButtonElement | null;
+      if (analyzeBtn) analyzeBtn.disabled = false;
+      const status = $("meal-text-status");
+      if (status) {
+        status.textContent = "Cancelled";
+        status.className = "tk-analyze-status";
+      }
+      setView("choice");
+    });
 
     const textInput = $("meal-text-input") as HTMLInputElement | null;
     textInput?.addEventListener("keydown", (e) => {

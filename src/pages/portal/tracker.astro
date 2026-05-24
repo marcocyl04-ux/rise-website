@@ -1338,17 +1338,6 @@ import MealLogModal from "../../components/MealLogModal.astro";
     border-color: var(--rise-red);
     background: var(--rise-red-light);
   }
-  .tk-meal-slot.tk-meal-slot-readonly {
-    cursor: default;
-  }
-  .tk-meal-slot.tk-meal-slot-readonly:hover {
-    transform: none;
-    box-shadow: none;
-    border-color: var(--rise-neutral-100);
-  }
-  .tk-meal-slot.tk-meal-slot-readonly.logged:hover {
-    border-color: var(--rise-red);
-  }
   .tk-slot-name {
     font-family: var(--font-heading);
     font-size: 0.95rem;
@@ -1480,7 +1469,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
     renderWeightWidget();
     // Meal grid - rebuild so slot names / status reflect current language.
     if (lastRenderedMeals) {
-      renderMealGrid(lastRenderedMeals.meals, lastRenderedMeals.yesterday, lastRenderedMeals.readOnly);
+      renderMealGrid(lastRenderedMeals.meals, lastRenderedMeals.yesterday);
     }
   }
 
@@ -1564,7 +1553,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
   }
 
   // Cached last-rendered meals so a lang toggle can rebuild the grid.
-  let lastRenderedMeals: { meals: any[]; yesterday: any[]; readOnly: boolean } | null = null;
+  let lastRenderedMeals: { meals: any[]; yesterday: any[] } | null = null;
 
   // Browser-detected timezone (IANA), synced to user_profiles on load.
   let userTimezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -1914,8 +1903,8 @@ import MealLogModal from "../../components/MealLogModal.astro";
     if (sugarRow) sugarRow.classList.toggle("tk-macro-over", over);
   }
 
-  function renderMealGrid(loggedMeals: any[], yesterdayMeals: any[] = [], readOnly: boolean = false) {
-    lastRenderedMeals = { meals: loggedMeals, yesterday: yesterdayMeals, readOnly };
+  function renderMealGrid(loggedMeals: any[], yesterdayMeals: any[] = []) {
+    lastRenderedMeals = { meals: loggedMeals, yesterday: yesterdayMeals };
     const grid = document.getElementById("meal-grid");
     if (!grid) return;
     const loggedBySlot: Record<string, any> = {};
@@ -1929,19 +1918,12 @@ import MealLogModal from "../../components/MealLogModal.astro";
       const logged = loggedBySlot[slot.key];
       const yesterday = yesterdayBySlot[slot.key];
       const card = document.createElement("div");
-      const interactive = !readOnly || !!logged;
-      card.className =
-        "tk-meal-slot" +
-        (logged ? " logged" : "") +
-        (readOnly ? " tk-meal-slot-readonly" : "");
-      if (interactive) {
-        card.setAttribute("role", "button");
-        card.setAttribute("tabindex", "0");
-      }
+      card.className = "tk-meal-slot" + (logged ? " logged" : "");
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
       card.setAttribute("aria-label", label);
 
       const showRepeat =
-        !readOnly &&
         !logged &&
         yesterday &&
         Array.isArray(yesterday.food_items) &&
@@ -1952,8 +1934,6 @@ import MealLogModal from "../../components/MealLogModal.astro";
       if (logged) {
         const cal = logged.total_calories_kcal || 0;
         html += `<span class="tk-slot-status">${t("tracker.meal.logged")} · ${logged.total_protein_g || 0}g protein · ${cal}kcal</span>`;
-      } else if (readOnly) {
-        html += `<span class="tk-slot-status">${t("tracker.meal.notLogged")}</span>`;
       } else {
         html += `<button class="tk-log-btn" type="button">${t("tracker.meal.logBtn")}</button>`;
         if (showRepeat) {
@@ -1969,28 +1949,23 @@ import MealLogModal from "../../components/MealLogModal.astro";
         if (typeof fn === "function") fn(slot.key, label, prefill, viewingDate);
       };
 
-      if (interactive) {
-        card.addEventListener("click", (e) => {
-          const target = e.target as HTMLElement;
-          const repeatEl = target.closest("[data-repeat]") as HTMLElement | null;
-          if (repeatEl) {
-            e.stopPropagation();
-            if (!readOnly) open(yesterday?.food_items || []);
-            return;
-          }
-          // Past days are read-only — only allow viewing logged meals.
-          if (readOnly && !logged) return;
-          open(logged?.food_items || undefined);
-        });
+      card.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        const repeatEl = target.closest("[data-repeat]") as HTMLElement | null;
+        if (repeatEl) {
+          e.stopPropagation();
+          open(yesterday?.food_items || []);
+          return;
+        }
+        open(logged?.food_items || undefined);
+      });
 
-        card.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            if (readOnly && !logged) return;
-            open(logged?.food_items || undefined);
-          }
-        });
-      }
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open(logged?.food_items || undefined);
+        }
+      });
 
       grid.appendChild(card);
     });
@@ -2118,7 +2093,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
       sumMealsFat(viewMeals), currentFatTarget,
       sumMealsSugar(viewMeals), currentSugarMax
     );
-    renderMealGrid(viewMeals, yMeals || [], !isToday);
+    renderMealGrid(viewMeals, yMeals || []);
 
     // Only show / refresh the AI daily summary on today's view. Past days
     // get a static, non-AI experience.
