@@ -503,6 +503,7 @@ import Footer from "../../components/Footer.astro";
           full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
           role: "athlete",
           team_id: "rise-hk",
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         });
       }
     } catch (err) {

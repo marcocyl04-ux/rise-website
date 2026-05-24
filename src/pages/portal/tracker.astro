@@ -1566,13 +1566,22 @@ import MealLogModal from "../../components/MealLogModal.astro";
   // Cached last-rendered meals so a lang toggle can rebuild the grid.
   let lastRenderedMeals: { meals: any[]; yesterday: any[]; readOnly: boolean } | null = null;
 
-  function todayISO() {
-    return new Date().toISOString().slice(0, 10);
+  // Browser-detected timezone (IANA), synced to user_profiles on load.
+  let userTimezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  /** Get YYYY-MM-DD in a given timezone (defaults to userTimezone). */
+  function todayISO(tz?: string): string {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz || userTimezone,
+      year: "numeric", month: "2-digit", day: "2-digit",
+    }).formatToParts(new Date());
+    const y = parts.find((p) => p.type === "year")!.value;
+    const m = parts.find((p) => p.type === "month")!.value;
+    const d = parts.find((p) => p.type === "day")!.value;
+    return `${y}-${m}-${d}`;
   }
-  function yesterdayISO() {
-    const d = new Date();
-    d.setDate(d.getDate() - 1);
-    return d.toISOString().slice(0, 10);
+  function yesterdayISO(tz?: string): string {
+    return addDaysISO(todayISO(tz), -1);
   }
   function isoToDate(iso: string): Date {
     const [y, m, d] = iso.split("-").map(Number);
@@ -2552,8 +2561,13 @@ import MealLogModal from "../../components/MealLogModal.astro";
   }
 
   function timeOfDay(): string {
-    const d = new Date();
-    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: userTimezone,
+      hour: "2-digit", minute: "2-digit", hour12: false,
+    }).formatToParts(new Date());
+    const hh = parts.find((p) => p.type === "hour")!.value;
+    const mm = parts.find((p) => p.type === "minute")!.value;
+    return `${hh}:${mm}`;
   }
 
   async function handleMealLogged(detail: {
@@ -2648,6 +2662,7 @@ import MealLogModal from "../../components/MealLogModal.astro";
       full_name,
       role: "athlete",
       team_id: "rise-hk",
+      timezone: userTimezone,
     });
   }
 
@@ -2678,6 +2693,16 @@ import MealLogModal from "../../components/MealLogModal.astro";
     }
 
     await ensureProfile(session.user);
+
+    // Sync browser timezone to profile on every load (catches travel).
+    const detectedTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    userTimezone = detectedTz;
+    sb.from("user_profiles")
+      .update({ timezone: detectedTz })
+      .eq("id", session.user.id)
+      .then(() => {})
+      .catch(() => {});
+
     const done = await hasBaseline(session.user.id);
 
     if (!done) {

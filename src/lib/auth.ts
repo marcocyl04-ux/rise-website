@@ -79,6 +79,7 @@ export async function ensureProfile(user: any) {
     full_name,
     role: "athlete",
     team_id: "rise-hk",
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   });
   if (error) console.warn("profile insert", error);
 }

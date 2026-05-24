@@ -786,7 +786,10 @@
     open: false,
     slotKey: null,
     slotLabel: null,
-    dateISO: new Date().toISOString().slice(0, 10),
+    dateISO: new Intl.DateTimeFormat("en-CA", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      year: "numeric", month: "2-digit", day: "2-digit",
+    }).format(new Date()),
     items: [],
     photoFile: null,
     photoDataUrl: null,
@@ -1144,7 +1147,10 @@
     state.open = true;
     state.slotKey = slotKey;
     state.slotLabel = slotLabel;
-    state.dateISO = dateISO || new Date().toISOString().slice(0, 10);
+    state.dateISO = dateISO || new Intl.DateTimeFormat("en-CA", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      year: "numeric", month: "2-digit", day: "2-digit",
+    }).format(new Date());
 
     const title = $("meal-modal-title");
     if (title) title.textContent = (prefill && prefill.length ? "Edit" : "Log") + ` · ${slotLabel}`;

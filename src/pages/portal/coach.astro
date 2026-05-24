@@ -737,6 +737,7 @@ import Footer from "../../components/Footer.astro";
     full_name: string | null;
     team_id: string | null;
     role?: string | null;
+    timezone?: string | null;
   };
   type Baseline = {
     user_id: string;
@@ -779,11 +780,11 @@ import Footer from "../../components/Footer.astro";
     alerts: AlertSpec[];
   };
 
-  // ===== Date helpers (Asia/Hong_Kong) =====
-  // Build a HK-local "today" YYYY-MM-DD string.
-  function hkTodayISO(): string {
+  // ===== Date helpers (timezone-aware) =====
+  // Build a local "today" YYYY-MM-DD string for a given IANA timezone.
+  function tzTodayISO(tz: string): string {
     const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Hong_Kong",
+      timeZone: tz,
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -834,14 +835,16 @@ import Footer from "../../components/Footer.astro";
     return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
   }
 
-  const TODAY = hkTodayISO();
+  // Coach's own "today" (browser timezone) for display/header only.
+  const COACH_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const TODAY = tzTodayISO(COACH_TZ);
 
   // ===== Data fetching =====
   async function loadCoachData(sb: any, coachTeamId: string): Promise<Athlete[]> {
     // First, fetch the athlete profiles to get the athlete IDs.
     const profilesRes = await sb
       .from("user_profiles")
-      .select("id, email, full_name, team_id, role")
+      .select("id, email, full_name, team_id, role, timezone")
       .eq("team_id", coachTeamId)
       .eq("role", "athlete");
 
@@ -878,14 +881,16 @@ import Footer from "../../components/Footer.astro";
     const weights = (weightsRes.data ?? []) as Weight[];
     const meals = (mealsRes.data ?? []) as Meal[];
 
-    const today = TODAY;
-    const yesterday = addDaysISO(today, -1);
-    const sevenDaysAgo = addDaysISO(today, -7);
-
     return profiles.map((p) => {
       const baseline = baselines.find((b) => b.user_id === p.id) || null;
       const aWeights = weights.filter((w) => w.user_id === p.id);
       const aMeals = meals.filter((m) => m.user_id === p.id);
+
+      // Per-athlete "today" based on their stored timezone (falls back to HK).
+      const athleteTz = p.timezone || "Asia/Hong_Kong";
+      const today = tzTodayISO(athleteTz);
+      const yesterday = addDaysISO(today, -1);
+      const sevenDaysAgo = addDaysISO(today, -7);
 
       // Today / yesterday counts
       const todayMeals = aMeals.filter((m) => m.logged_date === today);
@@ -1210,10 +1215,12 @@ import Footer from "../../components/Footer.astro";
     const body = document.getElementById("coach-drawer-body");
     if (!body) return;
 
-    // 7-day meal grid (today is rightmost)
+    // 7-day meal grid (today is rightmost, relative to athlete's timezone)
+    const athleteTz = a.profile.timezone || "Asia/Hong_Kong";
+    const athleteToday = tzTodayISO(athleteTz);
     const days: { iso: string; label: string }[] = [];
     for (let i = 6; i >= 0; i--) {
-      const iso = addDaysISO(TODAY, -i);
+      const iso = addDaysISO(athleteToday, -i);
       days.push({ iso, label: isoToDate(iso).toLocaleDateString(undefined, { weekday: "short" }) });
     }
     const countByDay: Record<string, number> = {};
@@ -1333,7 +1340,8 @@ import Footer from "../../components/Footer.astro";
     const root = document.getElementById("coach-chart-body");
     if (!root) return;
 
-    const today = TODAY;
+    const athleteTz = a.profile.timezone || "Asia/Hong_Kong";
+    const today = tzTodayISO(athleteTz);
     const days: string[] = [];
     for (let i = drawerChartRange - 1; i >= 0; i--) days.push(addDaysISO(today, -i));
 
