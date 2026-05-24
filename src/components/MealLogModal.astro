@@ -19,7 +19,7 @@
       <button class="tk-modal-x" type="button" data-meal-modal-close aria-label="Close">×</button>
     </header>
 
-    <!-- CHOICE: four input methods -->
+    <!-- CHOICE: three input methods -->
     <div class="tk-modal-body" data-view="choice">
       <button class="tk-photo-cta" id="meal-photo-cta" type="button">
         <span class="tk-photo-icon" aria-hidden="true">▣</span>
@@ -30,14 +30,10 @@
         <span aria-hidden="true">⇪</span>
         <span data-i18n="modal.uploadPhoto">Upload photo</span>
       </button>
-      <button class="tk-search-cta" id="meal-search-cta" type="button">
-        <span aria-hidden="true">⌕</span>
-        <span data-i18n="modal.searchFood">Search food</span>
-      </button>
-      <button class="tk-shake-cta" id="meal-shake-cta" type="button">
-        <span aria-hidden="true">🥤</span>
-        <span data-i18n="modal.proteinShake">Protein shake</span>
-        <span class="tk-shake-cta-sub" data-i18n="modal.quickAdd">Quick-add your shake</span>
+      <button class="tk-photo-cta" id="meal-text-cta" type="button">
+        <span class="tk-photo-icon" aria-hidden="true">✎</span>
+        <span class="tk-photo-cta-label" data-i18n="modal.textToAI">Describe your meal</span>
+        <span class="tk-photo-cta-sub" data-i18n="modal.textToAI.sub">Type what you ate, AI estimates nutrition</span>
       </button>
     </div>
 
@@ -67,27 +63,6 @@
         Analyze
       </button>
       <p class="tk-analyze-status" id="meal-text-status"></p>
-    </div>
-
-    <!-- SEARCH: text input + results -->
-    <div class="tk-modal-body" data-view="search" hidden>
-      <div class="tk-search-wrap">
-        <input
-          type="search"
-          id="meal-search-input"
-          class="tk-search-input"
-          placeholder="Search food (English or 中文)…"
-          autocomplete="off"
-          inputmode="search"
-        />
-      </div>
-      <div class="tk-search-results" id="meal-search-results"></div>
-    </div>
-
-    <!-- SHAKES: scrollable list of protein shake products -->
-    <div class="tk-modal-body" data-view="shakes" hidden>
-      <p class="tk-shakes-title" data-i18n="modal.pickShake">Pick your shake</p>
-      <div class="tk-search-results" id="meal-shakes-results"></div>
     </div>
 
     <!-- Items list (shared) -->
@@ -796,19 +771,6 @@
 <script>
   import { analyzeMealPhoto, analyzeMealText, type AnalyzedItem } from "../lib/analyze-meal";
 
-  type FoodRow = {
-    id: string;
-    name: string;
-    name_zh: string | null;
-    category: string;
-    portion_label: string;
-    protein_per_portion: number;
-    calories_per_portion: number | null;
-    fat_per_portion: number | null;
-    sugar_per_portion: number | null;
-    common_in_hk: boolean;
-  };
-
   type ModalState = {
     open: boolean;
     slotKey: string | null;
@@ -817,7 +779,7 @@
     items: AnalyzedItem[];
     photoFile: File | null;
     photoDataUrl: string | null;
-    foodCache: FoodRow[] | null;
+    addMode: boolean;
   };
 
   const state: ModalState = {
@@ -828,13 +790,13 @@
     items: [],
     photoFile: null,
     photoDataUrl: null,
-    foodCache: null,
+    addMode: false,
   };
 
   const modal = () => document.getElementById("meal-modal") as HTMLDivElement | null;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
-  function setView(view: "choice" | "photo" | "search" | "shakes" | "text-input") {
+  function setView(view: "choice" | "photo" | "text-input") {
     document.querySelectorAll<HTMLElement>("#meal-modal [data-view]").forEach((el) => {
       el.toggleAttribute("hidden", el.dataset.view !== view);
     });
@@ -935,111 +897,6 @@
     }[c] as string));
   }
 
-  // --- Food cache + search ----------------------------------------------------
-  async function loadFoodCache(): Promise<FoodRow[]> {
-    if (state.foodCache) return state.foodCache;
-    const sb = (window as any).supabaseClient;
-    if (!sb) return [];
-    const { data, error } = await sb
-      .from("food_database")
-      .select("id, name, name_zh, category, portion_label, protein_per_portion, calories_per_portion, fat_per_portion, sugar_per_portion, common_in_hk")
-      .eq("active", true)
-      .order("common_in_hk", { ascending: false })
-      .order("name");
-    if (error) {
-      console.warn("food_database", error);
-      return [];
-    }
-    state.foodCache = (data || []) as FoodRow[];
-    return state.foodCache;
-  }
-
-  function filterFoods(rows: FoodRow[], q: string): FoodRow[] {
-    const term = q.trim().toLowerCase();
-    if (!term) {
-      return rows.slice(0, 40);
-    }
-    return rows
-      .filter((r) => {
-        const n = r.name.toLowerCase();
-        const z = (r.name_zh || "").toLowerCase();
-        return n.includes(term) || z.includes(term);
-      })
-      .slice(0, 40);
-  }
-
-  function renderSearchResults(rows: FoodRow[]) {
-    const wrap = $("meal-search-results");
-    if (!wrap) return;
-    if (!rows.length) {
-      wrap.innerHTML = '<p class="tk-search-empty">No matches. Try another name.</p>';
-      return;
-    }
-    wrap.innerHTML = rows
-      .map(
-        (r) => {
-          const cal = Number(r.calories_per_portion) || 0;
-          const fat = Number(r.fat_per_portion) || 0;
-          const sugar = Number(r.sugar_per_portion) || 0;
-          return `
-          <button class="tk-food-row" type="button" data-food-id="${r.id}">
-            <div class="tk-food-info">
-              <span class="tk-food-name">${escapeHtml(r.name)}${
-                r.name_zh ? ` · ${escapeHtml(r.name_zh)}` : ""
-              }</span>
-              <span class="tk-food-meta">${escapeHtml(r.portion_label)} · ${cal}kcal · ${fat}g fat · ${sugar}g sugar</span>
-            </div>
-            <span class="tk-food-protein">${Number(r.protein_per_portion)}g</span>
-          </button>
-        `;
-        }
-      )
-      .join("");
-  }
-
-  async function showSearch() {
-    setView("search");
-    setMsg("");
-    const input = $("meal-search-input") as HTMLInputElement | null;
-    const results = $("meal-search-results");
-    if (results) results.innerHTML = '<p class="tk-search-empty">Loading…</p>';
-    const rows = await loadFoodCache();
-    renderSearchResults(filterFoods(rows, input?.value || ""));
-    setTimeout(() => input?.focus(), 30);
-  }
-
-  async function showShakes() {
-    setView("shakes");
-    setMsg("");
-    const results = $("meal-shakes-results");
-    if (results) results.innerHTML = '<p class="tk-search-empty">Loading…</p>';
-    const rows = await loadFoodCache();
-    const shakes = rows.filter((r) => r.category === "protein_shake");
-    if (!shakes.length) {
-      if (results) results.innerHTML = '<p class="tk-search-empty">No shakes found. Search manually.</p>';
-      return;
-    }
-    // Render shakes using the same food-row pattern
-    results.innerHTML = shakes
-      .map((r) => {
-        const cal = Number(r.calories_per_portion) || 0;
-        const fat = Number(r.fat_per_portion) || 0;
-        const sugar = Number(r.sugar_per_portion) || 0;
-        return `
-          <button class="tk-food-row" type="button" data-shake-id="${r.id}">
-            <div class="tk-food-info">
-              <span class="tk-food-name">${escapeHtml(r.name)}${
-                r.name_zh ? ` · ${escapeHtml(r.name_zh)}` : ""
-              }</span>
-              <span class="tk-food-meta">${escapeHtml(r.portion_label)} · ${cal}kcal · ${fat}g fat · ${sugar}g sugar</span>
-            </div>
-            <span class="tk-food-protein">${Number(r.protein_per_portion)}g</span>
-          </button>
-        `;
-      })
-      .join("");
-  }
-
   // --- Photo flow -------------------------------------------------------------
   function pickPhoto() {
     const input = $("meal-photo-input") as HTMLInputElement | null;
@@ -1074,12 +931,16 @@
 
     try {
       const result = await analyzeMealPhoto(file);
-      // Replace items with AI result (user can still edit / add more).
-      state.items = result.items.slice();
+      if (state.addMode) {
+        state.items.push(...result.items);
+      } else {
+        state.items = result.items.slice();
+      }
+      state.addMode = true;
       renderItems();
       if (status) {
         if (result.mock) {
-          status.textContent = result.notice || "Mock analysis — adjust as needed";
+          status.textContent = result.notice || "Mock analysis, adjust as needed";
           status.className = "tk-analyze-status mock";
         } else {
           status.textContent = "Adjust if needed, then confirm";
@@ -1090,7 +951,7 @@
     } catch (err: any) {
       console.error("analyze", err);
       if (status) {
-        status.textContent = "Could not analyze photo. Search foods manually.";
+        status.textContent = "Could not analyze photo. Try describing what you ate.";
         status.className = "tk-analyze-status error";
       }
       if (notRightBtn) notRightBtn.hidden = false;
@@ -1119,18 +980,21 @@
 
     try {
       const result = await analyzeMealText(description);
-      state.items = result.items.slice();
+      if (state.addMode) {
+        state.items.push(...result.items);
+      } else {
+        state.items = result.items.slice();
+      }
+      state.addMode = true;
       renderItems();
 
       const photoStatus = $("meal-analyze-status");
       if (photoStatus) {
         const count = state.items.length;
-        photoStatus.textContent = `AI found ${count} item${count === 1 ? "" : "s"} — tap any to adjust`;
+        photoStatus.textContent = `AI found ${count} item${count === 1 ? "" : "s"}, tap any to adjust`;
         photoStatus.className = "tk-analyze-status";
       }
 
-      // If we have a photo, go back to photo view so user sees it with items below.
-      // Otherwise switch to choice so user sees the items list rendered under the footer.
       if (state.photoDataUrl) {
         setView("photo");
         const notRightBtn = $("meal-not-right");
@@ -1141,7 +1005,7 @@
     } catch (err: any) {
       console.error("analyze text", err);
       if (status) {
-        status.textContent = "Could not analyze. Try again or search manually.";
+        status.textContent = "Could not analyze. Try again.";
         status.className = "tk-analyze-status error";
       }
     } finally {
@@ -1259,12 +1123,9 @@
     state.items = [];
     state.photoFile = null;
     state.photoDataUrl = null;
+    state.addMode = false;
     const img = $("meal-photo-img") as HTMLImageElement | null;
     if (img) img.src = "";
-    const input = $("meal-search-input") as HTMLInputElement | null;
-    if (input) input.value = "";
-    const results = $("meal-search-results");
-    if (results) results.innerHTML = "";
     const textInput = $("meal-text-input") as HTMLInputElement | null;
     if (textInput) textInput.value = "";
     const textStatus = $("meal-text-status");
@@ -1292,12 +1153,11 @@
 
     if (prefill && prefill.length) {
       state.items = prefill.map((it) => ({ ...it }));
+      state.addMode = true;
       renderItems();
-      // Show choice screen so user can take a photo or search.
       setView("choice");
-      const status = $("meal-search-results");
-      if (status) status.innerHTML = "";
     } else {
+      state.addMode = false;
       setView("choice");
     }
 
@@ -1324,13 +1184,15 @@
     });
 
     $("meal-photo-cta")?.addEventListener("click", pickPhoto);
-    $("meal-search-cta")?.addEventListener("click", showSearch);
-    $("meal-shake-cta")?.addEventListener("click", showShakes);
+    $("meal-text-cta")?.addEventListener("click", showTextInput);
 
-    $("meal-add-more")?.addEventListener("click", showSearch);
+    $("meal-add-more")?.addEventListener("click", showTextInput);
     $("meal-confirm")?.addEventListener("click", confirmMeal);
 
-    $("meal-not-right")?.addEventListener("click", showTextInput);
+    $("meal-not-right")?.addEventListener("click", () => {
+      state.addMode = false;
+      showTextInput();
+    });
     $("meal-text-analyze")?.addEventListener("click", handleTextAnalysis);
 
     const textInput = $("meal-text-input") as HTMLInputElement | null;
@@ -1356,59 +1218,6 @@
     uploadInput?.addEventListener("change", () => {
       const f = uploadInput.files?.[0];
       if (f) handlePhoto(f);
-    });
-
-    const searchInput = $("meal-search-input") as HTMLInputElement | null;
-    let searchTimer: number | null = null;
-    searchInput?.addEventListener("input", () => {
-      if (searchTimer) window.clearTimeout(searchTimer);
-      searchTimer = window.setTimeout(async () => {
-        const rows = await loadFoodCache();
-        renderSearchResults(filterFoods(rows, searchInput.value));
-      }, 120);
-    });
-
-    const searchResults = $("meal-search-results");
-    searchResults?.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement | null;
-      const btn = target?.closest<HTMLButtonElement>(".tk-food-row");
-      if (!btn) return;
-      const id = btn.dataset.foodId;
-      const row = (state.foodCache || []).find((r) => String(r.id) === id);
-      if (!row) return;
-      state.items.push({
-        name: row.name,
-        name_zh: row.name_zh || "",
-        portion_label: row.portion_label,
-        protein_g: Number(row.protein_per_portion) || 0,
-        calories_kcal: Number(row.calories_per_portion) || 0,
-        fat_g: Number(row.fat_per_portion) || 0,
-        sugar_g: Number(row.sugar_per_portion) || 0,
-        confidence: 1,
-      });
-      renderItems();
-    });
-
-    const shakesResults = $("meal-shakes-results");
-    shakesResults?.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement | null;
-      const btn = target?.closest<HTMLButtonElement>(".tk-food-row");
-      if (!btn) return;
-      const id = btn.dataset.shakeId;
-      const row = (state.foodCache || []).find((r) => String(r.id) === id);
-      if (!row) return;
-      state.items.push({
-        name: row.name,
-        name_zh: row.name_zh || "",
-        portion_label: row.portion_label,
-        protein_g: Number(row.protein_per_portion) || 0,
-        calories_kcal: Number(row.calories_per_portion) || 0,
-        fat_g: Number(row.fat_per_portion) || 0,
-        sugar_g: Number(row.sugar_per_portion) || 0,
-        confidence: 1,
-      });
-      renderItems();
-      setView("choice");
     });
 
     document.addEventListener("keydown", (e) => {
