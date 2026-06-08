@@ -1,5 +1,5 @@
 ---
-// Coach dashboard — only accessible to users with role='coach'.
+// Coach dashboard — accessible to users with role='coach' or role='founder'.
 // All team data fetched client-side, RLS enforces team_id scoping.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
@@ -1716,7 +1716,7 @@ import Footer from "../../components/Footer.astro";
       .eq("id", user.id)
       .maybeSingle();
 
-    if (profile?.role !== "coach") {
+    if (profile?.role !== "coach" && profile?.role !== "founder") {
       loading?.setAttribute("hidden", "");
       notCoach?.removeAttribute("hidden");
       return;

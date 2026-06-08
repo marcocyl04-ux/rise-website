@@ -78,6 +78,37 @@ import Footer from "../../components/Footer.astro";
           </span>
         </a>
 
+        <a class="portal-card portal-card-active" href="/portal/brain" id="portal-brain-card" hidden>
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.5-3 5.7V17a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 0 1 7-7z" />
+              <path d="M9 21h6" /><path d="M10 17v4" /><path d="M14 17v4" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Marketing Brain</h3>
+            <p class="portal-card-desc">Strategic marketing intelligence engine.</p>
+          </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
+          </span>
+        </a>
+
+        <a class="portal-card portal-card-active" href="/portal/coach" id="portal-coach-card" hidden>
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Coach Dashboard</h3>
+            <p class="portal-card-desc">Monitor your team's nutrition and progress.</p>
+          </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
+          </span>
+        </a>
+
         <div class="portal-card portal-card-soon">
           <div class="portal-card-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -516,10 +547,17 @@ import Footer from "../../components/Footer.astro";
       sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
     ]);
 
-    // Coaches see a different dashboard.
+    // Coaches get redirected to coach dashboard; founders stay here (they see everything).
     if (profile?.role === "coach") {
       window.location.replace("/portal/coach");
       return;
+    }
+    // Founders see the Brain card + a link to coach dashboard
+    if (profile?.role === "founder") {
+      const brainCard = document.getElementById("portal-brain-card");
+      if (brainCard) brainCard.removeAttribute("hidden");
+      const coachCard = document.getElementById("portal-coach-card");
+      if (coachCard) coachCard.removeAttribute("hidden");
     }
 
     const name = profile?.full_name || deriveDisplayName(user);
