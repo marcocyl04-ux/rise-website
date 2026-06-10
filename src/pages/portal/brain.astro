@@ -69,6 +69,8 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         <button class="brain-tab active" data-tab="briefs">Briefs</button>
         <button class="brain-tab" data-tab="consult">Consult</button>
         <button class="brain-tab" data-tab="research">Research</button>
+        <button class="brain-tab" data-tab="strategy">Strategy</button>
+        <button class="brain-tab" data-tab="health">Health</button>
         <button class="brain-tab" data-tab="setup" id="brain-tab-setup">Setup</button>
       </nav>
 
@@ -161,7 +163,20 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
 
       <!-- ── Research Tab ────────────────────────────────── -->
       <div class="brain-panel" id="panel-research">
-        <p class="brain-research-intro">Tell the brain a topic to research. It will find relevant knowledge and propose nodes for the graph.</p>
+
+        <!-- Scout Signals -->
+        <section class="brain-section" id="brain-scout-section">
+          <h2 class="brain-section-label">Scout Signals <span class="brain-gap-count" id="brain-scout-count"></span></h2>
+          <div class="brain-loading-inline hidden" id="brain-scout-loading">
+            <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
+            <span>Loading signals...</span>
+          </div>
+          <div id="brain-scout-list"></div>
+        </section>
+
+        <div style="border-top:1px solid var(--rise-neutral-100);margin:16px 0;padding-top:16px;">
+          <p class="brain-research-intro">Tell the brain a topic to research. It will find relevant knowledge and propose nodes for the graph.</p>
+        </div>
 
         <form class="brain-query-form" id="brain-research-form">
           <input type="text" class="brain-query-input" id="brain-research-input"
@@ -212,6 +227,136 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         <div class="brain-flash hidden" id="brain-research-flash">
           <span class="brain-flash-icon">&#10003;</span>
           <span class="brain-flash-text" id="brain-research-flash-text"></span>
+        </div>
+      </div>
+
+      <!-- ── Strategy Tab ──────────────────────────────────── -->
+      <div class="brain-panel" id="panel-strategy">
+        <div class="brain-loading-inline hidden" id="brain-strategy-loading">
+          <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
+          <span>Loading strategy...</span>
+        </div>
+
+        <div class="brain-empty-state hidden" id="brain-strategy-empty">
+          <p>No strategy document yet. Generate one to get started.</p>
+          <button class="btn-primary" id="brain-generate-strategy-btn" style="margin-top:12px">Generate strategy</button>
+        </div>
+
+        <div class="hidden" id="brain-strategy-content">
+          <div class="brain-strategy-header">
+            <span class="brain-strategy-version" id="brain-strategy-version"></span>
+            <span class="brain-strategy-status" id="brain-strategy-status"></span>
+          </div>
+
+          <section class="brain-section">
+            <h2 class="brain-section-label">Positioning</h2>
+            <p class="brain-position-text" id="brain-strategy-positioning"></p>
+          </section>
+
+          <section class="brain-section">
+            <h2 class="brain-section-label">Target Audience</h2>
+            <p class="brain-position-text" id="brain-strategy-audience"></p>
+          </section>
+
+          <section class="brain-section">
+            <h2 class="brain-section-label">Content Pillars</h2>
+            <div class="brain-tag-list" id="brain-strategy-pillars"></div>
+          </section>
+
+          <section class="brain-section">
+            <h2 class="brain-section-label">Growth Levers</h2>
+            <div class="brain-tag-list" id="brain-strategy-levers"></div>
+          </section>
+
+          <section class="brain-section">
+            <h2 class="brain-section-label">Current Priorities</h2>
+            <div class="brain-priority-list" id="brain-strategy-priorities"></div>
+          </section>
+
+          <section class="brain-section hidden" id="brain-strategy-refinement-section">
+            <h2 class="brain-section-label">Refinement Notes</h2>
+            <p class="brain-position-text" id="brain-strategy-refinement"></p>
+          </section>
+
+          <footer class="brain-result-meta">
+            <span id="brain-strategy-updated"></span>
+          </footer>
+        </div>
+
+        <div class="brain-error-card hidden" id="brain-strategy-error">
+          <p class="brain-error-text" id="brain-strategy-error-text"></p>
+        </div>
+      </div>
+
+      <!-- ── Health Tab ─────────────────────────────────────── -->
+      <div class="brain-panel" id="panel-health">
+        <div class="brain-loading-inline hidden" id="brain-health-loading">
+          <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
+          <span>Checking data health...</span>
+        </div>
+
+        <div class="hidden" id="brain-health-content">
+          <!-- Status banner -->
+          <div class="brain-health-status" id="brain-health-status-banner">
+            <span class="brain-health-status-icon" id="brain-health-status-icon"></span>
+            <span class="brain-health-status-text" id="brain-health-status-text"></span>
+          </div>
+
+          <!-- Stats grid -->
+          <div class="brain-health-grid">
+            <div class="brain-health-card">
+              <span class="brain-health-card-value" id="brain-health-outcomes">0</span>
+              <span class="brain-health-card-label">Outcomes tracked</span>
+            </div>
+            <div class="brain-health-card">
+              <span class="brain-health-card-value" id="brain-health-content-count">0</span>
+              <span class="brain-health-card-label">Content pieces</span>
+            </div>
+            <div class="brain-health-card">
+              <span class="brain-health-card-value" id="brain-health-missing">0</span>
+              <span class="brain-health-card-label">Missing outcomes</span>
+            </div>
+            <div class="brain-health-card">
+              <span class="brain-health-card-value" id="brain-health-stale">0</span>
+              <span class="brain-health-card-label">Stale outcomes</span>
+            </div>
+          </div>
+
+          <!-- Bias warning -->
+          <section class="brain-section hidden" id="brain-health-bias-section">
+            <h2 class="brain-section-label">Bias Warning</h2>
+            <div class="brain-health-warning" id="brain-health-bias"></div>
+          </section>
+
+          <!-- Missing outcomes list -->
+          <section class="brain-section hidden" id="brain-health-missing-section">
+            <h2 class="brain-section-label">Missing Outcomes</h2>
+            <div id="brain-health-missing-list"></div>
+          </section>
+
+          <!-- Suggested messages -->
+          <section class="brain-section hidden" id="brain-health-messages-section">
+            <h2 class="brain-section-label">Suggested for Ryan</h2>
+            <div id="brain-health-messages"></div>
+          </section>
+
+          <!-- Insights -->
+          <section class="brain-section" id="brain-health-insights-section">
+            <h2 class="brain-section-label">Performance Insights <span class="brain-gap-count" id="brain-health-insight-count"></span></h2>
+            <div class="brain-loading-inline hidden" id="brain-insights-loading">
+              <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
+              <span>Analyzing patterns...</span>
+            </div>
+            <div id="brain-health-insights"></div>
+          </section>
+
+          <footer class="brain-result-meta">
+            <span id="brain-health-last-outcome"></span>
+          </footer>
+        </div>
+
+        <div class="brain-error-card hidden" id="brain-health-error">
+          <p class="brain-error-text" id="brain-health-error-text"></p>
         </div>
       </div>
 
@@ -368,6 +513,9 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
           $$(".brain-panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + target));
           if (target === "briefs") { loadBriefs(); }
           if (target === "setup") loadOnboarding();
+          if (target === "strategy") loadStrategy();
+          if (target === "health") loadHealth();
+          if (target === "research") loadScoutSignals();
         });
       });
     }
@@ -395,7 +543,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
     function brainInit() {
       loadStats();
       setWeekHeader();
-      loadBriefs();
+      loadCampaignCache().then(() => loadBriefs());
     }
 
     // ── Ask Tab ───────────────────────────────────────────────
@@ -548,6 +696,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       html += '<div class="brain-brief-header-left">';
       html += '<span class="brain-brief-conf brain-conf-' + confClass + '">' + (content.confidence || brief.confidence || "\u2014") + '</span>';
       html += '<span class="brain-brief-topic-text">' + esc(brief.topic) + '</span>';
+      html += getCampaignBadge(brief);
       html += '</div>';
       html += '<div class="brain-brief-header-right">';
       html += statusBadge;
@@ -955,6 +1104,318 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       txt.textContent = msg;
       el.classList.remove("hidden");
       setTimeout(() => el.classList.add("hidden"), 1500);
+    }
+
+    // ── Campaign Cache (for brief context) ───────────────────
+    let campaignCache = {};
+
+    async function loadCampaignCache() {
+      try {
+        const campaigns = await brainFetch("/campaigns");
+        campaignCache = {};
+        for (const c of campaigns) {
+          campaignCache[c.id] = c;
+        }
+      } catch { campaignCache = {}; }
+    }
+
+    // ── Scout Signals ────────────────────────────────────────
+    async function loadScoutSignals() {
+      const $list = $("#brain-scout-list");
+      const $loading = $("#brain-scout-loading");
+      const $count = $("#brain-scout-count");
+      if (!$list) return;
+
+      $loading.classList.remove("hidden");
+      $list.innerHTML = "";
+
+      try {
+        const data = await brainFetch("/scout/signals");
+        const signals = data.signals || [];
+        $loading.classList.add("hidden");
+
+        const pending = signals.filter(s => s.status === "PENDING");
+        $count.textContent = pending.length > 0 ? "(" + pending.length + ")" : "";
+
+        if (signals.length === 0) {
+          $list.innerHTML = '<div class="brain-empty-state"><p>No scout signals yet. Signals appear when the brain detects market intelligence.</p></div>';
+          return;
+        }
+
+        let html = "";
+        for (const s of signals) {
+          const statusClass = s.status.toLowerCase();
+          const relevanceClass = (s.relevance || "medium").toLowerCase();
+          html += '<div class="brain-signal-card">';
+          html += '<div class="brain-signal-header">';
+          html += '<span class="brain-signal-topic">' + esc(s.topic) + '</span>';
+          html += '<span class="brain-signal-status brain-signal-' + statusClass + '">' + s.status + '</span>';
+          html += '</div>';
+          html += '<p class="brain-signal-summary">' + esc(s.summary) + '</p>';
+          html += '<div class="brain-signal-meta">';
+          html += '<span class="brain-signal-source">' + esc(s.source_type) + '</span>';
+          html += '<span class="brain-signal-relevance brain-relevance-' + relevanceClass + '">' + esc(s.relevance) + '</span>';
+          html += '</div>';
+          if (s.status === "PENDING") {
+            html += '<div class="brain-signal-actions">';
+            html += '<button class="btn-primary brain-signal-btn" onclick="window._brainApproveSignal(\'' + s.id + '\')">Approve</button>';
+            html += '<button class="btn-ghost brain-signal-btn" onclick="window._brainDismissSignal(\'' + s.id + '\')">Dismiss</button>';
+            html += '</div>';
+          }
+          html += '</div>';
+        }
+        $list.innerHTML = html;
+      } catch (e) {
+        $loading.classList.add("hidden");
+        $list.innerHTML = '<div class="brain-empty-state"><p>Could not load signals.</p></div>';
+      }
+    }
+
+    window._brainApproveSignal = async function(id) {
+      try {
+        await brainFetch("/scout/signals/" + id + "/approve", { method: "POST" });
+        loadScoutSignals();
+        loadStats();
+      } catch (e) { alert("Failed: " + e.message); }
+    };
+
+    window._brainDismissSignal = async function(id) {
+      try {
+        await brainFetch("/scout/signals/" + id + "/dismiss", { method: "POST" });
+        loadScoutSignals();
+      } catch (e) { alert("Failed: " + e.message); }
+    };
+
+    // ── Strategy Tab ─────────────────────────────────────────
+    async function loadStrategy() {
+      const $loading = $("#brain-strategy-loading");
+      const $empty = $("#brain-strategy-empty");
+      const $content = $("#brain-strategy-content");
+      const $error = $("#brain-strategy-error");
+      const $errorText = $("#brain-strategy-error-text");
+
+      $loading.classList.remove("hidden");
+      $empty.classList.add("hidden");
+      $content.classList.add("hidden");
+      $error.classList.add("hidden");
+
+      try {
+        const data = await brainFetch("/strategy");
+        $loading.classList.add("hidden");
+
+        if (!data || !data.positioning) {
+          $empty.classList.remove("hidden");
+          return;
+        }
+
+        // Version + status
+        $("#brain-strategy-version").textContent = "v" + (data.version || 1);
+        const statusEl = $("#brain-strategy-status");
+        statusEl.textContent = data.status || "ACTIVE";
+        statusEl.className = "brain-strategy-status brain-strat-" + (data.status || "active").toLowerCase();
+
+        // Core fields
+        $("#brain-strategy-positioning").textContent = data.positioning || "";
+        $("#brain-strategy-audience").textContent = data.target_audience || "";
+
+        // Content pillars (tags)
+        const pillars = data.content_pillars || [];
+        let pillarsHtml = "";
+        for (const p of pillars) {
+          pillarsHtml += '<span class="brain-tag">' + esc(p) + '</span>';
+        }
+        $("#brain-strategy-pillars").innerHTML = pillarsHtml || '<span class="brain-empty-text">None defined</span>';
+
+        // Growth levers (tags)
+        const levers = data.growth_levers || [];
+        let leversHtml = "";
+        for (const l of levers) {
+          leversHtml += '<span class="brain-tag">' + esc(l) + '</span>';
+        }
+        $("#brain-strategy-levers").innerHTML = leversHtml || '<span class="brain-empty-text">None defined</span>';
+
+        // Current priorities (numbered list)
+        const priorities = data.current_priorities || [];
+        let priHtml = "";
+        for (let i = 0; i < priorities.length; i++) {
+          priHtml += '<div class="brain-priority-item"><span class="brain-priority-num">' + (i + 1) + '</span><span class="brain-priority-text">' + esc(priorities[i]) + '</span></div>';
+        }
+        $("#brain-strategy-priorities").innerHTML = priHtml || '<span class="brain-empty-text">None defined</span>';
+
+        // Refinement notes
+        if (data.refinement_notes) {
+          $("#brain-strategy-refinement").textContent = data.refinement_notes;
+          $("#brain-strategy-refinement-section").classList.remove("hidden");
+        } else {
+          $("#brain-strategy-refinement-section").classList.add("hidden");
+        }
+
+        // Updated at
+        if (data.updated_at) {
+          const d = new Date(data.updated_at);
+          $("#brain-strategy-updated").textContent = "Last updated " + d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        }
+
+        $content.classList.remove("hidden");
+      } catch (e) {
+        $loading.classList.add("hidden");
+        $errorText.textContent = e.message;
+        $error.classList.remove("hidden");
+      }
+    }
+
+    // Generate strategy button
+    const $genStratBtn = $("#brain-generate-strategy-btn");
+    if ($genStratBtn) {
+      $genStratBtn.addEventListener("click", async function() {
+        $genStratBtn.disabled = true;
+        $genStratBtn.textContent = "Generating...";
+        try {
+          await brainFetch("/strategy/generate", { method: "POST" });
+          loadStrategy();
+        } catch (e) {
+          alert("Failed to generate strategy: " + e.message);
+        } finally {
+          $genStratBtn.disabled = false;
+          $genStratBtn.textContent = "Generate strategy";
+        }
+      });
+    }
+
+    // ── Health Tab ───────────────────────────────────────────
+    async function loadHealth() {
+      const $loading = $("#brain-health-loading");
+      const $content = $("#brain-health-content");
+      const $error = $("#brain-health-error");
+      const $errorText = $("#brain-health-error-text");
+
+      $loading.classList.remove("hidden");
+      $content.classList.add("hidden");
+      $error.classList.add("hidden");
+
+      try {
+        const health = await brainFetch("/analyst/health");
+        $loading.classList.add("hidden");
+
+        // Status banner
+        const statusIcon = $("#brain-health-status-icon");
+        const statusText = $("#brain-health-status-text");
+        const statusBanner = $("#brain-health-status-banner");
+        const st = (health.status || "unknown").toLowerCase();
+        statusBanner.className = "brain-health-status brain-health-" + st;
+        if (st === "healthy" || st === "good") {
+          statusIcon.textContent = "\u2713";
+          statusText.textContent = "Data health looks good";
+        } else if (st === "warning" || st === "needs_attention") {
+          statusIcon.textContent = "\u26A0";
+          statusText.textContent = "Some data needs attention";
+        } else {
+          statusIcon.textContent = "\u25CE";
+          statusText.textContent = "Data health: " + (health.status || "unknown");
+        }
+
+        // Stats grid
+        $("#brain-health-outcomes").textContent = health.total_outcomes || 0;
+        $("#brain-health-content-count").textContent = health.total_content || 0;
+        $("#brain-health-missing").textContent = (health.missing_outcomes || []).length;
+        $("#brain-health-stale").textContent = (health.stale_outcomes || []).length;
+
+        // Bias warning
+        if (health.bias_warning) {
+          $("#brain-health-bias").innerHTML = '<div class="brain-health-warning-text">' + esc(health.bias_warning) + '</div>';
+          $("#brain-health-bias-section").classList.remove("hidden");
+        } else {
+          $("#brain-health-bias-section").classList.add("hidden");
+        }
+
+        // Missing outcomes
+        const missing = health.missing_outcomes || [];
+        if (missing.length > 0) {
+          let missHtml = "";
+          for (const m of missing) {
+            missHtml += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:#C05621">\u25CB</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(m) + '</div></div></div>';
+          }
+          $("#brain-health-missing-list").innerHTML = missHtml;
+          $("#brain-health-missing-section").classList.remove("hidden");
+        } else {
+          $("#brain-health-missing-section").classList.add("hidden");
+        }
+
+        // Suggested messages
+        const messages = health.suggested_messages || [];
+        if (messages.length > 0) {
+          let msgHtml = "";
+          for (const m of messages) {
+            msgHtml += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:var(--rise-red)">&rarr;</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(m) + '</div></div></div>';
+          }
+          $("#brain-health-messages").innerHTML = msgHtml;
+          $("#brain-health-messages-section").classList.remove("hidden");
+        } else {
+          $("#brain-health-messages-section").classList.add("hidden");
+        }
+
+        // Last outcome
+        if (health.last_outcome_at) {
+          const d = new Date(health.last_outcome_at);
+          $("#brain-health-last-outcome").textContent = "Last outcome: " + d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        }
+
+        $content.classList.remove("hidden");
+
+        // Load insights separately (may take longer)
+        loadInsights();
+      } catch (e) {
+        $loading.classList.add("hidden");
+        $errorText.textContent = e.message;
+        $error.classList.remove("hidden");
+      }
+    }
+
+    async function loadInsights() {
+      const $loading = $("#brain-insights-loading");
+      const $list = $("#brain-health-insights");
+      const $count = $("#brain-health-insight-count");
+
+      $loading.classList.remove("hidden");
+      $list.innerHTML = "";
+
+      try {
+        const data = await brainFetch("/analyst/insights");
+        $loading.classList.add("hidden");
+
+        const insights = data || [];
+        $count.textContent = insights.length > 0 ? "(" + insights.length + ")" : "";
+
+        if (insights.length === 0) {
+          $list.innerHTML = '<div class="brain-empty-state"><p>No insights yet. Insights appear after recording outcomes and analyzing patterns.</p></div>';
+          return;
+        }
+
+        let html = "";
+        for (const ins of insights) {
+          const conf = (ins.confidence || "MEDIUM").toLowerCase();
+          html += '<div class="brain-insight-card">';
+          html += '<div class="brain-insight-header">';
+          html += '<span class="brain-insight-pattern">' + esc(ins.pattern) + '</span>';
+          html += '<span class="brain-confidence ' + conf + '">' + (ins.confidence || "MEDIUM") + '</span>';
+          html += '</div>';
+          if (ins.impact_estimate) {
+            html += '<p class="brain-insight-impact">' + esc(ins.impact_estimate) + '</p>';
+          }
+          html += '</div>';
+        }
+        $list.innerHTML = html;
+      } catch {
+        $loading.classList.add("hidden");
+        $list.innerHTML = '<div class="brain-empty-state"><p>Could not load insights.</p></div>';
+      }
+    }
+
+    // ── Brief campaign context (rendered in createBriefCard) ──
+    function getCampaignBadge(brief) {
+      if (!brief.campaign_id || !campaignCache[brief.campaign_id]) return "";
+      const c = campaignCache[brief.campaign_id];
+      return '<span class="brain-brief-campaign-tag" title="' + esc(c.theme || "") + '">' + esc(c.name) + '</span>';
     }
 
     // ── Boot ──────────────────────────────────────────────────
@@ -1458,6 +1919,171 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
   /* ── Brief Detail (old, hidden) ──────────────────────────── */
   .brain-brief-detail { display: none; }
 
+  /* ── Campaign Badge on Briefs ────────────────────────────── */
+  .brain-brief-campaign-tag {
+    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
+    color: var(--rise-red); background: rgba(211,25,31,0.06);
+    border: 1px solid rgba(211,25,31,0.12);
+    padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* ── Scout Signals ───────────────────────────────────────── */
+  .brain-signal-card {
+    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .brain-signal-card:hover { border-color: var(--rise-neutral-300); }
+  .brain-signal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .brain-signal-topic {
+    font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+    color: var(--rise-black);
+  }
+  .brain-signal-status {
+    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .brain-signal-pending { color: #B7791F; background: rgba(183,121,31,0.08); }
+  .brain-signal-approved { color: #2F855A; background: rgba(47,133,90,0.08); }
+  .brain-signal-dismissed { color: var(--rise-neutral-400); background: var(--rise-neutral-50); }
+  .brain-signal-summary {
+    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700);
+    line-height: 1.6; margin: 0 0 8px;
+  }
+  .brain-signal-meta {
+    display: flex; gap: 12px; align-items: center;
+    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400);
+  }
+  .brain-signal-source { text-transform: capitalize; }
+  .brain-signal-relevance { font-weight: 600; text-transform: capitalize; }
+  .brain-relevance-high { color: #2F855A; }
+  .brain-relevance-medium { color: #B7791F; }
+  .brain-relevance-low { color: #C05621; }
+  .brain-signal-actions {
+    display: flex; gap: 8px; margin-top: 10px;
+  }
+  .brain-signal-btn {
+    font-size: 0.8rem; padding: 6px 14px;
+  }
+
+  /* ── Strategy Tab ────────────────────────────────────────── */
+  .brain-strategy-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .brain-strategy-version {
+    font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
+    color: var(--rise-neutral-500);
+  }
+  .brain-strategy-status {
+    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .brain-strat-active { color: #2F855A; background: rgba(47,133,90,0.08); }
+  .brain-strat-draft { color: #B7791F; background: rgba(183,121,31,0.08); }
+  .brain-strat-archived { color: var(--rise-neutral-400); background: var(--rise-neutral-50); }
+  .brain-strat-forked { color: #805AD5; background: rgba(128,90,213,0.08); }
+  .brain-tag-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .brain-tag {
+    font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+    color: var(--rise-neutral-700); background: var(--rise-neutral-50);
+    border: 1px solid var(--rise-neutral-100);
+    padding: 6px 14px; border-radius: 6px;
+  }
+  .brain-empty-text {
+    font-family: var(--font-body); font-size: 0.85rem; color: var(--rise-neutral-400);
+    font-style: italic;
+  }
+  .brain-priority-list { display: flex; flex-direction: column; gap: 8px; }
+  .brain-priority-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 14px; background: var(--rise-neutral-50);
+    border-radius: 8px;
+  }
+  .brain-priority-num {
+    font-family: var(--font-body); font-size: 0.75rem; font-weight: 700;
+    color: var(--rise-red); background: rgba(211,25,31,0.08);
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .brain-priority-text {
+    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700);
+    line-height: 1.5;
+  }
+
+  /* ── Health Tab ──────────────────────────────────────────── */
+  .brain-health-status {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px; border-radius: 10px; margin-bottom: 20px;
+  }
+  .brain-health-healthy, .brain-health-good {
+    background: rgba(47,133,90,0.06); border: 1px solid rgba(47,133,90,0.15);
+  }
+  .brain-health-warning, .brain-health-needs_attention {
+    background: rgba(183,121,31,0.06); border: 1px solid rgba(183,121,31,0.15);
+  }
+  .brain-health-unknown {
+    background: var(--rise-neutral-50); border: 1px solid var(--rise-neutral-100);
+  }
+  .brain-health-status-icon {
+    font-size: 1.2rem;
+  }
+  .brain-health-healthy .brain-health-status-icon,
+  .brain-health-good .brain-health-status-icon { color: #2F855A; }
+  .brain-health-warning .brain-health-status-icon,
+  .brain-health-needs_attention .brain-health-status-icon { color: #B7791F; }
+  .brain-health-status-text {
+    font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+    color: var(--rise-neutral-700);
+  }
+  .brain-health-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    margin-bottom: 20px;
+  }
+  .brain-health-card {
+    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
+    border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .brain-health-card-value {
+    display: block; font-family: var(--font-body); font-size: 1.8rem;
+    font-weight: 700; color: var(--rise-black); line-height: 1;
+    margin-bottom: 4px;
+  }
+  .brain-health-card-label {
+    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .brain-health-warning-text {
+    font-family: var(--font-body); font-size: 0.9rem; color: #B7791F;
+    line-height: 1.6;
+  }
+  .brain-insight-card {
+    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 10px;
+  }
+  .brain-insight-header {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+  }
+  .brain-insight-pattern {
+    font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+    color: var(--rise-black); flex: 1;
+  }
+  .brain-insight-impact {
+    font-family: var(--font-body); font-size: 0.85rem; color: var(--rise-neutral-600);
+    line-height: 1.5; margin: 8px 0 0;
+  }
+
   /* ── Responsive ───────────────────────────────────────── */
   @media (max-width: 640px) {
     .brain-container { padding: 0 var(--space-4); }
@@ -1465,5 +2091,6 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
     .brain-chain-level { font-size: 0.6rem; }
     .brain-tabs { overflow-x: auto; }
     .brain-tab { padding: 8px 14px; font-size: 0.8rem; white-space: nowrap; }
+    .brain-health-grid { grid-template-columns: 1fr; }
   }
 </style>
