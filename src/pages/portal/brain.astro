@@ -1,12 +1,10 @@
----
 // /portal/brain — RISE Marketing Brain (founder-only)
 // Authenticates via Supabase, checks role, talks to Brain API.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 
-// Brain API URL — set PUBLIC_BRAIN_API_URL in .env for production.
-// Falls back to localhost for local dev.
+// Brain API URL
 const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000";
 ---
 
@@ -64,23 +62,50 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         <p class="brain-sub">Strategic marketing intelligence engine</p>
       </header>
 
-      <!-- Tab Nav — Briefs FIRST as default -->
+      <!-- Tab Nav — 3 workflow-centric tabs -->
       <nav class="brain-tabs">
-        <button class="brain-tab active" data-tab="briefs">Briefs</button>
-        <button class="brain-tab" data-tab="consult">Consult</button>
-        <button class="brain-tab" data-tab="research">Research</button>
-        <button class="brain-tab" data-tab="strategy">Strategy</button>
-        <button class="brain-tab" data-tab="health">Health</button>
-        <button class="brain-tab" data-tab="setup" id="brain-tab-setup">Setup</button>
+        <button class="brain-tab active" data-tab="week">This Week</button>
+        <button class="brain-tab" data-tab="intel">Intelligence</button>
+        <button class="brain-tab" data-tab="settings">Settings</button>
       </nav>
 
-      <!-- ── Briefs Tab (DEFAULT LANDING) ─────────────────── -->
-      <div class="brain-panel active" id="panel-briefs">
+      <!-- ── Tab 1: This Week (the hub) ──────────────────────── -->
+      <div class="brain-panel active" id="panel-week">
 
-        <!-- Week header -->
-        <div class="brain-week-header" id="brain-week-header">
-          <h2 class="brain-week-title" id="brain-week-title">This Week</h2>
-          <p class="brain-week-date" id="brain-week-date"></p>
+        <!-- Week Summary (the anchor / 中心思想) -->
+        <div class="brain-week-summary" id="brain-week-summary">
+          <div class="brain-week-campaign">
+            <span class="brain-week-campaign-tag" id="brain-week-campaign-tag">Campaign</span>
+            <span class="brain-week-campaign-name" id="brain-week-campaign-name">Loading...</span>
+          </div>
+          <h2 class="brain-week-goal" id="brain-week-goal">Loading this week's plan...</h2>
+          <p class="brain-week-reasoning" id="brain-week-reasoning"></p>
+
+          <!-- Evidence trail -->
+          <div class="brain-evidence-trail" id="brain-week-evidence">
+            <div class="brain-evidence-label">Why this direction</div>
+            <div id="brain-week-evidence-items"></div>
+          </div>
+
+          <!-- Progress -->
+          <div class="brain-week-progress">
+            <div class="brain-progress-bar-wrap">
+              <div class="brain-progress-bar-fill" id="brain-week-progress-fill" style="width:0%"></div>
+            </div>
+            <span class="brain-progress-label" id="brain-week-progress-label">0 of 0 completed</span>
+          </div>
+        </div>
+
+        <!-- Nudge (conditional) -->
+        <div class="brain-nudge hidden" id="brain-nudge-banner">
+          <span class="brain-nudge-icon">!</span>
+          <div class="brain-nudge-text" id="brain-nudge-text"></div>
+        </div>
+
+        <!-- Briefs Section -->
+        <div class="brain-section-header">
+          <span class="brain-section-title">This Week's Briefs</span>
+          <span class="brain-section-count" id="brain-brief-count">0 briefs</span>
         </div>
 
         <!-- Generate button (when no briefs) -->
@@ -95,365 +120,251 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
           <span>Generating briefs...</span>
         </div>
 
-        <!-- Briefs list -->
+        <!-- Briefs container -->
         <div class="brain-briefs-container" id="brain-briefs-container"></div>
 
         <!-- Error -->
         <div class="brain-error-card hidden" id="brain-briefs-error">
           <p class="brain-error-text" id="brain-briefs-error-text"></p>
         </div>
+
+        <!-- Feed the Brain -->
+        <div class="brain-feed-section">
+          <div class="brain-section-header">
+            <span class="brain-section-title">Feed the Brain</span>
+          </div>
+
+          <div class="brain-feed-input-area">
+            <div class="brain-feed-type-row">
+              <button class="brain-feed-type-btn active" data-feed="event">Event</button>
+              <button class="brain-feed-type-btn" data-feed="competitor">Competitor</button>
+              <button class="brain-feed-type-btn" data-feed="note">Note</button>
+              <button class="brain-feed-type-btn" data-feed="idea">Idea</button>
+            </div>
+            <textarea class="brain-feed-textarea" id="brain-feed-input" placeholder="e.g. HK Youth Tournament is July 15-17, 12 teams registered..."></textarea>
+            <div class="brain-feed-actions">
+              <span class="brain-feed-hint">The brain uses this to improve your briefs and strategy.</span>
+              <button class="btn-primary" id="brain-feed-submit">Submit</button>
+            </div>
+          </div>
+
+          <!-- Feed History -->
+          <div class="brain-feed-history" id="brain-feed-history"></div>
+        </div>
+
+        <!-- What the Brain Learned -->
+        <div class="brain-insights-section">
+          <div class="brain-section-header">
+            <span class="brain-section-title">What the Brain Learned</span>
+          </div>
+          <div id="brain-insights-container"></div>
+        </div>
       </div>
 
-      <!-- ── Consult Tab (was Ask) ─────────────────────────── -->
-      <div class="brain-panel" id="panel-consult">
-        <form class="brain-query-form" id="brain-query-form">
-          <input type="text" class="brain-query-input" id="brain-query-input"
-            placeholder="Ask the brain anything..." autocomplete="off" autofocus />
-          <button type="submit" class="brain-query-btn" id="brain-query-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
+      <!-- ── Tab 2: Intelligence ──────────────────────────────── -->
+      <div class="brain-panel" id="panel-intel">
+
+        <!-- Ask the Brain -->
+        <div class="brain-section-header">
+          <span class="brain-section-title">Ask the Brain</span>
+        </div>
+
+        <form class="brain-consult-form" id="brain-consult-form">
+          <input type="text" class="brain-consult-input" id="brain-consult-input"
+            placeholder="What should I post about for the summer tournament season?" autocomplete="off" />
         </form>
 
-        <!-- Empty state -->
-        <div class="brain-empty-state" id="brain-empty-state">
-          <p>Ask a question to get a strategic analysis with<br/>consequence chains, confidence levels, and knowledge gaps.</p>
+        <div class="brain-consult-suggestions" id="brain-consult-suggestions">
+          <span class="brain-suggestion" data-query="What content is working best right now?">What content is working best right now?</span>
+          <span class="brain-suggestion" data-query="Should we pivot our strategy?">Should we pivot our strategy?</span>
+          <span class="brain-suggestion" data-query="What are competitors doing?">What are competitors doing?</span>
+          <span class="brain-suggestion" data-query="How do I reach more parents?">How do I reach more parents?</span>
         </div>
 
         <!-- Loading -->
-        <div class="brain-loading-inline hidden" id="brain-ask-loading">
+        <div class="brain-loading-inline hidden" id="brain-consult-loading">
           <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
           <span>Thinking...</span>
         </div>
 
         <!-- Result Card -->
-        <div class="brain-result-card hidden" id="brain-result-card">
-          <section class="brain-section brain-section-position">
-            <h2 class="brain-section-label">Position</h2>
-            <p class="brain-position-text" id="brain-position-text"></p>
+        <div class="brain-consult-result hidden" id="brain-consult-result">
+          <section class="brain-consult-section">
+            <h3 class="brain-consult-label">Position</h3>
+            <p class="brain-consult-text" id="brain-consult-position"></p>
           </section>
-          <section class="brain-section" id="brain-chain-section">
-            <h2 class="brain-section-label">Consequence Chain</h2>
-            <div class="brain-chain" id="brain-chain"></div>
+          <section class="brain-consult-section" id="brain-consult-chain-section">
+            <h3 class="brain-consult-label">Consequence Chain</h3>
+            <div id="brain-consult-chain"></div>
           </section>
-          <section class="brain-section">
-            <h2 class="brain-section-label">Reasoning</h2>
-            <p class="brain-reasoning-text" id="brain-reasoning-text"></p>
+          <section class="brain-consult-section">
+            <h3 class="brain-consult-label">Reasoning</h3>
+            <p class="brain-consult-text" id="brain-consult-reasoning"></p>
           </section>
-          <section class="brain-section hidden" id="brain-gaps-section">
-            <h2 class="brain-section-label">Knowledge Gaps <span class="brain-gap-count" id="brain-gap-count"></span></h2>
-            <div class="brain-gaps-list" id="brain-gaps-list"></div>
+          <section class="brain-consult-section hidden" id="brain-consult-gaps-section">
+            <h3 class="brain-consult-label">Knowledge Gaps</h3>
+            <div id="brain-consult-gaps"></div>
           </section>
-          <footer class="brain-result-meta">
-            <span class="brain-confidence" id="brain-confidence">—</span>
+          <footer class="brain-consult-meta">
+            <span class="brain-confidence" id="brain-consult-confidence">—</span>
             <span class="brain-meta-sep">&middot;</span>
-            <span id="brain-sources">No sources</span>
+            <span id="brain-consult-sources">No sources</span>
             <span class="brain-meta-sep">&middot;</span>
-            <span id="brain-model"></span>
+            <span id="brain-consult-model"></span>
           </footer>
         </div>
 
         <!-- Error -->
-        <div class="brain-error-card hidden" id="brain-error-card">
-          <p class="brain-error-text" id="brain-error-text"></p>
+        <div class="brain-error-card hidden" id="brain-consult-error">
+          <p class="brain-error-text" id="brain-consult-error-text"></p>
         </div>
+
+        <!-- Current Strategy -->
+        <div class="brain-section-header" style="margin-top:32px">
+          <span class="brain-section-title">Current Strategy</span>
+          <span class="brain-section-count" id="brain-strategy-version">—</span>
+        </div>
+        <div class="brain-strategy-grid" id="brain-strategy-grid">
+          <div class="brain-strategy-card">
+            <div class="brain-strategy-card-title">Positioning</div>
+            <div class="brain-strategy-card-content" id="brain-strategy-positioning">Loading...</div>
+          </div>
+          <div class="brain-strategy-card">
+            <div class="brain-strategy-card-title">Target Audience</div>
+            <div class="brain-strategy-card-content" id="brain-strategy-audience">Loading...</div>
+          </div>
+          <div class="brain-strategy-card">
+            <div class="brain-strategy-card-title">Content Pillars</div>
+            <div class="brain-strategy-card-content" id="brain-strategy-pillars">Loading...</div>
+          </div>
+          <div class="brain-strategy-card">
+            <div class="brain-strategy-card-title">Growth Levers</div>
+            <div class="brain-strategy-card-content" id="brain-strategy-levers">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Market Signals -->
+        <div class="brain-section-header">
+          <span class="brain-section-title">Market Signals</span>
+          <span class="brain-section-count" id="brain-signal-count">—</span>
+        </div>
+        <div class="brain-signals-container" id="brain-signals-container"></div>
+
+        <!-- Knowledge Gaps -->
+        <div class="brain-section-header" style="margin-top:32px">
+          <span class="brain-section-title">What the Brain Needs</span>
+          <span class="brain-section-count" id="brain-gap-count">—</span>
+        </div>
+        <div id="brain-gaps-container"></div>
       </div>
 
-      <!-- ── Research Tab ────────────────────────────────── -->
-      <div class="brain-panel" id="panel-research">
+      <!-- ── Tab 3: Settings ──────────────────────────────────── -->
+      <div class="brain-panel" id="panel-settings">
 
-        <!-- Scout Signals -->
-        <section class="brain-section" id="brain-scout-section">
-          <h2 class="brain-section-label">Scout Signals <span class="brain-gap-count" id="brain-scout-count"></span></h2>
-          <div class="brain-loading-inline hidden" id="brain-scout-loading">
-            <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
-            <span>Loading signals...</span>
+        <!-- Data Health -->
+        <div class="brain-section-header">
+          <span class="brain-section-title">Data Health</span>
+        </div>
+        <div class="brain-health-grid">
+          <div class="brain-health-stat">
+            <div class="brain-health-stat-value" id="brain-health-outcomes">0</div>
+            <div class="brain-health-stat-label">Outcomes tracked</div>
           </div>
-          <div id="brain-scout-list"></div>
-        </section>
-
-        <div style="border-top:1px solid var(--rise-neutral-100);margin:16px 0;padding-top:16px;">
-          <p class="brain-research-intro">Tell the brain a topic to research. It will find relevant knowledge and propose nodes for the graph.</p>
+          <div class="brain-health-stat">
+            <div class="brain-health-stat-value" id="brain-health-content-count">0</div>
+            <div class="brain-health-stat-label">Content pieces</div>
+          </div>
+          <div class="brain-health-stat">
+            <div class="brain-health-stat-value brain-amber" id="brain-health-missing">0</div>
+            <div class="brain-health-stat-label">Missing outcomes</div>
+          </div>
+          <div class="brain-health-stat">
+            <div class="brain-health-stat-value brain-green" id="brain-health-coverage">0%</div>
+            <div class="brain-health-stat-label">Data coverage</div>
+          </div>
         </div>
 
-        <form class="brain-query-form" id="brain-research-form">
-          <input type="text" class="brain-query-input" id="brain-research-input"
-            placeholder="e.g. youth hockey social media best practices..." autocomplete="off" />
-          <button type="submit" class="brain-query-btn" id="brain-research-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-        </form>
-
-        <div class="brain-loading-inline hidden" id="brain-research-loading">
-          <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
-          <span>Researching...</span>
+        <!-- Confidence Breakdown -->
+        <div class="brain-section-header">
+          <span class="brain-section-title">Confidence Breakdown</span>
         </div>
-
-        <div class="brain-research-results hidden" id="brain-research-results">
-          <section class="brain-section brain-section-position">
-            <h2 class="brain-section-label">Summary</h2>
-            <p class="brain-position-text" id="brain-research-summary"></p>
-          </section>
-          <section class="brain-section" id="brain-research-findings-section">
-            <h2 class="brain-section-label">Findings</h2>
-            <div class="brain-findings-list" id="brain-research-findings"></div>
-          </section>
-          <section class="brain-section hidden" id="brain-research-actions-section">
-            <h2 class="brain-section-label">Action Items</h2>
-            <div class="brain-action-list" id="brain-research-actions"></div>
-          </section>
-          <section class="brain-section" id="brain-research-nodes-section">
-            <h2 class="brain-section-label">Knowledge to Add <span class="brain-gap-count" id="brain-research-node-count"></span></h2>
-            <div class="brain-findings-list" id="brain-research-nodes"></div>
-            <div class="brain-approve-row">
-              <button class="btn-primary brain-approve-btn" id="brain-approve-research-btn">Approve into graph</button>
+        <div class="brain-confidence-card" id="brain-confidence-card">
+          <div class="brain-confidence-row">
+            <div class="brain-confidence-row-header">
+              <span class="brain-confidence-label">Recency</span>
+              <span class="brain-confidence-detail" id="brain-conf-recency-detail">—</span>
             </div>
-          </section>
-          <section class="brain-section hidden" id="brain-research-gaps-section">
-            <h2 class="brain-section-label">Gaps</h2>
-            <div class="brain-gaps-list" id="brain-research-gaps"></div>
-          </section>
-        </div>
-
-        <div class="brain-error-card hidden" id="brain-research-error">
-          <p class="brain-error-text" id="brain-research-error-text"></p>
-        </div>
-
-        <div class="brain-flash hidden" id="brain-research-flash">
-          <span class="brain-flash-icon">&#10003;</span>
-          <span class="brain-flash-text" id="brain-research-flash-text"></span>
-        </div>
-      </div>
-
-      <!-- ── Strategy Tab ──────────────────────────────────── -->
-      <div class="brain-panel" id="panel-strategy">
-        <div class="brain-loading-inline hidden" id="brain-strategy-loading">
-          <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
-          <span>Loading strategy...</span>
-        </div>
-
-        <div class="brain-empty-state hidden" id="brain-strategy-empty">
-          <p>No strategy document yet. Generate one to get started.</p>
-          <button class="btn-primary" id="brain-generate-strategy-btn" style="margin-top:12px">Generate strategy</button>
-        </div>
-
-        <div class="hidden" id="brain-strategy-content">
-          <div class="brain-strategy-header">
-            <span class="brain-strategy-version" id="brain-strategy-version"></span>
-            <span class="brain-strategy-status" id="brain-strategy-status"></span>
+            <div class="brain-confidence-bar"><div class="brain-confidence-fill" id="brain-conf-recency-fill" style="width:0%"></div></div>
           </div>
-
-          <section class="brain-section">
-            <h2 class="brain-section-label">Positioning</h2>
-            <p class="brain-position-text" id="brain-strategy-positioning"></p>
-          </section>
-
-          <section class="brain-section">
-            <h2 class="brain-section-label">Target Audience</h2>
-            <p class="brain-position-text" id="brain-strategy-audience"></p>
-          </section>
-
-          <section class="brain-section">
-            <h2 class="brain-section-label">Content Pillars</h2>
-            <div class="brain-tag-list" id="brain-strategy-pillars"></div>
-          </section>
-
-          <section class="brain-section">
-            <h2 class="brain-section-label">Growth Levers</h2>
-            <div class="brain-tag-list" id="brain-strategy-levers"></div>
-          </section>
-
-          <section class="brain-section">
-            <h2 class="brain-section-label">Current Priorities</h2>
-            <div class="brain-priority-list" id="brain-strategy-priorities"></div>
-          </section>
-
-          <section class="brain-section hidden" id="brain-strategy-refinement-section">
-            <h2 class="brain-section-label">Refinement Notes</h2>
-            <p class="brain-position-text" id="brain-strategy-refinement"></p>
-          </section>
-
-          <footer class="brain-result-meta">
-            <span id="brain-strategy-updated"></span>
-          </footer>
-        </div>
-
-        <div class="brain-error-card hidden" id="brain-strategy-error">
-          <p class="brain-error-text" id="brain-strategy-error-text"></p>
-        </div>
-      </div>
-
-      <!-- ── Health Tab ─────────────────────────────────────── -->
-      <div class="brain-panel" id="panel-health">
-        <div class="brain-loading-inline hidden" id="brain-health-loading">
-          <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
-          <span>Checking data health...</span>
-        </div>
-
-        <div class="hidden" id="brain-health-content">
-          <!-- Status banner -->
-          <div class="brain-health-status" id="brain-health-status-banner">
-            <span class="brain-health-status-icon" id="brain-health-status-icon"></span>
-            <span class="brain-health-status-text" id="brain-health-status-text"></span>
+          <div class="brain-confidence-row">
+            <div class="brain-confidence-row-header">
+              <span class="brain-confidence-label">Volume</span>
+              <span class="brain-confidence-detail" id="brain-conf-volume-detail">—</span>
+            </div>
+            <div class="brain-confidence-bar"><div class="brain-confidence-fill" id="brain-conf-volume-fill" style="width:0%"></div></div>
           </div>
+          <div class="brain-confidence-row">
+            <div class="brain-confidence-row-header">
+              <span class="brain-confidence-label">Variety</span>
+              <span class="brain-confidence-detail" id="brain-conf-variety-detail">—</span>
+            </div>
+            <div class="brain-confidence-bar"><div class="brain-confidence-fill" id="brain-conf-variety-fill" style="width:0%"></div></div>
+          </div>
+          <div class="brain-confidence-row">
+            <div class="brain-confidence-row-header">
+              <span class="brain-confidence-label">Bias</span>
+              <span class="brain-confidence-detail" id="brain-conf-bias-detail">—</span>
+            </div>
+            <div class="brain-confidence-bar"><div class="brain-confidence-fill" id="brain-conf-bias-fill" style="width:0%"></div></div>
+          </div>
+        </div>
 
-          <!-- Stats grid -->
+        <!-- Distillation -->
+        <div class="brain-section-header" style="margin-top:32px">
+          <span class="brain-section-title">Distillation</span>
+        </div>
+        <div class="brain-distill-card">
           <div class="brain-health-grid">
-            <div class="brain-health-card">
-              <span class="brain-health-card-value" id="brain-health-outcomes">0</span>
-              <span class="brain-health-card-label">Outcomes tracked</span>
+            <div class="brain-health-stat">
+              <div class="brain-health-stat-value" id="brain-distill-total">0</div>
+              <div class="brain-health-stat-label">Total outcomes</div>
             </div>
-            <div class="brain-health-card">
-              <span class="brain-health-card-value" id="brain-health-content-count">0</span>
-              <span class="brain-health-card-label">Content pieces</span>
+            <div class="brain-health-stat">
+              <div class="brain-health-stat-value brain-green" id="brain-distill-done">0</div>
+              <div class="brain-health-stat-label">Distilled</div>
             </div>
-            <div class="brain-health-card">
-              <span class="brain-health-card-value" id="brain-health-missing">0</span>
-              <span class="brain-health-card-label">Missing outcomes</span>
+            <div class="brain-health-stat">
+              <div class="brain-health-stat-value brain-amber" id="brain-distill-pending">0</div>
+              <div class="brain-health-stat-label">Pending</div>
             </div>
-            <div class="brain-health-card">
-              <span class="brain-health-card-value" id="brain-health-stale">0</span>
-              <span class="brain-health-card-label">Stale outcomes</span>
+            <div class="brain-health-stat">
+              <div class="brain-health-stat-value" id="brain-distill-knowledge">0</div>
+              <div class="brain-health-stat-label">Knowledge nodes</div>
             </div>
           </div>
-
-          <!-- Bias warning -->
-          <section class="brain-section hidden" id="brain-health-bias-section">
-            <h2 class="brain-section-label">Bias Warning</h2>
-            <div class="brain-health-warning" id="brain-health-bias"></div>
-          </section>
-
-          <!-- Missing outcomes list -->
-          <section class="brain-section hidden" id="brain-health-missing-section">
-            <h2 class="brain-section-label">Missing Outcomes</h2>
-            <div id="brain-health-missing-list"></div>
-          </section>
-
-          <!-- Suggested messages -->
-          <section class="brain-section hidden" id="brain-health-messages-section">
-            <h2 class="brain-section-label">Suggested for Ryan</h2>
-            <div id="brain-health-messages"></div>
-          </section>
-
-          <!-- Insights -->
-          <section class="brain-section" id="brain-health-insights-section">
-            <h2 class="brain-section-label">Performance Insights <span class="brain-gap-count" id="brain-health-insight-count"></span></h2>
-            <div class="brain-loading-inline hidden" id="brain-insights-loading">
-              <div class="brain-loading-bar"><div class="brain-loading-bar-fill"></div></div>
-              <span>Analyzing patterns...</span>
-            </div>
-            <div id="brain-health-insights"></div>
-          </section>
-
-          <!-- Distillation -->
-          <section class="brain-section" id="brain-distill-section">
-            <h2 class="brain-section-label">Distillation</h2>
-            <p class="brain-section-desc" style="font-size:0.82rem;color:var(--rise-neutral-500);margin:0 0 12px;">Turns outcome patterns into reusable knowledge. Runs automatically every 6 hours.</p>
-            <div class="brain-health-grid">
-              <div class="brain-health-card">
-                <span class="brain-health-card-value" id="brain-distill-total">0</span>
-                <span class="brain-health-card-label">Total outcomes</span>
-              </div>
-              <div class="brain-health-card">
-                <span class="brain-health-card-value" id="brain-distill-done">0</span>
-                <span class="brain-health-card-label">Distilled</span>
-              </div>
-              <div class="brain-health-card">
-                <span class="brain-health-card-value" id="brain-distill-pending">0</span>
-                <span class="brain-health-card-label">Pending</span>
-              </div>
-              <div class="brain-health-card">
-                <span class="brain-health-card-value" id="brain-distill-knowledge">0</span>
-                <span class="brain-health-card-label">Knowledge nodes</span>
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;align-items:center;margin-top:12px;">
-              <button class="btn-primary" id="brain-distill-btn" style="font-size:0.82rem;padding:8px 18px;">Run Distillation</button>
-              <span id="brain-distill-status" style="font-size:0.82rem;color:var(--rise-neutral-500);"></span>
-            </div>
-            <div id="brain-distill-results" style="margin-top:12px;"></div>
-          </section>
-
-          <footer class="brain-result-meta">
-            <span id="brain-health-last-outcome"></span>
-          </footer>
+          <div class="brain-distill-actions">
+            <button class="btn-primary" id="brain-distill-btn" style="font-size:0.82rem;padding:8px 18px;">Run Distillation</button>
+            <span id="brain-distill-status" class="brain-distill-status-text"></span>
+          </div>
+          <div id="brain-distill-results" style="margin-top:12px;"></div>
         </div>
 
-        <div class="brain-error-card hidden" id="brain-health-error">
-          <p class="brain-error-text" id="brain-health-error-text"></p>
+        <!-- Learning Rules -->
+        <div class="brain-section-header" style="margin-top:32px">
+          <span class="brain-section-title">Learning Rules</span>
+          <span class="brain-section-count" id="brain-rules-count">—</span>
         </div>
-      </div>
+        <div class="brain-rules-card" id="brain-rules-container"></div>
 
-      <!-- ── Setup / Onboarding Tab ──────────────────────── -->
-      <div class="brain-panel" id="panel-setup">
-
-        <!-- Welcome screen (first visit) -->
-        <div class="brain-welcome hidden" id="brain-welcome-screen">
-          <h2 class="brain-welcome-title">Welcome to your Marketing Brain</h2>
-          <p class="brain-welcome-sub">Let's get to know your business. Answer a few questions so the brain can start generating strategic insights.</p>
-          <button class="btn-primary" id="brain-welcome-start">Get started</button>
+        <!-- Onboarding -->
+        <div class="brain-section-header" style="margin-top:32px">
+          <span class="brain-section-title">Onboarding</span>
         </div>
-
-        <!-- Onboarding flow -->
-        <div id="brain-onboarding-flow">
-          <!-- Progress -->
-          <div class="brain-onboarding-progress">
-            <div class="brain-onboarding-bar">
-              <div class="brain-onboarding-bar-fill" id="brain-onboarding-fill"></div>
-            </div>
-            <div class="brain-onboarding-meta">
-              <span id="brain-onboarding-pct">0%</span>
-              <span id="brain-onboarding-step">Setup</span>
-            </div>
+        <div id="brain-onboarding-container">
+          <div class="brain-empty-state">
+            <p>Onboarding helps the brain learn about your business. Answer questions to improve your briefs.</p>
+            <button class="btn-primary" id="brain-onboarding-start" style="margin-top:12px">Start onboarding</button>
           </div>
-          <div class="brain-milestone hidden" id="brain-milestone"></div>
-
-          <!-- Current question -->
-          <div class="brain-onboarding-question hidden" id="brain-onboarding-question">
-            <p class="brain-onboarding-q-text" id="brain-onboarding-q-text"></p>
-            <p class="brain-onboarding-q-context" id="brain-onboarding-q-context"></p>
-            <textarea class="brain-onboarding-answer" id="brain-onboarding-answer" rows="3" placeholder="Your answer..."></textarea>
-            <div class="brain-onboarding-actions">
-              <button class="btn-primary" id="brain-onboarding-submit" onclick="window._brainSubmitAnswer()">Submit</button>
-              <button class="btn-ghost" onclick="window._brainSkipQuestion()">Skip for now</button>
-            </div>
-          </div>
-
-          <!-- Status (when no question) -->
-          <div class="brain-empty-state hidden" id="brain-onboarding-empty">
-            <p id="brain-onboarding-status-text">Loading...</p>
-          </div>
-
-          <!-- Completion state -->
-          <div class="brain-completion hidden" id="brain-completion">
-            <h2 class="brain-welcome-title">Your brain is ready</h2>
-            <p class="brain-welcome-sub">Here's what it knows so far:</p>
-            <div id="brain-completion-stats"></div>
-            <button class="btn-primary" style="margin-top: var(--space-4)" onclick="window._brainSwitchTab('ask')">Start asking questions</button>
-          </div>
-
-          <!-- Result flash -->
-          <div class="brain-flash hidden" id="brain-onboarding-result">
-            <span class="brain-flash-icon">&#10003;</span>
-            <span class="brain-flash-text" id="brain-onboarding-result-text"></span>
-          </div>
-
-          <!-- Skipped questions -->
-          <section class="brain-section hidden" id="brain-skipped-section">
-            <h2 class="brain-section-label">Skipped questions</h2>
-            <div id="brain-skipped-list"></div>
-          </section>
-
-          <!-- History -->
-          <section class="brain-section" id="brain-onboarding-history-section">
-            <h2 class="brain-section-label">Answered questions</h2>
-            <div id="brain-onboarding-history"></div>
-          </section>
         </div>
       </div>
 
@@ -540,21 +451,25 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
           const target = tab.dataset.tab;
           $$(".brain-tab").forEach((t) => t.classList.toggle("active", t === tab));
           $$(".brain-panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + target));
-          if (target === "briefs") { loadBriefs(); }
-          if (target === "setup") loadOnboarding();
-          if (target === "strategy") loadStrategy();
-          if (target === "health") loadHealth();
-          if (target === "research") loadScoutSignals();
+          if (target === "week") { loadBriefs(); loadInsights(); }
+          if (target === "intel") { loadStrategy(); loadScoutSignals(); loadGaps(); }
+          if (target === "settings") { loadHealth(); loadDistillation(); loadRules(); }
         });
       });
     }
 
-    window._brainSwitchTab = function(name) {
-      const tab = document.querySelector('[data-tab="' + name + '"]');
-      if (tab) tab.click();
-    };
+    // ── Brain Init ────────────────────────────────────────────
+    function brainInit() {
+      loadStats();
+      setWeekHeader();
+      loadCampaignCache().then(() => {
+        loadBriefs();
+        loadInsights();
+        loadFeedHistory();
+      });
+    }
 
-    // ── Health / Stats ────────────────────────────────────────
+    // ── Stats ─────────────────────────────────────────────────
     async function loadStats() {
       try {
         const data = await brainFetch("/health");
@@ -568,100 +483,30 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       }
     }
 
-    // ── Brain Init (called after auth passes) ─────────────────
-    function brainInit() {
-      loadStats();
-      setWeekHeader();
-      loadCampaignCache().then(() => loadBriefs());
-    }
-
-    // ── Ask Tab ───────────────────────────────────────────────
-    let askLoading = false;
-
-    function showAskState(state) {
-      $("#brain-empty-state").classList.toggle("hidden", state !== "empty");
-      $("#brain-ask-loading").classList.toggle("hidden", state !== "loading");
-      $("#brain-result-card").classList.toggle("hidden", state !== "result");
-      $("#brain-error-card").classList.toggle("hidden", state !== "error");
-    }
-
-    async function submitQuery(query) {
-      if (askLoading || !query.trim()) return;
-      askLoading = true;
-      $("#brain-query-btn").disabled = true;
-      showAskState("loading");
-      try {
-        const data = await brainFetch("/reason", {
-          method: "POST",
-          body: JSON.stringify({ query: query.trim() }),
-        });
-        renderResult(data);
-        showAskState("result");
-      } catch (e) {
-        $("#brain-error-text").textContent = e.message;
-        showAskState("error");
-      } finally {
-        askLoading = false;
-        $("#brain-query-btn").disabled = false;
-      }
-    }
-
-    function renderResult(data) {
-      $("#brain-position-text").textContent = data.position || "No position.";
-      $("#brain-reasoning-text").textContent = data.reasoning || "No reasoning.";
-      if (data.consequence_chain) { renderChain(data.consequence_chain); $("#brain-chain-section").classList.remove("hidden"); }
-      else { $("#brain-chain-section").classList.add("hidden"); }
-      if (data.gaps?.length > 0) { renderGaps(data.gaps); $("#brain-gaps-section").classList.remove("hidden"); }
-      else { $("#brain-gaps-section").classList.add("hidden"); }
-      const conf = (data.confidence || "MEDIUM").toLowerCase();
-      $("#brain-confidence").textContent = data.confidence || "MEDIUM";
-      $("#brain-confidence").className = "brain-confidence " + conf;
-      $("#brain-sources").textContent = data.sources?.length > 0 ? data.sources.length + " source" + (data.sources.length > 1 ? "s" : "") + " cited" : "No sources";
-      $("#brain-model").textContent = data.model_used || "";
-    }
-
-    function renderChain(chain) {
-      const levels = [{ key: "action", label: "Action" }, { key: "direct", label: "Direct" }, { key: "secondary", label: "Secondary" }, { key: "strategic", label: "Strategic" }];
-      let html = "";
-      for (let i = 0; i < levels.length; i++) {
-        const { key, label } = levels[i];
-        const node = chain[key];
-        if (!node) continue;
-        const conf = (node.confidence || "MEDIUM").toLowerCase();
-        html += '<div class="brain-chain-node"><div class="brain-chain-connector"><span class="brain-chain-level">' + label + '</span>' + (i < levels.length - 1 ? '<span class="brain-chain-arrow">&darr;</span>' : '') + '</div><span class="brain-chain-claim">' + esc(node.claim) + '</span><span class="brain-chain-confidence ' + conf + '">' + node.confidence + '</span></div>';
-      }
-      $("#brain-chain").innerHTML = html;
-    }
-
-    function renderGaps(gaps) {
-      $("#brain-gap-count").textContent = "(" + gaps.length + ")";
-      const icons = { human: "\u26A0", researchable: "\u25CE", testable: "\u25C8" };
-      let html = "";
-      for (const g of gaps) {
-        const cat = (g.category || "HUMAN").toLowerCase();
-        html += '<div class="brain-gap-item"><span class="brain-gap-icon ' + cat + '">' + (icons[cat] || "\u2022") + '</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(g.question) + '</div>' + (g.impact ? '<div class="brain-gap-impact">' + esc(g.impact) + '</div>' : '') + '</div></div>';
-      }
-      $("#brain-gaps-list").innerHTML = html;
-    }
-
-    $("#brain-query-form").addEventListener("submit", (e) => { e.preventDefault(); submitQuery($("#brain-query-input").value); });
-
-    // ── Briefs Tab (Brief-First) ──────────────────────────────
-    let expandedBriefs = new Set();
-
+    // ── Week Header ───────────────────────────────────────────
     function setWeekHeader() {
       const now = new Date();
-      const options = { month: "long", day: "numeric", year: "numeric" };
-      const $date = $("#brain-week-date");
-      const $title = $("#brain-week-title");
-      if ($date) $date.textContent = now.toLocaleDateString("en-US", options);
-      if ($title) {
-        const day = now.getDay();
-        const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-        const monday = new Date(now.getFullYear(), now.getMonth(), diff);
-        $title.textContent = "Week of " + monday.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      }
+      const day = now.getDay();
+      const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+      const monday = new Date(now.getFullYear(), now.getMonth(), diff);
+      // The week header is now part of the week summary card
     }
+
+    // ── Campaign Cache ────────────────────────────────────────
+    let campaignCache = {};
+
+    async function loadCampaignCache() {
+      try {
+        const campaigns = await brainFetch("/campaigns");
+        campaignCache = {};
+        for (const c of campaigns) {
+          campaignCache[c.id] = c;
+        }
+      } catch { campaignCache = {}; }
+    }
+
+    // ── Briefs ────────────────────────────────────────────────
+    const expandedBriefs = new Set();
 
     async function loadBriefs() {
       const $container = $("#brain-briefs-container");
@@ -686,6 +531,15 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
           return;
         }
 
+        // Update brief count
+        $("#brain-brief-count").textContent = briefs.length + " briefs";
+
+        // Update progress
+        const completed = briefs.filter(b => b.status === "REPORTED" || b.status === "APPROVED").length;
+        const pct = briefs.length > 0 ? Math.round((completed / briefs.length) * 100) : 0;
+        $("#brain-week-progress-fill").style.width = pct + "%";
+        $("#brain-week-progress-label").textContent = completed + " of " + briefs.length + " completed";
+
         for (const brief of briefs) {
           $container.appendChild(createBriefCard(brief));
         }
@@ -700,65 +554,96 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
 
     function createBriefCard(brief) {
       const card = document.createElement("div");
-      card.className = "brain-brief-expandable";
+      card.className = "brain-brief-card";
       card.dataset.id = brief.id;
 
       const content = brief.content || {};
       const isExpanded = expandedBriefs.has(brief.id);
       const confClass = (content.confidence || brief.confidence || "MEDIUM").toLowerCase();
+      const statusClass = brief.status.toLowerCase();
 
-      const statusBadge = brief.status !== "PENDING"
-        ? '<span class="brain-brief-status-tag brain-brief-status-' + brief.status.toLowerCase() + '">' + brief.status + '</span>'
-        : "";
-
-      const hashtags = content.hashtags || [];
-      const hashtagHtml = hashtags.length > 0
-        ? '<div class="brain-brief-hashtags">' + hashtags.map(function(h) { return '<span class="brain-hashtag">' + esc(h) + '</span>'; }).join("") + '</div>'
-        : "";
-
-      const chain = content.consequence_chain || "";
-      const chainHtml = chain
-        ? '<div class="brain-brief-chain"><div class="brain-brief-chain-label">What happens when you post this</div><div class="brain-brief-chain-text">' + formatBriefChain(chain) + '</div></div>'
-        : "";
-
+      // Header
       let html = '<div class="brain-brief-header" onclick="window._brainToggleBrief(\'' + brief.id + '\')">';
-      html += '<div class="brain-brief-header-left">';
-      html += '<span class="brain-brief-conf brain-conf-' + confClass + '">' + (content.confidence || brief.confidence || "\u2014") + '</span>';
-      html += '<span class="brain-brief-topic-text">' + esc(brief.topic) + '</span>';
-      html += getCampaignBadge(brief);
+      html += '<div class="brain-brief-num ' + (brief.status === "REPORTED" ? "done" : "") + '">' + (brief.position || "#") + '</div>';
+      html += '<div class="brain-brief-title-wrap">';
+      html += '<div class="brain-brief-title">' + esc(brief.topic) + '</div>';
+      html += '<div class="brain-brief-subtitle">' + esc(content.what_to_post ? content.what_to_post.substring(0, 60) + "..." : "") + '</div>';
       html += '</div>';
-      html += '<div class="brain-brief-header-right">';
-      html += statusBadge;
-      html += '<span class="brain-brief-expand">' + (isExpanded ? "\u25BE" : "\u25B8") + '</span>';
-      html += '</div></div>';
+      html += '<span class="brain-brief-badge brain-badge-' + statusClass + '">' + brief.status + '</span>';
+      html += '<span class="brain-brief-expand-icon">' + (isExpanded ? "^" : "v") + '</span>';
+      html += '</div>';
 
+      // Body (expanded)
       if (isExpanded) {
         html += '<div class="brain-brief-body">';
 
+        // Confidence meter
+        html += '<div class="brain-confidence-meter">';
+        html += '<span class="brain-confidence-level brain-conf-' + confClass + '">' + (content.confidence || brief.confidence || "MEDIUM") + '</span>';
+        html += '<span class="brain-confidence-desc">' + esc(brief.gaps?.length > 0 ? brief.gaps.join("; ") : "Based on available data") + '</span>';
+        html += '</div>';
+
+        // What to post
         if (content.what_to_post) {
-          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">What to post</div><div class="brain-brief-section-text">' + formatBriefText(content.what_to_post) + '</div></div>';
+          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">What to post</div><div class="brain-brief-section-text">' + esc(content.what_to_post) + '</div></div>';
         }
-        if (content.how_to_fil) {
-          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">How to film it</div><div class="brain-brief-section-text">' + formatBriefText(content.how_to_fil) + '</div></div>';
-        }
+        // Why it matters
         if (content.why_it_matters) {
-          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">Why it matters</div><div class="brain-brief-section-text">' + formatBriefText(content.why_it_matters) + '</div></div>';
+          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">Why this works</div><div class="brain-brief-section-text">' + esc(content.why_it_matters) + '</div></div>';
         }
+        // How to film
+        if (content.how_to_fil) {
+          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">How to film</div><div class="brain-brief-section-text">' + esc(content.how_to_fil) + '</div></div>';
+        }
+        // Caption
         if (content.caption) {
-          html += '<div class="brain-brief-section brain-brief-caption-section"><div class="brain-brief-section-label">Caption (ready to copy)</div><div class="brain-brief-caption" onclick="window._brainCopyCaption(this)" title="Click to copy">' + esc(content.caption) + '</div></div>';
+          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">Caption (ready to copy)</div><div class="brain-brief-caption" onclick="window._brainCopyCaption(this)" title="Click to copy">' + esc(content.caption) + '</div></div>';
+        }
+        // Hashtags
+        const hashtags = content.hashtags || [];
+        if (hashtags.length > 0) {
+          html += '<div class="brain-brief-hashtags">' + hashtags.map(h => '<span class="brain-hashtag">' + esc(h) + '</span>').join("") + '</div>';
+        }
+        // Consequence chain
+        if (content.consequence_chain) {
+          html += '<div class="brain-brief-section"><div class="brain-brief-section-label">What happens when you post this</div><div class="brain-brief-section-text">' + esc(content.consequence_chain) + '</div></div>';
         }
 
-        html += hashtagHtml;
-        html += chainHtml;
+        // Evidence trail
+        html += '<div class="brain-evidence-trail">';
+        html += '<div class="brain-evidence-label">Evidence</div>';
+        html += '<div class="brain-evidence-item"><span class="brain-evidence-icon">%</span><span class="brain-evidence-text"><strong>Confidence:</strong> ' + esc(content.confidence || brief.confidence || "MEDIUM") + '</span></div>';
+        if (brief.sources?.length > 0) {
+          html += '<div class="brain-evidence-item"><span class="brain-evidence-icon">%</span><span class="brain-evidence-text"><strong>Sources:</strong> ' + brief.sources.length + ' graph nodes referenced</span></div>';
+        }
+        html += '</div>';
 
+        // Actions
         html += '<div class="brain-brief-actions">';
         if (brief.status === "PENDING") {
           html += '<button class="btn-primary brain-brief-action-btn" onclick="window._brainApproveBrief(\'' + brief.id + '\')">Approve</button>';
           html += '<button class="btn-ghost brain-brief-action-btn" onclick="window._brainRejectBrief(\'' + brief.id + '\')">Reject</button>';
+        } else if (brief.status === "APPROVED") {
+          html += '<button class="btn-ghost brain-brief-action-btn" onclick="window._brainShowOutcome(\'' + brief.id + '\')">Report Outcome</button>';
+          html += '<span class="brain-brief-status-label">' + brief.status + '</span>';
         } else {
           html += '<span class="brain-brief-status-label">' + brief.status + '</span>';
         }
         html += '</div>';
+
+        // Outcome form (hidden by default)
+        html += '<div class="brain-outcome-form hidden" id="brain-outcome-' + brief.id + '">';
+        html += '<div class="brain-outcome-form-title">Report Outcome</div>';
+        html += '<div class="brain-outcome-grid">';
+        html += '<div class="brain-outcome-field"><label>Views</label><input type="number" placeholder="0" id="brain-views-' + brief.id + '"></div>';
+        html += '<div class="brain-outcome-field"><label>DMs</label><input type="number" placeholder="0" id="brain-dms-' + brief.id + '"></div>';
+        html += '<div class="brain-outcome-field"><label>Saves</label><input type="number" placeholder="0" id="brain-saves-' + brief.id + '"></div>';
+        html += '<div class="brain-outcome-field"><label>Comments</label><input type="number" placeholder="0" id="brain-comments-' + brief.id + '"></div>';
+        html += '</div>';
+        html += '<div class="brain-outcome-actions">';
+        html += '<button class="btn-ghost" onclick="window._brainCancelOutcome(\'' + brief.id + '\')">Cancel</button>';
+        html += '<button class="btn-primary" onclick="window._brainSubmitOutcome(\'' + brief.id + '\')">Submit</button>';
+        html += '</div></div>';
 
         html += '</div>';
       }
@@ -780,29 +665,68 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       const text = el.textContent.trim();
       navigator.clipboard.writeText(text).then(function() {
         const orig = el.style.background;
-        el.style.background = "var(--rise-red)";
+        el.style.background = "var(--brain-green)";
         el.style.color = "#fff";
         setTimeout(function() { el.style.background = orig; el.style.color = ""; }, 800);
       });
     };
 
-    function formatBriefChain(chain) {
-      if (typeof chain === "string") {
-        return chain.split("\n").map(function(line) {
-          var parts = line.split(":");
-          if (parts.length >= 2) {
-            return '<div class="brain-chain-step"><span class="brain-chain-step-label">' + esc(parts[0].trim()) + ':</span> ' + esc(parts.slice(1).join(":").trim()) + '</div>';
-          }
-          return '<div class="brain-chain-step">' + esc(line) + '</div>';
-        }).join("");
-      }
-      return esc(JSON.stringify(chain));
-    }
+    window._brainApproveBrief = async function(id) {
+      try {
+        await brainFetch("/briefs/" + id + "/approve", { method: "POST", body: JSON.stringify({ notes: "" }) });
+        loadBriefs();
+        showFlash("Brief approved. Execute the post, then report the outcome here.");
+      } catch (err) { alert("Failed to approve."); }
+    };
 
-    function formatBriefText(text) {
-      if (!text) return "";
-      return esc(text).replace(/\n/g, "<br>");
-    }
+    window._brainRejectBrief = async function(id) {
+      const notes = prompt("Why reject this brief? (optional)") || "";
+      try {
+        await brainFetch("/briefs/" + id + "/reject", { method: "POST", body: JSON.stringify({ notes: notes }) });
+        loadBriefs();
+        showFlash("Brief rejected.");
+      } catch (err) { alert("Failed to reject."); }
+    };
+
+    window._brainShowOutcome = function(id) {
+      const form = document.getElementById("brain-outcome-" + id);
+      if (form) {
+        form.classList.remove("hidden");
+        const viewsInput = document.getElementById("brain-views-" + id);
+        if (viewsInput) viewsInput.focus();
+      }
+    };
+
+    window._brainCancelOutcome = function(id) {
+      const form = document.getElementById("brain-outcome-" + id);
+      if (form) form.classList.add("hidden");
+    };
+
+    window._brainSubmitOutcome = async function(id) {
+      const views = parseInt(document.getElementById("brain-views-" + id)?.value) || 0;
+      const dms = parseInt(document.getElementById("brain-dms-" + id)?.value) || 0;
+      const saves = parseInt(document.getElementById("brain-saves-" + id)?.value) || 0;
+      const comments = parseInt(document.getElementById("brain-comments-" + id)?.value) || 0;
+
+      try {
+        await brainFetch("/analyst/outcome", {
+          method: "POST",
+          body: JSON.stringify({
+            content_id: id,
+            views: views,
+            dms: dms,
+            saves: saves,
+            comments: comments,
+            qualitative_notes: ""
+          })
+        });
+        loadBriefs();
+        loadInsights();
+        showFlash("Outcome recorded. The brain is learning from this data.");
+      } catch (err) {
+        alert("Failed to record outcome: " + err.message);
+      }
+    };
 
     // Generate weekly button
     const $genBtn = $("#brain-generate-btn");
@@ -818,7 +742,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         if ($error) $error.classList.add("hidden");
 
         try {
-          const data = await brainFetch("/briefs/generate-weekly", { method: "POST" });
+          await brainFetch("/briefs/generate-weekly", { method: "POST" });
           if ($loading) $loading.classList.add("hidden");
           loadBriefs();
         } catch (err) {
@@ -832,371 +756,290 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       });
     }
 
-    // Approve / Reject
-    window._brainApproveBrief = async function(id) {
-      try {
-        await brainFetch("/briefs/" + id + "/approve", { method: "POST", body: JSON.stringify({ notes: "" }) });
-        loadBriefs();
-      } catch (err) { alert("Failed to approve."); }
-    };
+    // ── Feed the Brain ────────────────────────────────────────
+    let feedHistory = [];
 
-    window._brainRejectBrief = async function(id) {
-      const notes = prompt("Why reject this brief? (optional)") || "";
-      try {
-        await brainFetch("/briefs/" + id + "/reject", { method: "POST", body: JSON.stringify({ notes: notes }) });
-        loadBriefs();
-      } catch (err) { alert("Failed to reject."); }
-    };
-
-    // ── Research Tab ──────────────────────────────────────────
-    let researchData = null;
-
-    $("#brain-research-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const topic = $("#brain-research-input").value.trim();
-      if (!topic) return;
-
-      $("#brain-research-btn").disabled = true;
-      $("#brain-research-loading").classList.remove("hidden");
-      $("#brain-research-results").classList.add("hidden");
-      $("#brain-research-error").classList.add("hidden");
-      $("#brain-research-flash").classList.add("hidden");
-
-      try {
-        const data = await brainFetch("/research", {
-          method: "POST",
-          body: JSON.stringify({ topic }),
+    function setupFeed() {
+      // Type buttons
+      $$(".brain-feed-type-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          $$(".brain-feed-type-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          const textarea = $("#brain-feed-input");
+          const placeholders = {
+            event: "e.g. HK Youth Tournament is July 15-17, 12 teams registered...",
+            competitor: "e.g. Ice Academy HK launching summer camp, HKD 8,500...",
+            note: "e.g. Parents at the rink asking about summer programs...",
+            idea: "e.g. What if we did a live stream from the tournament?"
+          };
+          textarea.placeholder = placeholders[btn.dataset.feed] || "Tell the brain something...";
         });
-        researchData = data;
-        renderResearchResults(data);
-        $("#brain-research-results").classList.remove("hidden");
-      } catch (e) {
-        $("#brain-research-error-text").textContent = e.message;
-        $("#brain-research-error").classList.remove("hidden");
-      } finally {
-        $("#brain-research-btn").disabled = false;
-        $("#brain-research-loading").classList.add("hidden");
-      }
-    });
+      });
 
-    function renderResearchResults(data) {
-      $("#brain-research-summary").textContent = data.summary || "No summary.";
-      // Findings
-      let findingsHtml = "";
-      for (const f of (data.findings || [])) {
-        findingsHtml += '<div class="brain-finding-item"><div class="brain-finding-title">' + esc(f.title || f.claim || "") + '</div><div class="brain-finding-desc">' + esc(f.description || f.detail || "") + '</div>' + (f.relevance ? '<div class="brain-finding-relevance">' + esc(f.relevance) + '</div>' : '') + '</div>';
-      }
-      $("#brain-research-findings").innerHTML = findingsHtml || '<div class="brain-empty-state"><p>No findings.</p></div>';
-      // Actions
-      if (data.action_items?.length > 0) {
-        let actionsHtml = "";
-        for (const a of data.action_items) {
-          actionsHtml += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:var(--rise-red)">&rarr;</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(typeof a === "string" ? a : a.action || a.description || "") + '</div></div></div>';
-        }
-        $("#brain-research-actions").innerHTML = actionsHtml;
-        $("#brain-research-actions-section").classList.remove("hidden");
-      } else {
-        $("#brain-research-actions-section").classList.add("hidden");
-      }
-      // Nodes
-      const nodes = data.proposed_nodes || data.nodes || [];
-      $("#brain-research-node-count").textContent = "(" + nodes.length + ")";
-      let nodesHtml = "";
-      for (const n of nodes) {
-        nodesHtml += '<div class="brain-finding-item"><div class="brain-finding-title">' + esc(n.label || n.name || "") + '</div><div class="brain-finding-desc">' + esc(n.description || n.detail || "") + '</div><div class="brain-finding-relevance">Type: ' + esc(n.type || "unknown") + '</div></div>';
-      }
-      $("#brain-research-nodes").innerHTML = nodesHtml || '<div class="brain-empty-state"><p>No nodes proposed.</p></div>';
-      // Gaps
-      if (data.gaps?.length > 0) {
-        const icons = { human: "\u26A0", researchable: "\u25CE", testable: "\u25C8" };
-        let gapsHtml = "";
-        for (const g of data.gaps) {
-          const cat = (g.category || "HUMAN").toLowerCase();
-          gapsHtml += '<div class="brain-gap-item"><span class="brain-gap-icon ' + cat + '">' + (icons[cat] || "\u2022") + '</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(g.question || g) + '</div></div></div>';
-        }
-        $("#brain-research-gaps").innerHTML = gapsHtml;
-        $("#brain-research-gaps-section").classList.remove("hidden");
-      } else {
-        $("#brain-research-gaps-section").classList.add("hidden");
-      }
+      // Submit
+      $("#brain-feed-submit").addEventListener("click", submitFeed);
     }
 
-    $("#brain-approve-research-btn").addEventListener("click", async () => {
-      if (!researchData) return;
-      const btn = $("#brain-approve-research-btn");
-      btn.disabled = true;
+    async function submitFeed() {
+      const input = $("#brain-feed-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const activeType = document.querySelector(".brain-feed-type-btn.active");
+      const type = activeType ? activeType.dataset.feed : "note";
+
       try {
-        const nodes = researchData.proposed_nodes || researchData.nodes || [];
-        const edges = researchData.proposed_edges || researchData.edges || [];
-        const result = await brainFetch("/research/approve", {
+        // Use the scout event endpoint
+        await brainFetch("/scout/event", {
           method: "POST",
-          body: JSON.stringify({ nodes, edges }),
+          body: JSON.stringify({
+            event_type: type,
+            description: text,
+            date: new Date().toISOString().split("T")[0],
+            relevance: "User-reported " + type,
+            source: "ryan"
+          })
         });
-        $("#brain-research-flash-text").textContent = "Approved " + (result.nodes_added || nodes.length) + " nodes into the graph.";
-        $("#brain-research-flash").classList.remove("hidden");
-        researchData = null;
-        loadStats();
-      } catch (e) {
-        alert("Failed: " + e.message);
-      } finally {
-        btn.disabled = false;
-      }
-    });
 
-    // ── Onboarding ────────────────────────────────────────────
-    let currentQuestion = null;
-    const WELCOME_KEY = "rise-brain-seen-welcome";
-
-    async function loadOnboarding() {
-      let progress;
-      try {
-        progress = await brainFetch("/onboarding/progress");
-      } catch {
-        $("#brain-onboarding-empty").classList.remove("hidden");
-        $("#brain-onboarding-status-text").textContent = "Failed to load. Is the Brain API running?";
-        return;
-      }
-      const pct = progress.percent_complete || 0;
-      const total = progress.total || 0;
-      const answered = progress.answered || 0;
-      const skipped = progress.skipped || 0;
-      const completed = pct >= 100;
-
-      if (completed) {
-        $("#brain-tab-setup").textContent = "Settings";
-      }
-
-      const seenWelcome = localStorage.getItem(WELCOME_KEY);
-      if (pct === 0 && !seenWelcome) {
-        $("#brain-welcome-screen").classList.remove("hidden");
-        $("#brain-onboarding-flow").style.display = "none";
-        return;
-      }
-
-      $("#brain-welcome-screen").classList.add("hidden");
-      $("#brain-onboarding-flow").style.display = "";
-      $("#brain-onboarding-fill").style.width = pct + "%";
-      $("#brain-onboarding-pct").textContent = pct + "%";
-      const step = answered + skipped + 1;
-      if (total > 0 && !completed) {
-        $("#brain-onboarding-step").textContent = "Question " + Math.min(step, total) + " of " + total;
-      } else if (completed) {
-        $("#brain-onboarding-step").textContent = "Complete";
-      }
-
-      if (completed) {
-        showCompletion(progress);
-      } else {
-        $("#brain-completion").classList.add("hidden");
-        loadNextQuestion();
-      }
-      loadSkipped();
-      loadHistory();
-    }
-
-    async function showCompletion(progress) {
-      $("#brain-onboarding-question").classList.add("hidden");
-      $("#brain-onboarding-empty").classList.add("hidden");
-      $("#brain-completion").classList.remove("hidden");
-      try {
-        const stats = await brainFetch("/graph/stats");
-        const nodes = stats.nodes || {};
-        const total = nodes.total || 0;
-        const byType = nodes.by_type || {};
-        let html = '<div class="brain-stat-grid">';
-        html += '<div class="brain-stat-item"><span class="brain-stat-num">' + total + '</span><span class="brain-stat-lbl">total</span></div>';
-        for (const [type, count] of Object.entries(byType)) {
-          if (count > 0) html += '<div class="brain-stat-item"><span class="brain-stat-num">' + count + '</span><span class="brain-stat-lbl">' + type.toLowerCase() + '</span></div>';
-        }
-        html += '</div>';
-        $("#brain-completion-stats").innerHTML = html;
-      } catch {
-        $("#brain-completion-stats").innerHTML = '<p class="brain-reasoning-text">Stats unavailable.</p>';
+        input.value = "";
+        loadFeedHistory();
+        showFlash("Added to the brain. It will use this in future briefs and strategy.");
+      } catch (err) {
+        alert("Failed to submit: " + err.message);
       }
     }
 
-    async function loadNextQuestion() {
-      try {
-        const data = await brainFetch("/onboarding/next");
-        if (data.status === "complete") {
-          $("#brain-onboarding-question").classList.add("hidden");
-          $("#brain-onboarding-empty").classList.remove("hidden");
-          $("#brain-onboarding-status-text").textContent = "\u2713 Onboarding complete!";
-          $("#brain-tab-setup").textContent = "Settings";
-          return;
-        }
-        currentQuestion = data;
-        $("#brain-onboarding-q-text").textContent = data.question;
-        $("#brain-onboarding-q-context").textContent = data.context ? "Why this matters: " + data.context : "";
-        $("#brain-onboarding-question").classList.remove("hidden");
-        $("#brain-onboarding-empty").classList.add("hidden");
-        $("#brain-onboarding-answer").value = "";
-        $("#brain-onboarding-answer").focus();
-      } catch {
-        $("#brain-onboarding-empty").classList.remove("hidden");
-        $("#brain-onboarding-status-text").textContent = "Failed to load question.";
-      }
-    }
-
-    window._brainSubmitAnswer = async function() {
-      if (!currentQuestion) return;
-      const answer = $("#brain-onboarding-answer").value.trim();
-      if (!answer) return;
-      $("#brain-onboarding-submit").disabled = true;
-      try {
-        const data = await brainFetch("/onboarding/answer", {
-          method: "POST",
-          body: JSON.stringify({ question_id: currentQuestion.id, answer }),
-        });
-        flash("brain-onboarding-result", "brain-onboarding-result-text",
-          "Got it \u2014 added " + data.nodes_created + " " + (data.nodes_created === 1 ? "thing" : "things") + " to the brain.");
-        currentQuestion = null;
-        setTimeout(() => loadOnboarding(), 1200);
-      } catch (e) {
-        alert("Failed: " + e.message);
-      } finally {
-        $("#brain-onboarding-submit").disabled = false;
-      }
-    };
-
-    window._brainSkipQuestion = async function() {
-      if (!currentQuestion) return;
-      try {
-        await brainFetch("/onboarding/skip", {
-          method: "POST",
-          body: JSON.stringify({ question_id: currentQuestion.id }),
-        });
-        flash("brain-onboarding-result", "brain-onboarding-result-text", "No worries \u2014 you can come back to this later.");
-        currentQuestion = null;
-        setTimeout(() => loadOnboarding(), 1200);
-      } catch {}
-    };
-
-    async function loadSkipped() {
-      try {
-        const data = await brainFetch("/onboarding/history");
-        const skipped = (data.questions || []).filter(q => q.status === "SKIPPED");
-        if (skipped.length === 0) { $("#brain-skipped-section").classList.add("hidden"); return; }
-        $("#brain-skipped-section").classList.remove("hidden");
-        let html = "";
-        for (const q of skipped) {
-          html += '<div class="brain-brief-card" style="cursor:default"><div class="brain-brief-card-header"><span class="brain-brief-card-topic">' + esc(q.question) + '</span></div><button class="btn-ghost" style="margin-top:8px" onclick="window._brainAnswerSkipped(\'' + q.id + '\')">Answer now</button></div>';
-        }
-        $("#brain-skipped-list").innerHTML = html;
-      } catch {}
-    }
-
-    window._brainAnswerSkipped = async function(qid) {
-      try {
-        const data = await brainFetch("/onboarding/history");
-        const q = (data.questions || []).find(x => x.id === qid);
-        if (!q) return;
-        currentQuestion = { id: q.id, question: q.question, context: "" };
-        $("#brain-onboarding-q-text").textContent = q.question;
-        $("#brain-onboarding-q-context").textContent = "";
-        $("#brain-onboarding-question").classList.remove("hidden");
-        $("#brain-completion").classList.add("hidden");
-        $("#brain-skipped-section").classList.add("hidden");
-        $("#brain-onboarding-answer").value = "";
-        $("#brain-onboarding-answer").focus();
-      } catch {}
-    };
-
-    async function loadHistory() {
-      try {
-        const data = await brainFetch("/onboarding/history");
-        const answered = (data.questions || []).filter(q => q.status === "ANSWERED");
-        if (answered.length === 0) {
-          $("#brain-onboarding-history").innerHTML = '<div class="brain-empty-state"><p>No questions answered yet.</p></div>';
-          return;
-        }
-        let html = "";
-        for (const q of answered) {
-          html += '<div class="brain-brief-card" style="cursor:default"><div class="brain-brief-card-header"><span class="brain-brief-card-topic" style="color:#2F855A">\u2713 ' + esc(q.question) + '</span></div>' + (q.answer ? '<div class="brain-brief-card-position">&ldquo;' + esc(q.answer) + '&rdquo;</div>' : '') + (q.nodes_created ? '<div class="brain-brief-card-meta"><span>' + q.nodes_created + ' nodes created</span></div>' : '') + '</div>';
-        }
-        $("#brain-onboarding-history").innerHTML = html;
-      } catch {}
-    }
-
-    // Welcome start
-    $("#brain-welcome-start").addEventListener("click", () => {
-      localStorage.setItem(WELCOME_KEY, "true");
-      $("#brain-welcome-screen").classList.add("hidden");
-      $("#brain-onboarding-flow").style.display = "";
-      loadOnboarding();
-    });
-
-    // ── Helpers ───────────────────────────────────────────────
-    function flash(containerId, textId, msg) {
-      const el = document.getElementById(containerId);
-      const txt = document.getElementById(textId);
-      txt.textContent = msg;
-      el.classList.remove("hidden");
-      setTimeout(() => el.classList.add("hidden"), 1500);
-    }
-
-    // ── Campaign Cache (for brief context) ───────────────────
-    let campaignCache = {};
-
-    async function loadCampaignCache() {
-      try {
-        const campaigns = await brainFetch("/campaigns");
-        campaignCache = {};
-        for (const c of campaigns) {
-          campaignCache[c.id] = c;
-        }
-      } catch { campaignCache = {}; }
-    }
-
-    // ── Scout Signals ────────────────────────────────────────
-    async function loadScoutSignals() {
-      const $list = $("#brain-scout-list");
-      const $loading = $("#brain-scout-loading");
-      const $count = $("#brain-scout-count");
-      if (!$list) return;
-
-      $loading.classList.remove("hidden");
-      $list.innerHTML = "";
+    async function loadFeedHistory() {
+      const container = $("#brain-feed-history");
+      if (!container) return;
 
       try {
         const data = await brainFetch("/scout/signals");
         const signals = data.signals || [];
-        $loading.classList.add("hidden");
+        feedHistory = signals;
 
+        let html = "";
+        for (const s of signals.slice(0, 10)) {
+          const typeClass = s.source_type === "ryan" ? "event" : s.source_type === "web" ? "competitor" : "note";
+          const icons = { event: "!", competitor: "%", note: "~", idea: "*" };
+          const statusText = s.status === "CONFIRMED" ? "Confirmed" : s.status === "PENDING" ? "Proposed" : s.status;
+
+          html += '<div class="brain-feed-item">';
+          html += '<div class="brain-feed-item-icon ' + typeClass + '">' + (icons[typeClass] || "~") + '</div>';
+          html += '<div class="brain-feed-item-content">';
+          html += '<div class="brain-feed-item-text">' + esc(s.topic || s.summary || "") + '</div>';
+          html += '<div class="brain-feed-item-meta">' + esc(s.source_type || "unknown") + ' / ' + statusText + '</div>';
+          html += '</div></div>';
+        }
+
+        container.innerHTML = html || '<div class="brain-empty-state"><p>No feed items yet. Use the input above to feed the brain intel.</p></div>';
+      } catch {
+        container.innerHTML = '<div class="brain-empty-state"><p>Could not load feed history.</p></div>';
+      }
+    }
+
+    // ── Insights ──────────────────────────────────────────────
+    async function loadInsights() {
+      const container = $("#brain-insights-container");
+      if (!container) return;
+
+      try {
+        const data = await brainFetch("/analyst/insights");
+        const insights = data || [];
+
+        if (insights.length === 0) {
+          container.innerHTML = '<div class="brain-empty-state"><p>No insights yet. Insights appear after recording outcomes and analyzing patterns.</p></div>';
+          return;
+        }
+
+        let html = "";
+        for (const ins of insights.slice(0, 5)) {
+          const conf = (ins.confidence || "MEDIUM").toLowerCase();
+          const confDotClass = conf === "verified" ? "verified" : conf === "consistent" ? "verified" : "estimated";
+
+          html += '<div class="brain-insight-card">';
+          html += '<div class="brain-insight-header">';
+          html += '<span class="brain-insight-icon">%</span>';
+          html += '<div class="brain-insight-claim"><strong>' + esc(ins.pattern || "") + '</strong></div>';
+          html += '</div>';
+
+          if (ins.impact_estimate) {
+            html += '<div class="brain-insight-evidence">';
+            html += '<div class="brain-insight-evidence-label">Data</div>';
+            html += '<div class="brain-insight-evidence-row">';
+            html += '<span class="brain-insight-evidence-stat">' + esc(ins.impact_estimate) + '</span>';
+            html += '</div>';
+            html += '<div class="brain-insight-confidence">';
+            html += '<span class="brain-insight-confidence-dot ' + confDotClass + '"></span>';
+            html += '<span class="brain-insight-confidence-label">' + (ins.confidence || "MEDIUM") + '</span>';
+            html += '</div></div>';
+          }
+
+          html += '</div>';
+        }
+
+        container.innerHTML = html;
+      } catch {
+        container.innerHTML = '<div class="brain-empty-state"><p>Could not load insights.</p></div>';
+      }
+    }
+
+    // ── Consult ───────────────────────────────────────────────
+    let consultLoading = false;
+
+    function setupConsult() {
+      $("#brain-consult-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const query = $("#brain-consult-input").value.trim();
+        if (!query || consultLoading) return;
+        await submitConsult(query);
+      });
+
+      $$(".brain-suggestion").forEach(s => {
+        s.addEventListener("click", () => {
+          const query = s.dataset.query;
+          if (query) {
+            $("#brain-consult-input").value = query;
+            submitConsult(query);
+          }
+        });
+      });
+    }
+
+    async function submitConsult(query) {
+      consultLoading = true;
+      $("#brain-consult-loading").classList.remove("hidden");
+      $("#brain-consult-result").classList.add("hidden");
+      $("#brain-consult-error").classList.add("hidden");
+
+      try {
+        const data = await brainFetch("/reason", {
+          method: "POST",
+          body: JSON.stringify({ query: query })
+        });
+
+        renderConsultResult(data);
+        $("#brain-consult-result").classList.remove("hidden");
+      } catch (e) {
+        $("#brain-consult-error-text").textContent = e.message;
+        $("#brain-consult-error").classList.remove("hidden");
+      } finally {
+        consultLoading = false;
+        $("#brain-consult-loading").classList.add("hidden");
+      }
+    }
+
+    function renderConsultResult(data) {
+      $("#brain-consult-position").textContent = data.position || "No position.";
+      $("#brain-consult-reasoning").textContent = data.reasoning || "No reasoning.";
+
+      if (data.consequence_chain) {
+        renderConsultChain(data.consequence_chain);
+        $("#brain-consult-chain-section").classList.remove("hidden");
+      } else {
+        $("#brain-consult-chain-section").classList.add("hidden");
+      }
+
+      if (data.gaps?.length > 0) {
+        renderConsultGaps(data.gaps);
+        $("#brain-consult-gaps-section").classList.remove("hidden");
+      } else {
+        $("#brain-consult-gaps-section").classList.add("hidden");
+      }
+
+      const conf = (data.confidence || "MEDIUM").toLowerCase();
+      $("#brain-consult-confidence").textContent = data.confidence || "MEDIUM";
+      $("#brain-consult-confidence").className = "brain-confidence " + conf;
+      $("#brain-consult-sources").textContent = data.sources?.length > 0 ? data.sources.length + " source" + (data.sources.length > 1 ? "s" : "") + " cited" : "No sources";
+      $("#brain-consult-model").textContent = data.model_used || "";
+    }
+
+    function renderConsultChain(chain) {
+      const levels = [{ key: "action", label: "Action" }, { key: "direct", label: "Direct" }, { key: "secondary", label: "Secondary" }, { key: "strategic", label: "Strategic" }];
+      let html = "";
+      for (let i = 0; i < levels.length; i++) {
+        const { key, label } = levels[i];
+        const node = chain[key];
+        if (!node) continue;
+        const conf = (node.confidence || "MEDIUM").toLowerCase();
+        html += '<div class="brain-chain-node"><div class="brain-chain-connector"><span class="brain-chain-level">' + label + '</span>' + (i < levels.length - 1 ? '<span class="brain-chain-arrow">&darr;</span>' : '') + '</div><span class="brain-chain-claim">' + esc(node.claim) + '</span><span class="brain-chain-confidence ' + conf + '">' + node.confidence + '</span></div>';
+      }
+      $("#brain-consult-chain").innerHTML = html;
+    }
+
+    function renderConsultGaps(gaps) {
+      const icons = { human: "\u26A0", researchable: "\u25CE", testable: "\u25C8" };
+      let html = "";
+      for (const g of gaps) {
+        const cat = (g.category || "HUMAN").toLowerCase();
+        html += '<div class="brain-gap-item"><span class="brain-gap-icon ' + cat + '">' + (icons[cat] || "\u2022") + '</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(g.question || g) + '</div>';
+        if (g.impact) html += '<div class="brain-gap-impact">' + esc(g.impact) + '</div>';
+        html += '</div></div>';
+      }
+      $("#brain-consult-gaps").innerHTML = html;
+    }
+
+    // ── Strategy ──────────────────────────────────────────────
+    async function loadStrategy() {
+      try {
+        const data = await brainFetch("/strategy/current");
+        if (!data || !data.positioning) {
+          $("#brain-strategy-positioning").textContent = "No strategy yet. Generate one in Settings.";
+          return;
+        }
+
+        $("#brain-strategy-version").textContent = "v" + (data.version || 1) + ", " + (data.status || "active").toLowerCase();
+        $("#brain-strategy-positioning").textContent = data.positioning || "—";
+        $("#brain-strategy-audience").textContent = data.target_audience || "—";
+
+        const pillars = data.content_pillars || [];
+        $("#brain-strategy-pillars").innerHTML = pillars.map(p => '<span class="brain-tag">' + esc(p) + '</span>').join("") || "—";
+
+        const levers = data.growth_levers || [];
+        $("#brain-strategy-levers").innerHTML = levers.map(l => '<span class="brain-tag">' + esc(l) + '</span>').join("") || "—";
+      } catch {
+        $("#brain-strategy-positioning").textContent = "Could not load strategy.";
+      }
+    }
+
+    // ── Scout Signals ─────────────────────────────────────────
+    async function loadScoutSignals() {
+      const container = $("#brain-signals-container");
+      if (!container) return;
+
+      try {
+        const data = await brainFetch("/scout/signals");
+        const signals = data.signals || [];
         const pending = signals.filter(s => s.status === "PENDING");
-        $count.textContent = pending.length > 0 ? "(" + pending.length + ")" : "";
+        $("#brain-signal-count").textContent = signals.length + " active";
 
         if (signals.length === 0) {
-          $list.innerHTML = '<div class="brain-empty-state"><p>No scout signals yet. Signals appear when the brain detects market intelligence.</p></div>';
+          container.innerHTML = '<div class="brain-empty-state"><p>No scout signals yet. Signals appear when the brain detects market intelligence.</p></div>';
           return;
         }
 
         let html = "";
         for (const s of signals) {
           const statusClass = s.status.toLowerCase();
-          const relevanceClass = (s.relevance || "medium").toLowerCase();
-          html += '<div class="brain-signal-card">';
-          html += '<div class="brain-signal-header">';
-          html += '<span class="brain-signal-topic">' + esc(s.topic) + '</span>';
-          html += '<span class="brain-signal-status brain-signal-' + statusClass + '">' + s.status + '</span>';
-          html += '</div>';
-          html += '<p class="brain-signal-summary">' + esc(s.summary) + '</p>';
-          html += '<div class="brain-signal-meta">';
-          html += '<span class="brain-signal-source">' + esc(s.source_type) + '</span>';
-          html += '<span class="brain-signal-relevance brain-relevance-' + relevanceClass + '">' + esc(s.relevance) + '</span>';
-          html += '</div>';
+          html += '<div class="brain-signal">';
+          html += '<div class="brain-signal-status ' + statusClass + '"></div>';
+          html += '<div class="brain-signal-content">';
+          html += '<div class="brain-signal-topic">' + esc(s.topic) + '</div>';
+          html += '<div class="brain-signal-summary">' + esc(s.summary) + '</div>';
           if (s.status === "PENDING") {
             html += '<div class="brain-signal-actions">';
             html += '<button class="btn-primary brain-signal-btn" onclick="window._brainApproveSignal(\'' + s.id + '\')">Approve</button>';
             html += '<button class="btn-ghost brain-signal-btn" onclick="window._brainDismissSignal(\'' + s.id + '\')">Dismiss</button>';
             html += '</div>';
+          } else {
+            html += '<div class="brain-signal-actions"><span class="brain-signal-status-label">Confirmed by Ryan</span></div>';
           }
-          html += '</div>';
+          html += '</div></div>';
         }
-        $list.innerHTML = html;
-      } catch (e) {
-        $loading.classList.add("hidden");
-        $list.innerHTML = '<div class="brain-empty-state"><p>Could not load signals.</p></div>';
+
+        container.innerHTML = html;
+      } catch {
+        container.innerHTML = '<div class="brain-empty-state"><p>Could not load signals.</p></div>';
       }
     }
 
@@ -1205,6 +1048,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         await brainFetch("/scout/signals/" + id + "/approve", { method: "POST" });
         loadScoutSignals();
         loadStats();
+        showFlash("Signal confirmed.");
       } catch (e) { alert("Failed: " + e.message); }
     };
 
@@ -1212,232 +1056,75 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       try {
         await brainFetch("/scout/signals/" + id + "/dismiss", { method: "POST" });
         loadScoutSignals();
+        showFlash("Signal dismissed.");
       } catch (e) { alert("Failed: " + e.message); }
     };
 
-    // ── Strategy Tab ─────────────────────────────────────────
-    async function loadStrategy() {
-      const $loading = $("#brain-strategy-loading");
-      const $empty = $("#brain-strategy-empty");
-      const $content = $("#brain-strategy-content");
-      const $error = $("#brain-strategy-error");
-      const $errorText = $("#brain-strategy-error-text");
-
-      $loading.classList.remove("hidden");
-      $empty.classList.add("hidden");
-      $content.classList.add("hidden");
-      $error.classList.add("hidden");
+    // ── Gaps ──────────────────────────────────────────────────
+    async function loadGaps() {
+      const container = $("#brain-gaps-container");
+      if (!container) return;
 
       try {
-        const data = await brainFetch("/strategy");
-        $loading.classList.add("hidden");
+        const data = await brainFetch("/reason/gaps");
+        const gaps = data.gaps || [];
+        $("#brain-gap-count").textContent = gaps.length + " gaps";
 
-        if (!data || !data.positioning) {
-          $empty.classList.remove("hidden");
-          return;
-        }
-
-        // Version + status
-        $("#brain-strategy-version").textContent = "v" + (data.version || 1);
-        const statusEl = $("#brain-strategy-status");
-        statusEl.textContent = data.status || "ACTIVE";
-        statusEl.className = "brain-strategy-status brain-strat-" + (data.status || "active").toLowerCase();
-
-        // Core fields
-        $("#brain-strategy-positioning").textContent = data.positioning || "";
-        $("#brain-strategy-audience").textContent = data.target_audience || "";
-
-        // Content pillars (tags)
-        const pillars = data.content_pillars || [];
-        let pillarsHtml = "";
-        for (const p of pillars) {
-          pillarsHtml += '<span class="brain-tag">' + esc(p) + '</span>';
-        }
-        $("#brain-strategy-pillars").innerHTML = pillarsHtml || '<span class="brain-empty-text">None defined</span>';
-
-        // Growth levers (tags)
-        const levers = data.growth_levers || [];
-        let leversHtml = "";
-        for (const l of levers) {
-          leversHtml += '<span class="brain-tag">' + esc(l) + '</span>';
-        }
-        $("#brain-strategy-levers").innerHTML = leversHtml || '<span class="brain-empty-text">None defined</span>';
-
-        // Current priorities (numbered list)
-        const priorities = data.current_priorities || [];
-        let priHtml = "";
-        for (let i = 0; i < priorities.length; i++) {
-          priHtml += '<div class="brain-priority-item"><span class="brain-priority-num">' + (i + 1) + '</span><span class="brain-priority-text">' + esc(priorities[i]) + '</span></div>';
-        }
-        $("#brain-strategy-priorities").innerHTML = priHtml || '<span class="brain-empty-text">None defined</span>';
-
-        // Refinement notes
-        if (data.refinement_notes) {
-          $("#brain-strategy-refinement").textContent = data.refinement_notes;
-          $("#brain-strategy-refinement-section").classList.remove("hidden");
-        } else {
-          $("#brain-strategy-refinement-section").classList.add("hidden");
-        }
-
-        // Updated at
-        if (data.updated_at) {
-          const d = new Date(data.updated_at);
-          $("#brain-strategy-updated").textContent = "Last updated " + d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-        }
-
-        $content.classList.remove("hidden");
-      } catch (e) {
-        $loading.classList.add("hidden");
-        $errorText.textContent = e.message;
-        $error.classList.remove("hidden");
-      }
-    }
-
-    // Generate strategy button
-    const $genStratBtn = $("#brain-generate-strategy-btn");
-    if ($genStratBtn) {
-      $genStratBtn.addEventListener("click", async function() {
-        $genStratBtn.disabled = true;
-        $genStratBtn.textContent = "Generating...";
-        try {
-          await brainFetch("/strategy/generate", { method: "POST" });
-          loadStrategy();
-        } catch (e) {
-          alert("Failed to generate strategy: " + e.message);
-        } finally {
-          $genStratBtn.disabled = false;
-          $genStratBtn.textContent = "Generate strategy";
-        }
-      });
-    }
-
-    // ── Health Tab ───────────────────────────────────────────
-    async function loadHealth() {
-      const $loading = $("#brain-health-loading");
-      const $content = $("#brain-health-content");
-      const $error = $("#brain-health-error");
-      const $errorText = $("#brain-health-error-text");
-
-      $loading.classList.remove("hidden");
-      $content.classList.add("hidden");
-      $error.classList.add("hidden");
-
-      try {
-        const health = await brainFetch("/analyst/health");
-        $loading.classList.add("hidden");
-
-        // Status banner
-        const statusIcon = $("#brain-health-status-icon");
-        const statusText = $("#brain-health-status-text");
-        const statusBanner = $("#brain-health-status-banner");
-        const st = (health.status || "unknown").toLowerCase();
-        statusBanner.className = "brain-health-status brain-health-" + st;
-        if (st === "healthy" || st === "good") {
-          statusIcon.textContent = "\u2713";
-          statusText.textContent = "Data health looks good";
-        } else if (st === "warning" || st === "needs_attention") {
-          statusIcon.textContent = "\u26A0";
-          statusText.textContent = "Some data needs attention";
-        } else {
-          statusIcon.textContent = "\u25CE";
-          statusText.textContent = "Data health: " + (health.status || "unknown");
-        }
-
-        // Stats grid
-        $("#brain-health-outcomes").textContent = health.total_outcomes || 0;
-        $("#brain-health-content-count").textContent = health.total_content || 0;
-        $("#brain-health-missing").textContent = (health.missing_outcomes || []).length;
-        $("#brain-health-stale").textContent = (health.stale_outcomes || []).length;
-
-        // Bias warning
-        if (health.bias_warning) {
-          $("#brain-health-bias").innerHTML = '<div class="brain-health-warning-text">' + esc(health.bias_warning) + '</div>';
-          $("#brain-health-bias-section").classList.remove("hidden");
-        } else {
-          $("#brain-health-bias-section").classList.add("hidden");
-        }
-
-        // Missing outcomes
-        const missing = health.missing_outcomes || [];
-        if (missing.length > 0) {
-          let missHtml = "";
-          for (const m of missing) {
-            missHtml += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:#C05621">\u25CB</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(m) + '</div></div></div>';
-          }
-          $("#brain-health-missing-list").innerHTML = missHtml;
-          $("#brain-health-missing-section").classList.remove("hidden");
-        } else {
-          $("#brain-health-missing-section").classList.add("hidden");
-        }
-
-        // Suggested messages
-        const messages = health.suggested_messages || [];
-        if (messages.length > 0) {
-          let msgHtml = "";
-          for (const m of messages) {
-            msgHtml += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:var(--rise-red)">&rarr;</span><div class="brain-gap-content"><div class="brain-gap-question">' + esc(m) + '</div></div></div>';
-          }
-          $("#brain-health-messages").innerHTML = msgHtml;
-          $("#brain-health-messages-section").classList.remove("hidden");
-        } else {
-          $("#brain-health-messages-section").classList.add("hidden");
-        }
-
-        // Last outcome
-        if (health.last_outcome_at) {
-          const d = new Date(health.last_outcome_at);
-          $("#brain-health-last-outcome").textContent = "Last outcome: " + d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-        }
-
-        $content.classList.remove("hidden");
-
-        // Load insights separately (may take longer)
-        loadInsights();
-        loadDistillation();
-      } catch (e) {
-        $loading.classList.add("hidden");
-        $errorText.textContent = e.message;
-        $error.classList.remove("hidden");
-      }
-    }
-
-    async function loadInsights() {
-      const $loading = $("#brain-insights-loading");
-      const $list = $("#brain-health-insights");
-      const $count = $("#brain-health-insight-count");
-
-      $loading.classList.remove("hidden");
-      $list.innerHTML = "";
-
-      try {
-        const data = await brainFetch("/analyst/insights");
-        $loading.classList.add("hidden");
-
-        const insights = data || [];
-        $count.textContent = insights.length > 0 ? "(" + insights.length + ")" : "";
-
-        if (insights.length === 0) {
-          $list.innerHTML = '<div class="brain-empty-state"><p>No insights yet. Insights appear after recording outcomes and analyzing patterns.</p></div>';
+        if (gaps.length === 0) {
+          container.innerHTML = '<div class="brain-empty-state"><p>No knowledge gaps detected. The brain has enough data to make recommendations.</p></div>';
           return;
         }
 
         let html = "";
-        for (const ins of insights) {
-          const conf = (ins.confidence || "MEDIUM").toLowerCase();
-          html += '<div class="brain-insight-card">';
-          html += '<div class="brain-insight-header">';
-          html += '<span class="brain-insight-pattern">' + esc(ins.pattern) + '</span>';
-          html += '<span class="brain-confidence ' + conf + '">' + (ins.confidence || "MEDIUM") + '</span>';
-          html += '</div>';
-          if (ins.impact_estimate) {
-            html += '<p class="brain-insight-impact">' + esc(ins.impact_estimate) + '</p>';
-          }
+        for (const g of gaps) {
+          html += '<div class="brain-gap-card">';
+          html += '<div class="brain-gap-question">' + esc(g.question || g) + '</div>';
+          if (g.impact) html += '<div class="brain-gap-impact">' + esc(g.impact) + '</div>';
           html += '</div>';
         }
-        $list.innerHTML = html;
+
+        container.innerHTML = html;
       } catch {
-        $loading.classList.add("hidden");
-        $list.innerHTML = '<div class="brain-empty-state"><p>Could not load insights.</p></div>';
+        container.innerHTML = '<div class="brain-empty-state"><p>Could not load gaps.</p></div>';
+      }
+    }
+
+    // ── Health ────────────────────────────────────────────────
+    async function loadHealth() {
+      try {
+        const health = await brainFetch("/analyst/health");
+
+        $("#brain-health-outcomes").textContent = health.total_outcomes || 0;
+        $("#brain-health-content-count").textContent = health.total_content || 0;
+        $("#brain-health-missing").textContent = (health.missing_outcomes || []).length;
+
+        const coverage = health.total_content > 0
+          ? Math.round(((health.total_content - (health.missing_outcomes || []).length) / health.total_content) * 100)
+          : 0;
+        $("#brain-health-coverage").textContent = coverage + "%";
+
+        // Confidence breakdown (simplified)
+        const lastOutcome = health.last_outcome_at ? new Date(health.last_outcome_at) : null;
+        const daysSince = lastOutcome ? Math.floor((Date.now() - lastOutcome.getTime()) / 86400000) : 999;
+        const recencyPct = daysSince <= 2 ? 90 : daysSince <= 7 ? 70 : 40;
+        $("#brain-conf-recency-fill").style.width = recencyPct + "%";
+        $("#brain-conf-recency-detail").textContent = lastOutcome ? daysSince + " days ago" : "No outcomes yet";
+
+        const volumePct = Math.min(100, (health.total_outcomes || 0) * 4);
+        $("#brain-conf-volume-fill").style.width = volumePct + "%";
+        $("#brain-conf-volume-detail").textContent = (health.total_outcomes || 0) + " outcomes";
+
+        // Variety and bias (simplified)
+        $("#brain-conf-variety-fill").style.width = "80%";
+        $("#brain-conf-variety-detail").textContent = "Multiple content types";
+
+        const biasWarning = health.bias_warning || "";
+        const biasPct = biasWarning ? 60 : 100;
+        $("#brain-conf-bias-fill").style.width = biasPct + "%";
+        $("#brain-conf-bias-detail").textContent = biasWarning || "No bias detected";
+
+      } catch (e) {
+        console.error("Health load failed:", e);
       }
     }
 
@@ -1458,46 +1145,21 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
           btn.disabled = true;
           btn.textContent = "Not enough outcomes (need 3+)";
         }
-      } catch {
-        // Silently fail — distillation section is non-critical
-      }
+      } catch {}
     }
 
     async function triggerDistillation() {
       const btn = $("#brain-distill-btn");
       const status = $("#brain-distill-status");
-      const results = $("#brain-distill-results");
 
       btn.disabled = true;
       btn.textContent = "Running...";
       status.textContent = "Analyzing outcome patterns...";
-      results.innerHTML = "";
 
       try {
         const data = await brainFetch("/distill", { method: "POST" });
-        status.textContent = "Done";
-
-        let html = '<div class="brain-insight-card">';
-        html += '<div class="brain-insight-header"><span class="brain-insight-pattern">Distillation Complete</span></div>';
-        html += '<p style="font-size:0.82rem;color:var(--rise-neutral-600);margin:6px 0 0;">';
-        html += data.groups_analyzed + " groups analyzed, " + data.patterns_found + " patterns found, " + data.knowledge_nodes_created + " knowledge nodes created.";
-        html += '</p></div>';
-
-        if (data.details && data.details.length > 0) {
-          for (const d of data.details) {
-            const color = d.status === "distilled" ? "#2F855A" : d.status === "skipped" ? "#B7791F" : "#C05621";
-            html += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:' + color + '">';
-            html += d.status === "distilled" ? "\u2713" : d.status === "skipped" ? "\u25CB" : "\u2717";
-            html += '</span><div class="brain-gap-content"><div class="brain-gap-question">';
-            html += esc(d.group) + ": " + esc(d.status);
-            if (d.reason) html += " (" + esc(d.reason) + ")";
-            if (d.patterns) html += " \u2014 " + d.patterns + " patterns";
-            html += '</div></div></div>';
-          }
-        }
-
-        results.innerHTML = html;
-        loadDistillation(); // Refresh stats
+        status.textContent = data.patterns_found + " patterns found, " + data.knowledge_nodes_created + " knowledge nodes created.";
+        loadDistillation();
       } catch (e) {
         status.textContent = "Failed: " + e.message;
         btn.disabled = false;
@@ -1505,143 +1167,118 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       }
     }
 
-    // Wire distillation button
     const distillBtn = document.getElementById("brain-distill-btn");
     if (distillBtn) distillBtn.addEventListener("click", triggerDistillation);
 
-    // ── Brief campaign context (rendered in createBriefCard) ──
-    function getCampaignBadge(brief) {
-      if (!brief.campaign_id || !campaignCache[brief.campaign_id]) return "";
-      const c = campaignCache[brief.campaign_id];
-      return '<span class="brain-brief-campaign-tag" title="' + esc(c.theme || "") + '">' + esc(c.name) + '</span>';
+    // ── Learning Rules ────────────────────────────────────────
+    async function loadRules() {
+      const container = $("#brain-rules-container");
+      if (!container) return;
+
+      try {
+        const data = await brainFetch("/analyst/insights");
+        // Rules are not directly exposed via API yet, show placeholder
+        container.innerHTML = '<div class="brain-empty-state"><p>Learning rules are generated automatically from outcome patterns. They appear here once the brain has enough data.</p></div>';
+        $("#brain-rules-count").textContent = "—";
+      } catch {
+        container.innerHTML = '<div class="brain-empty-state"><p>Could not load rules.</p></div>';
+      }
+    }
+
+    // ── Onboarding ────────────────────────────────────────────
+    const WELCOME_KEY = "brain_welcomed";
+
+    function setupOnboarding() {
+      const startBtn = $("#brain-onboarding-start");
+      if (startBtn) {
+        startBtn.addEventListener("click", () => {
+          window.location.href = "/portal/brain?tab=setup";
+        });
+      }
+    }
+
+    // ── Flash ─────────────────────────────────────────────────
+    function showFlash(msg) {
+      // Create flash element if it doesn't exist
+      let flash = document.getElementById("brain-flash");
+      if (!flash) {
+        flash = document.createElement("div");
+        flash.id = "brain-flash";
+        flash.className = "brain-flash";
+        document.body.appendChild(flash);
+      }
+      flash.textContent = msg;
+      flash.classList.add("visible");
+      setTimeout(() => flash.classList.remove("visible"), 3000);
+    }
+
+    // ── Nudge (conditional) ───────────────────────────────────
+    function checkNudge() {
+      // Show nudge if there are pending outcomes
+      const nudgeBanner = $("#brain-nudge-banner");
+      const nudgeText = $("#brain-nudge-text");
+      if (nudgeBanner && nudgeText) {
+        // This would be based on actual data health check
+        // For now, show a generic nudge after 1.5s
+        setTimeout(() => {
+          nudgeText.innerHTML = '<strong>I need your data.</strong> Report outcomes on your recent posts so I can improve your briefs. Without this data, my confidence in recommendations will drop.';
+          nudgeBanner.classList.remove("hidden");
+        }, 1500);
+      }
     }
 
     // ── Boot ──────────────────────────────────────────────────
     initBrain();
     setupTabs();
+    setupFeed();
+    setupConsult();
+    setupOnboarding();
+    checkNudge();
   </script>
 </BaseLayout>
 
 <!-- ── Styles ──────────────────────────────────────────────────── -->
 <style is:global>
+  /* ── Dark Theme Override (v3 aesthetic) ──────────────────── */
+  :root {
+    --brain-bg: #0a0a0a;
+    --brain-surface: #111111;
+    --brain-surface-hover: #161616;
+    --brain-border: #1a1a1a;
+    --brain-border-light: #222222;
+    --brain-text-primary: #e8e8e8;
+    --brain-text-secondary: #888888;
+    --brain-text-muted: #555555;
+    --brain-green: #4ade80;
+    --brain-green-dim: #0d2818;
+    --brain-blue: #60a5fa;
+    --brain-blue-dim: #0d1a2e;
+    --brain-amber: #facc15;
+    --brain-amber-dim: #1a1a0d;
+    --brain-red: #f87171;
+    --brain-red-dim: #1a1111;
+  }
+
+  /* Force entire page dark when brain dashboard is present */
+  body:has(.brain-dashboard) {
+    background: #0a0a0a !important;
+    color: #e8e8e8 !important;
+  }
+  body:has(.brain-dashboard) header,
+  body:has(.brain-dashboard) footer,
+  body:has(.brain-dashboard) .pwa-app-header {
+    display: none !important;
+  }
+  body:has(.brain-dashboard) .brain-loading,
+  body:has(.brain-dashboard) .brain-anon {
+    background: #0a0a0a !important;
+    color: #e8e8e8 !important;
+  }
+  body:has(.brain-dashboard) .brain-anon-title { color: #e8e8e8 !important; }
+  body:has(.brain-dashboard) .brain-anon-sub { color: #888 !important; }
+  body:has(.brain-dashboard) .section { background: transparent !important; }
+
   .lang-toggle { display: none !important; }
-
-  /* ── Brief-First: Briefs Container ────────────────────────── */
-  .brain-briefs-container { display: flex; flex-direction: column; gap: 10px; }
-
-  /* ── Brief-First: Expandable Card ─────────────────────────── */
-  .brain-brief-expandable {
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 10px; overflow: hidden; transition: border-color 0.15s;
-  }
-  .brain-brief-expandable:hover { border-color: var(--rise-neutral-300); }
-
-  .brain-brief-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 18px; cursor: pointer; user-select: none;
-  }
-  .brain-brief-header:hover { background: var(--rise-neutral-50); }
-  .brain-brief-header-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
-  .brain-brief-header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-
-  .brain-brief-topic-text {
-    font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
-    color: var(--rise-black); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .brain-brief-expand { font-size: 0.8rem; color: var(--rise-neutral-400); }
-
-  .brain-brief-conf {
-    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-    padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
-    text-transform: uppercase; letter-spacing: 0.04em;
-  }
-  .brain-conf-high { color: #2F855A; background: rgba(47,133,90,0.08); }
-  .brain-conf-medium { color: #B7791F; background: rgba(183,121,31,0.08); }
-  .brain-conf-low { color: #C05621; background: rgba(192,86,33,0.08); }
-
-  .brain-brief-status-tag {
-    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px;
-  }
-  .brain-brief-status-approved { color: #2F855A; background: rgba(47,133,90,0.08); }
-  .brain-brief-status-rejected { color: #C05621; background: rgba(192,86,33,0.08); }
-
-  /* ── Brief-First: Expanded Body ───────────────────────────── */
-  .brain-brief-body {
-    padding: 0 18px 18px; border-top: 1px solid var(--rise-neutral-100);
-  }
-  .brain-brief-section {
-    padding: 16px 0; border-bottom: 1px solid var(--rise-neutral-100);
-  }
-  .brain-brief-section:last-of-type { border-bottom: none; }
-  .brain-brief-section-label {
-    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--rise-neutral-400);
-    margin: 0 0 8px;
-  }
-  .brain-brief-section-text {
-    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700);
-    line-height: 1.7;
-  }
-
-  /* ── Brief-First: Caption (Copyable) ──────────────────────── */
-  .brain-brief-caption-section {
-    background: var(--rise-neutral-50); margin: 0 -18px; padding: 16px 18px;
-    border-radius: 8px;
-  }
-  .brain-brief-caption {
-    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700);
-    line-height: 1.7; padding: 12px; background: var(--rise-white);
-    border: 1px solid var(--rise-neutral-100); border-radius: 6px;
-    cursor: pointer; transition: background 0.15s; white-space: pre-wrap;
-  }
-  .brain-brief-caption:hover { background: var(--rise-neutral-50); }
-
-  /* ── Brief-First: Hashtags ────────────────────────────────── */
-  .brain-brief-hashtags {
-    display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 0;
-  }
-  .brain-hashtag {
-    font-family: var(--font-body); font-size: 0.8rem; color: var(--rise-neutral-600);
-    background: var(--rise-neutral-50); border: 1px solid var(--rise-neutral-100);
-    padding: 3px 12px; border-radius: 14px;
-  }
-
-  /* ── Brief-First: Chain in Briefs ─────────────────────────── */
-  .brain-brief-chain { padding: 16px 0; border-bottom: 1px solid var(--rise-neutral-100); }
-  .brain-brief-chain-label {
-    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--rise-neutral-400);
-    margin: 0 0 10px;
-  }
-  .brain-brief-chain-text { display: flex; flex-direction: column; gap: 6px; }
-  .brain-chain-step {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-family: var(--font-body); font-size: 0.85rem; line-height: 1.5;
-    color: var(--rise-neutral-700);
-  }
-  .brain-chain-step-label {
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--rise-neutral-400);
-    min-width: 80px; flex-shrink: 0; padding-top: 2px;
-  }
-
-  /* ── Brief-First: Actions ─────────────────────────────────── */
-  .brain-brief-actions {
-    display: flex; gap: 8px; padding-top: 16px; margin-bottom: 0;
-  }
-  .brain-brief-action-btn { font-size: 0.85rem; }
-  .brain-brief-status-label {
-    font-family: var(--font-body); font-size: 0.8rem; color: var(--rise-neutral-400);
-    text-transform: uppercase; letter-spacing: 0.06em;
-  }
-
-  /* ── Responsive: Brief-First ──────────────────────────────── */
-  @media (max-width: 640px) {
-    .brain-brief-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .brain-brief-header-right { align-self: flex-end; }
-    .brain-brief-caption-section { margin: 0 -12px; padding: 12px; }
-  }
 </style>
 
 <style>
@@ -1650,8 +1287,8 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
     display: flex; align-items: center; justify-content: center; min-height: 60vh;
   }
   .brain-spinner {
-    width: 32px; height: 32px; border: 3px solid var(--rise-neutral-100);
-    border-top-color: var(--rise-red); border-radius: 50%;
+    width: 32px; height: 32px; border: 3px solid var(--brain-border);
+    border-top-color: var(--brain-green); border-radius: 50%;
     animation: brain-spin 0.8s linear infinite;
   }
   @keyframes brain-spin { to { transform: rotate(360deg); } }
@@ -1662,533 +1299,384 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
   .brain-narrow { max-width: 520px; }
   .brain-anon-title {
     font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 2.8rem);
-    color: var(--rise-black); text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 var(--space-3);
+    color: var(--brain-text-primary); text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 var(--space-3);
   }
   .brain-anon-sub {
-    font-family: var(--font-body); color: var(--rise-neutral-500); margin: 0 0 var(--space-6);
+    font-family: var(--font-body); color: var(--brain-text-secondary); margin: 0 0 var(--space-6);
   }
   .brain-anon-actions {
     display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap;
   }
 
-  /* ── Buttons (shared with portal) ─────────────────────── */
+  /* ── Buttons ───────────────────────────────────────────── */
   .btn-primary, .btn-ghost {
     display: inline-flex; align-items: center; justify-content: center;
     padding: 0.75rem 1.5rem; border-radius: 6px; font-family: var(--font-body);
     font-size: 0.95rem; font-weight: 600; text-decoration: none; cursor: pointer;
     border: 1px solid transparent; transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
-  .btn-primary { background: var(--rise-red); color: var(--rise-white); }
-  .btn-primary:hover { background: var(--rise-red-dark); text-decoration: none; }
+  .btn-primary { background: var(--brain-green); color: #111111; }
+  .btn-primary:hover { background: #22c55e; text-decoration: none; }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-ghost { background: transparent; color: var(--rise-neutral-700); border-color: var(--rise-neutral-200); }
-  .btn-ghost:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
+  .btn-ghost { background: transparent; color: #bbbbbb; border-color: var(--brain-border-light); }
+  .btn-ghost:hover { border-color: var(--brain-text-muted); }
 
-  /* ── Dashboard ────────────────────────────────────────── */
-  .brain-dashboard { padding: var(--space-8) 0 var(--space-12); }
-  .brain-container { max-width: 880px; }
+  /* ── Dashboard Container ──────────────────────────────── */
+  .brain-dashboard { padding-top: var(--space-8); }
+  .brain-container { max-width: 900px; margin: 0 auto; }
 
+  /* ── Header ───────────────────────────────────────────── */
   .brain-header { margin-bottom: var(--space-6); }
-  .brain-header-top {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2);
-  }
-  .brain-eyebrow {
-    font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.12em; color: var(--rise-red); margin: 0;
-  }
-  .brain-stats {
-    display: flex; align-items: center; gap: 8px;
-    font-family: var(--font-body); font-size: 0.8rem; color: var(--rise-neutral-400);
-  }
-  .brain-stat-sep { opacity: 0.4; }
-
-  .brain-title {
-    font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 2.75rem);
-    font-weight: 700; color: var(--rise-black); text-transform: uppercase;
-    letter-spacing: 0.02em; margin: 0 0 var(--space-1);
-  }
-  .brain-sub {
-    font-family: var(--font-body); color: var(--rise-neutral-500); font-size: 0.95rem; margin: 0;
-  }
+  .brain-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
+  .brain-eyebrow { font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brain-text-muted); }
+  .brain-stats { display: flex; gap: 8px; align-items: center; font-family: var(--font-body); font-size: 0.75rem; color: var(--brain-text-muted); }
+  .brain-stat { }
+  .brain-stat-sep { color: var(--brain-border-light); }
+  .brain-title { font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.2rem); color: var(--brain-text-primary); text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 var(--space-1); }
+  .brain-sub { font-family: var(--font-body); font-size: 0.9rem; color: var(--brain-text-secondary); margin: 0; }
 
   /* ── Tabs ─────────────────────────────────────────────── */
   .brain-tabs {
-    display: flex; gap: 0; margin-bottom: var(--space-6);
-    border-bottom: 2px solid var(--rise-neutral-100);
+    display: flex; gap: 4px; margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--brain-border);
   }
   .brain-tab {
-    background: none; border: none; padding: 10px 20px;
-    font-family: var(--font-body); font-size: 0.875rem; font-weight: 600;
-    color: var(--rise-neutral-400); cursor: pointer;
-    border-bottom: 2px solid transparent; margin-bottom: -2px;
-    transition: color 0.15s, border-color 0.15s;
-    display: flex; align-items: center; gap: 6px;
-    text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 10px 20px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+    color: var(--brain-text-secondary); background: none; border: none; cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
   }
-  .brain-tab:hover { color: var(--rise-neutral-700); }
-  .brain-tab.active { color: var(--rise-red); border-bottom-color: var(--rise-red); }
-
-  .brain-tab-badge {
-    font-size: 0.65rem; background: var(--rise-red); color: var(--rise-white);
-    padding: 1px 6px; border-radius: 8px; font-weight: 700;
-  }
-  .hidden { display: none !important; }
+  .brain-tab:hover { color: var(--brain-text-primary); }
+  .brain-tab.active { color: var(--brain-text-primary); border-bottom-color: var(--brain-text-primary); }
 
   .brain-panel { display: none; }
   .brain-panel.active { display: block; }
 
-  /* ── Query Form ───────────────────────────────────────── */
-  .brain-query-form { display: flex; gap: 8px; margin-bottom: var(--space-6); }
-  .brain-query-input {
-    flex: 1; background: var(--rise-white); border: 1px solid var(--rise-neutral-200);
-    border-radius: 8px; padding: 14px 18px; font-family: var(--font-body);
-    font-size: 0.95rem; color: var(--rise-black); outline: none;
-    transition: border-color 0.15s;
+  /* ── Week Summary ─────────────────────────────────────── */
+  .brain-week-summary {
+    background: #111111; border: 1px solid var(--brain-border);
+    border-radius: 10px; padding: 24px; margin-bottom: var(--space-6);
   }
-  .brain-query-input::placeholder { color: var(--rise-neutral-400); }
-  .brain-query-input:focus { border-color: var(--rise-red); }
-  .brain-query-btn {
-    background: var(--rise-red); border: none; border-radius: 8px;
-    padding: 14px 18px; color: var(--rise-white); cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+  .brain-week-campaign { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .brain-week-campaign-tag {
+    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+    background: #0d1a2e; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.05em;
   }
-  .brain-query-btn:hover { background: var(--rise-red-dark); }
-  .brain-query-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .brain-week-campaign-name { font-family: var(--font-body); font-size: 0.8rem; color: var(--brain-text-secondary); }
+  .brain-week-goal {
+    font-family: var(--font-heading); font-size: 1.3rem; font-weight: 600; color: var(--brain-text-primary);
+    letter-spacing: -0.01em; margin: 0 0 8px; line-height: 1.3;
+  }
+  .brain-week-reasoning { font-family: var(--font-body); font-size: 0.9rem; color: #999999; line-height: 1.6; margin: 0 0 16px; }
 
-  /* ── Empty State ──────────────────────────────────────── */
-  .brain-empty-state {
-    text-align: center; padding: var(--space-8) 0;
-    color: var(--rise-neutral-400); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7;
+  /* ── Evidence Trail ───────────────────────────────────── */
+  .brain-evidence-trail { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--brain-border); }
+  .brain-evidence-label {
+    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; color: var(--brain-text-muted);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;
+  }
+  .brain-evidence-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; font-family: var(--font-body); font-size: 0.8rem; line-height: 1.5; }
+  .brain-evidence-icon { flex-shrink: 0; width: 16px; text-align: center; color: var(--brain-text-muted); margin-top: 1px; }
+  .brain-evidence-text { color: #999999; }
+  .brain-evidence-text strong { color: var(--brain-text-primary); font-weight: 500; }
+
+  /* ── Progress ─────────────────────────────────────────── */
+  .brain-week-progress { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+  .brain-progress-bar-wrap { flex: 1; height: 6px; background: var(--brain-border); border-radius: 3px; overflow: hidden; }
+  .brain-progress-bar-fill { height: 100%; background: var(--brain-green); border-radius: 3px; transition: width 0.4s ease; }
+  .brain-progress-label { font-family: var(--font-body); font-size: 0.8rem; color: var(--brain-text-secondary); white-space: nowrap; }
+
+  /* ── Nudge ────────────────────────────────────────────── */
+  .brain-nudge {
+    background: #1a1a0d; border: 1px solid #332e0d; border-radius: 10px;
+    padding: 14px 18px; margin-bottom: var(--space-5); display: flex; align-items: flex-start; gap: 12px;
+  }
+  .brain-nudge-icon { font-size: 14px; flex-shrink: 0; margin-top: 2px; color: #facc15; }
+  .brain-nudge-text { font-family: var(--font-body); font-size: 0.85rem; color: #facc15; line-height: 1.5; }
+  .brain-nudge-text strong { font-weight: 600; }
+
+  /* ── Section Headers ──────────────────────────────────── */
+  .brain-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .brain-section-title { font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; color: var(--brain-text-secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+  .brain-section-count { font-family: var(--font-body); font-size: 0.7rem; color: var(--brain-text-muted); background: #0f0f0f; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--brain-border); }
+
+  /* ── Brief Cards ──────────────────────────────────────── */
+  .brain-briefs-container { display: flex; flex-direction: column; gap: 10px; }
+  .brain-brief-card {
+    background: #111111; border: 1px solid var(--brain-border);
+    border-radius: 10px; overflow: hidden; transition: border-color 0.15s;
+  }
+  .brain-brief-card:hover { border-color: #333333; }
+  .brain-brief-header {
+    display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer;
+  }
+  .brain-brief-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--brain-border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; color: var(--brain-text-secondary); flex-shrink: 0;
+  }
+  .brain-brief-num.done { background: #0d2818; color: #4ade80; }
+  .brain-brief-title-wrap { flex: 1; min-width: 0; }
+  .brain-brief-title { font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; color: var(--brain-text-primary); }
+  .brain-brief-subtitle { font-family: var(--font-body); font-size: 0.75rem; color: var(--brain-text-muted); margin-top: 2px; }
+  .brain-brief-badge {
+    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+  }
+  .brain-badge-pending { background: #1a1a0d; color: #facc15; }
+  .brain-badge-approved { background: #0d2818; color: #4ade80; }
+  .brain-badge-reported { background: #0d1a2e; color: #60a5fa; }
+  .brain-brief-expand-icon { font-size: 0.8rem; color: var(--brain-text-muted); flex-shrink: 0; }
+
+  .brain-brief-body { padding: 0 20px 20px 60px; }
+  .brain-brief-section { margin-bottom: 14px; }
+  .brain-brief-section-label {
+    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; color: var(--brain-text-muted);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+  }
+  .brain-brief-section-text { font-family: var(--font-body); font-size: 0.85rem; color: #bbbbbb; line-height: 1.7; }
+  .brain-brief-section-text strong { color: var(--brain-text-primary); font-weight: 500; }
+  .brain-brief-caption {
+    font-family: var(--font-body); font-size: 0.85rem; color: #bbbbbb; line-height: 1.7;
+    padding: 12px; background: #0f0f0f; border: 1px solid var(--brain-border);
+    border-radius: 6px; cursor: pointer; transition: background 0.15s; white-space: pre-wrap;
+  }
+  .brain-brief-caption:hover { background: var(--brain-border); }
+  .brain-brief-hashtags { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 0; }
+  .brain-hashtag {
+    font-family: var(--font-body); font-size: 0.8rem; color: #999999;
+    background: #0f0f0f; border: 1px solid var(--brain-border);
+    padding: 3px 12px; border-radius: 14px;
+  }
+  .brain-brief-actions { display: flex; gap: 8px; padding-top: 16px; }
+  .brain-brief-action-btn { font-size: 0.85rem; }
+  .brain-brief-status-label { font-family: var(--font-body); font-size: 0.8rem; color: var(--brain-text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── Confidence Meter ─────────────────────────────────── */
+  .brain-confidence-meter {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+    background: #0f0f0f; border: 1px solid var(--brain-border); border-radius: 6px;
+    margin-bottom: 14px;
+  }
+  .brain-confidence-level {
+    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  }
+  .brain-conf-high { background: #0d2818; color: #4ade80; }
+  .brain-conf-medium { background: #1a1a0d; color: #facc15; }
+  .brain-conf-low { background: #1a1111; color: #f87171; }
+  .brain-confidence-desc { font-family: var(--font-body); font-size: 0.8rem; color: var(--brain-text-secondary); flex: 1; }
+
+  /* ── Outcome Form ─────────────────────────────────────── */
+  .brain-outcome-form {
+    background: #0f0f0f; border: 1px solid var(--brain-border); border-radius: 6px;
+    padding: 14px; margin-top: 12px;
+  }
+  .brain-outcome-form-title { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; color: var(--brain-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .brain-outcome-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .brain-outcome-field label { display: block; font-family: var(--font-body); font-size: 0.7rem; color: var(--brain-text-muted); margin-bottom: 4px; }
+  .brain-outcome-field input {
+    width: 100%; padding: 8px 10px; background: #111111; border: 1px solid var(--brain-border-light);
+    border-radius: 6px; color: var(--brain-text-primary); font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; outline: none;
+  }
+  .brain-outcome-field input:focus { border-color: var(--brain-green); }
+  .brain-outcome-field input::placeholder { color: #333333; font-weight: 400; }
+  .brain-outcome-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* ── Feed Section ─────────────────────────────────────── */
+  .brain-feed-section { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--brain-border); }
+  .brain-feed-input-area { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .brain-feed-type-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .brain-feed-type-btn {
+    padding: 5px 12px; font-family: var(--font-body); font-size: 0.7rem; font-weight: 500;
+    border: 1px solid var(--brain-border-light); border-radius: 20px; cursor: pointer;
+    transition: all 0.15s; background: transparent; color: var(--brain-text-secondary);
+  }
+  .brain-feed-type-btn.active { background: #0d1a2e; color: #60a5fa; border-color: #1e3a5f; }
+  .brain-feed-type-btn:hover:not(.active) { color: #bbbbbb; border-color: #333333; }
+  .brain-feed-textarea {
+    width: 100%; padding: 10px 12px; background: #0f0f0f; border: 1px solid var(--brain-border);
+    border-radius: 6px; color: var(--brain-text-primary); font-family: var(--font-body); font-size: 0.85rem;
+    line-height: 1.5; resize: vertical; min-height: 60px; outline: none;
+  }
+  .brain-feed-textarea:focus { border-color: var(--brain-green); }
+  .brain-feed-textarea::placeholder { color: var(--brain-text-muted); }
+  .brain-feed-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .brain-feed-hint { font-family: var(--font-body); font-size: 0.7rem; color: var(--brain-text-muted); }
+
+  .brain-feed-history { margin-top: 16px; }
+  .brain-feed-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--brain-border); }
+  .brain-feed-item:last-child { border-bottom: none; }
+  .brain-feed-item-icon {
+    width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+  }
+  .brain-feed-item-icon.event { background: #1a1a0d; color: #facc15; }
+  .brain-feed-item-icon.competitor { background: #1a1111; color: #f87171; }
+  .brain-feed-item-icon.note { background: #0d1a2e; color: #60a5fa; }
+  .brain-feed-item-content { flex: 1; }
+  .brain-feed-item-text { font-family: var(--font-body); font-size: 0.85rem; color: var(--brain-text-primary); line-height: 1.5; }
+  .brain-feed-item-meta { font-family: var(--font-body); font-size: 0.7rem; color: var(--brain-text-muted); margin-top: 2px; }
+
+  /* ── Insights ─────────────────────────────────────────── */
+  .brain-insights-section { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--brain-border); }
+  .brain-insight-card {
+    background: #111111; border: 1px solid var(--brain-border); border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 12px;
+  }
+  .brain-insight-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .brain-insight-icon { color: #60a5fa; flex-shrink: 0; font-size: 0.75rem; margin-top: 3px; }
+  .brain-insight-claim { font-family: var(--font-body); font-size: 0.85rem; color: var(--brain-text-primary); line-height: 1.5; }
+  .brain-insight-evidence { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--brain-border); }
+  .brain-insight-evidence-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; color: var(--brain-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .brain-insight-evidence-row { display: flex; gap: 16px; font-family: var(--font-body); font-size: 0.8rem; margin-bottom: 4px; }
+  .brain-insight-evidence-stat { color: #999999; }
+  .brain-insight-evidence-stat strong { color: var(--brain-text-primary); font-weight: 500; }
+  .brain-insight-confidence { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-family: var(--font-body); font-size: 0.7rem; }
+  .brain-insight-confidence-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .brain-insight-confidence-dot.verified { background: #2F855A; }
+  .brain-insight-confidence-dot.estimated { background: #B7791F; }
+  .brain-insight-confidence-label { color: var(--brain-text-muted); }
+
+  /* ── Consult ──────────────────────────────────────────── */
+  .brain-consult-form { margin-bottom: var(--space-4); }
+  .brain-consult-input {
+    width: 100%; padding: 14px 18px; background: #111111; border: 1px solid var(--brain-border-light);
+    border-radius: 10px; color: var(--brain-text-primary); font-family: var(--font-body); font-size: 0.95rem; outline: none;
+  }
+  .brain-consult-input:focus { border-color: var(--brain-green); }
+  .brain-consult-input::placeholder { color: var(--brain-text-muted); }
+  .brain-consult-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-5); }
+  .brain-suggestion {
+    padding: 6px 14px; background: #111111; border: 1px solid var(--brain-border-light);
+    border-radius: 20px; font-family: var(--font-body); font-size: 0.8rem; color: #999999; cursor: pointer;
+  }
+  .brain-suggestion:hover { background: #0f0f0f; color: var(--brain-text-primary); border-color: #333333; }
+
+  .brain-consult-result {
+    background: #111111; border: 1px solid var(--brain-border); border-radius: 10px;
+    padding: 20px; margin-bottom: var(--space-5);
+  }
+  .brain-consult-section { padding: 12px 0; border-bottom: 1px solid var(--brain-border); }
+  .brain-consult-section:last-of-type { border-bottom: none; }
+  .brain-consult-label { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brain-text-muted); margin: 0 0 8px; }
+  .brain-consult-text { font-family: var(--font-body); font-size: 0.9rem; color: #bbbbbb; line-height: 1.7; margin: 0; }
+  .brain-consult-meta { display: flex; gap: 8px; align-items: center; font-family: var(--font-body); font-size: 0.75rem; color: var(--brain-text-muted); padding-top: 12px; }
+  .brain-confidence { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .brain-confidence.high { color: #4ade80; }
+  .brain-confidence.medium { color: #facc15; }
+  .brain-confidence.low { color: #f87171; }
+  .brain-meta-sep { color: var(--brain-border-light); }
+
+  .brain-chain-node { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-family: var(--font-body); font-size: 0.85rem; }
+  .brain-chain-connector { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+  .brain-chain-level { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brain-text-muted); }
+  .brain-chain-arrow { color: #333333; font-size: 0.8rem; }
+  .brain-chain-claim { flex: 1; color: #bbbbbb; line-height: 1.5; }
+  .brain-chain-confidence { font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .brain-chain-confidence.high { background: #0d2818; color: #4ade80; }
+  .brain-chain-confidence.medium { background: #1a1a0d; color: #facc15; }
+  .brain-chain-confidence.low { background: #1a1111; color: #f87171; }
+
+  .brain-gap-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--brain-border); }
+  .brain-gap-item:last-child { border-bottom: none; }
+  .brain-gap-icon { flex-shrink: 0; font-size: 0.8rem; margin-top: 2px; }
+  .brain-gap-icon.human { color: #f87171; }
+  .brain-gap-icon.researchable { color: #60a5fa; }
+  .brain-gap-icon.testable { color: #4ade80; }
+  .brain-gap-question { font-family: var(--font-body); font-size: 0.85rem; color: var(--brain-text-primary); }
+  .brain-gap-impact { font-family: var(--font-body); font-size: 0.75rem; color: var(--brain-text-secondary); margin-top: 2px; }
+
+  /* ── Strategy ─────────────────────────────────────────── */
+  .brain-strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: var(--space-5); }
+  .brain-strategy-card { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 16px; }
+  .brain-strategy-card-title { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; color: var(--brain-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .brain-strategy-card-content { font-family: var(--font-body); font-size: 0.85rem; color: #999999; line-height: 1.6; }
+  .brain-tag {
+    display: inline-block; padding: 3px 8px; background: #0f0f0f; border: 1px solid var(--brain-border);
+    border-radius: 4px; font-family: var(--font-body); font-size: 0.75rem; color: #999999; margin: 2px 4px 2px 0;
   }
 
-  /* ── Loading ──────────────────────────────────────────── */
-  .brain-loading-inline {
-    text-align: center; padding: var(--space-6) 0;
-    color: var(--rise-neutral-500); font-family: var(--font-body); font-size: 0.875rem;
-  }
-  .brain-loading-bar {
-    width: 100%; height: 3px; background: var(--rise-neutral-100);
-    border-radius: 2px; margin-bottom: 12px; overflow: hidden; position: relative;
-  }
-  .brain-loading-bar-fill {
-    position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
-    background: var(--rise-red); border-radius: 2px;
-    animation: brain-slide 1.2s ease-in-out infinite;
-  }
-  @keyframes brain-slide { 0% { left: -40%; } 100% { left: 100%; } }
-
-  /* ── Result Card ──────────────────────────────────────── */
-  .brain-result-card {
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 12px; overflow: hidden;
-  }
-  .brain-section {
-    padding: var(--space-5) var(--space-6);
-    border-bottom: 1px solid var(--rise-neutral-100);
-  }
-  .brain-section:last-of-type { border-bottom: none; }
-  .brain-section-label {
-    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--rise-neutral-400);
-    margin: 0 0 10px;
-  }
-  .brain-section-position { background: var(--rise-neutral-50); }
-  .brain-position-text {
-    font-family: var(--font-body); font-size: 1.05rem; line-height: 1.7;
-    color: var(--rise-black); font-weight: 500; margin: 0;
-  }
-
-  /* ── Consequence Chain ────────────────────────────────── */
-  .brain-chain { display: flex; flex-direction: column; gap: 0; }
-  .brain-chain-node {
-    display: flex; align-items: flex-start; gap: 16px; padding: 10px 0;
-  }
-  .brain-chain-connector {
-    display: flex; flex-direction: column; align-items: center; width: 70px; flex-shrink: 0;
-  }
-  .brain-chain-level {
-    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em; color: var(--rise-neutral-400); text-align: center;
-  }
-  .brain-chain-arrow { color: var(--rise-neutral-300); font-size: 0.8rem; margin: 3px 0; opacity: 0.5; }
-  .brain-chain-claim {
-    flex: 1; font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700); line-height: 1.5;
-  }
-  .brain-chain-confidence {
-    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-    padding: 2px 10px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
-    text-transform: uppercase; letter-spacing: 0.04em;
-  }
-  .brain-chain-confidence.high { color: #2F855A; background: rgba(47,133,90,0.08); }
-  .brain-chain-confidence.medium { color: #B7791F; background: rgba(183,121,31,0.08); }
-  .brain-chain-confidence.low { color: #C05621; background: rgba(192,86,33,0.08); }
-
-  /* ── Reasoning ────────────────────────────────────────── */
-  .brain-reasoning-text {
-    font-family: var(--font-body); font-size: 0.85rem; color: var(--rise-neutral-600);
-    line-height: 1.8; white-space: pre-wrap; margin: 0;
-  }
+  /* ── Signals ──────────────────────────────────────────── */
+  .brain-signals-container { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 12px 20px; }
+  .brain-signal { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--brain-border); align-items: flex-start; }
+  .brain-signal:last-child { border-bottom: none; }
+  .brain-signal-status { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .brain-signal-status.pending { background: #B7791F; }
+  .brain-signal-status.confirmed { background: #2F855A; }
+  .brain-signal-content { flex: 1; }
+  .brain-signal-topic { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--brain-text-primary); margin-bottom: 4px; }
+  .brain-signal-summary { font-family: var(--font-body); font-size: 0.8rem; color: #999999; line-height: 1.5; margin-bottom: 6px; }
+  .brain-signal-actions { display: flex; gap: 6px; }
+  .brain-signal-btn { font-size: 0.75rem; padding: 4px 10px; }
+  .brain-signal-status-label { font-family: var(--font-body); font-size: 0.7rem; color: var(--brain-text-muted); }
 
   /* ── Gaps ─────────────────────────────────────────────── */
-  .brain-gaps-list { display: flex; flex-direction: column; gap: 8px; }
-  .brain-gap-item {
-    display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px;
-    background: var(--rise-neutral-50); border-radius: 8px;
-    border: 1px solid var(--rise-neutral-100);
-  }
-  .brain-gap-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-  .brain-gap-icon.human { color: #C05621; }
-  .brain-gap-icon.researchable { color: #B7791F; }
-  .brain-gap-icon.testable { color: #2F855A; }
-  .brain-gap-content { flex: 1; }
-  .brain-gap-question {
-    font-family: var(--font-body); font-size: 0.875rem; color: var(--rise-black); line-height: 1.5;
-  }
-  .brain-gap-impact {
-    font-family: var(--font-body); font-size: 0.8rem; color: var(--rise-neutral-400); margin-top: 3px;
-  }
-  .brain-gap-count {
-    font-size: 0.65rem; color: var(--rise-neutral-400); font-weight: 400;
+  .brain-gap-card {
+    background: #111111; border: 1px solid var(--brain-border); border-left: 3px solid #B7791F;
+    border-radius: 6px; padding: 14px 16px; margin-bottom: 10px;
   }
 
-  /* ── Result Meta ──────────────────────────────────────── */
-  .brain-result-meta {
-    display: flex; align-items: center; gap: 8px;
-    padding: 12px var(--space-6); background: var(--rise-neutral-50);
-    border-top: 1px solid var(--rise-neutral-100);
-    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400);
-  }
-  .brain-meta-sep { opacity: 0.3; }
-  .brain-confidence { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-  .brain-confidence.high { color: #2F855A; }
-  .brain-confidence.medium { color: #B7791F; }
-  .brain-confidence.low { color: #C05621; }
-  .brain-confidence.ungrounded { color: var(--rise-red); }
+  /* ── Health ───────────────────────────────────────────── */
+  .brain-health-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: var(--space-5); }
+  .brain-health-stat { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 16px; text-align: center; }
+  .brain-health-stat-value { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 600; color: var(--brain-text-primary); margin-bottom: 4px; }
+  .brain-health-stat-label { font-family: var(--font-body); font-size: 0.7rem; color: var(--brain-text-muted); }
+  .brain-amber { color: #facc15; }
+  .brain-green { color: #4ade80; }
 
-  /* ── Shadow Status (kept for backward compat) ─────────────── */
-  .brain-shadow-status { display: none; }
+  .brain-confidence-card { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 20px; margin-bottom: var(--space-5); }
+  .brain-confidence-row { margin-bottom: 12px; }
+  .brain-confidence-row:last-child { margin-bottom: 0; }
+  .brain-confidence-row-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .brain-confidence-label { font-family: var(--font-body); font-size: 0.8rem; color: #999999; }
+  .brain-confidence-detail { font-family: var(--font-body); font-size: 0.75rem; color: var(--brain-text-muted); }
+  .brain-confidence-bar { height: 4px; background: var(--brain-border); border-radius: 2px; overflow: hidden; }
+  .brain-confidence-fill { height: 100%; background: #2F855A; border-radius: 2px; transition: width 0.3s ease; }
 
-  /* ── Brief Filters (removed in brief-first) ───────────────── */
-  .brain-brief-filters { display: none; }
+  .brain-distill-card { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 20px; margin-bottom: var(--space-5); }
+  .brain-distill-actions { display: flex; gap: 12px; align-items: center; }
+  .brain-distill-status-text { font-family: var(--font-body); font-size: 0.75rem; color: var(--brain-text-muted); }
 
-  /* ── Brief Cards (old style, hidden) ──────────────────────── */
-  .brain-briefs-list { display: none; }
+  .brain-rules-card { background: #111111; border: 1px solid var(--brain-border); border-radius: 10px; padding: 16px 20px; }
 
-  /* ── Brief Detail (old, hidden) ──────────────────────────── */
-  .brain-brief-back { display: none; }
-  .brain-brief-detail { display: none; }
+  /* ── Generate Section ─────────────────────────────────── */
+  .brain-generate-section { text-align: center; padding: 40px 20px; }
+  .brain-generate-btn { margin-top: 12px; }
 
-  /* ── Research ─────────────────────────────────────────── */
-  .brain-research-intro {
-    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-500);
-    margin: 0 0 var(--space-4);
-  }
-  .brain-findings-list { display: flex; flex-direction: column; gap: 8px; }
-  .brain-finding-item {
-    padding: 12px 14px; background: var(--rise-neutral-50); border-radius: 8px;
-    border: 1px solid var(--rise-neutral-100);
-  }
-  .brain-finding-title {
-    font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
-    color: var(--rise-black); margin-bottom: 4px;
-  }
-  .brain-finding-desc {
-    font-family: var(--font-body); font-size: 0.85rem; color: var(--rise-neutral-600); line-height: 1.5;
-  }
-  .brain-finding-relevance {
-    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400); margin-top: 4px;
-  }
-  .brain-approve-row {
-    margin-top: var(--space-4); display: flex;
-  }
-  .brain-approve-btn { font-size: 0.875rem; }
+  /* ── Loading ──────────────────────────────────────────── */
+  .brain-loading-inline { display: flex; align-items: center; gap: 12px; padding: 20px; }
+  .brain-loading-bar { flex: 1; height: 4px; background: var(--brain-border); border-radius: 2px; overflow: hidden; }
+  .brain-loading-bar-fill { height: 100%; background: var(--brain-green); border-radius: 2px; animation: brain-loading 1.5s ease-in-out infinite; }
+  @keyframes brain-loading { 0%,100% { width: 0%; } 50% { width: 60%; } }
 
-  .brain-action-list { display: flex; flex-direction: column; gap: 8px; }
-
-  /* ── Flash messages ───────────────────────────────────── */
-  .brain-flash {
-    display: flex; align-items: center; gap: 10px; padding: 14px 18px;
-    background: rgba(47,133,90,0.06); border: 1px solid rgba(47,133,90,0.2);
-    border-radius: 10px; margin-top: var(--space-4);
-  }
-  .brain-flash-icon { color: #2F855A; font-size: 1.1rem; }
-  .brain-flash-text {
-    font-family: var(--font-body); font-size: 0.9rem; color: #2F6B4A;
-  }
+  /* ── Empty States ─────────────────────────────────────── */
+  .brain-empty-state { text-align: center; padding: 24px; color: var(--brain-text-secondary); }
+  .brain-empty-state p { font-family: var(--font-body); font-size: 0.85rem; line-height: 1.6; margin: 0; }
 
   /* ── Error ────────────────────────────────────────────── */
-  .brain-error-card {
-    padding: var(--space-4) var(--space-5);
-    background: rgba(211,25,31,0.04); border: 1px solid rgba(211,25,31,0.15);
-    border-radius: 10px;
-  }
-  .brain-error-text {
-    font-family: var(--font-body); font-size: 0.9rem; color: #8B1A1A; margin: 0;
-  }
+  .brain-error-card { background: #1a1111; border: 1px solid #7f1d1d; border-radius: 10px; padding: 16px; margin-top: 12px; }
+  .brain-error-text { font-family: var(--font-body); font-size: 0.85rem; color: #f87171; margin: 0; }
 
-  /* ── Onboarding ───────────────────────────────────────── */
-  .brain-welcome {
-    text-align: center; padding: var(--space-10) 0;
+  /* ── Flash ────────────────────────────────────────────── */
+  .brain-flash {
+    position: fixed; bottom: 24px; right: 24px; background: #0d2818;
+    border: 1px solid #166534; color: #4ade80; padding: 12px 20px;
+    border-radius: 6px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+    opacity: 0; transform: translateY(10px); transition: all 0.3s ease;
+    pointer-events: none; z-index: 100;
   }
-  .brain-welcome-title {
-    font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.25rem);
-    font-weight: 700; color: var(--rise-black); text-transform: uppercase;
-    letter-spacing: 0.02em; margin: 0 0 var(--space-3);
-  }
-  .brain-welcome-sub {
-    font-family: var(--font-body); color: var(--rise-neutral-500);
-    font-size: 1rem; max-width: 480px; margin: 0 auto var(--space-6);
-  }
-
-  .brain-onboarding-progress { margin-bottom: var(--space-4); }
-  .brain-onboarding-bar {
-    width: 100%; height: 6px; background: var(--rise-neutral-100);
-    border-radius: 3px; overflow: hidden; margin-bottom: 6px;
-  }
-  .brain-onboarding-bar-fill {
-    height: 100%; background: var(--rise-red); border-radius: 3px;
-    transition: width 0.4s ease; width: 0%;
-  }
-  .brain-onboarding-meta {
-    display: flex; justify-content: space-between;
-    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400);
-  }
-
-  .brain-milestone {
-    text-align: center; font-family: var(--font-body); font-size: 0.85rem;
-    color: #2F855A; font-weight: 600; padding: 8px; margin-bottom: var(--space-3);
-  }
-
-  .brain-onboarding-question {
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 12px; padding: var(--space-5) var(--space-6); margin-bottom: var(--space-4);
-  }
-  .brain-onboarding-q-text {
-    font-family: var(--font-body); font-size: 1.05rem; font-weight: 500;
-    color: var(--rise-black); line-height: 1.5; margin: 0 0 8px;
-  }
-  .brain-onboarding-q-context {
-    font-family: var(--font-body); font-size: 0.8rem; color: var(--rise-neutral-400);
-    font-style: italic; margin: 0 0 var(--space-4);
-  }
-  .brain-onboarding-answer {
-    width: 100%; border: 1px solid var(--rise-neutral-200); border-radius: 8px;
-    padding: 12px 14px; font-family: var(--font-body); font-size: 0.9rem;
-    color: var(--rise-black); resize: vertical; outline: none; transition: border-color 0.15s;
-  }
-  .brain-onboarding-answer::placeholder { color: var(--rise-neutral-300); }
-  .brain-onboarding-answer:focus { border-color: var(--rise-red); }
-  .brain-onboarding-actions {
-    display: flex; gap: 8px; margin-top: var(--space-3);
-  }
-
-  .brain-completion { text-align: center; padding: var(--space-6) 0; }
-  .brain-stat-grid {
-    display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; margin-top: var(--space-4);
-  }
-  .brain-stat-item {
-    display: flex; flex-direction: column; align-items: center;
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 10px; padding: var(--space-4) var(--space-5); min-width: 80px;
-  }
-  .brain-stat-num {
-    font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; color: var(--rise-black);
-  }
-  .brain-stat-lbl {
-    font-family: var(--font-body); font-size: 0.7rem; color: var(--rise-neutral-400);
-    text-transform: uppercase; letter-spacing: 0.06em;
-  }
-
-  /* ── Brief-First: Week Header ─────────────────────────────── */
-  .brain-week-header { margin-bottom: var(--space-5); }
-  .brain-week-title {
-    font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700;
-    color: var(--rise-black); letter-spacing: -0.02em; margin: 0;
-  }
-  .brain-week-date {
-    font-family: var(--font-body); font-size: 0.8rem; color: var(--rise-neutral-400);
-    margin: 4px 0 0;
-  }
-
-  /* ── Brief-First: Generate Button ─────────────────────────── */
-  .brain-generate-section { text-align: center; padding: var(--space-8) 0; }
-  .brain-generate-btn { margin-top: var(--space-3); }
-
-  /* ── Brief Detail (old, hidden) ──────────────────────────── */
-  .brain-brief-detail { display: none; }
-
-  /* ── Campaign Badge on Briefs ────────────────────────────── */
-  .brain-brief-campaign-tag {
-    font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-    color: var(--rise-red); background: rgba(211,25,31,0.06);
-    border: 1px solid rgba(211,25,31,0.12);
-    padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
-    text-transform: uppercase; letter-spacing: 0.04em;
-    max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-
-  /* ── Scout Signals ───────────────────────────────────────── */
-  .brain-signal-card {
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 10px; padding: 14px 18px; margin-bottom: 10px;
-    transition: border-color 0.15s;
-  }
-  .brain-signal-card:hover { border-color: var(--rise-neutral-300); }
-  .brain-signal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 8px;
-  }
-  .brain-signal-topic {
-    font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
-    color: var(--rise-black);
-  }
-  .brain-signal-status {
-    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .brain-signal-pending { color: #B7791F; background: rgba(183,121,31,0.08); }
-  .brain-signal-approved { color: #2F855A; background: rgba(47,133,90,0.08); }
-  .brain-signal-dismissed { color: var(--rise-neutral-400); background: var(--rise-neutral-50); }
-  .brain-signal-summary {
-    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700);
-    line-height: 1.6; margin: 0 0 8px;
-  }
-  .brain-signal-meta {
-    display: flex; gap: 12px; align-items: center;
-    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400);
-  }
-  .brain-signal-source { text-transform: capitalize; }
-  .brain-signal-relevance { font-weight: 600; text-transform: capitalize; }
-  .brain-relevance-high { color: #2F855A; }
-  .brain-relevance-medium { color: #B7791F; }
-  .brain-relevance-low { color: #C05621; }
-  .brain-signal-actions {
-    display: flex; gap: 8px; margin-top: 10px;
-  }
-  .brain-signal-btn {
-    font-size: 0.8rem; padding: 6px 14px;
-  }
-
-  /* ── Strategy Tab ────────────────────────────────────────── */
-  .brain-strategy-header {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px;
-  }
-  .brain-strategy-version {
-    font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
-    color: var(--rise-neutral-500);
-  }
-  .brain-strategy-status {
-    font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .brain-strat-active { color: #2F855A; background: rgba(47,133,90,0.08); }
-  .brain-strat-draft { color: #B7791F; background: rgba(183,121,31,0.08); }
-  .brain-strat-archived { color: var(--rise-neutral-400); background: var(--rise-neutral-50); }
-  .brain-strat-forked { color: #805AD5; background: rgba(128,90,213,0.08); }
-  .brain-tag-list {
-    display: flex; flex-wrap: wrap; gap: 8px;
-  }
-  .brain-tag {
-    font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
-    color: var(--rise-neutral-700); background: var(--rise-neutral-50);
-    border: 1px solid var(--rise-neutral-100);
-    padding: 6px 14px; border-radius: 6px;
-  }
-  .brain-empty-text {
-    font-family: var(--font-body); font-size: 0.85rem; color: var(--rise-neutral-400);
-    font-style: italic;
-  }
-  .brain-priority-list { display: flex; flex-direction: column; gap: 8px; }
-  .brain-priority-item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 10px 14px; background: var(--rise-neutral-50);
-    border-radius: 8px;
-  }
-  .brain-priority-num {
-    font-family: var(--font-body); font-size: 0.75rem; font-weight: 700;
-    color: var(--rise-red); background: rgba(211,25,31,0.08);
-    width: 24px; height: 24px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .brain-priority-text {
-    font-family: var(--font-body); font-size: 0.9rem; color: var(--rise-neutral-700);
-    line-height: 1.5;
-  }
-
-  /* ── Health Tab ──────────────────────────────────────────── */
-  .brain-health-status {
-    display: flex; align-items: center; gap: 10px;
-    padding: 14px 18px; border-radius: 10px; margin-bottom: 20px;
-  }
-  .brain-health-healthy, .brain-health-good {
-    background: rgba(47,133,90,0.06); border: 1px solid rgba(47,133,90,0.15);
-  }
-  .brain-health-warning, .brain-health-needs_attention {
-    background: rgba(183,121,31,0.06); border: 1px solid rgba(183,121,31,0.15);
-  }
-  .brain-health-unknown {
-    background: var(--rise-neutral-50); border: 1px solid var(--rise-neutral-100);
-  }
-  .brain-health-status-icon {
-    font-size: 1.2rem;
-  }
-  .brain-health-healthy .brain-health-status-icon,
-  .brain-health-good .brain-health-status-icon { color: #2F855A; }
-  .brain-health-warning .brain-health-status-icon,
-  .brain-health-needs_attention .brain-health-status-icon { color: #B7791F; }
-  .brain-health-status-text {
-    font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
-    color: var(--rise-neutral-700);
-  }
-  .brain-health-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
-    margin-bottom: 20px;
-  }
-  .brain-health-card {
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 10px; padding: 16px; text-align: center;
-  }
-  .brain-health-card-value {
-    display: block; font-family: var(--font-body); font-size: 1.8rem;
-    font-weight: 700; color: var(--rise-black); line-height: 1;
-    margin-bottom: 4px;
-  }
-  .brain-health-card-label {
-    font-family: var(--font-body); font-size: 0.75rem; color: var(--rise-neutral-400);
-    text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .brain-health-warning-text {
-    font-family: var(--font-body); font-size: 0.9rem; color: #B7791F;
-    line-height: 1.6;
-  }
-  .brain-insight-card {
-    background: var(--rise-white); border: 1px solid var(--rise-neutral-100);
-    border-radius: 10px; padding: 14px 18px; margin-bottom: 10px;
-  }
-  .brain-insight-header {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 12px;
-  }
-  .brain-insight-pattern {
-    font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
-    color: var(--rise-black); flex: 1;
-  }
-  .brain-insight-impact {
-    font-family: var(--font-body); font-size: 0.85rem; color: var(--rise-neutral-600);
-    line-height: 1.5; margin: 8px 0 0;
-  }
+  .brain-flash.visible { opacity: 1; transform: translateY(0); }
 
   /* ── Responsive ───────────────────────────────────────── */
   @media (max-width: 640px) {
-    .brain-container { padding: 0 var(--space-4); }
-    .brain-chain-connector { width: 50px; }
-    .brain-chain-level { font-size: 0.6rem; }
+    .brain-header-top { flex-direction: column; align-items: flex-start; gap: 8px; }
     .brain-tabs { overflow-x: auto; }
-    .brain-tab { padding: 8px 14px; font-size: 0.8rem; white-space: nowrap; }
-    .brain-health-grid { grid-template-columns: 1fr; }
+    .brain-outcome-grid { grid-template-columns: 1fr 1fr; }
+    .brain-strategy-grid { grid-template-columns: 1fr; }
+    .brain-health-grid { grid-template-columns: 1fr 1fr; }
+    .brain-feed-type-row { flex-wrap: wrap; }
+    .brain-brief-body { padding: 0 16px 16px 16px; }
+    .brain-insight-evidence-row { flex-direction: column; gap: 4px; }
   }
+
+  .hidden { display: none !important; }
 </style>
