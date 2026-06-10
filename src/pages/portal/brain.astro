@@ -350,6 +350,35 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
             <div id="brain-health-insights"></div>
           </section>
 
+          <!-- Distillation -->
+          <section class="brain-section" id="brain-distill-section">
+            <h2 class="brain-section-label">Distillation</h2>
+            <p class="brain-section-desc" style="font-size:0.82rem;color:var(--rise-neutral-500);margin:0 0 12px;">Turns outcome patterns into reusable knowledge. Runs automatically every 6 hours.</p>
+            <div class="brain-health-grid">
+              <div class="brain-health-card">
+                <span class="brain-health-card-value" id="brain-distill-total">0</span>
+                <span class="brain-health-card-label">Total outcomes</span>
+              </div>
+              <div class="brain-health-card">
+                <span class="brain-health-card-value" id="brain-distill-done">0</span>
+                <span class="brain-health-card-label">Distilled</span>
+              </div>
+              <div class="brain-health-card">
+                <span class="brain-health-card-value" id="brain-distill-pending">0</span>
+                <span class="brain-health-card-label">Pending</span>
+              </div>
+              <div class="brain-health-card">
+                <span class="brain-health-card-value" id="brain-distill-knowledge">0</span>
+                <span class="brain-health-card-label">Knowledge nodes</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:12px;">
+              <button class="btn-primary" id="brain-distill-btn" style="font-size:0.82rem;padding:8px 18px;">Run Distillation</button>
+              <span id="brain-distill-status" style="font-size:0.82rem;color:var(--rise-neutral-500);"></span>
+            </div>
+            <div id="brain-distill-results" style="margin-top:12px;"></div>
+          </section>
+
           <footer class="brain-result-meta">
             <span id="brain-health-last-outcome"></span>
           </footer>
@@ -1364,6 +1393,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
 
         // Load insights separately (may take longer)
         loadInsights();
+        loadDistillation();
       } catch (e) {
         $loading.classList.add("hidden");
         $errorText.textContent = e.message;
@@ -1410,6 +1440,74 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         $list.innerHTML = '<div class="brain-empty-state"><p>Could not load insights.</p></div>';
       }
     }
+
+    // ── Distillation ──────────────────────────────────────────
+    async function loadDistillation() {
+      try {
+        const data = await brainFetch("/distill/status");
+        $("#brain-distill-total").textContent = data.total_outcomes || 0;
+        $("#brain-distill-done").textContent = data.distilled_outcomes || 0;
+        $("#brain-distill-pending").textContent = data.undistilled_outcomes || 0;
+        $("#brain-distill-knowledge").textContent = data.distilled_knowledge_nodes || 0;
+
+        const btn = $("#brain-distill-btn");
+        if (data.ready_for_distillation) {
+          btn.disabled = false;
+          btn.textContent = "Run Distillation";
+        } else {
+          btn.disabled = true;
+          btn.textContent = "Not enough outcomes (need 3+)";
+        }
+      } catch {
+        // Silently fail — distillation section is non-critical
+      }
+    }
+
+    async function triggerDistillation() {
+      const btn = $("#brain-distill-btn");
+      const status = $("#brain-distill-status");
+      const results = $("#brain-distill-results");
+
+      btn.disabled = true;
+      btn.textContent = "Running...";
+      status.textContent = "Analyzing outcome patterns...";
+      results.innerHTML = "";
+
+      try {
+        const data = await brainFetch("/distill", { method: "POST" });
+        status.textContent = "Done";
+
+        let html = '<div class="brain-insight-card">';
+        html += '<div class="brain-insight-header"><span class="brain-insight-pattern">Distillation Complete</span></div>';
+        html += '<p style="font-size:0.82rem;color:var(--rise-neutral-600);margin:6px 0 0;">';
+        html += data.groups_analyzed + " groups analyzed, " + data.patterns_found + " patterns found, " + data.knowledge_nodes_created + " knowledge nodes created.";
+        html += '</p></div>';
+
+        if (data.details && data.details.length > 0) {
+          for (const d of data.details) {
+            const color = d.status === "distilled" ? "#2F855A" : d.status === "skipped" ? "#B7791F" : "#C05621";
+            html += '<div class="brain-gap-item"><span class="brain-gap-icon" style="color:' + color + '">';
+            html += d.status === "distilled" ? "\u2713" : d.status === "skipped" ? "\u25CB" : "\u2717";
+            html += '</span><div class="brain-gap-content"><div class="brain-gap-question">';
+            html += esc(d.group) + ": " + esc(d.status);
+            if (d.reason) html += " (" + esc(d.reason) + ")";
+            if (d.patterns) html += " \u2014 " + d.patterns + " patterns";
+            html += '</div></div></div>';
+          }
+        }
+
+        results.innerHTML = html;
+        loadDistillation(); // Refresh stats
+      } catch (e) {
+        status.textContent = "Failed: " + e.message;
+        btn.disabled = false;
+        btn.textContent = "Retry";
+      }
+    }
+
+    // Wire distillation button
+    const distillBtn = document.getElementById("brain-distill-btn");
+    if (distillBtn) distillBtn.addEventListener("click", triggerDistillation);
 
     // ── Brief campaign context (rendered in createBriefCard) ──
     function getCampaignBadge(brief) {
