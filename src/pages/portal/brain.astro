@@ -1260,23 +1260,53 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
   }
 
   /* Force entire page dark when brain dashboard is present */
+  body:has(.brain-loading),
+  body:has(.brain-anon),
+  body:has(.brain-denied),
   body:has(.brain-dashboard) {
     background: #0a0a0a !important;
     color: #e8e8e8 !important;
   }
+  body:has(.brain-loading) header,
+  body:has(.brain-loading) footer,
+  body:has(.brain-loading) .pwa-app-header,
+  body:has(.brain-anon) header,
+  body:has(.brain-anon) footer,
+  body:has(.brain-anon) .pwa-app-header,
+  body:has(.brain-denied) header,
+  body:has(.brain-denied) footer,
+  body:has(.brain-denied) .pwa-app-header,
   body:has(.brain-dashboard) header,
   body:has(.brain-dashboard) footer,
   body:has(.brain-dashboard) .pwa-app-header {
     display: none !important;
   }
+  body:has(.brain-loading) .brain-loading,
+  body:has(.brain-loading) .brain-anon,
+  body:has(.brain-anon) .brain-loading,
+  body:has(.brain-anon) .brain-anon,
+  body:has(.brain-denied) .brain-anon,
   body:has(.brain-dashboard) .brain-loading,
   body:has(.brain-dashboard) .brain-anon {
     background: #0a0a0a !important;
     color: #e8e8e8 !important;
   }
+  body:has(.brain-loading) .brain-anon-title,
+  body:has(.brain-anon) .brain-anon-title,
+  body:has(.brain-denied) .brain-anon-title,
   body:has(.brain-dashboard) .brain-anon-title { color: #e8e8e8 !important; }
+  body:has(.brain-loading) .brain-anon-sub,
+  body:has(.brain-anon) .brain-anon-sub,
+  body:has(.brain-denied) .brain-anon-sub,
   body:has(.brain-dashboard) .brain-anon-sub { color: #888 !important; }
+  body:has(.brain-loading) .section,
+  body:has(.brain-anon) .section,
+  body:has(.brain-denied) .section,
   body:has(.brain-dashboard) .section { background: transparent !important; }
+  body:has(.brain-loading) .pwa-install-prompt,
+  body:has(.brain-anon) .pwa-install-prompt,
+  body:has(.brain-denied) .pwa-install-prompt,
+  body:has(.brain-dashboard) .pwa-install-prompt { display: none !important; }
 
   .lang-toggle { display: none !important; }
 </style>
