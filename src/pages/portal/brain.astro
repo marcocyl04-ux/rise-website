@@ -464,6 +464,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       loadStats();
       setWeekHeader();
       loadCampaignCache().then(() => {
+        loadWeekSummary();
         loadBriefs();
         loadInsights();
         loadFeedHistory();
@@ -491,6 +492,59 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       const diff = now.getDate() - day + (day === 0 ? -6 : 1);
       const monday = new Date(now.getFullYear(), now.getMonth(), diff);
       // The week header is now part of the week summary card
+    }
+
+    // ── Week Summary (中心思想) ──────────────────────────────
+    async function loadWeekSummary() {
+      const $campaignName = $("#brain-week-campaign-name");
+      const $goal = $("#brain-week-goal");
+      const $reasoning = $("#brain-week-reasoning");
+      const $evidence = $("#brain-week-evidence-items");
+
+      // Try to populate from active campaign
+      const campaigns = Object.values(campaignCache);
+      const activeCampaign = campaigns.find(c => c.status === "ACTIVE") || campaigns[0];
+
+      if (activeCampaign) {
+        if ($campaignName) $campaignName.textContent = activeCampaign.name || "Untitled Campaign";
+        if ($goal) $goal.textContent = activeCampaign.goal || "No goal set";
+        if ($reasoning) $reasoning.textContent = activeCampaign.reasoning || "";
+      } else {
+        // No campaign — derive from strategy
+        try {
+          const strategy = await brainFetch("/strategy/current");
+          if (strategy && strategy.positioning) {
+            if ($campaignName) $campaignName.textContent = "Current Strategy";
+            if ($goal) $goal.textContent = strategy.positioning;
+            if ($reasoning) $reasoning.textContent = (strategy.content_pillars || []).length > 0
+              ? "Content pillars: " + strategy.content_pillars.join(", ")
+              : "";
+          } else {
+            if ($campaignName) $campaignName.textContent = "No active campaign";
+            if ($goal) $goal.textContent = "Generate briefs to get started";
+            if ($reasoning) $reasoning.textContent = "The brain needs data to build a strategy. Start by feeding it intel and generating your first briefs.";
+          }
+        } catch {
+          if ($campaignName) $campaignName.textContent = "No active campaign";
+          if ($goal) $goal.textContent = "Generate briefs to get started";
+        }
+      }
+
+      // Load briefs count for evidence trail context
+      try {
+        const data = await brainFetch("/briefs?limit=10");
+        const briefs = data.briefs || [];
+        if ($evidence && briefs.length > 0) {
+          let html = "";
+          html += '<div class="brain-evidence-item"><span class="brain-evidence-icon">%</span><span class="brain-evidence-text"><strong>Briefs:</strong> ' + briefs.length + ' brief(s) this week, ' + briefs.filter(b => b.status === "REPORTED").length + ' reported</span></div>';
+          if (briefs[0]?.confidence) {
+            html += '<div class="brain-evidence-item"><span class="brain-evidence-icon">%</span><span class="brain-evidence-text"><strong>Confidence:</strong> ' + briefs[0].confidence + ' (top brief)</span></div>';
+          }
+          $evidence.innerHTML = html;
+        } else if ($evidence) {
+          $evidence.innerHTML = '<div class="brain-evidence-item"><span class="brain-evidence-icon">%</span><span class="brain-evidence-text">No briefs generated yet. Click "Generate this week\'s briefs" below.</span></div>';
+        }
+      } catch { /* briefs will show their own error */ }
     }
 
     // ── Campaign Cache ────────────────────────────────────────
@@ -1444,6 +1498,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
     width: 28px; height: 28px; border-radius: 50%; background: var(--brain-border);
     display: flex; align-items: center; justify-content: center;
     font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; color: var(--brain-text-secondary); flex-shrink: 0;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 28px;
   }
   .brain-brief-num.done { background: var(--brain-green-dim); color: #111111; }
   .brain-brief-title-wrap { flex: 1; min-width: 0; }
