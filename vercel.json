@@ -2,7 +2,15 @@
   "rewrites": [
     {
       "source": "/nutrition/(.*)",
-      "destination": "https://rise-nutrition.vercel.app/$1"
+      "destination": "https://rise-nutrition-v2.vercel.app/$1"
+    },
+    {
+      "source": "/portal/tracker",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/tracker"
+    },
+    {
+      "source": "/portal/tracker/(.*)",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/tracker/$1"
     }
   ]
 }
