@@ -28,3 +28,10 @@ supabase/.temp/
 # Hermes agent task files
 .hermes/
 supabase/.temp/
+
+# Internal build artifacts (not deliverables)
+SESSION_STATE.md
+AUDIT_REPORT.md
+REFINEMENT_REPORT.md
+redesign-mockup.html
+dogfood-output/
