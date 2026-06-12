@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/nutrition",
+      "destination": "/portal/tracker",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/nutrition/(.*)",

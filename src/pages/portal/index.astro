@@ -45,6 +45,24 @@ import Footer from "../../components/Footer.astro";
 
       <h2 class="portal-section-title">Your tools</h2>
       <div class="portal-grid">
+        <!-- Nutrition Tracker — visible to all authenticated users -->
+        <a class="portal-card portal-card-active" href="/portal/tracker" id="portal-tracker-card">
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(34,197,94,0.1); color: #16a34a">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+              <path d="M12 6v6l4 2" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title" data-i18n="portal.card.tracker.title">Nutrition Tracker</h3>
+            <p class="portal-card-desc" data-i18n="portal.card.tracker.desc">Log protein, track meals, hit your daily target.</p>
+          </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6" /></svg>
+          </span>
+        </a>
+
+        <!-- Marketing Brain — founder only -->
         <a class="portal-card portal-card-active" href="/portal/brain" id="portal-brain-card" hidden>
           <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -57,9 +75,37 @@ import Footer from "../../components/Footer.astro";
             <p class="portal-card-desc">Strategic marketing intelligence engine.</p>
           </div>
           <span class="portal-card-arrow" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6" /></svg>
           </span>
         </a>
+
+        <!-- Workouts — coming soon -->
+        <div class="portal-card portal-card-disabled">
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(107,114,128,0.08); color: var(--rise-neutral-400)">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6.5 6.5h11M6.5 17.5h11M3 12h2m14 0h2M6 6.5v11M18 6.5v11" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title" data-i18n="portal.card.workouts.title">Workouts</h3>
+            <p class="portal-card-desc" data-i18n="portal.card.workouts.desc">Strength + on-ice plans built around your week.</p>
+            <span class="portal-card-coming" data-i18n="portal.card.comingSoon">Coming soon</span>
+          </div>
+        </div>
+
+        <!-- Game Review — coming soon -->
+        <div class="portal-card portal-card-disabled">
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(107,114,128,0.08); color: var(--rise-neutral-400)">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title" data-i18n="portal.card.game.title">Game review</h3>
+            <p class="portal-card-desc" data-i18n="portal.card.game.desc">Mentor notes and clips from your games.</p>
+            <span class="portal-card-coming" data-i18n="portal.card.comingSoon">Coming soon</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -277,6 +323,25 @@ import Footer from "../../components/Footer.astro";
   .portal-card-active:hover .portal-card-arrow {
     color: var(--rise-red);
     transform: translateX(2px);
+  }
+
+  .portal-card-disabled {
+    opacity: 0.55;
+    cursor: default;
+    pointer-events: none;
+  }
+  .portal-card-coming {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rise-neutral-400);
+    background: var(--rise-neutral-100);
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-top: 6px;
   }
 
   .portal-lang-toggle {
