@@ -394,21 +394,36 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
           <span class="brain-section-count" id="brain-rules-count">—</span>
         </div>
         <div class="brain-rules-card" id="brain-rules-container"></div>
-
-        <!-- Onboarding -->
-        <div class="brain-section-header" style="margin-top:32px">
-          <span class="brain-section-title">Onboarding</span>
-        </div>
-        <div id="brain-onboarding-container">
-          <div class="brain-empty-state">
-            <p>Onboarding helps the brain learn about your business. Answer questions to improve your briefs.</p>
-            <button class="btn-primary" id="brain-onboarding-start" style="margin-top:12px">Start onboarding</button>
-          </div>
-        </div>
       </div>
 
     </div>
   </section>
+
+  <!-- ── Onboarding Wizard Overlay ──────────────────────────── -->
+  <div id="brain-onboarding-overlay" class="brain-overlay" hidden>
+    <div class="brain-overlay-card">
+      <div class="brain-overlay-header">
+        <div class="brain-overlay-step" id="brain-overlay-step">Step 1</div>
+        <button class="brain-overlay-close" id="brain-overlay-skip-all" title="Skip for now">&times;</button>
+      </div>
+      <div class="brain-overlay-body">
+        <div class="brain-overlay-priority" id="brain-overlay-priority"></div>
+        <h2 class="brain-overlay-question" id="brain-overlay-question">Loading...</h2>
+        <p class="brain-overlay-context" id="brain-overlay-context"></p>
+        <textarea class="brain-overlay-input" id="brain-overlay-answer" placeholder="Type your answer..." rows="3"></textarea>
+      </div>
+      <div class="brain-overlay-footer">
+        <button class="btn-ghost" id="brain-overlay-skip">Skip</button>
+        <button class="btn-primary" id="brain-overlay-submit">Submit</button>
+      </div>
+      <div class="brain-overlay-complete" id="brain-overlay-complete" hidden>
+        <div class="brain-overlay-check">&#10003;</div>
+        <h2>All done!</h2>
+        <p>The brain knows enough to get started. You can always re-run onboarding from Settings.</p>
+        <button class="btn-primary" id="brain-overlay-done">Go to Dashboard</button>
+      </div>
+    </div>
+  </div>
 
   <Footer slot="footer" />
 
@@ -1415,15 +1430,128 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       }
     }
 
-    // ── Onboarding ────────────────────────────────────────────
-    const WELCOME_KEY = "brain_welcomed";
+    // ── Onboarding Wizard ─────────────────────────────────────
+    const ONBOARD_KEY = "brain_onboarded";
+    let onboardingStep = 0;
+    let currentQuestionId = null;
+
+    async function startOnboarding() {
+      const overlay = $("#brain-onboarding-overlay");
+      if (!overlay) return;
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+      onboardingStep = 0;
+      await loadNextOnboardingQuestion();
+    }
+
+    function closeOnboarding() {
+      const overlay = $("#brain-onboarding-overlay");
+      if (overlay) overlay.hidden = true;
+      document.body.style.overflow = "";
+      localStorage.setItem(ONBOARD_KEY, "true");
+    }
+
+    async function loadNextOnboardingQuestion() {
+      const stepEl = $("#brain-overlay-step");
+      const priorityEl = $("#brain-overlay-priority");
+      const questionEl = $("#brain-overlay-question");
+      const contextEl = $("#brain-overlay-context");
+      const answerEl = $("#brain-overlay-answer");
+      const bodyEl = $(".brain-overlay-body");
+      const footerEl = $(".brain-overlay-footer");
+      const completeEl = $("#brain-overlay-complete");
+
+      try {
+        const data = await brainFetch("/onboarding/next");
+
+        if (data.status === "complete" || !data.id) {
+          // No more questions, show completion
+          if (bodyEl) bodyEl.hidden = true;
+          if (footerEl) footerEl.hidden = true;
+          if (completeEl) completeEl.hidden = false;
+          return;
+        }
+
+        onboardingStep++;
+        currentQuestionId = data.id;
+        if (stepEl) stepEl.textContent = "Step " + onboardingStep;
+        if (priorityEl) priorityEl.textContent = (data.priority || "MEDIUM") + " priority";
+        if (questionEl) questionEl.textContent = data.question || data.gap_question || "Tell us about your business";
+        if (contextEl) contextEl.textContent = data.context || "";
+        if (answerEl) { answerEl.value = ""; answerEl.focus(); }
+      } catch (err) {
+        if (questionEl) questionEl.textContent = "Could not load next question. Try again later.";
+        if (contextEl) contextEl.textContent = err.message;
+      }
+    }
+
+    async function submitOnboardingAnswer() {
+      const answerEl = $("#brain-overlay-answer");
+      const text = (answerEl?.value || "").trim();
+      if (!text || !currentQuestionId) return;
+
+      const submitBtn = $("#brain-overlay-submit");
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Saving..."; }
+
+      try {
+        await brainFetch("/onboarding/answer", {
+          method: "POST",
+          body: JSON.stringify({ question_id: currentQuestionId, answer: text })
+        });
+        await loadNextOnboardingQuestion();
+      } catch (err) {
+        showFlash("Failed to save answer: " + err.message);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Submit"; }
+      }
+    }
+
+    async function skipOnboardingQuestion() {
+      if (!currentQuestionId) return;
+      try {
+        await brainFetch("/onboarding/skip", {
+          method: "POST",
+          body: JSON.stringify({ question_id: currentQuestionId })
+        });
+        await loadNextOnboardingQuestion();
+      } catch {
+        await loadNextOnboardingQuestion();
+      }
+    }
 
     function setupOnboarding() {
-      const startBtn = $("#brain-onboarding-start");
-      if (startBtn) {
-        startBtn.addEventListener("click", () => {
-          window.location.href = "/portal/brain?tab=setup";
+      // "Re-run onboarding" button in Knowledge tab
+      const rerunBtn = $("#brain-rerun-onboarding");
+      if (rerunBtn) {
+        rerunBtn.addEventListener("click", () => {
+          localStorage.removeItem(ONBOARD_KEY);
+          startOnboarding();
         });
+      }
+
+      // Overlay buttons
+      const submitBtn = $("#brain-overlay-submit");
+      const skipBtn = $("#brain-overlay-skip");
+      const skipAllBtn = $("#brain-overlay-skip-all");
+      const doneBtn = $("#brain-overlay-done");
+      const answerEl = $("#brain-overlay-answer");
+
+      if (submitBtn) submitBtn.addEventListener("click", submitOnboardingAnswer);
+      if (skipBtn) skipBtn.addEventListener("click", skipOnboardingQuestion);
+      if (skipAllBtn) skipAllBtn.addEventListener("click", closeOnboarding);
+      if (doneBtn) doneBtn.addEventListener("click", closeOnboarding);
+
+      // Enter to submit
+      if (answerEl) {
+        answerEl.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submitOnboardingAnswer(); }
+        });
+      }
+
+      // Auto-show on first visit
+      const completed = localStorage.getItem(ONBOARD_KEY);
+      if (!completed) {
+        setTimeout(() => startOnboarding(), 800);
       }
     }
 
@@ -2026,4 +2154,111 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
   }
 
   .hidden { display: none !important; }
+
+  /* ── Onboarding Overlay ─────────────────────────────────────── */
+  .brain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .brain-overlay[hidden] { display: none; }
+  .brain-overlay-card {
+    background: #fff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.15);
+  }
+  .brain-overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 0;
+  }
+  .brain-overlay-step {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brain-text-secondary, #666);
+  }
+  .brain-overlay-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--brain-text-secondary, #999);
+    line-height: 1;
+    padding: 4px;
+  }
+  .brain-overlay-close:hover { color: var(--brain-text-primary, #111); }
+  .brain-overlay-body {
+    padding: 20px 24px;
+  }
+  .brain-overlay-priority {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brain-text-secondary, #999);
+    margin-bottom: 8px;
+  }
+  .brain-overlay-question {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brain-text-primary, #111);
+    margin: 0 0 12px;
+    line-height: 1.3;
+  }
+  .brain-overlay-context {
+    font-size: 0.85rem;
+    color: var(--brain-text-secondary, #666);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .brain-overlay-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--brain-border, #e5e5e5);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .brain-overlay-input:focus { border-color: var(--brain-text-primary, #111); }
+  .brain-overlay-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px 20px;
+    gap: 12px;
+  }
+  .brain-overlay-footer .btn-primary { min-width: 100px; }
+  .brain-overlay-complete {
+    padding: 40px 24px;
+    text-align: center;
+  }
+  .brain-overlay-check {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+  .brain-overlay-complete h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    margin: 0 0 8px;
+  }
+  .brain-overlay-complete p {
+    font-size: 0.9rem;
+    color: var(--brain-text-secondary, #666);
+    margin: 0 0 24px;
+  }
 </style>
