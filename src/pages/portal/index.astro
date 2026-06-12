@@ -79,33 +79,21 @@ import Footer from "../../components/Footer.astro";
           </span>
         </a>
 
-        <!-- Workouts — coming soon -->
-        <div class="portal-card portal-card-disabled">
-          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(107,114,128,0.08); color: var(--rise-neutral-400)">
+        <!-- Coach Dashboard — coach + founder -->
+        <a class="portal-card portal-card-active" href="/portal/coach" id="portal-coach-card" hidden>
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6.5 6.5h11M6.5 17.5h11M3 12h2m14 0h2M6 6.5v11M18 6.5v11" />
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
           </div>
           <div class="portal-card-body">
-            <h3 class="portal-card-title" data-i18n="portal.card.workouts.title">Workouts</h3>
-            <p class="portal-card-desc" data-i18n="portal.card.workouts.desc">Strength + on-ice plans built around your week.</p>
-            <span class="portal-card-coming" data-i18n="portal.card.comingSoon">Coming soon</span>
+            <h3 class="portal-card-title">Coach Dashboard</h3>
+            <p class="portal-card-desc">Monitor your team's nutrition and progress.</p>
           </div>
-        </div>
-
-        <!-- Game Review — coming soon -->
-        <div class="portal-card portal-card-disabled">
-          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(107,114,128,0.08); color: var(--rise-neutral-400)">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
-          </div>
-          <div class="portal-card-body">
-            <h3 class="portal-card-title" data-i18n="portal.card.game.title">Game review</h3>
-            <p class="portal-card-desc" data-i18n="portal.card.game.desc">Mentor notes and clips from your games.</p>
-            <span class="portal-card-coming" data-i18n="portal.card.comingSoon">Coming soon</span>
-          </div>
-        </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6" /></svg>
+          </span>
+        </a>
       </div>
     </div>
   </section>
@@ -451,10 +439,23 @@ import Footer from "../../components/Footer.astro";
       .eq("id", user.id)
       .maybeSingle();
 
-    // Only founders see the brain card
+    // Role-based routing: single-tool roles skip the portal hub.
+    // Athletes → tracker (their only tool)
+    if (profile?.role === "athlete") {
+      window.location.replace("/portal/tracker");
+      return;
+    }
+    // Coaches → coach dashboard (their primary view)
+    if (profile?.role === "coach") {
+      window.location.replace("/portal/coach");
+      return;
+    }
+    // Founders see everything: Tracker, Coach Dashboard, Brain
     if (profile?.role === "founder") {
       const brainCard = document.getElementById("portal-brain-card");
       if (brainCard) brainCard.removeAttribute("hidden");
+      const coachCard = document.getElementById("portal-coach-card");
+      if (coachCard) coachCard.removeAttribute("hidden");
     }
 
     const name = profile?.full_name || deriveDisplayName(user);

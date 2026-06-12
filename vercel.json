@@ -18,6 +18,14 @@
     {
       "source": "/portal/tracker/(.*)",
       "destination": "https://rise-nutrition-v2.vercel.app/portal/tracker/$1"
+    },
+    {
+      "source": "/portal/coach",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/coach"
+    },
+    {
+      "source": "/portal/coach/(.*)",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/coach/$1"
     }
   ]
 }
