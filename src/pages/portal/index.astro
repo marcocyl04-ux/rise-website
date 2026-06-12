@@ -1,17 +1,13 @@
 ---
-// Portal dashboard — entry point for authenticated users.
+// Portal dashboard — entry point for authenticated users (RISE Website).
+// After extraction: brain access only. Nutrition tracker is in rise-nutrition.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 ---
 
-<BaseLayout title="Portal" description="Your RISE Advancement portal — access training tools, nutrition tracking, and more.">
+<BaseLayout title="Portal" description="Your RISE Advancement portal — access the marketing brain.">
   <Header slot="header" />
-
-  <!-- Minimal app header (standalone PWA only) -->
-  <div class="pwa-app-header" aria-hidden="true">
-    <img src="/logo-header.png" alt="RISE" class="pwa-app-header-logo" />
-  </div>
 
   <!-- Loading state while we check auth -->
   <section id="portal-loading" class="portal-loading">
@@ -25,8 +21,8 @@ import Footer from "../../components/Footer.astro";
   <section id="portal-anon" class="portal-anon section" hidden>
     <div class="container portal-narrow">
       <h1 class="portal-anon-title" data-i18n="common.signInToPortal">Sign in to your portal</h1>
-      <p class="portal-anon-sub" data-i18n="portal.signInSub">
-        Access your nutrition tracker, training tools, and personalized targets.
+      <p class="portal-anon-sub">
+        Access the RISE marketing brain.
       </p>
       <div class="portal-anon-actions">
         <button class="btn-primary" type="button" data-open-auth data-i18n="common.signupOrLogin">Log in / Sign up</button>
@@ -44,40 +40,11 @@ import Footer from "../../components/Footer.astro";
           <button type="button" class="portal-logout-btn" id="portal-logout-btn" data-i18n="common.logout">Log out</button>
         </div>
         <h1 class="portal-title" id="portal-hello" data-i18n="portal.welcome">Welcome</h1>
-        <p class="portal-sub" id="portal-sub" data-i18n="portal.subPick">Pick a tool to get started.</p>
-        <button type="button" class="portal-install-btn" id="portal-install-btn" hidden>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span data-i18n="pwa.install.getApp">Get the app</span>
-        </button>
+        <p class="portal-sub" data-i18n="portal.subPick">Pick a tool to get started.</p>
       </header>
 
-      <div class="portal-target" id="portal-target-card" hidden>
-        <span class="portal-target-label" data-i18n="portal.dailyTargetLabel">Your daily protein target</span>
-        <div class="portal-target-row">
-          <span class="portal-target-number" id="portal-protein">0</span>
-          <span class="portal-target-unit" data-i18n="portal.unitGPerDay">g / day</span>
-        </div>
-      </div>
-
-      <h2 class="portal-section-title" data-i18n="portal.toolsHeading">Your tools</h2>
+      <h2 class="portal-section-title">Your tools</h2>
       <div class="portal-grid">
-        <a class="portal-card portal-card-active" href="/portal/tracker">
-          <div class="portal-card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 7h16M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" />
-              <path d="M9 11v6M12 11v6M15 11v6" />
-              <path d="M9 4h6l1 3H8z" />
-            </svg>
-          </div>
-          <div class="portal-card-body">
-            <h3 class="portal-card-title" data-i18n="portal.card.tracker.title">Nutrition Tracker</h3>
-            <p class="portal-card-desc" data-i18n="portal.card.tracker.desc">Log protein, track meals, hit your daily target.</p>
-          </div>
-          <span class="portal-card-arrow" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
-          </span>
-        </a>
-
         <a class="portal-card portal-card-active" href="/portal/brain" id="portal-brain-card" hidden>
           <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -93,47 +60,6 @@ import Footer from "../../components/Footer.astro";
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
           </span>
         </a>
-
-        <a class="portal-card portal-card-active" href="/portal/coach" id="portal-coach-card" hidden>
-          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          </div>
-          <div class="portal-card-body">
-            <h3 class="portal-card-title">Coach Dashboard</h3>
-            <p class="portal-card-desc">Monitor your team's nutrition and progress.</p>
-          </div>
-          <span class="portal-card-arrow" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6"/></svg>
-          </span>
-        </a>
-
-        <div class="portal-card portal-card-soon">
-          <div class="portal-card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12" />
-            </svg>
-          </div>
-          <div class="portal-card-body">
-            <h3 class="portal-card-title" data-i18n="portal.card.workouts.title">Workouts</h3>
-            <p class="portal-card-desc" data-i18n="portal.card.workouts.desc">Strength + on-ice plans built around your week.</p>
-          </div>
-          <span class="portal-card-soon-tag" data-i18n="portal.card.comingSoon">Coming soon</span>
-        </div>
-
-        <div class="portal-card portal-card-soon">
-          <div class="portal-card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3v18M3 12h18" />
-            </svg>
-          </div>
-          <div class="portal-card-body">
-            <h3 class="portal-card-title" data-i18n="portal.card.game.title">Game review</h3>
-            <p class="portal-card-desc" data-i18n="portal.card.game.desc">Mentor notes and clips from your games.</p>
-          </div>
-          <span class="portal-card-soon-tag" data-i18n="portal.card.comingSoon">Coming soon</span>
-        </div>
       </div>
     </div>
   </section>
@@ -142,7 +68,6 @@ import Footer from "../../components/Footer.astro";
 </BaseLayout>
 
 <style is:global>
-  /* Hide Header lang toggle — portal pages use their own floating toggle */
   .lang-toggle { display: none !important; }
 </style>
 
@@ -279,42 +204,6 @@ import Footer from "../../components/Footer.astro";
     margin: 0;
   }
 
-  .portal-target {
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(135deg, var(--rise-red), var(--rise-red-dark));
-    color: var(--rise-white);
-    border-radius: 12px;
-    padding: var(--space-5) var(--space-6);
-    margin-bottom: var(--space-8);
-    box-shadow: 0 8px 24px rgba(211, 25, 31, 0.18);
-    max-width: 420px;
-  }
-  .portal-target[hidden] { display: none; }
-  .portal-target-label {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    opacity: 0.9;
-  }
-  .portal-target-row {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .portal-target-number {
-    font-family: var(--font-heading);
-    font-size: 2.75rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .portal-target-unit {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    opacity: 0.9;
-  }
-
   .portal-section-title {
     font-family: var(--font-body);
     font-size: 0.75rem;
@@ -332,9 +221,6 @@ import Footer from "../../components/Footer.astro";
   }
   @media (min-width: 640px) {
     .portal-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (min-width: 960px) {
-    .portal-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   .portal-card {
@@ -356,10 +242,6 @@ import Footer from "../../components/Footer.astro";
     box-shadow: 0 8px 20px rgba(18, 18, 18, 0.08);
     text-decoration: none;
   }
-  .portal-card-soon {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
   .portal-card-icon {
     flex-shrink: 0;
     width: 48px;
@@ -370,10 +252,6 @@ import Footer from "../../components/Footer.astro";
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  .portal-card-soon .portal-card-icon {
-    background: var(--rise-neutral-50);
-    color: var(--rise-neutral-400);
   }
   .portal-card-body { flex: 1; }
   .portal-card-title {
@@ -399,20 +277,6 @@ import Footer from "../../components/Footer.astro";
   .portal-card-active:hover .portal-card-arrow {
     color: var(--rise-red);
     transform: translateX(2px);
-  }
-  .portal-card-soon-tag {
-    position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--rise-neutral-400);
-    background: var(--rise-neutral-50);
-    padding: 2px 8px;
-    border-radius: 4px;
   }
 
   .portal-lang-toggle {
@@ -455,12 +319,10 @@ import Footer from "../../components/Footer.astro";
     document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
       if (!key) return;
-      // Welcome line is dynamic — handled below
       if (el.id === "portal-hello") return;
       el.textContent = getTranslation(lang, key);
     });
 
-    // Welcome string: "Welcome, {first}" or "歡迎,{first}"
     const hello = document.getElementById("portal-hello");
     const first = currentName();
     if (hello) {
@@ -468,13 +330,11 @@ import Footer from "../../components/Footer.astro";
       hello.textContent = first ? `${base}, ${first}` : base;
     }
 
-    // Lang toggle button text
     const toggle = document.getElementById("portal-lang-toggle");
     if (toggle) {
       toggle.textContent = lang === "zh" ? getTranslation("en", "lang.toggle.en") : getTranslation("zh", "lang.toggle.zh");
     }
 
-    // Update <html lang>
     document.documentElement.setAttribute("lang", lang === "zh" ? "zh-HK" : "en");
   }
 
@@ -489,9 +349,9 @@ import Footer from "../../components/Footer.astro";
   }
 
   function deriveDisplayName(user: any): string {
-    if (!user) return "athlete";
+    if (!user) return "user";
     const meta = user.user_metadata || {};
-    return (meta.full_name || meta.name || user.email?.split("@")[0] || "athlete").trim();
+    return (meta.full_name || meta.name || user.email?.split("@")[0] || "user").trim();
   }
 
   async function initPortal() {
@@ -511,7 +371,6 @@ import Footer from "../../components/Footer.astro";
       loading?.setAttribute("hidden", "");
       anon?.removeAttribute("hidden");
       applyTranslations();
-      // React to login from modal
       sb.auth.onAuthStateChange((_e: string, s: any) => {
         if (s) window.location.reload();
       });
@@ -520,97 +379,32 @@ import Footer from "../../components/Footer.astro";
 
     const user = session.user;
 
-    // ensure user_profiles row exists
-    try {
-      const { data: existing } = await sb
-        .from("user_profiles")
-        .select("id")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (!existing) {
-        await sb.from("user_profiles").insert({
-          id: user.id,
-          email: user.email,
-          full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
-          role: "athlete",
-          team_id: "rise-hk",
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        });
-      }
-    } catch (err) {
-      console.warn("ensureProfile", err);
-    }
+    // Load profile for hello message
+    const { data: profile } = await sb
+      .from("user_profiles")
+      .select("full_name, role")
+      .eq("id", user.id)
+      .maybeSingle();
 
-    // Load baseline + profile in parallel for hello + target card
-    const [{ data: profile }, { data: baseline }] = await Promise.all([
-      sb.from("user_profiles").select("full_name, role").eq("id", user.id).maybeSingle(),
-      sb.from("baseline_intake").select("protein_target_g").eq("user_id", user.id).maybeSingle(),
-    ]);
-
-    // Coaches get redirected to coach dashboard; founders stay here (they see everything).
-    if (profile?.role === "coach") {
-      window.location.replace("/portal/coach");
-      return;
-    }
-    // Founders see the Brain card + a link to coach dashboard
+    // Only founders see the brain card
     if (profile?.role === "founder") {
       const brainCard = document.getElementById("portal-brain-card");
       if (brainCard) brainCard.removeAttribute("hidden");
-      const coachCard = document.getElementById("portal-coach-card");
-      if (coachCard) coachCard.removeAttribute("hidden");
     }
 
     const name = profile?.full_name || deriveDisplayName(user);
     const firstName = name.split(" ")[0];
     (window as any).__riseFirstName = firstName;
 
-    if (baseline?.protein_target_g) {
-      const target = document.getElementById("portal-target-card");
-      const num = document.getElementById("portal-protein");
-      if (target) target.removeAttribute("hidden");
-      if (num) num.textContent = String(baseline.protein_target_g);
-    }
-
     loading?.setAttribute("hidden", "");
     dash?.removeAttribute("hidden");
     applyTranslations();
   }
 
-  function maybeShowInstallHint() {
-    const btn = document.getElementById("portal-install-btn");
-    if (!btn) return;
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
-      || (window.navigator as any).standalone === true;
-    if (isStandalone) return;
-    let dismissed = false;
-    try { dismissed = window.localStorage.getItem("rise-pwa-install-dismissed") === "1"; } catch (e) {}
-    if (dismissed) return;
-
-    // Detect iOS
-    const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-
-    btn.removeAttribute("hidden");
-    btn.addEventListener("click", async function () {
-      // Android: trigger native install prompt
-      const prompt = (window as any).__riseDeferredPrompt;
-      if (prompt) {
-        prompt.prompt();
-        try { await prompt.userChoice; } catch (e) {}
-        (window as any).__riseDeferredPrompt = null;
-        btn.setAttribute("hidden", "");
-        return;
-      }
-      // iOS or no prompt: go to install guide
-      window.location.href = "/install-guide";
-    });
-  }
-
   applyTranslations();
   wireLangToggle();
-  maybeShowInstallHint();
   initPortal();
 
-  // Logout handler
   document.getElementById("portal-logout-btn")?.addEventListener("click", async () => {
     const sb = (window as any).supabaseClient;
     if (sb) await sb.auth.signOut();
