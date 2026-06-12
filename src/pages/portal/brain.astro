@@ -460,7 +460,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
         .maybeSingle();
 
       const role = profile?.role || "athlete";
-      if (role !== "coach" && role !== "founder") {
+      if (role !== "founder") {
         loading.setAttribute("hidden", "");
         denied.removeAttribute("hidden");
         return;

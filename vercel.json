@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/nutrition/(.*)",
+      "destination": "https://rise-nutrition.vercel.app/$1"
+    }
+  ]
+}

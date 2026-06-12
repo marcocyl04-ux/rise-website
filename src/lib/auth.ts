@@ -99,7 +99,7 @@ export async function hasBaseline(userId: string): Promise<boolean> {
   return !!data;
 }
 
-export type UserRole = "athlete" | "coach" | null;
+export type UserRole = "athlete" | "coach" | "founder" | null;
 
 // Read the role from user_profiles. Returns null on error so callers can fall
 // back to the default athlete view.
