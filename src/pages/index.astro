@@ -320,7 +320,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     (function () {
       // ——— LENIS SMOOTH SCROLL ———
       var lenis = new Lenis({
-        lerp: 0.08,
+        lerp: 0.12,
         smoothWheel: true,
         wheelMultiplier: 1.0,
         touchMultiplier: 1.2,
@@ -328,7 +328,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
       });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(1000, 16);
 
       // ——— GSAP SETUP ———
       gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
