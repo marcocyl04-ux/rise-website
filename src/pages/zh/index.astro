@@ -299,9 +299,9 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
   <script is:inline>
     (function () {
       var lenis = new Lenis({
-        duration: 1.2,
-        easing: function(t) { return 1 - Math.pow(1 - t, 4); },
-        smoothWheel: true, wheelMultiplier: 1.0, touchMultiplier: 1.2, infinite: false,
+       duration: 0.5,
+       easing: function(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; },
+       smoothWheel: true, wheelMultiplier: 1.0, touchMultiplier: 1.2, infinite: false,
       });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
