@@ -131,7 +131,25 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  /* scroll-behavior removed — Lenis handles smooth scroll */
+  scroll-behavior: auto; /* Lenis handles smooth scroll — defensive override */
+}
+
+/* Lenis defensive CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {

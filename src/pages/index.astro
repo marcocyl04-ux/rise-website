@@ -320,7 +320,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     (function () {
       // ——— LENIS SMOOTH SCROLL ———
       var lenis = new Lenis({
-        lerp: 0.12,
+        lerp: 0.25,
         smoothWheel: true,
         wheelMultiplier: 1.0,
         touchMultiplier: 1.2,
@@ -328,7 +328,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
       });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(1000, 16);
+      gsap.ticker.lagSmoothing(0);
 
       // ——— GSAP SETUP ———
       gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -435,10 +435,9 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         var particles = new THREE.Points(particleGeom, particleMat);
         scene.add(particles);
 
-        var rafId;
         var heroKilled = false;
-        function animate() {
-          rafId = requestAnimationFrame(animate);
+        function renderRink() {
+          if (heroKilled) return;
           var pos = particleGeom.attributes.position.array;
           for (var i = 0; i < count; i++) {
             pos[i * 3] += velocities[i * 3];
@@ -455,7 +454,8 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           camera.lookAt(0, 0, 0);
           renderer.render(scene, camera);
         }
-        animate();
+        // Drive Three.js from GSAP ticker (single clock, no competing rAF)
+        gsap.ticker.add(renderRink);
 
         window.addEventListener('mousemove', function(e) {
           mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -467,13 +467,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           renderer.setSize(window.innerWidth, window.innerHeight);
         });
         window.addEventListener('scroll', function() {
-          if (!heroKilled && window.scrollY > window.innerHeight * 1.5) {
-            cancelAnimationFrame(rafId);
-            heroKilled = true;
-          } else if (heroKilled && window.scrollY < window.innerHeight * 1.5) {
-            heroKilled = false;
-            animate();
-          }
+          heroKilled = window.scrollY > window.innerHeight * 1.5;
         }, { passive: true });
       })();
 
