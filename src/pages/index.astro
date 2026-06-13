@@ -320,8 +320,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     (function () {
       // ——— LENIS SMOOTH SCROLL ———
       var lenis = new Lenis({
-        duration: 0.5,
-        easing: function(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; },
+        lerp: 0.08,
         smoothWheel: true,
         wheelMultiplier: 1.0,
         touchMultiplier: 1.2,
