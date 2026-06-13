@@ -1,109 +1,131 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import SectionHeader from "../../components/SectionHeader.astro";
-import ServiceNav from "../../components/ServiceNav.astro";
+// Mentoring — EN (dark theme)
+import MarketingLayout from "../../layouts/MarketingLayout.astro";
 ---
 
-<BaseLayout title="Mentoring" description="Season-long hockey development program with dedicated mentors. Video review, skill skates, exercise plans, nutrition, mental skills, and academic support.">
-  <Header slot="header" />
+<MarketingLayout title="Mentoring" description="Season-long hockey development program with dedicated mentors. Video review, skill skates, exercise plans, nutrition, mental skills, and academic support.">
 
-  <section class="service-hero section"><div class="container">
-    <p class="hero-eyebrow">Service</p>
-    <h1 class="hero-title">Mentoring</h1>
-    <p class="hero-lead">Rise Advancement's mentoring program pairs every player with a dedicated mentor for the season. You choose the services that fit your game and your goals, whether that's on-ice skills, game review, fitness, nutrition, or academic support. Every engagement starts with an onboarding session, goal-setting, and regular check-ins throughout.</p>
-    <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="btn-primary">Get Started</a>
-  </div></section>
-
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="How It Works" subtitle="From day one, our mentors are in your corner." />
-    <div class="steps-grid">
-      <div class="step"><div class="step-number">1</div><h3>Plan</h3><p>You'll start with a planning session to map out the season, set clear goals, and decide which services make the most sense for where you are in your development.</p></div>
-      <div class="step"><div class="step-number">2</div><h3>Choose</h3><p>Pick what fits. All services can be delivered virtually unless noted.</p></div>
-      <div class="step"><div class="step-number">3</div><h3>Check-ins</h3><p>Your mentor stays connected throughout, tracking progress, making adjustments, and giving you direct, honest feedback.</p></div>
-      <div class="step"><div class="step-number">4</div><h3>Wrap</h3><p>Exit interview. What worked, what's next.</p></div>
+  <section class="mpg-hero">
+    <div class="mpg-container">
+      <p class="mpg-hero__eyebrow">Service</p>
+      <h1 class="mpg-hero__title">Mentoring</h1>
+      <p class="mpg-hero__lead">Rise Advancement's mentoring program pairs every player with a dedicated mentor for the season. You choose the services that fit your game and your goals. Every engagement starts with an onboarding session, goal-setting, and regular check-ins throughout.</p>
+      <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="hp-btn-primary"><span>Get Started</span></a>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container">
-    <SectionHeader title="Available Services" subtitle="Pick what fits. All services can be delivered virtually unless noted." />
-    <div class="services-list">
-      <div class="service-item"><h3>Weekly Check-ins</h3><p>Regular touchpoints with your mentor throughout the season covering progress, challenges, and adjustments to your plan. Included with every engagement.</p></div>
-      <div class="service-item"><h3>Video Review</h3><p>One-on-one virtual game review with your mentor. Specific, actionable feedback on game or practice footage you can apply immediately.</p></div>
-      <div class="service-item"><h3>Skill Skates</h3><p>In-person on-ice sessions focused on skating mechanics, puck handling, shooting, and position-specific skills with your Rise mentor.</p></div>
-      <div class="service-item"><h3>Exercise Plan</h3><p>Structured off-ice training built around your position and goals. Updated regularly and delivered with full workout instructions.</p></div>
-      <div class="service-item"><h3>Mental Skills</h3><p>Sessions with a professional mental skills coach covering focus, confidence, pressure management, and competitive mindset.</p></div>
-      <div class="service-item"><h3>Nutritional Plan</h3><p>A custom nutrition plan built for your body and training load, designed to support performance and recovery all season long.</p></div>
-      <div class="service-item"><h3>Stretching & Yoga</h3><p>Guided sessions focused on athletic performance, injury prevention, and recovery. Tailored to your schedule.</p></div>
-      <div class="service-item"><h3>School Help</h3><p>Academic support for players balancing a demanding school schedule alongside hockey. Available throughout the season.</p></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <div class="mpg-label">Process</div>
+        <h2 class="mpg-heading">How It Works</h2>
+        <p class="mpg-subtitle">From day one, our mentors are in your corner.</p>
+      </div>
+      <div class="mpg-steps mpg-steps--4">
+        <div class="mpg-step">
+          <div class="mpg-step__number">1</div>
+          <h3>Plan</h3>
+          <p>You'll start with a planning session to map out the season, set clear goals, and decide which services make the most sense for where you are in your development.</p>
+        </div>
+        <div class="mpg-step">
+          <div class="mpg-step__number">2</div>
+          <h3>Choose</h3>
+          <p>Pick what fits. All services can be delivered virtually unless noted.</p>
+        </div>
+        <div class="mpg-step">
+          <div class="mpg-step__number">3</div>
+          <h3>Check-ins</h3>
+          <p>Your mentor stays connected throughout, tracking progress, making adjustments, and giving you direct, honest feedback.</p>
+        </div>
+        <div class="mpg-step">
+          <div class="mpg-step__number">4</div>
+          <h3>Wrap</h3>
+          <p>Exit interview. What worked, what's next.</p>
+        </div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="Why It Works" />
-    <div class="why-list">
-      <div class="why-item"><span class="check">✔</span><span>Dedicated mentors who know your game</span></div>
-      <div class="why-item"><span class="check">✔</span><span>Flexible, build the program around your needs</span></div>
-      <div class="why-item"><span class="check">✔</span><span>24/7 response time from the mentorship team</span></div>
-      <div class="why-item"><span class="check">✔</span><span>Real feedback, real accountability, all season long</span></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">Available Services</h2>
+        <p class="mpg-subtitle">Pick what fits. All services can be delivered virtually unless noted.</p>
+      </div>
+      <div class="mpg-services-list">
+        <div class="mpg-service-item"><h3>Weekly Check-ins</h3><p>Regular touchpoints with your mentor throughout the season covering progress, challenges, and adjustments to your plan. Included with every engagement.</p></div>
+        <div class="mpg-service-item"><h3>Video Review</h3><p>One-on-one virtual game review with your mentor. Specific, actionable feedback on game or practice footage you can apply immediately.</p></div>
+        <div class="mpg-service-item"><h3>Skill Skates</h3><p>In-person on-ice sessions focused on skating mechanics, puck handling, shooting, and position-specific skills with your Rise mentor.</p></div>
+        <div class="mpg-service-item"><h3>Exercise Plan</h3><p>Structured off-ice training built around your position and goals. Updated regularly and delivered with full workout instructions.</p></div>
+        <div class="mpg-service-item"><h3>Mental Skills</h3><p>Sessions with a professional mental skills coach covering focus, confidence, pressure management, and competitive mindset.</p></div>
+        <div class="mpg-service-item"><h3>Nutritional Plan</h3><p>A custom nutrition plan built for your body and training load, designed to support performance and recovery all season long.</p></div>
+        <div class="mpg-service-item"><h3>Stretching & Yoga</h3><p>Guided sessions focused on athletic performance, injury prevention, and recovery. Tailored to your schedule.</p></div>
+        <div class="mpg-service-item"><h3>School Help</h3><p>Academic support for players balancing a demanding school schedule alongside hockey. Available throughout the season.</p></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="Who Is It For?" />
-    <p class="who-text">Mentoring is available to elite players at any level and to players who are looking for ongoing support in their new environment. Programs are built individually; no two are the same.</p>
-  </div></section>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="Questions" />
-    <div class="faq-list">
-      <div class="faq-item"><h3>Can I pick individual services?</h3><p>Yes. That's the whole point.</p></div>
-      <div class="faq-item"><h3>How often are check-ins?</h3><p>Weekly.</p></div>
-      <div class="faq-item"><h3>What if my kid is struggling?</h3><p>We adjust the plan and support them through it.</p></div>
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">Why It Works</h2>
+      </div>
+      <div class="mpg-checklist">
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>Dedicated mentors who know your game</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>Flexible, build the program around your needs</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>24/7 response time from the mentorship team</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>Real feedback, real accountability, all season long</span></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <ServiceNav current="mentoring" />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to start developing?</h2>
-    <div class="cta-actions">
-      <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="btn-primary">Email Us</a>
-      <a href="https://wa.me/16472253861?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">Who Is It For?</h2>
+      </div>
+      <p class="mpg-who">Mentoring is available to elite players at any level and to players who are looking for ongoing support in their new environment. Programs are built individually; no two are the same.</p>
     </div>
-  </div></section>
+  </section>
 
-  <Footer slot="footer" />
-</BaseLayout>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-<style>
-  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
-  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
-  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
-  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(4, 1fr); } }
-  .step { text-align: center; padding: var(--space-6); }
-  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
-  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .services-list { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .services-list { grid-template-columns: repeat(2, 1fr); } }
-  .service-item { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; }
-  .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .service-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .why-list { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
-  .why-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
-  .who-text { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; text-align: center; }
-  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .cta-banner { padding: var(--space-16) 0; }
-  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
-  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
-  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
-  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
-</style>
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">Questions</h2>
+      </div>
+      <div class="mpg-faq__list">
+        <div class="mpg-faq-item"><h3>Can I pick individual services?</h3><p>Yes. That's the whole point.</p></div>
+        <div class="mpg-faq-item"><h3>How often are check-ins?</h3><p>Weekly.</p></div>
+        <div class="mpg-faq-item"><h3>What if my kid is struggling?</h3><p>We adjust the plan and support them through it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="mpg-service-nav">
+    <a href="/services/the-move">The Move</a>
+    <a href="/services/mentoring" class="active">Mentoring</a>
+    <a href="/services/hk-program">HK Program</a>
+    <a href="/why-us">Why RISE</a>
+  </nav>
+
+  <section class="mpg-cta">
+    <div class="mpg-container" style="text-align: center;">
+      <h2>Ready to start developing?</h2>
+      <div class="mpg-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=Mentoring - Inquiry" class="hp-btn-white">Email Us</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</MarketingLayout>

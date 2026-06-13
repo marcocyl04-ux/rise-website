@@ -1,88 +1,86 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import SectionHeader from "../../components/SectionHeader.astro";
-import ServiceNav from "../../components/ServiceNav.astro";
+// HK Off-Ice Program — EN (dark theme)
+import MarketingLayout from "../../layouts/MarketingLayout.astro";
 ---
 
-<BaseLayout title="HK Off-Ice Program" description="10-week summer hockey training program in Hong Kong. Gym, shooting, skating, and mental skills. June 8 to August 16, 2026.">
-  <Header slot="header" />
+<MarketingLayout title="HK Off-Ice Program" description="10-week summer hockey training program in Hong Kong. Gym, shooting, skating, and mental skills. June 8 to August 16, 2026.">
 
-  <section class="service-hero section"><div class="container">
-    <p class="hero-eyebrow">Summer 2026</p>
-    <h1 class="hero-title">HK Off-Ice <span class="red">Program</span></h1>
-    <p class="hero-lead">10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting.</p>
-    <a href="mailto:riseadvancements@gmail.com?subject=HK Program - Sign Up" class="btn-primary">Sign Up</a>
-  </div></section>
-
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="The Details" subtitle="June 8 to August 16, 2026. 10 weeks." />
-    <div class="details-grid">
-      <div class="detail-card"><h3>ONYX Gym</h3><p>Taikoo Place, Quarry Bay. Strength and conditioning.</p></div>
-      <div class="detail-card"><h3>The Flying Puck</h3><p>Off-ice shooting. Technique, accuracy, release.</p></div>
-      <div class="detail-card"><h3>Quarry Bay Park</h3><p>Outdoor training. Cardio, agility, bodyweight.</p></div>
-      <div class="detail-card"><h3>Discovery Bay Ice Rink/Lohas Park</h3><p>On-ice sessions when available.</p></div>
+  <section class="mpg-hero">
+    <div class="mpg-container">
+      <p class="mpg-hero__eyebrow">Summer 2026</p>
+      <h1 class="mpg-hero__title">HK Off-Ice <span class="accent">Program</span></h1>
+      <p class="mpg-hero__lead">10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting.</p>
+      <a href="mailto:riseadvancements@gmail.com?subject=HK Program - Sign Up" class="hp-btn-primary"><span>Sign Up</span></a>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="Preliminary Weekly Schedule" />
-    <div class="schedule">
-      <div class="schedule-day"><span class="day">Mon</span><span class="activity">2.5km run + Gym</span></div>
-      <div class="schedule-day"><span class="day">Tue</span><span class="activity">3km bike + Game day</span></div>
-      <div class="schedule-day"><span class="day">Wed</span><span class="activity">Gym + Off-ice shooting</span></div>
-      <div class="schedule-day"><span class="day">Thu</span><span class="activity">2.5km run + Gym</span></div>
-      <div class="schedule-day"><span class="day">Fri</span><span class="activity">Gym</span></div>
-      <div class="schedule-day"><span class="day">Sat</span><span class="activity">Gym + On-ice</span></div>
-      <div class="schedule-day"><span class="day">Sun</span><span class="activity">Park + Off-ice shooting</span></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <div class="mpg-label">Details</div>
+        <h2 class="mpg-heading">The Details</h2>
+        <p class="mpg-subtitle">June 8 to August 16, 2026. 10 weeks.</p>
+      </div>
+      <div class="mpg-cards">
+        <div class="mpg-card"><h3>ONYX Gym</h3><p>Taikoo Place, Quarry Bay. Strength and conditioning.</p></div>
+        <div class="mpg-card"><h3>The Flying Puck</h3><p>Off-ice shooting. Technique, accuracy, release.</p></div>
+        <div class="mpg-card"><h3>Quarry Bay Park</h3><p>Outdoor training. Cardio, agility, bodyweight.</p></div>
+        <div class="mpg-card"><h3>Discovery Bay Ice Rink / Lohas Park</h3><p>On-ice sessions when available.</p></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="Questions" />
-    <div class="faq-list">
-      <div class="faq-item"><h3>What age group?</h3><p>12-16. Customized by age.</p></div>
-      <div class="faq-item"><h3>Do I need my own equipment?</h3><p>Custom merch included. Bring your own gear for on-ice.</p></div>
-      <div class="faq-item"><h3>Can parents watch?</h3><p>WhatsApp group with daily updates. Park sessions open.</p></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">Preliminary Weekly Schedule</h2>
+      </div>
+      <div class="mpg-schedule">
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Mon</span><span class="mpg-schedule__activity">2.5km run + Gym</span></div>
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Tue</span><span class="mpg-schedule__activity">3km bike + Game day</span></div>
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Wed</span><span class="mpg-schedule__activity">Gym + Off-ice shooting</span></div>
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Thu</span><span class="mpg-schedule__activity">2.5km run + Gym</span></div>
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Fri</span><span class="mpg-schedule__activity">Gym</span></div>
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Sat</span><span class="mpg-schedule__activity">Gym + On-ice</span></div>
+        <div class="mpg-schedule__day"><span class="mpg-schedule__label">Sun</span><span class="mpg-schedule__activity">Park + Off-ice shooting</span></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <ServiceNav current="hk-program" />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Summer 2026. Spots are limited.</h2>
-    <div class="cta-actions">
-      <a href="mailto:riseadvancements@gmail.com?subject=HK Program - Sign Up" class="btn-primary">Email Us</a>
-      <a href="https://wa.me/16472253861?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">Questions</h2>
+      </div>
+      <div class="mpg-faq__list">
+        <div class="mpg-faq-item"><h3>What age group?</h3><p>12-16. Customized by age.</p></div>
+        <div class="mpg-faq-item"><h3>Do I need my own equipment?</h3><p>Custom merch included. Bring your own gear for on-ice.</p></div>
+        <div class="mpg-faq-item"><h3>Can parents watch?</h3><p>WhatsApp group with daily updates. Park sessions open.</p></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <Footer slot="footer" />
-</BaseLayout>
+  <nav class="mpg-service-nav">
+    <a href="/services/the-move">The Move</a>
+    <a href="/services/mentoring">Mentoring</a>
+    <a href="/services/hk-program" class="active">HK Program</a>
+    <a href="/why-us">Why RISE</a>
+  </nav>
 
-<style>
-  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
-  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
-  .red { color: var(--rise-red); }
-  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
-  .details-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
-  @media (min-width: 640px) { .details-grid { grid-template-columns: repeat(2, 1fr); } }
-  .detail-card { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
-  .detail-card h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .detail-card p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .schedule { display: flex; flex-direction: column; }
-  .schedule-day { display: flex; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--rise-neutral-100); }
-  .day { font-family: var(--font-heading); font-weight: 600; text-transform: uppercase; width: 50px; flex-shrink: 0; font-size: var(--text-sm); }
-  .activity { font-size: var(--text-sm); color: var(--rise-neutral-500); }
-  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .cta-banner { padding: var(--space-16) 0; }
-  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
-  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
-  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
-  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
-</style>
+  <section class="mpg-cta">
+    <div class="mpg-container" style="text-align: center;">
+      <h2>Summer 2026. Spots are limited.</h2>
+      <div class="mpg-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=HK Program - Sign Up" class="hp-btn-white">Email Us</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</MarketingLayout>

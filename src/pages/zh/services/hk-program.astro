@@ -1,63 +1,64 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import Header from "../../../components/Header.astro";
-import Footer from "../../../components/Footer.astro";
-import SectionHeader from "../../../components/SectionHeader.astro";
-import ServiceNav from "../../../components/ServiceNav.astro";
+// 香港體能訓練計劃 — 中文 (dark theme)
+import MarketingLayout from "../../../layouts/MarketingLayout.astro";
 ---
 
-<BaseLayout title="香港體能訓練計劃" lang="zh-HK">
-  <Header slot="header" lang="zh" />
-  <section class="service-hero section"><div class="container">
-    <p class="hero-eyebrow">2026 夏季</p>
-    <h1 class="hero-title">香港體能<span class="red">訓練計劃</span></h1>
-    <p class="hero-lead">為期10週的夏季訓練計劃。與 EJ Elite Shooting 合作。</p>
-    <a href="mailto:riseadvancements@gmail.com?subject=香港體能訓練 - 報名" class="btn-primary">報名參加</a>
-  </div></section>
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="詳細資料" subtitle="6月8日至8月16日。10週。" />
-    <div class="details-grid">
-      <div class="detail-card"><h3>ONYX 健身中心</h3><p>太古坊。冰球專項訓練。</p></div>
-      <div class="detail-card"><h3>The Flying Puck</h3><p>陸地射門訓練。</p></div>
-      <div class="detail-card"><h3>鰂魚涌公園</h3><p>戶外訓練。</p></div>
-      <div class="detail-card"><h3>愉景灣冰場/LOHAS Park</h3><p>冰上訓練。</p></div>
+<MarketingLayout title="香港體能訓練計劃" lang="zh" description="為期10週的夏季訓練計劃。與 EJ Elite Shooting 合作。">
+
+  <section class="mpg-hero">
+    <div class="mpg-container">
+      <p class="mpg-hero__eyebrow">2026 夏季</p>
+      <h1 class="mpg-hero__title">香港體能<span class="accent">訓練計劃</span></h1>
+      <p class="mpg-hero__lead">為期10週的夏季訓練計劃。與 EJ Elite Shooting 合作。</p>
+      <a href="mailto:riseadvancements@gmail.com?subject=香港體能訓練 - 報名" class="hp-btn-primary"><span>報名參加</span></a>
     </div>
-  </div></section>
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="常見問題" />
-    <div class="faq-list">
-      <div class="faq-item"><h3>什麼年齡段？</h3><p>12至16歲。</p></div>
-      <div class="faq-item"><h3>需要自備裝備嗎？</h3><p>包含定制裝備。</p></div>
+  </section>
+
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <div class="mpg-label">詳細資料</div>
+        <h2 class="mpg-heading">詳細資料</h2>
+        <p class="mpg-subtitle">6月8日至8月16日。10週。</p>
+      </div>
+      <div class="mpg-cards">
+        <div class="mpg-card"><h3>ONYX 健身中心</h3><p>太古坊。冰球專項訓練。</p></div>
+        <div class="mpg-card"><h3>The Flying Puck</h3><p>陸地射門訓練。</p></div>
+        <div class="mpg-card"><h3>鰂魚涌公園</h3><p>戶外訓練。</p></div>
+        <div class="mpg-card"><h3>愉景灣冰場/LOHAS Park</h3><p>冰上訓練。</p></div>
+      </div>
     </div>
-  </div></section>
-  <ServiceNav lang="zh" current="hk-program" />
-  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">名額有限。</h2>
-    <div class="cta-actions">
-      <a href="mailto:riseadvancements@gmail.com?subject=香港體能訓練 - 報名" class="btn-primary">發送電子郵件</a>
-      <a href="https://wa.me/16472253861?text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E5%AF%B9RISE%E7%9A%84%E5%86%B0%E7%90%83%E8%AF%BE%E7%A8%8B%E6%84%9F%E5%85%B4%E8%B6%A3%E3%80%82" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  </section>
+
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center"><h2 class="mpg-heading">常見問題</h2></div>
+      <div class="mpg-faq__list">
+        <div class="mpg-faq-item"><h3>什麼年齡段？</h3><p>12至16歲。</p></div>
+        <div class="mpg-faq-item"><h3>需要自備裝備嗎？</h3><p>包含定制裝備。</p></div>
+      </div>
     </div>
-  </div></section>
-  <Footer slot="footer" lang="zh" />
-</BaseLayout>
-<style>
-  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
-  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
-  .red { color: var(--rise-red); }
-  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
-  .details-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
-  @media (min-width: 640px) { .details-grid { grid-template-columns: repeat(2, 1fr); } }
-  .detail-card { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; background-color: var(--rise-white); }
-  .detail-card h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .detail-card p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .cta-banner { padding: var(--space-16) 0; }
-  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
-  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
-  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
-  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
-</style>
+  </section>
+
+  <nav class="mpg-service-nav">
+    <a href="/zh/services/the-move">球員安置</a>
+    <a href="/zh/services/mentoring">訓練指導</a>
+    <a href="/zh/services/hk-program" class="active">香港計劃</a>
+    <a href="/zh/why-us">為什麼選擇我們</a>
+  </nav>
+
+  <section class="mpg-cta">
+    <div class="mpg-container" style="text-align: center;">
+      <h2>名額有限。</h2>
+      <div class="mpg-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=香港體能訓練 - 報名" class="hp-btn-white">發送電子郵件</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</MarketingLayout>

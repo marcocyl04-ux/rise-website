@@ -1,265 +1,390 @@
 ---
-// Home page — 中文 (aligned with EN May 13 2026)
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import SectionHeader from "../../components/SectionHeader.astro";
-import PlayerCard from "../../components/PlayerCard.astro";
-import ServiceCard from "../../components/ServiceCard.astro";
-import ContactForm from "../../components/ContactForm.astro";
+// 首頁 — 中文 (dark theme, matches EN homepage)
+import HomeLayout from "../../layouts/HomeLayout.astro";
 ---
 
-<BaseLayout title="首頁" lang="zh-HK" description="RISE Advancement：精英冰球訓練和球員安置服務。暑期計劃、訓練指導、以及從香港到加拿大的完整安置服務。">
-  <Header slot="header" lang="zh" />
+<HomeLayout title="首頁" lang="zh" description="RISE Advancement：精英冰球訓練和球員安置服務。暑期計劃、訓練指導、以及從香港到加拿大的完整安置服務。">
 
-  <!-- JSON-LD Structured Data -->
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "SportsActivityLocation",
-    "name": "RISE Advancement",
-    "description": "精英冰球球員發展和安置機構。我們將年輕球員從香港帶到加拿大的球隊。",
-    "url": "https://riseadvancement.com",
-    "email": "riseadvancements@gmail.com",
-    "telephone": "+852-9095-0387",
-    "areaServed": ["Hong Kong", "Canada"],
-    "sport": "Ice Hockey"
-  })} />
-
-  <!-- 1. HERO -->
-  <section class="hero section">
-    <div class="container">
-      <div class="hero-content">
-        <p class="hero-eyebrow">RISE Advancement</p>
-        <h1 class="hero-title">
-          冰球<span class="hero-title-red">發展與安置</span>
-        </h1>
-        <p class="hero-lead">
-          我們將年輕冰球運動員送到加拿大的球隊。
-          我們評估他們、安置他們、在整個賽季中培養他們。
-          由親身經歷過這條管道的球員創立。
-        </p>
-        <div class="hero-actions">
-          <a href="/zh/services/hk-program" class="btn-primary">休賽期計劃</a>
-          <a href="#contact" class="btn-secondary">聯繫我們</a>
-        </div>
+  <!-- ====== HERO ====== -->
+  <section class="hp-hero" id="hero">
+    <canvas class="hp-hero__canvas" id="hero-canvas"></canvas>
+    <div class="hp-hero__overlay"></div>
+    <div class="hp-hero__content">
+      <div class="hp-hero__eyebrow"><span>Asia → Canada</span></div>
+      <h1 class="hp-hero__title">
+        <span class="line"><span class="line-inner">RISE</span></span>
+        <span class="line"><span class="line-inner accent">ADVANCEMENT</span></span>
+      </h1>
+      <p class="hp-hero__subtitle">
+        <span>我們將年輕冰球運動員送到加拿大的球隊。我們評估他們、安置他們、在整個賽季中培養他們。由親身經歷過這條管道的球員創立。</span>
+      </p>
+      <div class="hp-hero__actions">
+        <a href="/zh/services/hk-program" class="hp-btn-primary"><span>休賽期計劃</span></a>
+        <a href="#contact" class="hp-btn-outline">聯繫我們</a>
       </div>
+    </div>
+    <div class="hp-hero__scroll">
+      <span>Scroll</span>
+      <div class="hp-scroll-line"></div>
     </div>
   </section>
 
-  <!-- 2. HOW IT WORKS -->
-  <section id="how-it-works" class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
-      <SectionHeader
-        title="運作方式"
-        subtitle="到加拿大的四個步驟。"
-      />
-      <div class="steps-grid">
-        <div class="step">
-          <div class="step-number">1</div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <!-- ====== HOW IT WORKS ====== -->
+  <section class="hp-section hp-how" id="how-it-works">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label">流程</div>
+        <h2 class="hp-heading">運作方式</h2>
+        <p class="hp-subtitle">到加拿大的四個步驟。我們處理一切，確保每個環節都不出差錯。</p>
+      </div>
+      <div class="hp-pipeline">
+        <div class="hp-pipeline__line"><div class="hp-pipeline__line-fill" id="pipeline-fill"></div></div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">01</span></div>
           <h3>評估</h3>
-          <p>比賽錄像、技能評估、水平確定。</p>
+          <p>比賽錄像、技能評估、水平確定。我們看過影片，知道你孩子的水平。</p>
         </div>
-        <div class="step">
-          <div class="step-number">2</div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">02</span></div>
           <h3>配對</h3>
-          <p>我們找到合適的球隊和學校。我們了解加拿大的教練、課程和各個級別。</p>
+          <p>合適的球隊、合適的學校、合適的水平。我們了解加拿大的教練和課程。</p>
         </div>
-        <div class="step">
-          <div class="step-number">3</div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">03</span></div>
           <h3>搬遷</h3>
-          <p>VISA、文件處理、後勤支援，確保一切順利。</p>
+          <p>VISA、文件處理、後勤支援。我們確保搬遷過程中不出任何問題。</p>
         </div>
-        <div class="step">
-          <div class="step-number">4</div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">04</span></div>
           <h3>發展</h3>
           <p>每週跟進、比賽回顧、技術訓練、營養、心理技能。你的孩子絕不孤單。</p>
         </div>
       </div>
     </div>
-    <div class="mid-cta">
-      <a href="#contact" class="btn-primary">和我們聊聊</a>
-    </div>
   </section>
 
-  <!-- 3. SERVICES -->
-  <section id="services" class="section">
-    <div class="container">
-      <SectionHeader
-        title="我們的服務"
-        subtitle="三種方式幫助你的孩子。每個服務針對旅程的不同階段。"
-      />
-      <div class="services-grid">
-        <ServiceCard
-          title="球員安置"
-          description="全面的球員安置和過渡服務。我們管理整個過程，從初步評估到孩子在新球隊首次上場，確保每個環節都不出差錯。"
-          price="請聯繫我們"
-          features={[
-            "深入評估比賽錄像和技術水平",
-            "根據目標篩選合適的教練和球隊",
-            "安排與教練團隊的介紹和會面",
-            "在合適的競技水平提供曝光機會",
-            "整個過程中的全程指導和支持",
-          ]}
-          ctaText="了解球員安置"
-          ctaLink="/zh/services/the-move"
-        />
-        <ServiceCard
-          title="訓練指導"
-          description="賽季發展計劃。你根據自己的需要選擇服務。每項合作都從入門會議、目標設定和定期跟進開始。"
-          price="請聯繫我們"
-          features={[
-            "每週與專屬導師跟進",
-            "一對一比賽回顧課程",
-            "導師指導的冰上訓練",
-            "定制體能和營養計劃",
-            "專業心理訓練指導",
-          ]}
-          ctaText="了解訓練指導"
-          ctaLink="/zh/services/mentoring"
-        />
-        <ServiceCard
-          title="香港體能訓練計劃"
-          description="為期10週的休賽期訓練計劃，在香港舉行。與 EJ Elite Shooting 合作。健身房、陸地射門、滑冰、心理訓練。"
-          price="2026 夏季"
-          features={[
-            "6月8日至8月16日",
-            "ONYX 健身中心，太古坊",
-            "The Flying Puck 射門訓練",
-            "鰂魚涌公園訓練",
-            "愉景灣冰場/LOHAS Park",
-            "包含定制裝備",
-          ]}
-          ctaText="了解香港體能訓練"
-          ctaLink="/zh/services/hk-program"
-        />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <!-- ====== SERVICES ====== -->
+  <section class="hp-services" id="services">
+    <div class="hp-container" style="padding-top: 8rem; padding-bottom: 2rem;">
+      <div class="hp-header-center">
+        <div class="hp-label">我們的服務</div>
+        <h2 class="hp-heading">我們的服務</h2>
+        <p class="hp-subtitle">三種方式幫助你的孩子。每個服務針對旅程的不同階段。</p>
+      </div>
+    </div>
+
+    <div class="hp-service-row" data-service>
+      <div class="hp-service__visual">
+        <div class="hp-service__visual-bg"><div class="hp-service__number">01</div></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+          <line x1="100" y1="20" x2="100" y2="180" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+          <line x1="20" y1="100" x2="180" y2="100" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+          <circle cx="100" cy="100" r="60" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+          <circle cx="100" cy="100" r="4" fill="#D3191F"/>
+        </svg>
+      </div>
+      <div class="hp-service__info" data-service-content>
+        <h3>球員安置</h3>
+        <div class="hp-service__price">請聯繫我們</div>
+        <p>全面的球員安置和過渡服務。我們管理整個過程，從初步評估到孩子在新球隊首次上場，確保每個環節都不出差錯。</p>
+        <ul class="hp-service__features">
+          <li>深入評估比賽錄像和技術水平</li>
+          <li>根據目標篩選合適的教練和球隊</li>
+          <li>安排與教練團隊的介紹和會面</li>
+          <li>在合適的競技水平提供曝光機會</li>
+          <li>整個過程中的全程指導和支持</li>
+        </ul>
+        <a href="/zh/services/the-move" class="hp-service__link">
+          了解球員安置
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hp-service-row" data-service>
+      <div class="hp-service__visual">
+        <div class="hp-service__visual-bg"><div class="hp-service__number">02</div></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+          <circle cx="100" cy="100" r="50" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
+          <circle cx="100" cy="100" r="30" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
+          <circle cx="100" cy="100" r="10" stroke="#D3191F" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="hp-service__info" data-service-content>
+        <h3>訓練指導</h3>
+        <div class="hp-service__price">請聯繫我們</div>
+        <p>賽季發展計劃。你根據自己的需要選擇服務。每項合作都從入門會議、目標設定和定期跟進開始。</p>
+        <ul class="hp-service__features">
+          <li>每週與專屬導師跟進</li>
+          <li>一對一比賽回顧課程</li>
+          <li>導師指導的冰上訓練</li>
+          <li>定制體能和營養計劃</li>
+          <li>專業心理訓練指導</li>
+        </ul>
+        <a href="/zh/services/mentoring" class="hp-service__link">
+          了解訓練指導
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hp-service-row" data-service>
+      <div class="hp-service__visual">
+        <div class="hp-service__visual-bg"><div class="hp-service__number">03</div></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+          <rect x="30" y="30" width="140" height="140" rx="4" stroke="#D3191F" stroke-width="1" stroke-dasharray="6 4"/>
+          <circle cx="100" cy="100" r="20" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 3"/>
+          <circle cx="100" cy="100" r="3" fill="#D3191F"/>
+        </svg>
+      </div>
+      <div class="hp-service__info" data-service-content>
+        <h3>香港體能訓練計劃</h3>
+        <div class="hp-service__price">2026 夏季</div>
+        <p>為期10週的休賽期訓練計劃，在香港舉行。與 EJ Elite Shooting 合作。健身房、陸地射門、滑冰、心理訓練。</p>
+        <ul class="hp-service__features">
+          <li>6月8日至8月16日</li>
+          <li>ONYX 健身中心，太古坊</li>
+          <li>The Flying Puck 射門訓練</li>
+          <li>鰂魚涌公園訓練</li>
+          <li>愉景灣冰場/LOHAS Park</li>
+          <li>包含定制裝備</li>
+        </ul>
+        <a href="/zh/services/hk-program" class="hp-service__link">
+          了解香港體能訓練
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- 3b. OFF-SEASON PROGRAM -->
-  <section class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 720px; text-align: center;">
-      <h2 style="margin-bottom: var(--space-4);">不只是一个计划。</h2>
-      <p style="font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; margin-bottom: var(--space-6);">
-        我们的休赛期计划是10周的精英训练。健身房、射门、滑冰、心理训练。6月8日至8月16日。这也是进入RISE体系的第一步，球员在这里被评估、培养，并安置到加拿大的球队。
-      </p>
-      <a href="/zh/why-us" class="btn-secondary">為什麼選擇 RISE?</a>
+  <!-- ====== INTERLUDE ====== -->
+  <section class="hp-interlude">
+    <div class="hp-container">
+      <h2>不只是一个计划。</h2>
+      <p>我们的休赛期计划是10周的精英训练。健身房、射门、滑冰、心理训练。6月8日至8月16日。这也是进入RISE体系的第一步，球员在这里被评估、培养，并安置到加拿大的球队。</p>
+      <a href="/zh/why-us" class="hp-btn-outline" style="border-color: rgba(255,255,255,0.2);">為什麼選擇 RISE?</a>
     </div>
   </section>
 
-  <!-- 4. PLAYERS -->
-  <section id="players" class="section">
-    <div class="container">
-      <SectionHeader
-        title="我們的運動員"
-        subtitle="真實的孩子。真實的球隊。真實的進步。"
-      />
-      <div class="players-grid">
-        <PlayerCard
-          number="#7"
-          name="Wilshere Tung"
-          position="後衛"
-          team="2012 Toronto Titans"
-        />
-        <PlayerCard
-          number="#13"
-          name="Felix Lloren"
-          position="後衛"
-          team="2011 Upper Canada College"
-        />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
+  <!-- ====== PLAYERS ====== -->
+  <section class="hp-section hp-players" id="players">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label">證明</div>
+        <h2 class="hp-heading">我們的運動員</h2>
+        <p class="hp-subtitle">真實的孩子。真實的球隊。真實的進步。</p>
       </div>
-    </div>
-    <div class="mid-cta">
-      <a href="#contact" class="btn-primary">開始孩子的旅程</a>
-    </div>
-  </section>
-
-  <!-- 5. FAQ -->
-  <section id="faq" class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 640px;">
-      <SectionHeader
-        title="家長常問的問題"
-        subtitle="坦白的回答。"
-      />
-      <div class="faq-list">
-        <div class="faq-item">
-          <h3>如果孩子想家怎麼辦？</h3>
-          <p>我們每週跟進。與三位導師的群組聊天。我們把每位球員當作自己的孩子。你的孩子在加拿大絕不孤單。</p>
+      <div class="hp-players__grid">
+        <div class="hp-player-card" data-number="#7">
+          <div class="hp-player-card__jersey">#7</div>
+          <h3>Wilshere Tung</h3>
+          <p class="hp-player-card__pos">後衛</p>
+          <p class="hp-player-card__team">2012 Toronto Titans</p>
         </div>
-        <div class="faq-item">
-          <h3>如果球隊不合適怎麼辦？</h3>
-          <p>我們在安置前就進行評估。我們了解教練。我們做過很多次了。如果有問題，我們會及早處理。</p>
+        <div class="hp-player-card" data-number="#13">
+          <div class="hp-player-card__jersey">#13</div>
+          <h3>Felix Lloren</h3>
+          <p class="hp-player-card__pos">後衛</p>
+          <p class="hp-player-card__team">2011 Upper Canada College</p>
         </div>
-        <div class="faq-item">
-          <h3>你們保證安置嗎？</h3>
-          <p>不。我們保證努力。我們不做出無法兌現的承諾。但我們安置球員是因為我們做好工作。</p>
-        </div>
-        <div class="faq-item">
-          <h3>我怎麼和孩子保持聯繫？</h3>
-          <p>我們的每週更新。教練溝通。WhatsApp 群組。你會知道每一步的情況。</p>
-        </div>
-        <div class="faq-item">
-          <h3>費用是多少？</h3>
-          <p>這取決於服務。<a href="/zh/#contact">聯繫我們</a>聊聊孩子的需求和適合的方案。</p>
-        </div>
+      </div>
+      <div style="text-align:center;margin-top:3rem;">
+        <a href="#contact" class="hp-btn-primary"><span>開始孩子的旅程</span></a>
       </div>
     </div>
   </section>
 
-  <!-- 6. CONTACT -->
-  <section id="contact" class="contact-section section">
-    <div class="container" style="max-width: 640px; text-align: center;">
-      <SectionHeader
-        title="聯繫我們"
-        subtitle="沒有承諾。只是聊聊孩子的冰球未來。"
-      />
-      <div class="contact-center">
-        <div class="contact-person">
-          <h3>和我們聊聊</h3>
-          <p>我們是前球員，現在是教練。我們會坦白回答你的問題，幫助你找到最適合的道路。</p>
+  <!-- ====== STATS BAR ====== -->
+  <div class="hp-stats">
+    <div class="hp-stats__grid">
+      <div class="hp-stat"><div class="hp-stat__number" data-count="100">0</div><div class="hp-stat__label">全力投入</div></div>
+      <div class="hp-stat"><div class="hp-stat__number" data-count="3">0</div><div class="hp-stat__label">項服務</div></div>
+      <div class="hp-stat"><div class="hp-stat__number" data-count="10">0</div><div class="hp-stat__label">週計劃</div></div>
+      <div class="hp-stat"><div class="hp-stat__number" data-count="2">0</div><div class="hp-stat__label">個國家</div></div>
+    </div>
+  </div>
+
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <!-- ====== FAQ ====== -->
+  <section class="hp-section hp-faq" id="faq">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label">問題</div>
+        <h2 class="hp-heading">家長常問的問題</h2>
+        <p class="hp-subtitle">坦白的回答。</p>
+      </div>
+      <div class="hp-faq__list">
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>如果孩子想家怎麼辦？</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>我們每週跟進。與三位導師的群組聊天。我們把每位球員當作自己的孩子。你的孩子在加拿大絕不孤單。</p></div>
         </div>
-        <ContactForm lang="zh" />
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>如果球隊不合適怎麼辦？</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>我們在安置前就進行評估。我們了解教練。我們做過很多次了。如果有問題，我們會及早處理。</p></div>
+        </div>
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>你們保證安置嗎？</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>不。我們保證努力。我們不做出無法兌現的承諾。但我們安置球員是因為我們做好工作。</p></div>
+        </div>
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>我怎麼和孩子保持聯繫？</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>我們的每週更新。教練溝通。WhatsApp 群組。你會知道每一步的情況。</p></div>
+        </div>
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>費用是多少？</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>這取決於服務。<a href="#contact">聯繫我們</a>聊聊孩子的需求和適合的方案。</p></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <Footer slot="footer" lang="zh" />
-</BaseLayout>
+  <!-- ====== CTA ====== -->
+  <section class="hp-cta" id="contact">
+    <div class="hp-cta__content">
+      <h2>聯繫我們</h2>
+      <p>沒有承諾。只是聊聊孩子的冰球未來。我們會在24小時內回覆。</p>
+      <div class="hp-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=RISE 查詢" class="hp-btn-white">發送電子郵件</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
 
-<style>
-  .hero { padding-top: var(--space-20); padding-bottom: var(--space-20); }
-  .hero-content { max-width: 720px; margin: 0 auto; text-align: center; }
-  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
-  @media (max-width: 639px) { .hero-title { font-size: var(--text-3xl); } }
-  .hero-title-red { color: var(--rise-red); }
-  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); margin-bottom: var(--space-8); max-width: none; }
-  .hero-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
-  .btn-primary, .btn-secondary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; transition: all 0.2s; }
-  .btn-primary { background-color: var(--rise-red); color: var(--rise-white); }
-  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
-  .btn-secondary { background-color: transparent; color: var(--rise-black); border: 2px solid var(--rise-neutral-300); }
-  .btn-secondary:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
-  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(4, 1fr); } }
-  .step { text-align: center; padding: var(--space-6); }
-  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
-  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .services-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
-  .players-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
-  @media (min-width: 640px) { .players-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .players-grid { grid-template-columns: repeat(2, 1fr); max-width: 640px; margin-inline: auto; } }
-  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .faq-item a { color: var(--rise-red); text-decoration: underline; display: inline-block; padding: 0.5rem 0; min-height: 44px; }
-  .contact-center { display: flex; flex-direction: column; gap: var(--space-8); align-items: center; }
-  .contact-person h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .contact-person p { font-size: var(--text-sm); color: var(--rise-neutral-700); line-height: 1.6; }
-  .mid-cta { text-align: center; margin-top: var(--space-8); }
-</style>
+  <!-- ====== FOOTER ====== -->
+  <footer class="hp-footer">
+    <div class="hp-footer__grid">
+      <div class="hp-footer__brand">
+        <img src="https://riseadvancement.com/logo-header.png" alt="RISE Advancement" style="height:32px;width:auto;opacity:0.4;filter:brightness(0) invert(1);" />
+        <p>冰球球員發展和安置。從香港到加拿大。由經歷過這條管道的球員創立。</p>
+      </div>
+      <div>
+        <h4>鏈接</h4>
+        <ul>
+          <li><a href="#how-it-works">運作方式</a></li>
+          <li><a href="#services">服務</a></li>
+          <li><a href="#players">運動員</a></li>
+          <li><a href="#faq">常見問題</a></li>
+          <li><a href="#contact">聯繫我們</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>聯繫方式</h4>
+        <ul>
+          <li><a href="mailto:riseadvancements@gmail.com">riseadvancements@gmail.com</a></li>
+          <li><a href="tel:+852****0387">+852 9095 0387</a></li>
+          <li>WeChat: RISE-Advancement</li>
+        </ul>
+      </div>
+      <div>
+        <h4>關注我們</h4>
+        <ul>
+          <li><a href="https://instagram.com/riseadvancement">Instagram</a></li>
+          <li><a href="https://facebook.com/riseadvancement">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="hp-footer__bottom">
+      <p>&copy; 2026 RISE Advancement. 版權所有。</p>
+    </div>
+  </footer>
+
+  <!-- ====== PAGE SCRIPTS (same as EN) ====== -->
+  <script is:inline>
+    (function () {
+      var lenis = new Lenis({
+        duration: 1.2,
+        easing: function(t) { return 1 - Math.pow(1 - t, 4); },
+        smoothWheel: true, wheelMultiplier: 1.0, touchMultiplier: 1.2, infinite: false,
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      // THREE.JS ICE RINK
+      (function() {
+        var canvas = document.getElementById('hero-canvas');
+        if (!canvas) return;
+        var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x0a0a0a, 1);
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 8);
+        var mouse = { x: 0, y: 0 };
+        var floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), new THREE.MeshBasicMaterial({ color: 0x08080c, transparent: true, opacity: 0.5, side: THREE.DoubleSide }));
+        floor.position.z = -4; scene.add(floor);
+        var dashMat = new THREE.LineDashedMaterial({ color: 0xD3191F, transparent: true, opacity: 0.06, dashSize: 0.3, gapSize: 0.2 });
+        var dashMatBlue = new THREE.LineDashedMaterial({ color: 0x4488cc, transparent: true, opacity: 0.04, dashSize: 0.3, gapSize: 0.2 });
+        function makeDashedLine(pts, mat) { var g = new THREE.BufferGeometry().setFromPoints(pts); var l = new THREE.Line(g, mat); l.computeLineDistances(); return l; }
+        function makeCircle(cx, cy, r, seg, mat) { var pts = []; for (var i = 0; i <= seg; i++) { var a = (i / seg) * Math.PI * 2; pts.push(new THREE.Vector3(cx + Math.cos(a) * r, cy + Math.sin(a) * r, -3.85)); } return makeDashedLine(pts, mat); }
+        scene.add(makeDashedLine([new THREE.Vector3(0,-9,-3.85), new THREE.Vector3(0,9,-3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(-6,-9,-3.85), new THREE.Vector3(-6,9,-3.85)], dashMatBlue));
+        scene.add(makeDashedLine([new THREE.Vector3(6,-9,-3.85), new THREE.Vector3(6,9,-3.85)], dashMatBlue));
+        scene.add(makeDashedLine([new THREE.Vector3(-13,-8,-3.85), new THREE.Vector3(13,-8,-3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(13,-8,-3.85), new THREE.Vector3(13,8,-3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(13,8,-3.85), new THREE.Vector3(-13,8,-3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(-13,8,-3.85), new THREE.Vector3(-13,-8,-3.85)], dashMat));
+        scene.add(makeCircle(0,0,3,64,dashMat)); scene.add(makeCircle(-8,0,2,48,dashMat)); scene.add(makeCircle(8,0,2,48,dashMat));
+        scene.add(makeCircle(-8,-5,0.5,32,dashMat)); scene.add(makeCircle(-8,5,0.5,32,dashMat));
+        scene.add(makeCircle(8,-5,0.5,32,dashMat)); scene.add(makeCircle(8,5,0.5,32,dashMat));
+        var dotGeom = new THREE.CircleGeometry(0.12, 16);
+        var dotMat = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.15 });
+        var centerDot = new THREE.Mesh(dotGeom, dotMat); centerDot.position.z = -3.84; scene.add(centerDot);
+        var count = window.innerWidth < 768 ? 400 : 1000;
+        var positions = new Float32Array(count * 3), colors = new Float32Array(count * 3), velocities = new Float32Array(count * 3);
+        var iceColor = new THREE.Color(0xB8D4E3), redColor = new THREE.Color(0xD3191F), whiteColor = new THREE.Color(0xE8E8E8);
+        for (var i = 0; i < count; i++) {
+          positions[i*3] = (Math.random()-0.5)*24; positions[i*3+1] = (Math.random()-0.5)*16; positions[i*3+2] = (Math.random()-0.5)*8-1;
+          velocities[i*3] = (Math.random()-0.5)*0.002; velocities[i*3+1] = -Math.random()*0.004-0.001; velocities[i*3+2] = (Math.random()-0.5)*0.001;
+          var r = Math.random(), c; if (r < 0.12) c = redColor; else if (r < 0.45) c = iceColor; else c = whiteColor;
+          colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+        }
+        var particleGeom = new THREE.BufferGeometry();
+        particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        var particles = new THREE.Points(particleGeom, new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.6, sizeAttenuation: true }));
+        scene.add(particles);
+        var rafId, heroKilled = false;
+        function animate() {
+          rafId = requestAnimationFrame(animate);
+          var pos = particleGeom.attributes.position.array;
+          for (var i = 0; i < count; i++) { pos[i*3] += velocities[i*3]; pos[i*3+1] += velocities[i*3+1]; pos[i*3+2] += velocities[i*3+2]; if (pos[i*3+1] < -8) { pos[i*3+1] = 8; pos[i*3] = (Math.random()-0.5)*24; } }
+          particleGeom.attributes.position.needsUpdate = true;
+          camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.015;
+          camera.position.y += (-mouse.y * 0.3 - camera.position.y) * 0.015;
+          camera.lookAt(0, 0, 0); renderer.render(scene, camera);
+        }
+        animate();
+        window.addEventListener('mousemove', function(e) { mouse.x = (e.clientX/window.innerWidth)*2-1; mouse.y = (e.clientY/window.innerHeight)*2-1; });
+        window.addEventListener('resize', function() { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+        window.addEventListener('scroll', function() { if (!heroKilled && window.scrollY > window.innerHeight*1.5) { cancelAnimationFrame(rafId); heroKilled = true; } else if (heroKilled && window.scrollY < window.innerHeight*1.5) { heroKilled = false; animate(); } }, { passive: true });
+      })();
+
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+      var loaderTl = gsap.timeline();
+      loaderTl.to('#loader-fill', { width: '100%', duration: 0.8, ease: 'power2.inOut' }).to('#loader', { yPercent: -100, duration: 0.6, ease: 'power4.inOut', delay: 0.15 }).to('.hp-hero__eyebrow span', { y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.2').to('.hp-hero__title .line-inner', { y: 0, duration: 0.8, stagger: 0.12, ease: 'power4.out' }, '-=0.3').to('.hp-hero__subtitle span', { y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4').to('.hp-hero__actions', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.2').to('.hp-hero__scroll', { opacity: 1, duration: 0.4 }, '-=0.1');
+      ScrollTrigger.create({ start: 80, onUpdate: function(self) { document.getElementById('hp-nav').classList.toggle('scrolled', self.progress > 0); } });
+      gsap.utils.toArray('.hp-step').forEach(function(step, i) { var marker = step.querySelector('.hp-step__marker'); gsap.from(step, { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', delay: i * 0.1, immediateRender: false, scrollTrigger: { trigger: step, start: 'top 75%' } }); ScrollTrigger.create({ trigger: step, start: 'top 75%', onEnter: function() { marker.classList.add('active'); gsap.to(marker, { borderColor: 'rgba(211,25,31,0.5)', boxShadow: '0 0 30px rgba(211,25,31,0.15)', duration: 0.6 }); } }); });
+      ScrollTrigger.create({ trigger: '.hp-pipeline', start: 'top 70%', end: 'bottom 40%', onUpdate: function(self) { gsap.set('#pipeline-fill', { width: (self.progress * 100) + '%' }); } });
+      gsap.utils.toArray('.hp-service-row').forEach(function(row) { var content = row.querySelector('[data-service-content]'); var visual = row.querySelector('.hp-service__visual'); if (content) gsap.from(content, { opacity: 0, x: 40, duration: 0.8, ease: 'power3.out', immediateRender: false, scrollTrigger: { trigger: row, start: 'top 80%' } }); if (visual) gsap.from(visual, { opacity: 0, x: -40, duration: 0.8, ease: 'power3.out', immediateRender: false, scrollTrigger: { trigger: row, start: 'top 80%' } }); });
+      gsap.from('.hp-interlude h2', { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', immediateRender: false, scrollTrigger: { trigger: '.hp-interlude', start: 'top 75%' } });
+      gsap.from('.hp-interlude p', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.2, immediateRender: false, scrollTrigger: { trigger: '.hp-interlude', start: 'top 75%' } });
+      gsap.utils.toArray('.hp-player-card').forEach(function(card, i) { gsap.from(card, { opacity: 0, y: 40, duration: 0.8, ease: 'power3.out', delay: i * 0.15, immediateRender: false, scrollTrigger: { trigger: card, start: 'top 80%' } }); });
+      gsap.utils.toArray('[data-count]').forEach(function(el) { var target = parseInt(el.dataset.count); var obj = { val: 0 }; ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: function() { gsap.to(obj, { val: target, duration: 1.5, ease: 'power2.out', onUpdate: function() { el.textContent = Math.round(obj.val); } }); } }); });
+      gsap.from('.hp-cta__content h2', { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', immediateRender: false, scrollTrigger: { trigger: '.hp-cta', start: 'top 75%' } });
+      gsap.from('.hp-cta__content p', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.15, immediateRender: false, scrollTrigger: { trigger: '.hp-cta', start: 'top 75%' } });
+      gsap.from('.hp-cta__buttons', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.3, immediateRender: false, scrollTrigger: { trigger: '.hp-cta', start: 'top 75%' } });
+      document.querySelectorAll('.hp-faq-item__question').forEach(function(btn) { btn.addEventListener('click', function() { var item = btn.closest('.hp-faq-item'); var answer = item.querySelector('.hp-faq-item__answer'); var isOpen = item.classList.contains('active'); document.querySelectorAll('.hp-faq-item.active').forEach(function(a) { a.classList.remove('active'); gsap.to(a.querySelector('.hp-faq-item__answer'), { maxHeight: 0, duration: 0.4, ease: 'power3.inOut' }); }); if (!isOpen) { item.classList.add('active'); answer.style.maxHeight = 'none'; var h = answer.scrollHeight; answer.style.maxHeight = '0px'; answer.offsetHeight; gsap.to(answer, { maxHeight: h, duration: 0.5, ease: 'power3.out' }); } }); });
+      document.querySelectorAll('.hp-nav__links a[href^="#"]').forEach(function(a) { a.addEventListener('click', function(e) { e.preventDefault(); var target = document.querySelector(a.getAttribute('href')); if (target) lenis.scrollTo(target, { offset: -80, duration: 1.5 }); }); });
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { lenis.destroy(); ScrollTrigger.getAll().forEach(function(st) { st.kill(); }); gsap.globalTimeline.progress(1); document.querySelectorAll('.hp-service-row, [data-service-content], .hp-service__visual, .hp-player-card, .hp-step, .hp-hero__actions, .hp-hero__scroll, .hp-hero__eyebrow span, .hp-hero__title .line-inner, .hp-hero__subtitle span, .hp-interlude h2, .hp-interlude p, .hp-cta__content h2, .hp-cta__content p, .hp-cta__buttons').forEach(function(el) { el.style.opacity = '1'; el.style.transform = 'none'; }); var loader = document.getElementById('loader'); if (loader) loader.style.display = 'none'; }
+    })();
+  </script>
+</HomeLayout>

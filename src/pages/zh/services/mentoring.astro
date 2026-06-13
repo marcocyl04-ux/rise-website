@@ -1,111 +1,109 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import Header from "../../../components/Header.astro";
-import Footer from "../../../components/Footer.astro";
-import SectionHeader from "../../../components/SectionHeader.astro";
-import ServiceNav from "../../../components/ServiceNav.astro";
+// 訓練指導 — 中文 (dark theme)
+import MarketingLayout from "../../../layouts/MarketingLayout.astro";
 ---
 
-<BaseLayout title="訓練指導" lang="zh-HK">
-  <Header slot="header" lang="zh" />
+<MarketingLayout title="訓練指導" lang="zh" description="賽季發展計劃。專屬導師、影片分析、冰上訓練、體能計劃、營養規劃、心理訓練。">
 
-  <section class="service-hero section"><div class="container">
-    <p class="hero-eyebrow">服務</p>
-    <h1 class="hero-title">訓練<span class="red">指導</span></h1>
-    <p class="hero-lead">Rise Advancement 的訓練指導計劃為每位球員配對一位專屬導師，陪伴你整個賽季。你可以根據自己的需要選擇服務，無論是冰上技術、比賽回顧、體能訓練、營養規劃還是學業支援。每項合作都從入門會議、目標設定和定期跟進開始。</p>
-    <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="btn-primary">立即開始</a>
-  </div></section>
-
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="運作方式" subtitle="從第一天起，導師就在你身邊。" />
-    <div class="steps-grid">
-      <div class="step"><div class="step-number">1</div><h3>規劃</h3><p>從規劃會議開始，制定賽季計劃，設定明確目標，決定哪些服務最適合你目前的發展階段。</p></div>
-      <div class="step"><div class="step-number">2</div><h3>選擇</h3><p>自由搭配。所有服務均可線上提供，除非特別標註。</p></div>
-      <div class="step"><div class="step-number">3</div><h3>跟進</h3><p>導師全程保持聯繫，追蹤進度、調整計劃，並給予直接、坦誠的反饋。</p></div>
-      <div class="step"><div class="step-number">4</div><h3>總結</h3><p>賽季結束面談。回顧成效，規劃下一步。</p></div>
+  <section class="mpg-hero">
+    <div class="mpg-container">
+      <p class="mpg-hero__eyebrow">服務</p>
+      <h1 class="mpg-hero__title">訓練<span class="accent">指導</span></h1>
+      <p class="mpg-hero__lead">Rise Advancement 的訓練指導計劃為每位球員配對一位專屬導師，陪伴你整個賽季。你可以根據自己的需要選擇服務，無論是冰上技術、比賽回顧、體能訓練、營養規劃還是學業支援。每項合作都從入門會議、目標設定和定期跟進開始。</p>
+      <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="hp-btn-primary"><span>立即開始</span></a>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container">
-    <SectionHeader title="可選服務" subtitle="自由搭配。所有服務均可線上提供，除非特別標註。" />
-    <div class="services-list">
-      <div class="service-item"><h3>每週跟進</h3><p>與導師定期溝通，涵蓋進度、挑戰和計劃調整。每項合作均包含此服務。</p></div>
-      <div class="service-item"><h3>比賽回顧</h3><p>與導師一對一線上比賽回顧。針對你的比賽或訓練片段，提供具體、可即時應用的反饋。</p></div>
-      <div class="service-item"><h3>冰上訓練</h3><p>由 Rise 導師指導的面對面冰上訓練，專注於滑行技巧、控球、射門和位置技術。</p></div>
-      <div class="service-item"><h3>體能計劃</h3><p>根據你的位置和目標制定的場下訓練計劃。定期更新，附完整訓練說明。</p></div>
-      <div class="service-item"><h3>心理訓練</h3><p>由專業心理訓練師主持的課程，涵蓋專注力、自信心、壓力管理和競技心態。</p></div>
-      <div class="service-item"><h3>營養計劃</h3><p>根據你的身體狀況和訓練強度量身定制的營養計劃，支援整個賽季的表現和恢復。</p></div>
-      <div class="service-item"><h3>拉伸與瑜伽</h3><p>專注於運動表現、傷患預防和恢復的指導課程。根據你的時間安排調整。</p></div>
-      <div class="service-item"><h3>學業支援</h3><p>為需要兼顧學業和冰球的球員提供學業輔導。整個賽季均可使用。</p></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <div class="mpg-label">流程</div>
+        <h2 class="mpg-heading">運作方式</h2>
+        <p class="mpg-subtitle">從第一天起，導師就在你身邊。</p>
+      </div>
+      <div class="mpg-steps mpg-steps--4">
+        <div class="mpg-step"><div class="mpg-step__number">1</div><h3>規劃</h3><p>從規劃會議開始，制定賽季計劃，設定明確目標，決定哪些服務最適合你目前的發展階段。</p></div>
+        <div class="mpg-step"><div class="mpg-step__number">2</div><h3>選擇</h3><p>自由搭配。所有服務均可線上提供，除非特別標註。</p></div>
+        <div class="mpg-step"><div class="mpg-step__number">3</div><h3>跟進</h3><p>導師全程保持聯繫，追蹤進度、調整計劃，並給予直接、坦誠的反饋。</p></div>
+        <div class="mpg-step"><div class="mpg-step__number">4</div><h3>總結</h3><p>賽季結束面談。回顧成效，規劃下一步。</p></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="為什麼有效" />
-    <div class="why-list">
-      <div class="why-item"><span class="check">✔</span><span>專屬導師，了解你的球技</span></div>
-      <div class="why-item"><span class="check">✔</span><span>靈活彈性，根據你的需要定制計劃</span></div>
-      <div class="why-item"><span class="check">✔</span><span>導師團隊 24/7 回應</span></div>
-      <div class="why-item"><span class="check">✔</span><span>真實反饋，真正問責，整個賽季</span></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">可選服務</h2>
+        <p class="mpg-subtitle">自由搭配。所有服務均可線上提供，除非特別標註。</p>
+      </div>
+      <div class="mpg-services-list">
+        <div class="mpg-service-item"><h3>每週跟進</h3><p>與導師定期溝通，涵蓋進度、挑戰和計劃調整。每項合作均包含此服務。</p></div>
+        <div class="mpg-service-item"><h3>比賽回顧</h3><p>與導師一對一線上比賽回顧。針對你的比賽或訓練片段，提供具體、可即時應用的反饋。</p></div>
+        <div class="mpg-service-item"><h3>冰上訓練</h3><p>由 Rise 導師指導的面對面冰上訓練，專注於滑行技巧、控球、射門和位置技術。</p></div>
+        <div class="mpg-service-item"><h3>體能計劃</h3><p>根據你的位置和目標制定的場下訓練計劃。定期更新，附完整訓練說明。</p></div>
+        <div class="mpg-service-item"><h3>心理訓練</h3><p>由專業心理訓練師主持的課程，涵蓋專注力、自信心、壓力管理和競技心態。</p></div>
+        <div class="mpg-service-item"><h3>營養計劃</h3><p>根據你的身體狀況和訓練強度量身定制的營養計劃，支援整個賽季的表現和恢復。</p></div>
+        <div class="mpg-service-item"><h3>拉伸與瑜伽</h3><p>專注於運動表現、傷患預防和恢復的指導課程。根據你的時間安排調整。</p></div>
+        <div class="mpg-service-item"><h3>學業支援</h3><p>為需要兼顧學業和冰球的球員提供學業輔導。整個賽季均可使用。</p></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="適合誰？" />
-    <p class="who-text">訓練指導面向各級精英球員，以及在新環境中需要持續支援的球員。每項計劃都是獨立定制的，沒有兩份計劃是相同的。</p>
-  </div></section>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="常見問題" />
-    <div class="faq-list">
-      <div class="faq-item"><h3>可以只選個別服務嗎？</h3><p>可以，這正是計劃的設計理念。</p></div>
-      <div class="faq-item"><h3>多久跟進一次？</h3><p>每週。</p></div>
-      <div class="faq-item"><h3>孩子遇到困難怎麼辦？</h3><p>我們會調整計劃，全程提供支援。</p></div>
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center"><h2 class="mpg-heading">為什麼有效</h2></div>
+      <div class="mpg-checklist">
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>專屬導師，了解你的球技</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>靈活彈性，根據你的需要定制計劃</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>導師團隊 24/7 回應</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>真實反饋，真正問責，整個賽季</span></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <ServiceNav lang="zh" current="mentoring" />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好開始提升了嗎？</h2>
-    <div class="cta-actions">
-      <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="btn-primary">發送電子郵件</a>
-      <a href="https://wa.me/16472253861?text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E5%AF%B9RISE%E7%9A%84%E5%86%B0%E7%90%83%E8%AF%BE%E7%A8%8B%E6%84%9F%E5%85%B4%E8%B6%A3%E3%80%82" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center"><h2 class="mpg-heading">適合誰？</h2></div>
+      <p class="mpg-who">訓練指導面向各級精英球員，以及在新環境中需要持續支援的球員。每項計劃都是獨立定制的，沒有兩份計劃是相同的。</p>
     </div>
-  </div></section>
+  </section>
 
-  <Footer slot="footer" lang="zh" />
-</BaseLayout>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-<style>
-  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
-  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
-  .red { color: var(--rise-red); }
-  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
-  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(4, 1fr); } }
-  .step { text-align: center; padding: var(--space-6); }
-  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
-  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .services-list { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .services-list { grid-template-columns: repeat(2, 1fr); } }
-  .service-item { padding: var(--space-6); border: 1px solid var(--rise-neutral-100); border-radius: 4px; }
-  .service-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .service-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .why-list { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
-  .why-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
-  .check { color: var(--rise-red); font-weight: 700; font-size: var(--text-lg); flex-shrink: 0; }
-  .who-text { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; text-align: center; }
-  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .cta-banner { padding: var(--space-16) 0; }
-  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
-  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
-  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
-  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
-</style>
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center"><h2 class="mpg-heading">常見問題</h2></div>
+      <div class="mpg-faq__list">
+        <div class="mpg-faq-item"><h3>可以只選個別服務嗎？</h3><p>可以，這正是計劃的設計理念。</p></div>
+        <div class="mpg-faq-item"><h3>多久跟進一次？</h3><p>每週。</p></div>
+        <div class="mpg-faq-item"><h3>孩子遇到困難怎麼辦？</h3><p>我們會調整計劃，全程提供支援。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="mpg-service-nav">
+    <a href="/zh/services/the-move">球員安置</a>
+    <a href="/zh/services/mentoring" class="active">訓練指導</a>
+    <a href="/zh/services/hk-program">香港計劃</a>
+    <a href="/zh/why-us">為什麼選擇我們</a>
+  </nav>
+
+  <section class="mpg-cta">
+    <div class="mpg-container" style="text-align: center;">
+      <h2>準備好開始提升了嗎？</h2>
+      <div class="mpg-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=訓練指導 - 查詢" class="hp-btn-white">發送電子郵件</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</MarketingLayout>

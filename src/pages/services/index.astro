@@ -1,158 +1,91 @@
 ---
-// Services overview — EN
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import SectionHeader from "../../components/SectionHeader.astro";
-import ServiceCard from "../../components/ServiceCard.astro";
+// Services overview — EN (dark theme)
+import MarketingLayout from "../../layouts/MarketingLayout.astro";
 ---
 
-<BaseLayout title="Services" description="RISE Advancement services: player placement to Canada, season-long mentoring, and summer training in Hong Kong.">
-  <Header slot="header" />
+<MarketingLayout title="Services" description="RISE Advancement services: player placement to Canada, season-long mentoring, and summer training in Hong Kong.">
 
-  <section class="hero section">
-    <div class="container">
-      <SectionHeader
-        title="Our Services"
-        subtitle="Three ways we help your kid reach the next level. From full placement to Canada, to season-long development, to off-season training in Hong Kong."
-      />
-      <div class="services-grid">
-        <ServiceCard
-          title="The Move"
-          description="Full player placement and transition service to Canada. We evaluate, place, and support your kid's move."
-          price="Contact us"
-          features={[
-            "Game footage evaluation",
-            "Level determination (AA/AAA/Elite)",
-            "Team and school placement",
-            "VISA and GTHL transfer support",
-            "Post-move wrap-up",
-          ]}
-          ctaText="Explore The Move"
-          ctaLink="/services/the-move"
-        />
-        <ServiceCard
-          title="Mentoring"
-          description="Season-long development program. Choose the services your kid needs. Video review, skill skates, nutrition, mental skills."
-          price="Contact us"
-          features={[
-            "Onboarding + weekly check-ins",
-            "Video review sessions",
-            "Skill skates",
-            "Exercise and nutrition plans",
-            "Mental skills coaching",
-          ]}
-          ctaText="Explore Mentoring"
-          ctaLink="/services/mentoring"
-        />
-        <ServiceCard
-          title="HK Off-Ice Program"
-          description="10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting."
-          price="Summer 2026"
-          features={[
-            "June 8 to August 16",
-            "ONYX Gym, Taikoo Place",
-            "The Flying Puck shooting sessions",
-            "Quarry Bay Park training",
-            "Discovery Bay Ice Rink",
-            "Custom merch included",
-          ]}
-          ctaText="Explore HK Program"
-          ctaLink="/services/hk-program"
-        />
+  <section class="mpg-hero">
+    <div class="mpg-container">
+      <p class="mpg-hero__eyebrow">What We Offer</p>
+      <h1 class="mpg-hero__title">Our <span class="accent">Services</span></h1>
+      <p class="mpg-hero__lead">Three ways we help your kid reach the next level. From full placement to Canada, to season-long development, to off-season training in Hong Kong.</p>
+    </div>
+  </section>
+
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section">
+    <div class="mpg-container">
+      <div class="mpg-cards mpg-cards--3">
+
+        <div class="mpg-card">
+          <h3>The Move</h3>
+          <p style="color: var(--rise-red); font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;">Contact us</p>
+          <p>Full player placement and transition service to Canada. We evaluate, place, and support your kid's move.</p>
+          <ul class="hp-service__features" style="margin-top: 1rem;">
+            <li>Game footage evaluation</li>
+            <li>Level determination (AA/AAA/Elite)</li>
+            <li>Team and school placement</li>
+            <li>VISA and GTHL transfer support</li>
+            <li>Post-move wrap-up</li>
+          </ul>
+          <a href="/services/the-move" class="hp-service__link" style="margin-top: 1rem;">
+            Explore The Move
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="mpg-card">
+          <h3>Mentoring</h3>
+          <p style="color: var(--rise-red); font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;">Contact us</p>
+          <p>Season-long development program. Choose the services your kid needs. Video review, skill skates, nutrition, mental skills.</p>
+          <ul class="hp-service__features" style="margin-top: 1rem;">
+            <li>Onboarding + weekly check-ins</li>
+            <li>Video review sessions</li>
+            <li>Skill skates</li>
+            <li>Exercise and nutrition plans</li>
+            <li>Mental skills coaching</li>
+          </ul>
+          <a href="/services/mentoring" class="hp-service__link" style="margin-top: 1rem;">
+            Explore Mentoring
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="mpg-card">
+          <h3>HK Off-Ice Program</h3>
+          <p style="color: var(--rise-red); font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;">Summer 2026</p>
+          <p>10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting.</p>
+          <ul class="hp-service__features" style="margin-top: 1rem;">
+            <li>June 8 to August 16</li>
+            <li>ONYX Gym, Taikoo Place</li>
+            <li>The Flying Puck shooting sessions</li>
+            <li>Quarry Bay Park training</li>
+            <li>Discovery Bay Ice Rink</li>
+            <li>Custom merch included</li>
+          </ul>
+          <a href="/services/hk-program" class="hp-service__link" style="margin-top: 1rem;">
+            Explore HK Program
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);">
-    <div class="container" style="text-align: center;">
-      <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">Ready to talk?</h2>
-      <p style="color: var(--rise-neutral-400); margin-bottom: var(--space-8);">No commitment. Just a conversation about your kid's hockey future.</p>
-      <div class="cta-actions">
-        <a href="/#contact" class="btn-primary">Contact Us</a>
-        <a href="https://wa.me/16472253861?text=Hi%2C%20I'm%20interested%20in%20RISE's%20hockey%20programs%20for%20my%20child." class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-cta" id="contact">
+    <div class="mpg-container" style="text-align: center;">
+      <h2>Ready to talk?</h2>
+      <p>No commitment. Just a conversation about your kid's hockey future.</p>
+      <div class="mpg-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=RISE Inquiry" class="hp-btn-white">Email Us</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
       </div>
     </div>
   </section>
 
-  <Footer slot="footer" />
-</BaseLayout>
-
-<style>
-  .hero {
-    padding-top: var(--space-20);
-    padding-bottom: var(--space-20);
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  @media (min-width: 640px) {
-    .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .services-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .cta-banner {
-    padding: var(--space-16) 0;
-  }
-
-  .cta-actions {
-    display: flex;
-    gap: var(--space-4);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: var(--rise-red);
-    color: var(--rise-white);
-    transition: background-color 0.2s;
-  }
-
-  .btn-primary:hover {
-    background-color: var(--rise-red-dark);
-    color: var(--rise-white);
-    text-decoration: none;
-  }
-
-  .btn-secondary-light {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: transparent;
-    color: var(--rise-white);
-    border: 2px solid var(--rise-neutral-500);
-    transition: border-color 0.2s;
-  }
-
-  .btn-secondary-light:hover {
-    border-color: var(--rise-red);
-    color: var(--rise-red);
-    text-decoration: none;
-  }
-</style>
+</MarketingLayout>

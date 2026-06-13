@@ -1,455 +1,641 @@
 ---
-// Home page — EN (Phase 2: user flow restructure)
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import SectionHeader from "../components/SectionHeader.astro";
-import PlayerCard from "../components/PlayerCard.astro";
-import ServiceCard from "../components/ServiceCard.astro";
-import ContactForm from "../components/ContactForm.astro";
+// Home page — Redesign (approved mockup → Astro)
+import HomeLayout from "../layouts/HomeLayout.astro";
 ---
 
-<BaseLayout title="Home" description="RISE Advancement: elite hockey training and player placement for Hong Kong youth. Summer program, mentoring, and full placement services to Canada.">
-  <Header slot="header" />
+<HomeLayout title="Home" description="RISE Advancement: elite hockey training and player placement for Hong Kong youth. Summer program, mentoring, and full placement services to Canada.">
 
-  <!-- JSON-LD Structured Data -->
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "SportsActivityLocation",
-    "name": "RISE Advancement",
-    "description": "Elite hockey player development and placement agency. We get young players from Hong Kong onto teams in Canada.",
-    "url": "https://riseadvancement.com",
-    "email": "riseadvancements@gmail.com",
-    "telephone": "+852-9095-0387",
-    "areaServed": ["Hong Kong", "Canada"],
-    "sport": "Ice Hockey",
-    "offers": [
-      {
-        "@type": "Offer",
-        "name": "The Move",
-        "description": "Full player placement and transition service to Canada"
-      },
-      {
-        "@type": "Offer",
-        "name": "Mentoring",
-        "description": "Season-long hockey development program with dedicated mentors"
-      },
-      {
-        "@type": "Offer",
-        "name": "HK Off-Ice Summer Program",
-        "description": "10-week summer hockey training program in Hong Kong"
-      }
-    ]
-  })} />
-
-  <!-- 1. HERO — What is RISE + off-season program -->
-  <section class="hero section">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="hero-title">
-          RISE <span class="hero-title-red">Advancement</span>
-        </h1>
-        <p class="hero-lead">
-          We get young hockey players onto teams in Canada.
-          We evaluate them, place them, and develop them through the season.
-          Founded by players who lived the pipeline themselves.
-        </p>
-        <div class="hero-actions">
-          <a href="/services/hk-program" class="btn-primary">Off-Season Program</a>
-          <a href="#contact" class="btn-secondary">Talk to Us</a>
-        </div>
+  <!-- ====== HERO ====== -->
+  <section class="hp-hero" id="hero">
+    <canvas class="hp-hero__canvas" id="hero-canvas"></canvas>
+    <div class="hp-hero__overlay"></div>
+    <div class="hp-hero__content">
+      <div class="hp-hero__eyebrow"><span>Asia → Canada</span></div>
+      <h1 class="hp-hero__title">
+        <span class="line"><span class="line-inner">RISE</span></span>
+        <span class="line"><span class="line-inner accent">ADVANCEMENT</span></span>
+      </h1>
+      <p class="hp-hero__subtitle">
+        <span>We get young hockey players onto teams in Canada. We evaluate them, place them, and develop them through the season. Founded by players who lived the pipeline themselves.</span>
+      </p>
+      <div class="hp-hero__actions">
+        <a href="/services/hk-program" class="hp-btn-primary"><span>Off-Season Program</span></a>
+        <a href="#contact" class="hp-btn-outline">Talk to Us</a>
       </div>
+    </div>
+    <div class="hp-hero__scroll">
+      <span>Scroll</span>
+      <div class="hp-scroll-line"></div>
     </div>
   </section>
 
-  <!-- 2. HOW IT WORKS — How does it work? -->
-  <section id="how-it-works" class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
-      <SectionHeader
-        title="How It Works"
-        subtitle="Four steps to Canada."
-      />
-      <div class="steps-grid">
-        <div class="step">
-          <div class="step-number">1</div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <!-- ====== HOW IT WORKS ====== -->
+  <section class="hp-section hp-how" id="how-it-works">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label">The Process</div>
+        <h2 class="hp-heading">How It Works</h2>
+        <p class="hp-subtitle">Four steps to Canada. We handle everything so nothing falls through the cracks.</p>
+      </div>
+      <div class="hp-pipeline">
+        <div class="hp-pipeline__line"><div class="hp-pipeline__line-fill" id="pipeline-fill"></div></div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">01</span></div>
           <h3>We Evaluate</h3>
-          <p>Game footage, skill assessment, level determination.</p>
+          <p>Game footage, skill assessment, level determination. We watch the tape and know where your kid stands.</p>
         </div>
-        <div class="step">
-          <div class="step-number">2</div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">02</span></div>
           <h3>We Match</h3>
-          <p>We find the right team and school. We know the coaches, the programs, and the levels across Canada.</p>
+          <p>The right team, the right school, the right level. We know the coaches and programs across Canada.</p>
         </div>
-        <div class="step">
-          <div class="step-number">3</div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">03</span></div>
           <h3>We Move</h3>
-          <p>VISA, paperwork, help with logistics so nothing goes wrong.</p>
+          <p>VISA, paperwork, logistics. We make sure nothing goes wrong in the transition.</p>
         </div>
-        <div class="step">
-          <div class="step-number">4</div>
+        <div class="hp-step" data-step>
+          <div class="hp-step__marker"><span class="hp-step__number">04</span></div>
           <h3>We Develop</h3>
           <p>Weekly check-ins, video review, skill skates, nutrition, mental skills. Your kid is never alone.</p>
         </div>
       </div>
     </div>
-    <div class="mid-cta">
-      <a href="#contact" class="btn-primary">Talk to Us</a>
-    </div>
   </section>
 
-  <!-- 3. SERVICES — What can you do for my kid? -->
-  <section id="services" class="section">
-    <div class="container">
-      <SectionHeader
-        title="Our Services"
-        subtitle="Three ways we help. Each one designed for a different stage of the journey."
-      />
-      <div class="services-grid">
-        <ServiceCard
-          title="The Move"
-          description="Full player placement and transition service. We manage the entire process, from initial assessment to first skate with your new team, so nothing falls through the cracks."
-          price="Contact us"
-          features={[
-            "Thorough evaluation of game footage and skill level",
-            "Identification of coaches and teams suited to your goals",
-            "Facilitation of introductions with coaching staff",
-            "Exposure opportunities at the right level of play",
-            "Guidance and support at every step of the process",
-          ]}
-          ctaText="Explore The Move"
-          ctaLink="/services/the-move"
-        />
-        <ServiceCard
-          title="Mentoring"
-          description="Season-long development program. You choose the services that fit your game and your goals. Every engagement starts with an onboarding session, goal-setting, and regular check-ins throughout."
-          price="Contact us"
-          features={[
-            "Weekly check-ins with your dedicated mentor",
-            "One-on-one video review sessions",
-            "In-person skill skates with your Rise mentor",
-            "Custom exercise and nutrition plans",
-            "Mental skills coaching with a professional",
-          ]}
-          ctaText="Explore Mentoring"
-          ctaLink="/services/mentoring"
-        />
-        <ServiceCard
-          title="HK Off-Ice Program"
-          description="10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting. Gym, off-ice shooting, park training, on-ice sessions."
-          price="Summer 2026"
-          features={[
-            "June 8 to August 16",
-            "ONYX Gym, Taikoo Place",
-            "The Flying Puck shooting sessions",
-            "Quarry Bay Park training",
-            "Discovery Bay Ice Rink/Lohas Park",
-            "Custom merch included",
-          ]}
-          ctaText="Explore HK Program"
-          ctaLink="/services/hk-program"
-        />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <!-- ====== SERVICES ====== -->
+  <section class="hp-services" id="services">
+    <div class="hp-container" style="padding-top: 8rem; padding-bottom: 2rem;">
+      <div class="hp-header-center">
+        <div class="hp-label">What We Offer</div>
+        <h2 class="hp-heading">Our Services</h2>
+        <p class="hp-subtitle">Three ways we help. Each one designed for a different stage of the journey.</p>
+      </div>
+    </div>
+
+    <!-- Service 1: The Move -->
+    <div class="hp-service-row" data-service>
+      <div class="hp-service__visual">
+        <div class="hp-service__visual-bg"><div class="hp-service__number">01</div></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+          <line x1="100" y1="20" x2="100" y2="180" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+          <line x1="20" y1="100" x2="180" y2="100" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+          <circle cx="100" cy="100" r="60" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+          <circle cx="100" cy="100" r="4" fill="#D3191F"/>
+          <circle cx="100" cy="40" r="3" fill="#D3191F" opacity="0.5"/>
+          <circle cx="100" cy="160" r="3" fill="#D3191F" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="hp-service__info" data-service-content>
+        <h3>The Move</h3>
+        <div class="hp-service__price">Contact us</div>
+        <p>Full player placement and transition service. We manage the entire process, from initial assessment to first skate with your new team.</p>
+        <ul class="hp-service__features">
+          <li>Thorough evaluation of game footage and skill level</li>
+          <li>Identification of coaches and teams suited to your goals</li>
+          <li>Facilitation of introductions with coaching staff</li>
+          <li>Exposure opportunities at the right level of play</li>
+          <li>Guidance and support at every step</li>
+        </ul>
+        <a href="/services/the-move" class="hp-service__link">
+          Explore The Move
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Service 2: Mentoring -->
+    <div class="hp-service-row" data-service>
+      <div class="hp-service__visual">
+        <div class="hp-service__visual-bg"><div class="hp-service__number">02</div></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+          <circle cx="100" cy="100" r="50" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
+          <circle cx="100" cy="100" r="30" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
+          <circle cx="100" cy="100" r="10" stroke="#D3191F" stroke-width="1"/>
+          <line x1="100" y1="10" x2="100" y2="190" stroke="#D3191F" stroke-width="0.5" opacity="0.3"/>
+          <line x1="10" y1="100" x2="190" y2="100" stroke="#D3191F" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="hp-service__info" data-service-content>
+        <h3>Mentoring</h3>
+        <div class="hp-service__price">Contact us</div>
+        <p>Season-long development program. You choose the services that fit your game and your goals. Every engagement starts with an onboarding session.</p>
+        <ul class="hp-service__features">
+          <li>Weekly check-ins with your dedicated mentor</li>
+          <li>One-on-one video review sessions</li>
+          <li>In-person skill skates with your RISE mentor</li>
+          <li>Custom exercise and nutrition plans</li>
+          <li>Mental skills coaching with a professional</li>
+        </ul>
+        <a href="/services/mentoring" class="hp-service__link">
+          Explore Mentoring
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Service 3: HK Off-Ice Program -->
+    <div class="hp-service-row" data-service>
+      <div class="hp-service__visual">
+        <div class="hp-service__visual-bg"><div class="hp-service__number">03</div></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+          <rect x="30" y="30" width="140" height="140" rx="4" stroke="#D3191F" stroke-width="1" stroke-dasharray="6 4"/>
+          <line x1="30" y1="100" x2="170" y2="100" stroke="#D3191F" stroke-width="1" stroke-dasharray="6 4"/>
+          <circle cx="100" cy="100" r="20" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 3"/>
+          <circle cx="100" cy="100" r="3" fill="#D3191F"/>
+        </svg>
+      </div>
+      <div class="hp-service__info" data-service-content>
+        <h3>HK Off-Ice Program</h3>
+        <div class="hp-service__price">Summer 2026</div>
+        <p>10-week summer training program in Hong Kong. Partnership with EJ Elite Shooting. Gym, off-ice shooting, park training, on-ice sessions.</p>
+        <ul class="hp-service__features">
+          <li>June 8 to August 16</li>
+          <li>ONYX Gym, Taikoo Place</li>
+          <li>The Flying Puck shooting sessions</li>
+          <li>Quarry Bay Park training</li>
+          <li>Discovery Bay Ice Rink / Lohas Park</li>
+          <li>Custom merch included</li>
+        </ul>
+        <a href="/services/hk-program" class="hp-service__link">
+          Explore HK Program
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- 3b. OFF-SEASON PROGRAM -->
-  <section class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 720px; text-align: center;">
-      <h2 style="margin-bottom: var(--space-4);">Not just a program.</h2>
-      <p style="font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; margin-bottom: var(--space-6);">
-        Our off-season program is 10 weeks of elite training in Hong Kong. Gym, shooting, skating, and mental skills. June 8 to August 16. It's also the first step into the RISE ecosystem, where players get evaluated, developed, and placed on teams in Canada.
-      </p>
-      <a href="/why-us" class="btn-secondary">Why RISE?</a>
+  <!-- ====== INTERLUDE ====== -->
+  <section class="hp-interlude">
+    <div class="hp-container">
+      <h2>Not just a program.</h2>
+      <p>Our off-season program is 10 weeks of elite training in Hong Kong. Gym, shooting, skating, and mental skills. June 8 to August 16. It's also the first step into the RISE ecosystem, where players get evaluated, developed, and placed on teams in Canada.</p>
+      <a href="/why-us" class="hp-btn-outline" style="border-color: rgba(255,255,255,0.2);">Why RISE?</a>
     </div>
   </section>
 
-  <!-- 4. PLAYERS — Has it worked for others? -->
-  <section id="players" class="section" style="background-color: var(--rise-neutral-50);">
-    <div class="container">
-      <SectionHeader
-        title="Our Players"
-        subtitle="Real kids. Real teams. Real progress."
-      />
-      <div class="players-grid">
-        <PlayerCard
-          number="#7"
-          name="Wilshere Tung"
-          position="Defenceman"
-          team="2012 Toronto Titans"
-        />
-        <PlayerCard
-          number="#13"
-          name="Felix Lloren"
-          position="Defenceman"
-          team="2011 Upper Canada College"
-        />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
+  <!-- ====== PLAYERS ====== -->
+  <section class="hp-section hp-players" id="players">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label">Proof</div>
+        <h2 class="hp-heading">Our Players</h2>
+        <p class="hp-subtitle">Real kids. Real teams. Real progress.</p>
       </div>
-    </div>
-    <div class="mid-cta">
-      <a href="#contact" class="btn-primary">Start Your Kid's Journey</a>
-    </div>
-  </section>
-
-  <!-- 5. FAQ — What about my concerns? -->
-  <section id="faq" class="section">
-    <div class="container" style="max-width: 640px;">
-      <SectionHeader
-        title="Questions Parents Ask"
-        subtitle="The honest answers."
-      />
-      <div class="faq-list">
-        <div class="faq-item">
-          <h3>What if my kid is homesick?</h3>
-          <p>We check in weekly. Group chat with all three mentors. We treat every player like our own. Your kid is never alone in Canada.</p>
+      <div class="hp-players__grid">
+        <div class="hp-player-card" data-number="#7">
+          <div class="hp-player-card__jersey">#7</div>
+          <h3>Wilshere Tung</h3>
+          <p class="hp-player-card__pos">Defenceman</p>
+          <p class="hp-player-card__team">2012 Toronto Titans</p>
         </div>
-        <div class="faq-item">
-          <h3>What if the team isn't the right fit?</h3>
-          <p>We evaluate before placement. We know the coaches. We've done this before. If something isn't working, we address it early.</p>
+        <div class="hp-player-card" data-number="#13">
+          <div class="hp-player-card__jersey">#13</div>
+          <h3>Felix Lloren</h3>
+          <p class="hp-player-card__pos">Defenceman</p>
+          <p class="hp-player-card__team">2011 Upper Canada College</p>
         </div>
-        <div class="faq-item">
-          <h3>Do you guarantee placement?</h3>
-          <p>No. We guarantee effort. We don't make promises we can't keep. But we've placed players because we do the work.</p>
-        </div>
-        <div class="faq-item">
-          <h3>How do I stay connected with my kid?</h3>
-          <p>Weekly updates from us. Coach communication. WhatsApp group. You'll know what's happening every step of the way.</p>
-        </div>
-        <div class="faq-item">
-          <h3>How much does it cost?</h3>
-          <p>It depends on the service. <a href="/#contact">Contact us</a> for a conversation about your kid's needs and what makes sense.</p>
-        </div>
+      </div>
+      <div style="text-align:center;margin-top:3rem;">
+        <a href="#contact" class="hp-btn-primary"><span>Start Your Kid's Journey</span></a>
       </div>
     </div>
   </section>
 
-  <!-- 6. CONTACT — I'm ready to reach out -->
-  <section id="contact" class="contact-section section" style="background-color: var(--rise-neutral-50);">
-    <div class="container" style="max-width: 640px; text-align: center;">
-      <SectionHeader
-        title="Get In Touch"
-        subtitle="No commitment. Just a conversation about your kid's hockey future."
-      />
-      <div class="contact-center">
-        <div class="contact-person">
-          <h3>Talk to the Team</h3>
-          <p>Former players, now coaching. We'll answer your questions honestly and help you figure out the right path.</p>
+  <!-- ====== STATS BAR ====== -->
+  <div class="hp-stats">
+    <div class="hp-stats__grid">
+      <div class="hp-stat">
+        <div class="hp-stat__number" data-count="100">0</div>
+        <div class="hp-stat__label">Percent Effort</div>
+      </div>
+      <div class="hp-stat">
+        <div class="hp-stat__number" data-count="3">0</div>
+        <div class="hp-stat__label">Services</div>
+      </div>
+      <div class="hp-stat">
+        <div class="hp-stat__number" data-count="10">0</div>
+        <div class="hp-stat__label">Week Program</div>
+      </div>
+      <div class="hp-stat">
+        <div class="hp-stat__number" data-count="2">0</div>
+        <div class="hp-stat__label">Countries</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <!-- ====== FAQ ====== -->
+  <section class="hp-section hp-faq" id="faq">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label">Questions</div>
+        <h2 class="hp-heading">Parents Ask</h2>
+        <p class="hp-subtitle">The honest answers.</p>
+      </div>
+      <div class="hp-faq__list">
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>What if my kid is homesick?</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>We check in weekly. Group chat with all three mentors. We treat every player like our own. Your kid is never alone in Canada.</p></div>
         </div>
-        <ContactForm />
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>What if the team isn't the right fit?</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>We evaluate before placement. We know the coaches. We've done this before. If something isn't working, we address it early.</p></div>
+        </div>
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>Do you guarantee placement?</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>No. We guarantee effort. We don't make promises we can't keep. But we've placed players because we do the work.</p></div>
+        </div>
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>How do I stay connected with my kid?</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>Weekly updates from us. Coach communication. WhatsApp group. You'll know what's happening every step of the way.</p></div>
+        </div>
+        <div class="hp-faq-item">
+          <button class="hp-faq-item__question"><h3>How much does it cost?</h3><div class="hp-faq-item__icon"></div></button>
+          <div class="hp-faq-item__answer"><p>It depends on the service. <a href="#contact">Contact us</a> for a conversation about your kid's needs and what makes sense.</p></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <Footer slot="footer" />
-</BaseLayout>
+  <!-- ====== CTA ====== -->
+  <section class="hp-cta" id="contact">
+    <div class="hp-cta__content">
+      <h2>Get in Touch</h2>
+      <p>No commitment. Just a conversation about your kid's hockey future. We reply within 24 hours.</p>
+      <div class="hp-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=RISE%20Advancement%20-%20Interested" class="hp-btn-white">Email Us</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
 
-<style>
-  /* ========== HERO ========== */
-  .hero {
-    padding-top: var(--space-20);
-    padding-bottom: var(--space-20);
-  }
+  <!-- ====== FOOTER ====== -->
+  <footer class="hp-footer">
+    <div class="hp-footer__grid">
+      <div class="hp-footer__brand">
+        <img src="https://riseadvancement.com/logo-header.png" alt="RISE Advancement" style="height:32px;width:auto;opacity:0.4;filter:brightness(0) invert(1);" />
+        <p>Hockey player development and placement. Hong Kong to Canada. Founded by players who lived the pipeline.</p>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <ul>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#players">Players</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:riseadvancements@gmail.com">riseadvancements@gmail.com</a></li>
+          <li><a href="tel:+85290950387">+852 9095 0387</a></li>
+          <li>WeChat: RISE-Advancement</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="https://instagram.com/riseadvancement">Instagram</a></li>
+          <li><a href="https://facebook.com/riseadvancement">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="hp-footer__bottom">
+      <p>&copy; 2026 RISE Advancement. All rights reserved.</p>
+    </div>
+  </footer>
 
-  .hero-content {
-    max-width: 720px;
-    margin: 0 auto;
-    text-align: center;
-  }
+  <!-- ====== PAGE SCRIPTS ====== -->
+  <script is:inline>
+    (function () {
+      // ——— LENIS SMOOTH SCROLL ———
+      var lenis = new Lenis({
+        duration: 1.2,
+        easing: function(t) { return 1 - Math.pow(1 - t, 4); },
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.2,
+        infinite: false,
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
 
-  .hero-eyebrow {
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--rise-neutral-500);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: var(--space-4);
-  }
+      // ——— THREE.JS ICE RINK ———
+      (function() {
+        var canvas = document.getElementById('hero-canvas');
+        if (!canvas) return;
+        var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x0a0a0a, 1);
 
-  .hero-title {
-    font-size: var(--text-5xl);
-    margin-bottom: var(--space-6);
-  }
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 8);
 
-  @media (max-width: 639px) {
-    .hero-title {
-      font-size: var(--text-3xl);
-    }
-  }
+        var mouse = { x: 0, y: 0 };
 
-  .hero-title-red {
-    color: var(--rise-red);
-  }
+        // Ice plane
+        var floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(28, 18),
+          new THREE.MeshBasicMaterial({ color: 0x08080c, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
+        );
+        floor.position.z = -4;
+        scene.add(floor);
 
-  .hero-lead {
-    font-size: var(--text-lg);
-    color: var(--rise-neutral-500);
-    margin-bottom: var(--space-8);
-    max-width: none;
-  }
+        // Rink markings
+        var dashMat = new THREE.LineDashedMaterial({ color: 0xD3191F, transparent: true, opacity: 0.06, dashSize: 0.3, gapSize: 0.2 });
+        var dashMatBlue = new THREE.LineDashedMaterial({ color: 0x4488cc, transparent: true, opacity: 0.04, dashSize: 0.3, gapSize: 0.2 });
 
-  .hero-actions {
-    display: flex;
-    gap: var(--space-4);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+        function makeDashedLine(points, material) {
+          var geom = new THREE.BufferGeometry().setFromPoints(points);
+          var line = new THREE.Line(geom, material);
+          line.computeLineDistances();
+          return line;
+        }
+        function makeCircle(cx, cy, r, segments, material) {
+          var pts = [];
+          for (var i = 0; i <= segments; i++) {
+            var a = (i / segments) * Math.PI * 2;
+            pts.push(new THREE.Vector3(cx + Math.cos(a) * r, cy + Math.sin(a) * r, -3.85));
+          }
+          return makeDashedLine(pts, material);
+        }
 
-  /* ========== BUTTONS ========== */
-  .btn-primary,
-  .btn-secondary {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-8);
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
+        scene.add(makeDashedLine([new THREE.Vector3(0, -9, -3.85), new THREE.Vector3(0, 9, -3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(-6, -9, -3.85), new THREE.Vector3(-6, 9, -3.85)], dashMatBlue));
+        scene.add(makeDashedLine([new THREE.Vector3(6, -9, -3.85), new THREE.Vector3(6, 9, -3.85)], dashMatBlue));
+        scene.add(makeDashedLine([new THREE.Vector3(-13, -8, -3.85), new THREE.Vector3(13, -8, -3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(13, -8, -3.85), new THREE.Vector3(13, 8, -3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(13, 8, -3.85), new THREE.Vector3(-13, 8, -3.85)], dashMat));
+        scene.add(makeDashedLine([new THREE.Vector3(-13, 8, -3.85), new THREE.Vector3(-13, -8, -3.85)], dashMat));
+        scene.add(makeCircle(0, 0, 3, 64, dashMat));
+        scene.add(makeCircle(-8, 0, 2, 48, dashMat));
+        scene.add(makeCircle(8, 0, 2, 48, dashMat));
+        scene.add(makeCircle(-8, -5, 0.5, 32, dashMat));
+        scene.add(makeCircle(-8, 5, 0.5, 32, dashMat));
+        scene.add(makeCircle(8, -5, 0.5, 32, dashMat));
+        scene.add(makeCircle(8, 5, 0.5, 32, dashMat));
+        var dotGeom = new THREE.CircleGeometry(0.12, 16);
+        var dotMat = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.15 });
+        var centerDot = new THREE.Mesh(dotGeom, dotMat);
+        centerDot.position.z = -3.84;
+        scene.add(centerDot);
 
-  .btn-primary {
-    background-color: var(--rise-red);
-    color: var(--rise-white);
-  }
+        // Particles
+        var count = window.innerWidth < 768 ? 400 : 1000;
+        var positions = new Float32Array(count * 3);
+        var colors = new Float32Array(count * 3);
+        var velocities = new Float32Array(count * 3);
+        var iceColor = new THREE.Color(0xB8D4E3);
+        var redColor = new THREE.Color(0xD3191F);
+        var whiteColor = new THREE.Color(0xE8E8E8);
 
-  .btn-primary:hover {
-    background-color: var(--rise-red-dark);
-    color: var(--rise-white);
-    text-decoration: none;
-  }
+        for (var i = 0; i < count; i++) {
+          positions[i * 3] = (Math.random() - 0.5) * 24;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 1;
+          velocities[i * 3] = (Math.random() - 0.5) * 0.002;
+          velocities[i * 3 + 1] = -Math.random() * 0.004 - 0.001;
+          velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
+          var r = Math.random();
+          var c;
+          if (r < 0.12) c = redColor;
+          else if (r < 0.45) c = iceColor;
+          else c = whiteColor;
+          colors[i * 3] = c.r;
+          colors[i * 3 + 1] = c.g;
+          colors[i * 3 + 2] = c.b;
+        }
 
-  .btn-secondary {
-    background-color: transparent;
-    color: var(--rise-black);
-    border: 2px solid var(--rise-neutral-300);
-  }
+        var particleGeom = new THREE.BufferGeometry();
+        particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        var particleMat = new THREE.PointsMaterial({
+          size: 0.04,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.6,
+          sizeAttenuation: true
+        });
+        var particles = new THREE.Points(particleGeom, particleMat);
+        scene.add(particles);
 
-  .btn-secondary:hover {
-    border-color: var(--rise-red);
-    color: var(--rise-red);
-    text-decoration: none;
-  }
+        var rafId;
+        var heroKilled = false;
+        function animate() {
+          rafId = requestAnimationFrame(animate);
+          var pos = particleGeom.attributes.position.array;
+          for (var i = 0; i < count; i++) {
+            pos[i * 3] += velocities[i * 3];
+            pos[i * 3 + 1] += velocities[i * 3 + 1];
+            pos[i * 3 + 2] += velocities[i * 3 + 2];
+            if (pos[i * 3 + 1] < -8) {
+              pos[i * 3 + 1] = 8;
+              pos[i * 3] = (Math.random() - 0.5) * 24;
+            }
+          }
+          particleGeom.attributes.position.needsUpdate = true;
+          camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.015;
+          camera.position.y += (-mouse.y * 0.3 - camera.position.y) * 0.015;
+          camera.lookAt(0, 0, 0);
+          renderer.render(scene, camera);
+        }
+        animate();
 
-  /* ========== HOW IT WORKS ========== */
-  .steps-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
+        window.addEventListener('mousemove', function(e) {
+          mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+          mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+        });
+        window.addEventListener('resize', function() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        window.addEventListener('scroll', function() {
+          if (!heroKilled && window.scrollY > window.innerHeight * 1.5) {
+            cancelAnimationFrame(rafId);
+            heroKilled = true;
+          } else if (heroKilled && window.scrollY < window.innerHeight * 1.5) {
+            heroKilled = false;
+            animate();
+          }
+        }, { passive: true });
+      })();
 
-  @media (min-width: 640px) {
-    .steps-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+      // ——— GSAP ANIMATIONS ———
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-  @media (min-width: 1024px) {
-    .steps-grid { grid-template-columns: repeat(4, 1fr); }
-  }
+      // LOADER
+      var loaderTl = gsap.timeline();
+      loaderTl
+        .to('#loader-fill', { width: '100%', duration: 0.8, ease: 'power2.inOut' })
+        .to('#loader', { yPercent: -100, duration: 0.6, ease: 'power4.inOut', delay: 0.15 })
+        .to('.hp-hero__eyebrow span', { y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.2')
+        .to('.hp-hero__title .line-inner', { y: 0, duration: 0.8, stagger: 0.12, ease: 'power4.out' }, '-=0.3')
+        .to('.hp-hero__subtitle span', { y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+        .to('.hp-hero__actions', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.2')
+        .to('.hp-hero__scroll', { opacity: 1, duration: 0.4 }, '-=0.1');
 
-  .step {
-    text-align: center;
-    padding: var(--space-6);
-  }
+      // NAV SCROLL
+      ScrollTrigger.create({
+        start: 80,
+        onUpdate: function(self) {
+          document.getElementById('hp-nav').classList.toggle('scrolled', self.progress > 0);
+        }
+      });
 
-  .step-number {
-    font-family: var(--font-heading);
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    color: var(--rise-red);
-    margin-bottom: var(--space-3);
-  }
+      // PIPELINE STEPS
+      gsap.utils.toArray('.hp-step').forEach(function(step, i) {
+        var marker = step.querySelector('.hp-step__marker');
+        gsap.from(step, {
+          opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', delay: i * 0.1, immediateRender: false,
+          scrollTrigger: { trigger: step, start: 'top 75%' }
+        });
+        ScrollTrigger.create({
+          trigger: step,
+          start: 'top 75%',
+          onEnter: function() {
+            marker.classList.add('active');
+            gsap.to(marker, { borderColor: 'rgba(211,25,31,0.5)', boxShadow: '0 0 30px rgba(211,25,31,0.15)', duration: 0.6 });
+          }
+        });
+      });
 
-  .step h3 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-2);
-  }
+      // Pipeline line fill
+      ScrollTrigger.create({
+        trigger: '.hp-pipeline',
+        start: 'top 70%',
+        end: 'bottom 40%',
+        onUpdate: function(self) {
+          gsap.set('#pipeline-fill', { width: (self.progress * 100) + '%' });
+        }
+      });
 
-  .step p {
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
-    line-height: 1.6;
-  }
+      // SERVICE ROWS
+      gsap.utils.toArray('.hp-service-row').forEach(function(row) {
+        var content = row.querySelector('[data-service-content]');
+        var visual = row.querySelector('.hp-service__visual');
+        if (content) {
+          gsap.from(content, {
+            opacity: 0, x: 40, duration: 0.8, ease: 'power3.out', immediateRender: false,
+            scrollTrigger: { trigger: row, start: 'top 80%' }
+          });
+        }
+        if (visual) {
+          gsap.from(visual, {
+            opacity: 0, x: -40, duration: 0.8, ease: 'power3.out', immediateRender: false,
+            scrollTrigger: { trigger: row, start: 'top 80%' }
+          });
+        }
+      });
 
-  /* ========== SERVICES ========== */
-  .services-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
+      // INTERLUDE
+      gsap.from('.hp-interlude h2', {
+        opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { trigger: '.hp-interlude', start: 'top 75%' }
+      });
+      gsap.from('.hp-interlude p', {
+        opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.2, immediateRender: false,
+        scrollTrigger: { trigger: '.hp-interlude', start: 'top 75%' }
+      });
 
-  @media (min-width: 640px) {
-    .services-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+      // PLAYER CARDS
+      gsap.utils.toArray('.hp-player-card').forEach(function(card, i) {
+        gsap.from(card, {
+          opacity: 0, y: 40, duration: 0.8, ease: 'power3.out', delay: i * 0.15, immediateRender: false,
+          scrollTrigger: { trigger: card, start: 'top 80%' }
+        });
+      });
 
-  @media (min-width: 1024px) {
-    .services-grid { grid-template-columns: repeat(3, 1fr); }
-  }
+      // STATS COUNTERS
+      gsap.utils.toArray('[data-count]').forEach(function(el) {
+        var target = parseInt(el.dataset.count);
+        var obj = { val: 0 };
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 85%',
+          once: true,
+          onEnter: function() {
+            gsap.to(obj, {
+              val: target, duration: 1.5, ease: 'power2.out',
+              onUpdate: function() { el.textContent = Math.round(obj.val); }
+            });
+          }
+        });
+      });
 
-  /* ========== PLAYERS ========== */
-  .players-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
+      // CTA
+      gsap.from('.hp-cta__content h2', {
+        opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { trigger: '.hp-cta', start: 'top 75%' }
+      });
+      gsap.from('.hp-cta__content p', {
+        opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.15, immediateRender: false,
+        scrollTrigger: { trigger: '.hp-cta', start: 'top 75%' }
+      });
+      gsap.from('.hp-cta__buttons', {
+        opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.3, immediateRender: false,
+        scrollTrigger: { trigger: '.hp-cta', start: 'top 75%' }
+      });
 
-  @media (min-width: 640px) {
-    .players-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+      // FAQ ACCORDION
+      document.querySelectorAll('.hp-faq-item__question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = btn.closest('.hp-faq-item');
+          var answer = item.querySelector('.hp-faq-item__answer');
+          var isOpen = item.classList.contains('active');
 
-  @media (min-width: 1024px) {
-    .players-grid { grid-template-columns: repeat(2, 1fr); max-width: 640px; margin-inline: auto; }
-  }
+          document.querySelectorAll('.hp-faq-item.active').forEach(function(activeItem) {
+            activeItem.classList.remove('active');
+            gsap.to(activeItem.querySelector('.hp-faq-item__answer'), { maxHeight: 0, duration: 0.4, ease: 'power3.inOut' });
+          });
 
-  /* ========== FAQ ========== */
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-  }
+          if (!isOpen) {
+            item.classList.add('active');
+            answer.style.maxHeight = 'none';
+            var h = answer.scrollHeight;
+            answer.style.maxHeight = '0px';
+            answer.offsetHeight; // force reflow
+            gsap.to(answer, { maxHeight: h, duration: 0.5, ease: 'power3.out' });
+          }
+        });
+      });
 
-  .faq-item h3 {
-    font-size: var(--text-lg);
-    margin-bottom: var(--space-2);
-  }
+      // SMOOTH SCROLL NAV
+      document.querySelectorAll('.hp-nav__links a[href^="#"]').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = document.querySelector(a.getAttribute('href'));
+          if (target) {
+            lenis.scrollTo(target, { offset: -80, duration: 1.5 });
+          }
+        });
+      });
 
-  .faq-item p {
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-500);
-    line-height: 1.7;
-  }
-
-  .faq-item a {
-    color: var(--rise-red);
-    text-decoration: underline;
-    display: inline-block;
-    padding: 0.5rem 0;
-    min-height: 44px;
-  }
-
-  /* ========== CONTACT ========== */
-  .contact-center {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-    align-items: center;
-  }
-
-  .contact-person h3 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-2);
-  }
-
-  .contact-person p {
-    font-size: var(--text-sm);
-    color: var(--rise-neutral-700);
-    line-height: 1.6;
-  }
-
-  /* ========== MID-PAGE CTAs ========== */
-  .mid-cta {
-    text-align: center;
-    margin-top: var(--space-8);
-  }
-</style>
+      // REDUCED MOTION
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        lenis.destroy();
+        ScrollTrigger.getAll().forEach(function(st) { st.kill(); });
+        gsap.globalTimeline.progress(1);
+        document.querySelectorAll('.hp-service-row, [data-service-content], .hp-service__visual, .hp-player-card, .hp-step, .hp-hero__actions, .hp-hero__scroll, .hp-hero__eyebrow span, .hp-hero__title .line-inner, .hp-hero__subtitle span, .hp-interlude h2, .hp-interlude p, .hp-cta__content h2, .hp-cta__content p, .hp-cta__buttons').forEach(function(el) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+        var loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'none';
+      }
+    })();
+  </script>
+</HomeLayout>

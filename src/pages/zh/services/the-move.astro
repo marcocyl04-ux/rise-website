@@ -1,93 +1,100 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import Header from "../../../components/Header.astro";
-import Footer from "../../../components/Footer.astro";
-import SectionHeader from "../../../components/SectionHeader.astro";
-import ServiceNav from "../../../components/ServiceNav.astro";
+// 球員安置 — 中文 (dark theme)
+import MarketingLayout from "../../../layouts/MarketingLayout.astro";
 ---
 
-<BaseLayout title="球員安置" lang="zh-HK">
-  <Header slot="header" lang="zh" />
+<MarketingLayout title="球員安置" lang="zh" description="全面的球員安置和過渡服務。從香港到加拿大的冰球安置。">
 
-  <section class="service-hero section"><div class="container">
-    <p class="hero-eyebrow">服務</p>
-    <h1 class="hero-title">球員<span class="red">安置</span></h1>
-    <p class="hero-lead">轉到新球隊或新城市，是年輕球員生涯中最重大的決定之一。Rise Advancement 管理整個過程，從初步評估到孩子在新球隊首次上場，確保每個環節都不出差錯。</p>
-    <a href="mailto:riseadvancements@gmail.com?subject=球員安置 - 查詢" class="btn-primary">立即開始</a>
-  </div></section>
-
-  <section class="section" style="background-color: var(--rise-neutral-50);"><div class="container">
-    <SectionHeader title="運作方式" subtitle="從評估到安置，兩個步驟。" />
-    <div class="steps-grid">
-      <div class="step"><div class="step-number">1</div><h3>初步評估</h3><p>我們審閱你的比賽錄像，評估你的技術水平，並與你和家人面談，了解你們的目標。我們的團隊會判斷合適的競技水平，並提出清晰的建議。</p></div>
-      <div class="step"><div class="step-number">2</div><h3>球隊安置</h3><p>我們動用人脈，尋找合適水平的教練和球隊，創造曝光機會，並在你家人與教練團隊之間全程提供溝通指導。</p></div>
+  <section class="mpg-hero">
+    <div class="mpg-container">
+      <p class="mpg-hero__eyebrow">服務</p>
+      <h1 class="mpg-hero__title">球員<span class="accent">安置</span></h1>
+      <p class="mpg-hero__lead">轉到新球隊或新城市，是年輕球員生涯中最重大的決定之一。Rise Advancement 管理整個過程，從初步評估到孩子在新球隊首次上場，確保每個環節都不出差錯。</p>
+      <a href="mailto:riseadvancements@gmail.com?subject=球員安置 - 查詢" class="hp-btn-primary"><span>立即開始</span></a>
     </div>
-  </div></section>
+  </section>
 
-  <section class="section"><div class="container">
-    <SectionHeader title="包含內容" />
-    <div class="included-grid">
-      <div class="included-item"><span class="check">✔</span><span>深入評估比賽錄像和技術水平</span></div>
-      <div class="included-item"><span class="check">✔</span><span>根據你的目標篩選合適的教練和球隊</span></div>
-      <div class="included-item"><span class="check">✔</span><span>安排與教練團隊的介紹和會面</span></div>
-      <div class="included-item"><span class="check">✔</span><span>在合適的競技水平提供曝光機會</span></div>
-      <div class="included-item"><span class="check">✔</span><span>整個過程中的全程指導和支持</span></div>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <div class="mpg-label">流程</div>
+        <h2 class="mpg-heading">運作方式</h2>
+        <p class="mpg-subtitle">從評估到安置，兩個步驟。</p>
+      </div>
+      <div class="mpg-steps">
+        <div class="mpg-step">
+          <div class="mpg-step__number">1</div>
+          <h3>初步評估</h3>
+          <p>我們審閱你的比賽錄像，評估你的技術水平，並與你和家人面談，了解你們的目標。我們的團隊會判斷合適的競技水平，並提出清晰的建議。</p>
+        </div>
+        <div class="mpg-step">
+          <div class="mpg-step__number">2</div>
+          <h3>球隊安置</h3>
+          <p>我們動用人脈，尋找合適水平的教練和球隊，創造曝光機會，並在你家人與教練團隊之間全程提供溝通指導。</p>
+        </div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section class="honest section" style="background-color: var(--rise-neutral-50);"><div class="container" style="max-width: 640px;">
-    <h2>我們的承諾</h2>
-    <p>Rise Advancement 的義務在球員加入新球隊並完成新學校入學後即告完成。沒有隱藏步驟，只有結果。</p>
-  </div></section>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="section"><div class="container" style="max-width: 640px;">
-    <SectionHeader title="常見問題" />
-    <div class="faq-list">
-      <div class="faq-item"><h3>找不到球隊怎麼辦？</h3><p>我們不保證安置，但保證全力以赴。我們會從一開始就坦誠告訴你孩子的準備程度和選擇。</p></div>
-      <div class="faq-item"><h3>打什麼級別？</h3><p>取決於技術、年齡和準備程度。我們會評估後判斷最合適的水平。</p></div>
-      <div class="faq-item"><h3>需要多長時間？</h3><p>大部分安置在九月前完成。建議儘早聯繫。</p></div>
-      <div class="faq-item"><h3>你們安排住宿嗎？</h3><p>我們協助安排寄宿家庭和學校住宿計劃。</p></div>
+  <section class="mpg-section">
+    <div class="mpg-container">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">包含內容</h2>
+      </div>
+      <div class="mpg-checklist">
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>深入評估比賽錄像和技術水平</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>根據你的目標篩選合適的教練和球隊</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>安排與教練團隊的介紹和會面</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>在合適的競技水平提供曝光機會</span></div>
+        <div class="mpg-checklist__item"><span class="mpg-checklist__check">&#10003;</span><span>整個過程中的全程指導和支持</span></div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <ServiceNav lang="zh" current="the-move" />
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-  <section class="cta-banner section" style="background-color: var(--rise-black);"><div class="container" style="text-align: center;">
-    <h2 style="color: var(--rise-white); margin-bottom: var(--space-4);">準備好踏出這一步了嗎？</h2>
-    <div class="cta-actions">
-      <a href="mailto:riseadvancements@gmail.com?subject=球員安置 - 查詢" class="btn-primary">發送電子郵件</a>
-      <a href="https://wa.me/16472253861?text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E5%AF%B9RISE%E7%9A%84%E5%86%B0%E7%90%83%E8%AF%BE%E7%A8%8B%E6%84%9F%E5%85%B4%E8%B6%A3%E3%80%82" class="btn-secondary-light" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <section class="mpg-section mpg-surface">
+    <div class="mpg-container mpg-container--narrow mpg-honest">
+      <h2>我們的承諾</h2>
+      <p>Rise Advancement 的義務在球員加入新球隊並完成新學校入學後即告完成。沒有隱藏步驟，只有結果。</p>
     </div>
-  </div></section>
+  </section>
 
-  <Footer slot="footer" lang="zh" />
-</BaseLayout>
+  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
 
-<style>
-  .service-hero { padding-top: var(--space-12); padding-bottom: var(--space-16); text-align: center; }
-  .hero-eyebrow { font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 500; color: var(--rise-neutral-500); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: var(--text-5xl); margin-bottom: var(--space-6); }
-  .red { color: var(--rise-red); }
-  .hero-lead { font-size: var(--text-lg); color: var(--rise-neutral-500); max-width: 600px; margin: 0 auto var(--space-8); }
-  .steps-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-  @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
-  .step { text-align: center; padding: var(--space-6); }
-  .step-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--rise-red); margin-bottom: var(--space-3); }
-  .step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
-  .step p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.6; }
-  .included-grid { display: flex; flex-direction: column; gap: var(--space-4); max-width: 500px; margin: 0 auto; }
-  .included-item { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--text-base); }
-  .check { color: var(--rise-red); font-weight: 700; font-size: var(--text-lg); flex-shrink: 0; }
-  .honest h2 { margin-bottom: var(--space-4); }
-  .honest p { font-size: var(--text-base); color: var(--rise-neutral-500); line-height: 1.7; }
-  .faq-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .faq-item h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .faq-item p { font-size: var(--text-sm); color: var(--rise-neutral-500); line-height: 1.7; }
-  .cta-banner { padding: var(--space-16) 0; }
-  .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: var(--rise-red); color: var(--rise-white); transition: background-color 0.2s; }
-  .btn-primary:hover { background-color: var(--rise-red-dark); color: var(--rise-white); text-decoration: none; }
-  .btn-secondary-light { display: inline-block; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: var(--space-3) var(--space-8); border-radius: 4px; text-decoration: none; background-color: transparent; color: var(--rise-white); border: 2px solid var(--rise-neutral-500); transition: border-color 0.2s; }
-  .btn-secondary-light:hover { border-color: var(--rise-red); color: var(--rise-red); text-decoration: none; }
-</style>
+  <section class="mpg-section">
+    <div class="mpg-container mpg-container--narrow">
+      <div class="mpg-header-center">
+        <h2 class="mpg-heading">常見問題</h2>
+      </div>
+      <div class="mpg-faq__list">
+        <div class="mpg-faq-item"><h3>找不到球隊怎麼辦？</h3><p>我們不保證安置，但保證全力以赴。我們會從一開始就坦誠告訴你孩子的準備程度和選擇。</p></div>
+        <div class="mpg-faq-item"><h3>打什麼級別？</h3><p>取決於技術、年齡和準備程度。我們會評估後判斷最合適的水平。</p></div>
+        <div class="mpg-faq-item"><h3>需要多長時間？</h3><p>大部分安置在九月前完成。建議儘早聯繫。</p></div>
+        <div class="mpg-faq-item"><h3>你們安排住宿嗎？</h3><p>我們協助安排寄宿家庭和學校住宿計劃。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="mpg-service-nav">
+    <a href="/zh/services/the-move" class="active">球員安置</a>
+    <a href="/zh/services/mentoring">訓練指導</a>
+    <a href="/zh/services/hk-program">香港計劃</a>
+    <a href="/zh/why-us">為什麼選擇我們</a>
+  </nav>
+
+  <section class="mpg-cta">
+    <div class="mpg-container" style="text-align: center;">
+      <h2>準備好踏出這一步了嗎？</h2>
+      <div class="mpg-cta__buttons">
+        <a href="mailto:riseadvancements@gmail.com?subject=球員安置 - 查詢" class="hp-btn-white">發送電子郵件</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</MarketingLayout>
