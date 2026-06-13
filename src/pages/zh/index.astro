@@ -335,7 +335,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
         var dotGeom = new THREE.CircleGeometry(0.12, 16);
         var dotMat = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.15 });
         var centerDot = new THREE.Mesh(dotGeom, dotMat); centerDot.position.z = -3.84; scene.add(centerDot);
-        var count = window.innerWidth < 768 ? 400 : 1000;
+        var count = window.innerWidth < 768 ? 150 : 300;
         var positions = new Float32Array(count * 3), colors = new Float32Array(count * 3), velocities = new Float32Array(count * 3);
         var iceColor = new THREE.Color(0xB8D4E3), redColor = new THREE.Color(0xD3191F), whiteColor = new THREE.Color(0xE8E8E8);
         for (var i = 0; i < count; i++) {

@@ -102,12 +102,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.4s, backdrop-filter 0.4s;
+  transition: background 0.4s;
 }
 .hp-nav.scrolled {
   background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); — removed for scroll perf */
   border-bottom: 1px solid var(--rise-border);
 }
 .hp-nav__logo img {
@@ -965,12 +964,32 @@
   .hp-cta { padding: 5rem 1.25rem; }
 }
 
-/* ============ ANIMATION HELPERS ============ */
-.hp-service-row,
-.hp-player-card,
-.hp-step,
-.hp-faq-item {
-  will-change: transform, opacity;
+/* ============ SCROLL PERFORMANCE ============ */
+/* content-visibility: auto tells the browser to skip painting
+   off-screen sections entirely — the single biggest scroll perf win
+   for content-heavy pages. contain-intrinsic-size provides a placeholder
+   height so the scrollbar doesn't jump when sections enter/leave. */
+.hp-how,
+.hp-services,
+.hp-interlude,
+.hp-players,
+.hp-faq,
+.hp-cta {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+/* hero is above-fold — never defer it */
+.hp-hero {
+  content-visibility: visible;
+}
+
+/* contain: isolates layout/paint so the browser doesn't
+   re-composite the whole page when these elements change */
+.hp-service-row {
+  contain: layout style paint;
+}
+.hp-player-card {
+  contain: layout style paint;
 }
 
 /* ============ REDUCED MOTION ============ */
