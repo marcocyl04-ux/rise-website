@@ -334,7 +334,7 @@
   border-color: var(--rise-red);
   color: var(--rise-red);
 }
-.hp-btn-white {
+.home-dark .hp-btn-white {
   font-family: var(--font-heading);
   font-size: 0.8rem;
   font-weight: 600;
@@ -349,7 +349,7 @@
   text-decoration: none;
   display: inline-block;
 }
-.hp-btn-white:hover {
+.home-dark .hp-btn-white:hover {
   background: var(--rise-black);
   color: var(--rise-white);
 }
