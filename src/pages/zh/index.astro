@@ -80,7 +80,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
     <div class="hp-service-row" data-service>
       <div class="hp-service__visual">
         <div class="hp-service__visual-bg"><div class="hp-service__number">01</div></div>
-        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.35;">
           <line x1="100" y1="20" x2="100" y2="180" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
           <line x1="20" y1="100" x2="180" y2="100" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
           <circle cx="100" cy="100" r="60" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
@@ -108,7 +108,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
     <div class="hp-service-row" data-service>
       <div class="hp-service__visual">
         <div class="hp-service__visual-bg"><div class="hp-service__number">02</div></div>
-        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.35;">
           <circle cx="100" cy="100" r="50" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
           <circle cx="100" cy="100" r="30" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
           <circle cx="100" cy="100" r="10" stroke="#D3191F" stroke-width="1"/>
@@ -135,7 +135,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
     <div class="hp-service-row" data-service>
       <div class="hp-service__visual">
         <div class="hp-service__visual-bg"><div class="hp-service__number">03</div></div>
-        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.12;">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.35;">
           <rect x="30" y="30" width="140" height="140" rx="4" stroke="#D3191F" stroke-width="1" stroke-dasharray="6 4"/>
           <circle cx="100" cy="100" r="20" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 3"/>
           <circle cx="100" cy="100" r="3" fill="#D3191F"/>
@@ -299,9 +299,9 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
   <script is:inline>
     (function () {
       var lenis = new Lenis({
-        duration: 1.2,
+        duration: 0.8,
         easing: function(t) { return 1 - Math.pow(1 - t, 4); },
-        smoothWheel: true, wheelMultiplier: 1.0, touchMultiplier: 1.2, infinite: false,
+        smoothWheel: true, wheelMultiplier: 1.5, touchMultiplier: 1.2, infinite: false,
       });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
