@@ -318,16 +318,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
   <!-- ====== PAGE SCRIPTS ====== -->
   <script is:inline>
     (function () {
-      // ——— LENIS SMOOTH SCROLL ———
-      var lenis = new Lenis({
-        lerp: 0.25,
-        smoothWheel: true,
-        wheelMultiplier: 1.0,
-        touchMultiplier: 1.2,
-        infinite: false,
-      });
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+      // ——— NATIVE SCROLL (Lenis removed) ———
       gsap.ticker.lagSmoothing(0);
 
       // ——— GSAP SETUP ———
@@ -613,14 +604,13 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           e.preventDefault();
           var target = document.querySelector(a.getAttribute('href'));
           if (target) {
-            lenis.scrollTo(target, { offset: -80 });
+            gsap.to(window, { scrollTo: { y: target, offsetY: 80 }, duration: 0.8, ease: 'power2.inOut' });
           }
         });
       });
 
       // REDUCED MOTION
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        lenis.destroy();
         ScrollTrigger.getAll().forEach(function(st) { st.kill(); });
         gsap.globalTimeline.progress(1);
         document.querySelectorAll('.hp-service-row, [data-service-content], .hp-service__visual, .hp-player-card, .hp-step, .hp-hero__actions, .hp-hero__scroll, .hp-hero__eyebrow span, .hp-hero__title .line-inner, .hp-hero__subtitle span, .hp-interlude h2, .hp-interlude p, .hp-cta__content h2, .hp-cta__content p, .hp-cta__buttons').forEach(function(el) {
