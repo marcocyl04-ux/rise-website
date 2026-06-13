@@ -965,31 +965,26 @@
 }
 
 /* ============ SCROLL PERFORMANCE ============ */
-/* content-visibility: auto tells the browser to skip painting
-   off-screen sections entirely — the single biggest scroll perf win
-   for content-heavy pages. contain-intrinsic-size provides a placeholder
-   height so the scrollbar doesn't jump when sections enter/leave. */
-.hp-how,
-.hp-services,
-.hp-interlude,
-.hp-players,
-.hp-faq,
-.hp-cta {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
-/* hero is above-fold — never defer it */
-.hp-hero {
-  content-visibility: visible;
-}
-
 /* contain: isolates layout/paint so the browser doesn't
-   re-composite the whole page when these elements change */
+   re-composite the whole page when these elements change.
+   Note: content-visibility:auto was tested here but killed
+   GSAP ScrollTrigger entrance animations (browser skips painting
+   off-screen elements so ScrollTrigger never fires). The perf win
+   from contain + reduced particles + no backdrop-filter is enough. */
 .hp-service-row {
   contain: layout style paint;
 }
 .hp-player-card {
   contain: layout style paint;
+}
+
+/* will-change on GSAP animation targets — hints the browser
+   to promote these to their own compositing layer */
+.hp-service-row,
+.hp-player-card,
+.hp-step,
+.hp-faq-item {
+  will-change: transform, opacity;
 }
 
 /* ============ REDUCED MOTION ============ */
