@@ -12,10 +12,97 @@
     <li><a href="#players">Players</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#contact" class="hp-nav__cta">Contact</a></li>
+    <li>
+      <button class="hp-nav__login" type="button" data-open-auth data-auth-anon hidden>Portal Login</button>
+    </li>
+    <li class="hp-nav__user-menu" data-auth-user hidden>
+      <a href="/portal" class="hp-nav__cta">My Portal</a>
+    </li>
   </ul>
   <button class="hp-nav__hamburger" id="hp-hamburger" aria-label="Menu">
     <span></span>
     <span></span>
     <span></span>
   </button>
+
+  <!-- Mobile portal login (inside hamburger menu, handled by homepage JS) -->
+  <div class="hp-nav__mobile-auth" id="hp-mobile-auth">
+    <button class="hp-nav__login hp-nav__login--mobile" type="button" data-open-auth data-auth-anon hidden>Portal Login</button>
+    <a href="/portal" class="hp-nav__cta hp-nav__cta--mobile" data-auth-user hidden>My Portal</a>
+  </div>
 </nav>
+
+<style>
+  .hp-nav__login {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    background: #D3191F;
+    border: 1px solid #D3191F;
+    border-radius: 6px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .hp-nav__login:hover {
+    background: #b8141a;
+    border-color: #b8141a;
+  }
+  .hp-nav__login[hidden] { display: none !important; }
+  .hp-nav__user-menu[hidden] { display: none !important; }
+  .hp-nav__mobile-auth { display: none; }
+  .hp-nav__login--mobile { display: none; }
+  .hp-nav__cta--mobile { display: none; }
+  [data-auth-user][hidden] { display: none !important; }
+
+  @media (max-width: 768px) {
+    .hp-nav__links li:has(.hp-nav__login),
+    .hp-nav__links li:has(.hp-nav__user-menu) {
+      display: none;
+    }
+    .hp-nav__mobile-auth {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .hp-nav__login--mobile:not([hidden]) {
+      display: inline-flex;
+    }
+    .hp-nav__cta--mobile:not([hidden]) {
+      display: inline-flex;
+    }
+  }
+</style>
+
+<script>
+  // Show/hide auth elements based on Supabase session
+  function initHomeAuth() {
+    const sb = (window as any).supabaseClient;
+    if (!sb) { setTimeout(initHomeAuth, 100); return; }
+
+    sb.auth.getSession().then(({ data }: any) => {
+      const user = data.session?.user || null;
+      applyHomeAuthState(user);
+    });
+
+    sb.auth.onAuthStateChange((_e: string, session: any) => {
+      applyHomeAuthState(session?.user || null);
+    });
+  }
+
+  function applyHomeAuthState(user: any) {
+    const isAuthed = !!user;
+    document.querySelectorAll<HTMLElement>('[data-auth-anon]').forEach(el => {
+      el.toggleAttribute('hidden', isAuthed);
+    });
+    document.querySelectorAll<HTMLElement>('[data-auth-user]').forEach(el => {
+      el.toggleAttribute('hidden', !isAuthed);
+    });
+  }
+
+  initHomeAuth();
+</script>

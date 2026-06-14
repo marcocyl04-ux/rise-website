@@ -298,70 +298,85 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
   <!-- ====== PAGE SCRIPTS (same as EN) ====== -->
   <script is:inline>
     (function () {
-      // ——— NATIVE SCROLL (Lenis removed) ———
+      // ——— LENIS SMOOTH SCROLL ———
+      var lenis = new Lenis({ duration: 1.8, easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, touchMultiplier: 1.5, wheelMultiplier: 0.8 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
       gsap.ticker.lagSmoothing(0);
 
       gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
       ScrollTrigger.config({ limitCallbacks: true });
 
-      // THREE.JS ICE RINK
+      // ENHANCED HOCKEY RINK
       (function() {
         var canvas = document.getElementById('hero-canvas');
         if (!canvas) return;
+        var heroEl = canvas.parentElement;
         var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x0a0a0a, 1);
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(0, 0, 8);
+        renderer.setClearColor(0x060608, 1);
+        renderer.fog = new THREE.FogExp2(0x060608, 0.035);
+        var scene = new THREE.Scene(); scene.fog = renderer.fog;
+        var camera = new THREE.PerspectiveCamera(55, heroEl.offsetWidth / heroEl.offsetHeight, 0.1, 100);
+        camera.position.set(0, 3.5, 10); camera.lookAt(0, 0, -2);
         var mouse = { x: 0, y: 0 };
-        var floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), new THREE.MeshBasicMaterial({ color: 0x08080c, transparent: true, opacity: 0.5, side: THREE.DoubleSide }));
-        floor.position.z = -4; scene.add(floor);
-        var dashMat = new THREE.LineDashedMaterial({ color: 0xD3191F, transparent: true, opacity: 0.06, dashSize: 0.3, gapSize: 0.2 });
-        var dashMatBlue = new THREE.LineDashedMaterial({ color: 0x4488cc, transparent: true, opacity: 0.04, dashSize: 0.3, gapSize: 0.2 });
-        function makeDashedLine(pts, mat) { var g = new THREE.BufferGeometry().setFromPoints(pts); var l = new THREE.Line(g, mat); l.computeLineDistances(); return l; }
-        function makeCircle(cx, cy, r, seg, mat) { var pts = []; for (var i = 0; i <= seg; i++) { var a = (i / seg) * Math.PI * 2; pts.push(new THREE.Vector3(cx + Math.cos(a) * r, cy + Math.sin(a) * r, -3.85)); } return makeDashedLine(pts, mat); }
-        scene.add(makeDashedLine([new THREE.Vector3(0,-9,-3.85), new THREE.Vector3(0,9,-3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(-6,-9,-3.85), new THREE.Vector3(-6,9,-3.85)], dashMatBlue));
-        scene.add(makeDashedLine([new THREE.Vector3(6,-9,-3.85), new THREE.Vector3(6,9,-3.85)], dashMatBlue));
-        scene.add(makeDashedLine([new THREE.Vector3(-13,-8,-3.85), new THREE.Vector3(13,-8,-3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(13,-8,-3.85), new THREE.Vector3(13,8,-3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(13,8,-3.85), new THREE.Vector3(-13,8,-3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(-13,8,-3.85), new THREE.Vector3(-13,-8,-3.85)], dashMat));
-        scene.add(makeCircle(0,0,3,64,dashMat)); scene.add(makeCircle(-8,0,2,48,dashMat)); scene.add(makeCircle(8,0,2,48,dashMat));
-        scene.add(makeCircle(-8,-5,0.5,32,dashMat)); scene.add(makeCircle(-8,5,0.5,32,dashMat));
-        scene.add(makeCircle(8,-5,0.5,32,dashMat)); scene.add(makeCircle(8,5,0.5,32,dashMat));
-        var dotGeom = new THREE.CircleGeometry(0.12, 16);
-        var dotMat = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.15 });
-        var centerDot = new THREE.Mesh(dotGeom, dotMat); centerDot.position.z = -3.84; scene.add(centerDot);
-        var count = window.innerWidth < 768 ? 150 : 300;
-        var positions = new Float32Array(count * 3), colors = new Float32Array(count * 3), velocities = new Float32Array(count * 3);
-        var iceColor = new THREE.Color(0xB8D4E3), redColor = new THREE.Color(0xD3191F), whiteColor = new THREE.Color(0xE8E8E8);
-        for (var i = 0; i < count; i++) {
-          positions[i*3] = (Math.random()-0.5)*24; positions[i*3+1] = (Math.random()-0.5)*16; positions[i*3+2] = (Math.random()-0.5)*8-1;
-          velocities[i*3] = (Math.random()-0.5)*0.002; velocities[i*3+1] = -Math.random()*0.004-0.001; velocities[i*3+2] = (Math.random()-0.5)*0.001;
-          var r = Math.random(), c; if (r < 0.12) c = redColor; else if (r < 0.45) c = iceColor; else c = whiteColor;
-          colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
-        }
-        var particleGeom = new THREE.BufferGeometry();
-        particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        var particles = new THREE.Points(particleGeom, new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.6, sizeAttenuation: true }));
-        scene.add(particles);
+        // ICE
+        var ice = new THREE.Mesh(new THREE.PlaneGeometry(32, 22), new THREE.MeshPhongMaterial({ color: 0x0a0e14, specular: 0x1a2030, shininess: 80, transparent: true, opacity: 0.85, side: THREE.DoubleSide }));
+        ice.rotation.x = -Math.PI/2; ice.position.y = -0.01; scene.add(ice);
+        // LIGHTS
+        scene.add(new THREE.AmbientLight(0x222233, 0.6));
+        var dl = new THREE.DirectionalLight(0x4488cc, 0.3); dl.position.set(2,8,5); scene.add(dl);
+        var rp = new THREE.PointLight(0xD3191F, 0.4, 20); rp.position.set(0,2,0); scene.add(rp);
+        // HELPERS
+        var lm = function(c,o) { return new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o}); };
+        function ml(pts,mat) { var g=new THREE.BufferGeometry().setFromPoints(pts); return new THREE.Line(g,mat); }
+        function mdl(pts,c,o,dash,gap) { var g=new THREE.BufferGeometry().setFromPoints(pts); var l=new THREE.LineDashedMaterial({color:c,transparent:true,opacity:o,dashSize:dash||0.3,gapSize:gap||0.2}); var line=new THREE.Line(g,l); line.computeLineDistances(); return line; }
+        var Y=0.01, bx=13, bz=8.5;
+        // BOARDS
+        var bm = new THREE.LineBasicMaterial({color:0x334455,transparent:true,opacity:0.5});
+        [ml([new THREE.Vector3(-bx,Y,-bz),new THREE.Vector3(bx,Y,-bz)],bm),ml([new THREE.Vector3(bx,Y,-bz),new THREE.Vector3(bx,Y,bz)],bm),ml([new THREE.Vector3(bx,Y,bz),new THREE.Vector3(-bx,Y,bz)],bm),ml([new THREE.Vector3(-bx,Y,bz),new THREE.Vector3(-bx,Y,-bz)],bm)].forEach(function(l){scene.add(l);});
+        var wm = new THREE.MeshPhongMaterial({color:0x111520,transparent:true,opacity:0.4,emissive:0xD3191F,emissiveIntensity:0.03}); var wh=0.6;
+        [[bx*2,0.08,0,wh/2,-bz],[bx*2,0.08,0,wh/2,bz],[0.08,bz*2,-bx,wh/2,0],[0.08,bz*2,bx,wh/2,0]].forEach(function(d){var m=new THREE.Mesh(new THREE.BoxGeometry(d[0],wh,d[1]),wm);m.position.set(d[2],d[3],d[4]);scene.add(m);});
+        // LINES
+        scene.add(ml([new THREE.Vector3(0,Y,-bz),new THREE.Vector3(0,Y,bz)],lm(0xD3191F,0.2)));
+        scene.add(ml([new THREE.Vector3(-6,Y,-bz),new THREE.Vector3(-6,Y,bz)],lm(0x4488cc,0.15)));
+        scene.add(ml([new THREE.Vector3(6,Y,-bz),new THREE.Vector3(6,Y,bz)],lm(0x4488cc,0.15)));
+        // CIRCLES + DOTS
+        function mc(cx,cz,r,seg,c,o){var pts=[];for(var i=0;i<=seg;i++){var a=(i/seg)*Math.PI*2;pts.push(new THREE.Vector3(cx+Math.cos(a)*r,Y,cz+Math.sin(a)*r));}return mdl(pts,c,o,0.3,0.2);}
+        scene.add(mc(0,0,3,64,0xD3191F,0.12)); scene.add(mc(-8,0,2,48,0x4488cc,0.08)); scene.add(mc(8,0,2,48,0x4488cc,0.08));
+        var dg=new THREE.CircleGeometry(0.2,16), dm=new THREE.MeshBasicMaterial({color:0xD3191F,transparent:true,opacity:0.2});
+        [[-8,-5],[-8,5],[8,-5],[8,5],[0,0]].forEach(function(p){var d=new THREE.Mesh(dg,dm);d.rotation.x=-Math.PI/2;d.position.set(p[0],Y+0.005,p[1]);scene.add(d);});
+        // CREASES
+        function cr(x){var pts=[];for(var i=0;i<=32;i++){var a=(i/32)*Math.PI;pts.push(new THREE.Vector3(x+Math.cos(a)*1.2,Y,Math.sin(a)*1.2));}scene.add(mdl(pts,0xD3191F,0.1,0.15,0.1));scene.add(ml([new THREE.Vector3(x,Y,-1.5),new THREE.Vector3(x,Y,1.5)],lm(0xD3191F,0.15)));}
+        cr(-11.5); cr(11.5);
+        // PARTICLES
+        var pC=300, pP=new Float32Array(pC*3), pCl=new Float32Array(pC*3), pV=new Float32Array(pC*3);
+        var iC=new THREE.Color(0xB8D4E3),rC=new THREE.Color(0xD3191F),wC=new THREE.Color(0xE8E8E8);
+        for(var i=0;i<pC;i++){pP[i*3]=(Math.random()-0.5)*24;pP[i*3+1]=Math.random()*3+0.5;pP[i*3+2]=(Math.random()-0.5)*16;pV[i*3]=(Math.random()-0.5)*0.002;pV[i*3+1]=(Math.random()-0.5)*0.001;pV[i*3+2]=(Math.random()-0.5)*0.001;var r=Math.random(),c=r<0.12?rC:r<0.45?iC:wC;pCl[i*3]=c.r;pCl[i*3+1]=c.g;pCl[i*3+2]=c.b;}
+        var pG=new THREE.BufferGeometry();pG.setAttribute('position',new THREE.BufferAttribute(pP,3));pG.setAttribute('color',new THREE.BufferAttribute(pCl,3));
+        scene.add(new THREE.Points(pG,new THREE.PointsMaterial({size:0.035,vertexColors:true,transparent:true,opacity:0.5,sizeAttenuation:true})));
+        // PUCKS
+        var pkG=new THREE.CylinderGeometry(0.19,0.19,0.06,16), pks=[];
+        for(var i=0;i<3;i++){var p=new THREE.Mesh(pkG,new THREE.MeshPhongMaterial({color:0x111111,specular:0x333333,shininess:40}));p.position.set((Math.random()-0.5)*16,0.03,(Math.random()-0.5)*10);p.userData={vx:(Math.random()-0.5)*0.04,vz:(Math.random()-0.5)*0.04,vr:(Math.random()-0.5)*0.03};scene.add(p);pks.push(p);}
+        // TRAILS
+        var tM=200,tP=new Float32Array(tM*3),tC=new Float32Array(tM*3),tA=new Float32Array(tM),tI=0;
+        var tG=new THREE.BufferGeometry();tG.setAttribute('position',new THREE.BufferAttribute(tP,3));tG.setAttribute('color',new THREE.BufferAttribute(tC,3));
+        scene.add(new THREE.Points(tG,new THREE.PointsMaterial({size:0.025,vertexColors:true,transparent:true,opacity:0.35,sizeAttenuation:true})));
+        function st(x,z){var idx=tI%tM;tP[idx*3]=x+(Math.random()-0.5)*0.3;tP[idx*3+1]=0.02+Math.random()*0.15;tP[idx*3+2]=z+(Math.random()-0.5)*0.3;var r=Math.random();if(r<0.6){tC[idx*3]=0.9;tC[idx*3+1]=0.92;tC[idx*3+2]=0.95;}else if(r<0.85){tC[idx*3]=0.72;tC[idx*3+1]=0.83;tC[idx*3+2]=0.9;}else{tC[idx*3]=0.82;tC[idx*3+1]=0.1;tC[idx*3+2]=0.12;}tA[idx]=1.0;tI++;}
+        // RENDER
         var heroKilled = false;
         function renderRink() {
           if (heroKilled) return;
-          var pos = particleGeom.attributes.position.array;
-          for (var i = 0; i < count; i++) { pos[i*3] += velocities[i*3]; pos[i*3+1] += velocities[i*3+1]; pos[i*3+2] += velocities[i*3+2]; if (pos[i*3+1] < -8) { pos[i*3+1] = 8; pos[i*3] = (Math.random()-0.5)*24; } }
-          particleGeom.attributes.position.needsUpdate = true;
-          camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.015;
-          camera.position.y += (-mouse.y * 0.3 - camera.position.y) * 0.015;
-          camera.lookAt(0, 0, 0); renderer.render(scene, camera);
+          var pos=pG.attributes.position.array; for(var i=0;i<pC;i++){pos[i*3]+=pV[i*3];pos[i*3+1]+=pV[i*3+1];pos[i*3+2]+=pV[i*3+2];if(pos[i*3+1]<0.2){pos[i*3+1]=3.5;pos[i*3]=(Math.random()-0.5)*24;}if(pos[i*3+1]>4)pos[i*3+1]=0.2;}
+          pG.attributes.position.needsUpdate=true;
+          pks.forEach(function(p){var d=p.userData;p.position.x+=d.vx;p.position.z+=d.vz;p.rotation.y+=d.vr;var sp=Math.sqrt(d.vx*d.vx+d.vz*d.vz);if(sp>0.01)st(p.position.x,p.position.z);if(p.position.x>12.5||p.position.x<-12.5){d.vx*=-0.85;p.position.x=Math.max(-12.5,Math.min(12.5,p.position.x));}if(p.position.z>8||p.position.z<-8){d.vz*=-0.85;p.position.z=Math.max(-8,Math.min(8,p.position.z));}d.vx*=0.998;d.vz*=0.998;d.vr*=0.995;if(Math.random()<0.003){d.vx+=(Math.random()-0.5)*0.06;d.vz+=(Math.random()-0.5)*0.06;d.vr+=(Math.random()-0.5)*0.02;}});
+          var tp=tG.attributes.position.array;for(var i=0;i<tM;i++){if(tA[i]>0){tA[i]-=0.008;tp[i*3+1]+=0.002;}}tG.attributes.position.needsUpdate=true;
+          camera.position.x+=(mouse.x*3-camera.position.x)*0.012;camera.position.y+=(3.5-mouse.y*1.5-camera.position.y)*0.012;camera.lookAt(0,0,-2);renderer.render(scene,camera);
         }
         gsap.ticker.add(renderRink);
-        window.addEventListener('mousemove', function(e) { mouse.x = (e.clientX/window.innerWidth)*2-1; mouse.y = (e.clientY/window.innerHeight)*2-1; });
-        window.addEventListener('resize', function() { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+        heroEl.addEventListener('mousemove', function(e) { var rect=heroEl.getBoundingClientRect(); mouse.x=((e.clientX-rect.left)/rect.width)*2-1; mouse.y=((e.clientY-rect.top)/rect.height)*2-1; });
+        window.addEventListener('resize', function() { camera.aspect=heroEl.offsetWidth/heroEl.offsetHeight; camera.updateProjectionMatrix(); renderer.setSize(heroEl.offsetWidth,heroEl.offsetHeight); });
         window.addEventListener('scroll', function() { heroKilled = window.scrollY > window.innerHeight * 1.5; }, { passive: true });
       })();
 
@@ -379,8 +394,8 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
       gsap.from('.hp-cta__content p', { opacity: 0, y: 15, duration: 0.45, ease: 'power2.out', delay: 0.1, immediateRender: false, scrollTrigger: { trigger: '.hp-cta', start: 'top 88%' } });
       gsap.from('.hp-cta__buttons', { opacity: 0, y: 15, duration: 0.45, ease: 'power2.out', delay: 0.2, immediateRender: false, scrollTrigger: { trigger: '.hp-cta', start: 'top 88%' } });
       document.querySelectorAll('.hp-faq-item__question').forEach(function(btn) { btn.addEventListener('click', function() { var item = btn.closest('.hp-faq-item'); var answer = item.querySelector('.hp-faq-item__answer'); var isOpen = item.classList.contains('active'); document.querySelectorAll('.hp-faq-item.active').forEach(function(a) { a.classList.remove('active'); gsap.to(a.querySelector('.hp-faq-item__answer'), { maxHeight: 0, duration: 0.4, ease: 'power3.inOut' }); }); if (!isOpen) { item.classList.add('active'); answer.style.maxHeight = 'none'; var h = answer.scrollHeight; answer.style.maxHeight = '0px'; answer.offsetHeight; gsap.to(answer, { maxHeight: h, duration: 0.5, ease: 'power3.out' }); } }); });
-      document.querySelectorAll('.hp-nav__links a[href^="#"]').forEach(function(a) { a.addEventListener('click', function(e) { e.preventDefault(); var target = document.querySelector(a.getAttribute('href')); if (target) { gsap.to(window, { scrollTo: { y: target, offsetY: 80 }, duration: 0.8, ease: 'power2.inOut' }); } }); });
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { ScrollTrigger.getAll().forEach(function(st) { st.kill(); }); gsap.globalTimeline.progress(1); document.querySelectorAll('.hp-service-row, [data-service-content], .hp-service__visual, .hp-player-card, .hp-step, .hp-hero__actions, .hp-hero__scroll, .hp-hero__eyebrow span, .hp-hero__title .line-inner, .hp-hero__subtitle span, .hp-interlude h2, .hp-interlude p, .hp-cta__content h2, .hp-cta__content p, .hp-cta__buttons').forEach(function(el) { el.style.opacity = '1'; el.style.transform = 'none'; }); var loader = document.getElementById('loader'); if (loader) loader.style.display = 'none'; }
+      document.querySelectorAll('.hp-nav__links a[href^="#"]').forEach(function(a) { a.addEventListener('click', function(e) { e.preventDefault(); var target = document.querySelector(a.getAttribute('href')); if (target) { lenis.scrollTo(target, { offset: -80, duration: 1.2 }); } }); });
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { lenis.destroy(); ScrollTrigger.getAll().forEach(function(st) { st.kill(); }); gsap.globalTimeline.progress(1); document.querySelectorAll('.hp-service-row, [data-service-content], .hp-service__visual, .hp-player-card, .hp-step, .hp-hero__actions, .hp-hero__scroll, .hp-hero__eyebrow span, .hp-hero__title .line-inner, .hp-hero__subtitle span, .hp-interlude h2, .hp-interlude p, .hp-cta__content h2, .hp-cta__content p, .hp-cta__buttons').forEach(function(el) { el.style.opacity = '1'; el.style.transform = 'none'; }); var loader = document.getElementById('loader'); if (loader) loader.style.display = 'none'; }
     })();
   </script>
 </HomeLayout>

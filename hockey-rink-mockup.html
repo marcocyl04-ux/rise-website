@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE — Enhanced Ice Rink Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rise-red: #D3191F;
+    --rise-red-glow: rgba(211, 25, 31, 0.15);
+    --rise-black: #0a0a0a;
+    --rise-surface: #0d0d0d;
+    --rise-white: #f0f0f0;
+    --rise-muted: #888;
+    --rise-border: rgba(255,255,255,0.06);
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--rise-black);
+    color: var(--rise-white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .hero canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(10,10,10,0.55) 50%, var(--rise-black) 78%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 2rem;
+    pointer-events: none;
+  }
+  .hero-content > * { pointer-events: auto; }
+  .eyebrow {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rise-red);
+    margin-bottom: 1.5rem;
+  }
+  .title {
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 10vw, 9rem);
+    font-weight: 700;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+  .title .accent { color: var(--rise-red); }
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--rise-muted);
+    max-width: 550px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .btn-red {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: none;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  .btn-red:hover { background: #b81018; }
+  .btn-ghost {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    background: transparent;
+    color: var(--rise-white);
+    border: 1px solid rgba(255,255,255,0.15);
+    text-decoration: none;
+    transition: border-color 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--rise-white); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-align: center;
+  }
+  .scroll-hint span {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rise-muted);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: var(--rise-border);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--rise-red);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0% { top: -100%; }
+    50% { top: 100%; }
+    100% { top: 100%; }
+  }
+
+  /* Info panel below hero */
+  .info-panel {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+  .info-label {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rise-red);
+    margin-bottom: 0.75rem;
+  }
+  .info-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .info-desc {
+    font-size: 0.95rem;
+    color: var(--rise-muted);
+    line-height: 1.7;
+    max-width: 60ch;
+    margin-bottom: 2rem;
+  }
+  .feature-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    list-style: none;
+  }
+  .feature-list li {
+    font-size: 0.9rem;
+    color: var(--rise-muted);
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.5;
+  }
+  .feature-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    background: var(--rise-red);
+    border-radius: 50%;
+  }
+  .feature-list li strong {
+    color: var(--rise-white);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== ENHANCED HOCKEY RINK HERO ====== -->
+<div class="hero" id="hero">
+  <canvas id="rink-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="eyebrow">Asia → Canada</div>
+    <h1 class="title">RISE<br><span class="accent">ADVANCEMENT</span></h1>
+    <p class="subtitle">We get young hockey players onto teams in Canada. We evaluate them, place them, and develop them through the season. Founded by players who lived the pipeline themselves.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-red">Off-Season Program</a>
+      <a href="#" class="btn-ghost">Talk to Us</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- ====== WHAT'S NEW ====== -->
+<div class="info-panel">
+  <div class="info-label">Enhanced Ice Rink</div>
+  <div class="info-title">What's Different</div>
+  <div class="info-desc">The same Three.js ice rink foundation, enhanced with real hockey elements. Move your mouse over the hero to control the camera.</div>
+  <ul class="feature-list">
+    <li><strong>Hockey pucks</strong> — 3D puck objects that glide and tumble across the ice surface</li>
+    <li><strong>Skate trails</strong> — ice shaving particles that spawn behind moving pucks</li>
+    <li><strong>Depth fog</strong> — atmospheric fade so the far end of the rink recedes naturally</li>
+    <li><strong>Better rink detail</strong> — face-off dots, goal creases, blue line fills, boards with height</li>
+    <li><strong>Ice reflections</strong> — subtle reflective floor that catches light from the pucks</li>
+    <li><strong>Board glow</strong> — faint red edge lighting on the boards for depth</li>
+  </ul>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function() {
+  var canvas = document.getElementById('rink-canvas');
+  if (!canvas) return;
+  var heroEl = document.getElementById('hero');
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x060608, 1);
+  renderer.fog = new THREE.FogExp2(0x060608, 0.035);
+
+  var scene = new THREE.Scene();
+  scene.fog = renderer.fog;
+  var camera = new THREE.PerspectiveCamera(55, heroEl.offsetWidth / heroEl.offsetHeight, 0.1, 100);
+  camera.position.set(0, 3.5, 10);
+  camera.lookAt(0, 0, -2);
+
+  var mouse = { x: 0, y: 0 };
+
+  // ===== ICE SURFACE (reflective) =====
+  var iceMat = new THREE.MeshPhongMaterial({
+    color: 0x0a0e14,
+    specular: 0x1a2030,
+    shininess: 80,
+    transparent: true,
+    opacity: 0.85,
+    side: THREE.DoubleSide
+  });
+  var ice = new THREE.Mesh(new THREE.PlaneGeometry(32, 22), iceMat);
+  ice.rotation.x = -Math.PI / 2;
+  ice.position.y = -0.01;
+  scene.add(ice);
+
+  // Subtle ambient light + directional for reflections
+  scene.add(new THREE.AmbientLight(0x222233, 0.6));
+  var dirLight = new THREE.DirectionalLight(0x4488cc, 0.3);
+  dirLight.position.set(2, 8, 5);
+  scene.add(dirLight);
+  var redPoint = new THREE.PointLight(0xD3191F, 0.4, 20);
+  redPoint.position.set(0, 2, 0);
+  scene.add(redPoint);
+
+  // ===== RINK MARKINGS =====
+  var lineMat = function(color, opacity) {
+    return new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: opacity });
+  };
+
+  function makeLine(pts, mat) {
+    var g = new THREE.BufferGeometry().setFromPoints(pts);
+    return new THREE.Line(g, mat);
+  }
+  function makeDashedLine(pts, color, opacity, dash, gap) {
+    var g = new THREE.BufferGeometry().setFromPoints(pts);
+    var l = new THREE.LineDashedMaterial({ color: color, transparent: true, opacity: opacity, dashSize: dash || 0.3, gapSize: gap || 0.2 });
+    var line = new THREE.Line(g, l);
+    line.computeLineDistances();
+    return line;
+  }
+
+  var Y = 0.01; // just above ice
+
+  // Boards (outer rectangle) — thicker, slightly elevated
+  var boardMat = new THREE.LineBasicMaterial({ color: 0x334455, transparent: true, opacity: 0.5 });
+  var bx = 13, bz = 8.5;
+  scene.add(makeLine([new THREE.Vector3(-bx, Y, -bz), new THREE.Vector3(bx, Y, -bz)], boardMat));
+  scene.add(makeLine([new THREE.Vector3(bx, Y, -bz), new THREE.Vector3(bx, Y, bz)], boardMat));
+  scene.add(makeLine([new THREE.Vector3(bx, Y, bz), new THREE.Vector3(-bx, Y, bz)], boardMat));
+  scene.add(makeLine([new THREE.Vector3(-bx, Y, bz), new THREE.Vector3(-bx, Y, -bz)], boardMat));
+
+  // Thin board walls (actual geometry for depth)
+  var wallMat = new THREE.MeshPhongMaterial({ color: 0x111520, transparent: true, opacity: 0.4, emissive: 0xD3191F, emissiveIntensity: 0.03 });
+  var wallH = 0.6;
+  // Back wall
+  var bw1 = new THREE.Mesh(new THREE.BoxGeometry(bx * 2, wallH, 0.08), wallMat);
+  bw1.position.set(0, wallH / 2, -bz);
+  scene.add(bw1);
+  // Front wall
+  var bw2 = new THREE.Mesh(new THREE.BoxGeometry(bx * 2, wallH, 0.08), wallMat);
+  bw2.position.set(0, wallH / 2, bz);
+  scene.add(bw2);
+  // Left wall
+  var bw3 = new THREE.Mesh(new THREE.BoxGeometry(0.08, wallH, bz * 2), wallMat);
+  bw3.position.set(-bx, wallH / 2, 0);
+  scene.add(bw3);
+  // Right wall
+  var bw4 = new THREE.Mesh(new THREE.BoxGeometry(0.08, wallH, bz * 2), wallMat);
+  bw4.position.set(bx, wallH / 2, 0);
+  scene.add(bw4);
+
+  // Center line (red)
+  scene.add(makeLine([new THREE.Vector3(0, Y, -bz), new THREE.Vector3(0, Y, bz)], lineMat(0xD3191F, 0.2)));
+
+  // Blue lines
+  scene.add(makeLine([new THREE.Vector3(-6, Y, -bz), new THREE.Vector3(-6, Y, bz)], lineMat(0x4488cc, 0.15)));
+  scene.add(makeLine([new THREE.Vector3(6, Y, -bz), new THREE.Vector3(6, Y, bz)], lineMat(0x4488cc, 0.15)));
+
+  // Center circle
+  function makeCircle(cx, cz, r, segments, color, opacity) {
+    var pts = [];
+    for (var i = 0; i <= segments; i++) {
+      var a = (i / segments) * Math.PI * 2;
+      pts.push(new THREE.Vector3(cx + Math.cos(a) * r, Y, cz + Math.sin(a) * r));
+    }
+    return makeDashedLine(pts, color, opacity, 0.3, 0.2);
+  }
+  scene.add(makeCircle(0, 0, 3, 64, 0xD3191F, 0.12));
+
+  // Face-off circles (neutral zone)
+  scene.add(makeCircle(-8, 0, 2, 48, 0x4488cc, 0.08));
+  scene.add(makeCircle(8, 0, 2, 48, 0x4488cc, 0.08));
+
+  // Face-off dots (solid circles at face-off spots)
+  var dotGeo = new THREE.CircleGeometry(0.2, 16);
+  var dotMatSolid = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.2 });
+  var dotPositions = [[-8, -5], [-8, 5], [8, -5], [8, 5], [0, 0]];
+  dotPositions.forEach(function(p) {
+    var dot = new THREE.Mesh(dotGeo, dotMatSolid);
+    dot.rotation.x = -Math.PI / 2;
+    dot.position.set(p[0], Y + 0.005, p[1]);
+    scene.add(dot);
+  });
+
+  // Goal creases (small arcs at each end)
+  function makeCrease(x) {
+    var pts = [];
+    for (var i = 0; i <= 32; i++) {
+      var a = (i / 32) * Math.PI;
+      pts.push(new THREE.Vector3(x + Math.cos(a) * 1.2, Y, Math.sin(a) * 1.2));
+    }
+    scene.add(makeDashedLine(pts, 0xD3191F, 0.1, 0.15, 0.1));
+    // Goal line
+    scene.add(makeLine([new THREE.Vector3(x, Y, -1.5), new THREE.Vector3(x, Y, 1.5)], lineMat(0xD3191F, 0.15)));
+  }
+  makeCrease(-11.5);
+  makeCrease(11.5);
+
+  // ===== PARTICLES (ice shavings / ambient) =====
+  var pCount = 300;
+  var pPos = new Float32Array(pCount * 3);
+  var pCol = new Float32Array(pCount * 3);
+  var pVel = new Float32Array(pCount * 3);
+  var iceColor = new THREE.Color(0xB8D4E3);
+  var redColor = new THREE.Color(0xD3191F);
+  var whiteColor = new THREE.Color(0xE8E8E8);
+
+  for (var i = 0; i < pCount; i++) {
+    pPos[i * 3] = (Math.random() - 0.5) * 24;
+    pPos[i * 3 + 1] = Math.random() * 3 + 0.5;
+    pPos[i * 3 + 2] = (Math.random() - 0.5) * 16;
+    pVel[i * 3] = (Math.random() - 0.5) * 0.002;
+    pVel[i * 3 + 1] = (Math.random() - 0.5) * 0.001;
+    pVel[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
+    var r = Math.random();
+    var c = r < 0.12 ? redColor : r < 0.45 ? iceColor : whiteColor;
+    pCol[i * 3] = c.r; pCol[i * 3 + 1] = c.g; pCol[i * 3 + 2] = c.b;
+  }
+  var pGeom = new THREE.BufferGeometry();
+  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  pGeom.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
+  var particles = new THREE.Points(pGeom, new THREE.PointsMaterial({
+    size: 0.035, vertexColors: true, transparent: true, opacity: 0.5, sizeAttenuation: true
+  }));
+  scene.add(particles);
+
+  // ===== HOCKEY PUCKS =====
+  var puckGeo = new THREE.CylinderGeometry(0.19, 0.19, 0.06, 16);
+  var puckMat = new THREE.MeshPhongMaterial({ color: 0x111111, specular: 0x333333, shininess: 40 });
+  var pucks = [];
+  var puckCount = 3;
+  for (var i = 0; i < puckCount; i++) {
+    var puck = new THREE.Mesh(puckGeo, puckMat.clone());
+    puck.position.set(
+      (Math.random() - 0.5) * 16,
+      0.03,
+      (Math.random() - 0.5) * 10
+    );
+    puck.userData = {
+      vx: (Math.random() - 0.5) * 0.04,
+      vz: (Math.random() - 0.5) * 0.04,
+      vr: (Math.random() - 0.5) * 0.03,
+      trail: []
+    };
+    scene.add(puck);
+    pucks.push(puck);
+  }
+
+  // ===== SKATE TRAIL PARTICLES (ice shavings behind pucks) =====
+  var trailMax = 200;
+  var trailPos = new Float32Array(trailMax * 3);
+  var trailCol = new Float32Array(trailMax * 3);
+  var trailAlpha = new Float32Array(trailMax); // per-particle life
+  var trailIdx = 0;
+  var trailGeom = new THREE.BufferGeometry();
+  trailGeom.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+  trailGeom.setAttribute('color', new THREE.BufferAttribute(trailCol, 3));
+  var trailPoints = new THREE.Points(trailGeom, new THREE.PointsMaterial({
+    size: 0.025, vertexColors: true, transparent: true, opacity: 0.35, sizeAttenuation: true
+  }));
+  scene.add(trailPoints);
+
+  function spawnTrail(x, z) {
+    var idx = trailIdx % trailMax;
+    trailPos[idx * 3] = x + (Math.random() - 0.5) * 0.3;
+    trailPos[idx * 3 + 1] = 0.02 + Math.random() * 0.15;
+    trailPos[idx * 3 + 2] = z + (Math.random() - 0.5) * 0.3;
+    // ice shaving color (white/light blue)
+    var r = Math.random();
+    if (r < 0.6) { trailCol[idx * 3] = 0.9; trailCol[idx * 3 + 1] = 0.92; trailCol[idx * 3 + 2] = 0.95; }
+    else if (r < 0.85) { trailCol[idx * 3] = 0.72; trailCol[idx * 3 + 1] = 0.83; trailCol[idx * 3 + 2] = 0.9; }
+    else { trailCol[idx * 3] = 0.82; trailCol[idx * 3 + 1] = 0.1; trailCol[idx * 3 + 2] = 0.12; }
+    trailAlpha[idx] = 1.0;
+    trailIdx++;
+  }
+
+  // ===== RENDER LOOP =====
+  var heroKilled = false;
+  function render() {
+    if (heroKilled) return;
+
+    // Animate ambient particles
+    var pos = pGeom.attributes.position.array;
+    for (var i = 0; i < pCount; i++) {
+      pos[i * 3] += pVel[i * 3];
+      pos[i * 3 + 1] += pVel[i * 3 + 1];
+      pos[i * 3 + 2] += pVel[i * 3 + 2];
+      if (pos[i * 3 + 1] < 0.2) { pos[i * 3 + 1] = 3.5; pos[i * 3] = (Math.random() - 0.5) * 24; }
+      if (pos[i * 3 + 1] > 4) { pos[i * 3 + 1] = 0.2; }
+    }
+    pGeom.attributes.position.needsUpdate = true;
+
+    // Animate pucks
+    pucks.forEach(function(puck) {
+      var d = puck.userData;
+      puck.position.x += d.vx;
+      puck.position.z += d.vz;
+      puck.rotation.y += d.vr;
+
+      // Spawn trail shavings when moving fast enough
+      var speed = Math.sqrt(d.vx * d.vx + d.vz * d.vz);
+      if (speed > 0.01) spawnTrail(puck.position.x, puck.position.z);
+
+      // Bounce off boards
+      if (puck.position.x > 12.5 || puck.position.x < -12.5) {
+        d.vx *= -0.85;
+        puck.position.x = Math.max(-12.5, Math.min(12.5, puck.position.x));
+      }
+      if (puck.position.z > 8 || puck.position.z < -8) {
+        d.vz *= -0.85;
+        puck.position.z = Math.max(-8, Math.min(8, puck.position.z));
+      }
+
+      // Gentle friction
+      d.vx *= 0.998;
+      d.vz *= 0.998;
+      d.vr *= 0.995;
+
+      // Occasional random impulse (like a stick hit)
+      if (Math.random() < 0.003) {
+        d.vx += (Math.random() - 0.5) * 0.06;
+        d.vz += (Math.random() - 0.5) * 0.06;
+        d.vr += (Math.random() - 0.5) * 0.02;
+      }
+    });
+
+    // Fade trail particles
+    var tPos = trailGeom.attributes.position.array;
+    for (var i = 0; i < trailMax; i++) {
+      if (trailAlpha[i] > 0) {
+        trailAlpha[i] -= 0.008;
+        tPos[i * 3 + 1] += 0.002; // float upward slightly
+      }
+    }
+    trailGeom.attributes.position.needsUpdate = true;
+
+    // Camera follows mouse smoothly
+    camera.position.x += (mouse.x * 3 - camera.position.x) * 0.012;
+    camera.position.y += (3.5 - mouse.y * 1.5 - camera.position.y) * 0.012;
+    camera.lookAt(0, 0, -2);
+
+    renderer.render(scene, camera);
+  }
+  gsap.ticker.add(render);
+
+  // Mouse tracking
+  heroEl.addEventListener('mousemove', function(e) {
+    var rect = heroEl.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  });
+
+  // Kill renderer when scrolled past
+  window.addEventListener('scroll', function() {
+    heroKilled = window.scrollY > window.innerHeight * 1.5;
+  }, { passive: true });
+
+  // Resize
+  window.addEventListener('resize', function() {
+    var w = heroEl.offsetWidth, h = heroEl.offsetHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+})();
+</script>
+</body>
+</html>

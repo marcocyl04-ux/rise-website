@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE — 3D Treatment Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rise-red: #D3191F;
+    --rise-red-glow: rgba(211, 25, 31, 0.15);
+    --rise-black: #0a0a0a;
+    --rise-surface: #0d0d0d;
+    --rise-white: #f0f0f0;
+    --rise-muted: #888;
+    --rise-border: rgba(255,255,255,0.06);
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--rise-black);
+    color: var(--rise-white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Film grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ===== STICKER NAV ===== */
+  .sticker-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rise-border);
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .sticker-nav a {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rise-muted);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--rise-border);
+    transition: all 0.3s;
+  }
+  .sticker-nav a:hover, .sticker-nav a.active {
+    color: var(--rise-white);
+    border-color: var(--rise-red);
+  }
+
+  /* ===== SECTION LABELS ===== */
+  .section-label {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rise-red);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rise-border);
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    line-height: 1;
+  }
+  .section-desc {
+    font-size: 0.95rem;
+    color: var(--rise-muted);
+    max-width: 50ch;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  section {
+    padding: 6rem 0;
+    border-bottom: 1px solid var(--rise-border);
+  }
+  section:last-child { border-bottom: none; }
+
+  /* ===== A: 3D CARD TILT (Player Cards) ===== */
+  .tilt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    perspective: 1000px;
+  }
+  .tilt-card {
+    background: var(--rise-surface);
+    border: 1px solid var(--rise-border);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    transform-style: preserve-3d;
+    will-change: transform;
+    cursor: default;
+  }
+  .tilt-card:hover {
+    border-color: rgba(211,25,31,0.3);
+  }
+  .tilt-card::before {
+    content: attr(data-number);
+    position: absolute;
+    top: -0.15em;
+    right: -0.05em;
+    font-family: var(--font-heading);
+    font-size: 10rem;
+    font-weight: 700;
+    color: var(--rise-white);
+    opacity: 0.02;
+    line-height: 1;
+    pointer-events: none;
+    transform: translateZ(20px);
+  }
+  .tilt-card .jersey {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--rise-red);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    transform: translateZ(30px);
+  }
+  .tilt-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.25rem;
+    transform: translateZ(20px);
+  }
+  .tilt-card .pos {
+    font-size: 0.85rem;
+    color: var(--rise-muted);
+    font-weight: 500;
+    transform: translateZ(15px);
+  }
+  .tilt-card .team {
+    font-size: 0.8rem;
+    color: var(--rise-muted);
+    font-style: italic;
+    transform: translateZ(15px);
+  }
+  /* Glare overlay */
+  .tilt-card .glare {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tilt-card:hover .glare { opacity: 1; }
+
+  /* ===== B: PERSPECTIVE SECTIONS ===== */
+  .perspective-wrap {
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+  }
+  .perspective-section {
+    background: var(--rise-surface);
+    border: 1px solid var(--rise-border);
+    padding: 4rem;
+    transform: rotateX(2deg) scale(0.97);
+    transform-origin: center top;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+  }
+  .perspective-section.in-view {
+    transform: rotateX(0deg) scale(1);
+    opacity: 1;
+  }
+  .perspective-section h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .perspective-section p {
+    font-size: 0.95rem;
+    color: var(--rise-muted);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  /* ===== A: PARALLAX DEPTH HERO ===== */
+  .parallax-hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .parallax-hero .hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .parallax-hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(10,10,10,0.6) 50%, var(--rise-black) 75%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .parallax-hero .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 2rem;
+    max-width: 900px;
+    perspective: 800px;
+  }
+  .parallax-hero .eyebrow {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rise-red);
+    margin-bottom: 1.5rem;
+    transform: translateZ(40px);
+    will-change: transform;
+  }
+  .parallax-hero .title {
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 10vw, 9rem);
+    font-weight: 700;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    transform: translateZ(20px);
+    will-change: transform;
+  }
+  .parallax-hero .title .accent { color: var(--rise-red); }
+  .parallax-hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--rise-muted);
+    max-width: 550px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    transform: translateZ(0px);
+    will-change: transform;
+  }
+  .parallax-hero .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    transform: translateZ(-20px);
+    will-change: transform;
+    opacity: 0;
+    animation: fadeInUp 0.6s 1.2s forwards;
+  }
+  @keyframes fadeInUp {
+    to { opacity: 1; }
+  }
+  .parallax-hero .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-align: center;
+    transform: translateX(-50%) translateZ(-40px);
+    will-change: transform;
+  }
+  .parallax-hero .scroll-hint span {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rise-muted);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: var(--rise-border);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--rise-red);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0% { top: -100%; }
+    50% { top: 100%; }
+    100% { top: 100%; }
+  }
+
+  /* ===== D: FLOATING 3D SERVICE CARDS ===== */
+  .float-services {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    perspective: 1200px;
+  }
+  .float-service {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    padding: 3rem;
+    background: var(--rise-surface);
+    border: 1px solid var(--rise-border);
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .float-service:hover {
+    transform: translateZ(20px) rotateY(-1deg);
+  }
+  .float-service .visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(40px);
+  }
+  .float-service .visual svg { opacity: 0.5; }
+  .float-service .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .float-service .info h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transform: translateZ(20px);
+  }
+  .float-service .info p {
+    font-size: 0.9rem;
+    color: var(--rise-muted);
+    line-height: 1.7;
+    transform: translateZ(10px);
+  }
+  .float-service .price {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--rise-red);
+    transform: translateZ(15px);
+  }
+
+  /* ===== E: 3D PIPELINE STEPS ===== */
+  .pipeline-3d {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    perspective: 1000px;
+  }
+  .pipeline-step {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: var(--rise-surface);
+    border: 1px solid var(--rise-border);
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+    transform: translateZ(0) rotateX(0);
+  }
+  .pipeline-step:hover {
+    transform: translateZ(30px) rotateX(-2deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px var(--rise-red-glow);
+    border-color: rgba(211,25,31,0.3);
+  }
+  .pipeline-step .marker {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--rise-black);
+    border: 1px solid var(--rise-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    transition: all 0.4s;
+    transform: translateZ(20px);
+  }
+  .pipeline-step:hover .marker {
+    border-color: var(--rise-red);
+    box-shadow: 0 0 30px var(--rise-red-glow);
+  }
+  .pipeline-step .marker span {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--rise-muted);
+    transition: color 0.4s;
+  }
+  .pipeline-step:hover .marker span { color: var(--rise-red); }
+  .pipeline-step h3 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    transform: translateZ(15px);
+  }
+  .pipeline-step p {
+    font-size: 0.8rem;
+    color: var(--rise-muted);
+    line-height: 1.6;
+    transform: translateZ(10px);
+  }
+
+  /* ===== F: LAYERED GLASS CTA ===== */
+  .glass-cta {
+    position: relative;
+    padding: 6rem 4rem;
+    text-align: center;
+    perspective: 1000px;
+  }
+  .glass-cta .layer-1 {
+    position: absolute;
+    inset: 2rem;
+    background: rgba(211,25,31,0.03);
+    border: 1px solid rgba(211,25,31,0.08);
+    transform: translateZ(-60px) rotateY(2deg) rotateX(1deg);
+    transform-style: preserve-3d;
+  }
+  .glass-cta .layer-2 {
+    position: absolute;
+    inset: 1rem;
+    background: rgba(255,255,255,0.01);
+    border: 1px solid rgba(255,255,255,0.04);
+    transform: translateZ(-30px) rotateY(1deg);
+    transform-style: preserve-3d;
+  }
+  .glass-cta .content {
+    position: relative;
+    z-index: 2;
+    transform: translateZ(20px);
+  }
+  .glass-cta h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .glass-cta p {
+    font-size: 1rem;
+    color: var(--rise-muted);
+    max-width: 50ch;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
+  .glass-cta .btn-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .btn-primary {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #b81018; transform: translateY(-2px); }
+  .btn-outline {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    background: transparent;
+    color: var(--rise-white);
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-outline:hover { border-color: var(--rise-white); }
+
+  /* ===== COMPARISON TOGGLE ===== */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .comparison .flat, .comparison .deep {
+    padding: 3rem;
+    background: var(--rise-surface);
+    border: 1px solid var(--rise-border);
+    text-align: center;
+  }
+  .comparison .flat { opacity: 0.6; }
+  .comparison .deep {
+    transform: perspective(600px) rotateY(-3deg) rotateX(2deg);
+    box-shadow: 12px 12px 40px rgba(0,0,0,0.3), 0 0 20px var(--rise-red-glow);
+    border-color: rgba(211,25,31,0.2);
+  }
+  .comparison h4 {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rise-red);
+    margin-bottom: 1rem;
+  }
+  .comparison .jersey-demo {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--rise-red);
+    margin-bottom: 0.5rem;
+  }
+  .comparison .name-demo {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .tilt-grid, .pipeline-3d, .comparison { grid-template-columns: 1fr; }
+    .float-service { grid-template-columns: 1fr; }
+    .float-service .visual { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="sticker-nav">
+  <a href="#hero-3d">Hero</a>
+  <a href="#cards-3d">Cards</a>
+  <a href="#pipeline-3d">Pipeline</a>
+  <a href="#services-3d">Services</a>
+  <a href="#perspective-3d">Sections</a>
+  <a href="#glass-cta">CTA</a>
+  <a href="#compare">Compare</a>
+</nav>
+
+<!-- ===== A: PARALLAX DEPTH HERO (with Three.js canvas) ===== -->
+<section id="hero-3d">
+  <div class="container" style="padding-bottom:2rem;">
+    <div class="section-label">A — Parallax Depth Hero</div>
+    <div class="section-title">Canvas + Layered Content</div>
+    <div class="section-desc">Three.js ice rink canvas stays as the deepest layer. Content layers (eyebrow, title, subtitle, CTAs) each sit at different Z-depths via translateZ + perspective. On scroll, layers separate. On mouse move, the canvas already tracks — content layers add subtle parallax on top.</div>
+  </div>
+  <div class="parallax-hero" id="parallaxDemo">
+    <canvas class="hero-canvas" id="hero-canvas-demo"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="eyebrow">Asia → Canada</div>
+      <h1 class="title">
+        RISE<br><span class="accent">ADVANCEMENT</span>
+      </h1>
+      <p class="subtitle">We get young hockey players onto teams in Canada. We evaluate them, place them, and develop them through the season. Founded by players who lived the pipeline themselves.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary">Off-Season Program</a>
+        <a href="#" class="btn-outline">Talk to Us</a>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== B: 3D CARD TILT ===== -->
+<section id="cards-3d">
+  <div class="container">
+    <div class="section-label">B — 3D Card Tilt</div>
+    <div class="section-title">Mouse-Tracking Perspective</div>
+    <div class="section-desc">Cards tilt toward the cursor with a glare overlay. translateZ on children creates real depth parallax between jersey number, name, and details. Move your mouse over the cards.</div>
+    <div class="tilt-grid">
+      <div class="tilt-card" data-number="#7">
+        <div class="glare"></div>
+        <div class="jersey">#7</div>
+        <h3>Wilshere Tung</h3>
+        <p class="pos">Defenceman</p>
+        <p class="team">2012 Toronto Titans</p>
+      </div>
+      <div class="tilt-card" data-number="#13">
+        <div class="glare"></div>
+        <div class="jersey">#13</div>
+        <h3>Felix Lloren</h3>
+        <p class="pos">Defenceman</p>
+        <p class="team">2011 Upper Canada College</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== C: 3D PIPELINE STEPS ===== -->
+<section id="pipeline-3d">
+  <div class="container">
+    <div class="section-label">C — 3D Pipeline Steps</div>
+    <div class="section-title">Elevated Step Cards</div>
+    <div class="section-desc">Steps pop forward on hover with translateZ + rotateX. Shadow depth and red glow sell the 3D effect. The markers lift off the surface.</div>
+    <div class="pipeline-3d">
+      <div class="pipeline-step">
+        <div class="marker"><span>01</span></div>
+        <h3>We Evaluate</h3>
+        <p>Game footage, skill assessment, level determination.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="marker"><span>02</span></div>
+        <h3>We Match</h3>
+        <p>The right team, the right school, the right level.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="marker"><span>03</span></div>
+        <h3>We Move</h3>
+        <p>VISA, paperwork, logistics. Nothing falls through.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="marker"><span>04</span></div>
+        <h3>We Develop</h3>
+        <p>Weekly check-ins, video review, skill skates, nutrition.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== D: FLOATING 3D SERVICE CARDS ===== -->
+<section id="services-3d">
+  <div class="container">
+    <div class="section-label">D — Floating Service Rows</div>
+    <div class="section-title">Z-Layer Separation</div>
+    <div class="section-desc">Service rows lift on hover with translateZ + subtle rotateY. The SVG visual floats at a deeper Z-plane than the text, creating real depth separation between content layers.</div>
+    <div class="float-services">
+      <div class="float-service">
+        <div class="visual">
+          <svg width="160" height="160" viewBox="0 0 200 200" fill="none">
+            <line x1="100" y1="20" x2="100" y2="180" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+            <line x1="20" y1="100" x2="180" y2="100" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+            <circle cx="100" cy="100" r="60" stroke="#D3191F" stroke-width="1" stroke-dasharray="8 6"/>
+            <circle cx="100" cy="100" r="4" fill="#D3191F"/>
+          </svg>
+        </div>
+        <div class="info">
+          <h3>The Move</h3>
+          <div class="price">Contact us</div>
+          <p>Full player placement and transition service. We manage the entire process, from initial assessment to first skate with your new team.</p>
+        </div>
+      </div>
+      <div class="float-service">
+        <div class="visual">
+          <svg width="160" height="160" viewBox="0 0 200 200" fill="none">
+            <circle cx="100" cy="100" r="50" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
+            <circle cx="100" cy="100" r="30" stroke="#D3191F" stroke-width="1" stroke-dasharray="4 4"/>
+            <circle cx="100" cy="100" r="10" stroke="#D3191F" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="info">
+          <h3>Mentoring</h3>
+          <div class="price">Contact us</div>
+          <p>Season-long development program. Weekly check-ins, video review, skill skates, nutrition plans, and mental skills coaching.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== E: PERSPECTIVE SECTIONS ===== -->
+<section id="perspective-3d">
+  <div class="container">
+    <div class="section-label">E — Perspective Section Reveal</div>
+    <div class="section-title">Scroll-Driven Rotation</div>
+    <div class="section-desc">Sections start slightly rotated on X axis (tilted back) and straighten as they enter the viewport. Creates a "panels rising into place" effect. Scroll down to see them animate.</div>
+    <div class="perspective-wrap">
+      <div class="perspective-section" data-reveal>
+        <h3>Evaluate</h3>
+        <p>Game footage, skill assessment, level determination. We watch the tape and know where your kid stands. Every evaluation is thorough and honest.</p>
+      </div>
+      <div class="perspective-section" data-reveal>
+        <h3>Match</h3>
+        <p>The right team, the right school, the right level. We know the coaches and programs across Canada. Placement is about fit, not just availability.</p>
+      </div>
+      <div class="perspective-section" data-reveal>
+        <h3>Move</h3>
+        <p>VISA, paperwork, logistics. We make sure nothing goes wrong in the transition. Every detail handled so parents can breathe.</p>
+      </div>
+      <div class="perspective-section" data-reveal>
+        <h3>Develop</h3>
+        <p>Weekly check-ins, video review, skill skates, nutrition, mental skills. Your kid is never alone in Canada. Season-long support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== F: LAYERED GLASS CTA ===== -->
+<section id="glass-cta">
+  <div class="container">
+    <div class="section-label">F — Layered Glass CTA</div>
+    <div class="section-title">Depth Stacking</div>
+    <div class="section-desc">Multiple translucent layers at different Z-depths create a parallax card stack. The content floats above two ghost layers that shift on scroll.</div>
+    <div class="glass-cta">
+      <div class="layer-1"></div>
+      <div class="layer-2"></div>
+      <div class="content">
+        <h2>Get in Touch</h2>
+        <p>No commitment. Just a conversation about your kid's hockey future. We reply within 24 hours.</p>
+        <div class="btn-row">
+          <a href="#" class="btn-primary">Email Us</a>
+          <a href="#" class="btn-outline">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== G: SIDE-BY-SIDE COMPARISON ===== -->
+<section id="compare">
+  <div class="container">
+    <div class="section-label">G — Flat vs Deep</div>
+    <div class="section-title">See the Difference</div>
+    <div class="section-desc">Same content, two treatments. Left is the current flat style. Right has perspective rotation, shadow depth, and glow. This is the before/after.</div>
+    <div class="comparison">
+      <div class="flat">
+        <h4>Current — Flat</h4>
+        <div class="jersey-demo">#7</div>
+        <div class="name-demo">Wilshere Tung</div>
+      </div>
+      <div class="deep">
+        <h4>Proposed — Deep</h4>
+        <div class="jersey-demo">#7</div>
+        <div class="name-demo">Wilshere Tung</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function() {
+  // ===== THREE.JS ICE RINK (same as live site) =====
+  (function() {
+    var canvas = document.getElementById('hero-canvas-demo');
+    if (!canvas) return;
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setSize(canvas.parentElement.offsetWidth, canvas.parentElement.offsetHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x0a0a0a, 1);
+
+    var scene = new THREE.Scene();
+    var w = canvas.parentElement.offsetWidth, h = canvas.parentElement.offsetHeight;
+    var camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 100);
+    camera.position.set(0, 0, 8);
+
+    var mouse = { x: 0, y: 0 };
+
+    // Ice plane
+    var floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(28, 18),
+      new THREE.MeshBasicMaterial({ color: 0x08080c, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
+    );
+    floor.position.z = -4;
+    scene.add(floor);
+
+    // Rink markings
+    var dashMat = new THREE.LineDashedMaterial({ color: 0xD3191F, transparent: true, opacity: 0.06, dashSize: 0.3, gapSize: 0.2 });
+    var dashMatBlue = new THREE.LineDashedMaterial({ color: 0x4488cc, transparent: true, opacity: 0.04, dashSize: 0.3, gapSize: 0.2 });
+
+    function makeDashedLine(points, material) {
+      var geom = new THREE.BufferGeometry().setFromPoints(points);
+      var line = new THREE.Line(geom, material);
+      line.computeLineDistances();
+      return line;
+    }
+    function makeCircle(cx, cy, r, segments, material) {
+      var pts = [];
+      for (var i = 0; i <= segments; i++) {
+        var a = (i / segments) * Math.PI * 2;
+        pts.push(new THREE.Vector3(cx + Math.cos(a) * r, cy + Math.sin(a) * r, -3.85));
+      }
+      return makeDashedLine(pts, material);
+    }
+
+    scene.add(makeDashedLine([new THREE.Vector3(0, -9, -3.85), new THREE.Vector3(0, 9, -3.85)], dashMat));
+    scene.add(makeDashedLine([new THREE.Vector3(-6, -9, -3.85), new THREE.Vector3(-6, 9, -3.85)], dashMatBlue));
+    scene.add(makeDashedLine([new THREE.Vector3(6, -9, -3.85), new THREE.Vector3(6, 9, -3.85)], dashMatBlue));
+    scene.add(makeDashedLine([new THREE.Vector3(-13, -8, -3.85), new THREE.Vector3(13, -8, -3.85)], dashMat));
+    scene.add(makeDashedLine([new THREE.Vector3(13, -8, -3.85), new THREE.Vector3(13, 8, -3.85)], dashMat));
+    scene.add(makeDashedLine([new THREE.Vector3(13, 8, -3.85), new THREE.Vector3(-13, 8, -3.85)], dashMat));
+    scene.add(makeDashedLine([new THREE.Vector3(-13, 8, -3.85), new THREE.Vector3(-13, -8, -3.85)], dashMat));
+    scene.add(makeCircle(0, 0, 3, 64, dashMat));
+    scene.add(makeCircle(-8, 0, 2, 48, dashMat));
+    scene.add(makeCircle(8, 0, 2, 48, dashMat));
+    scene.add(makeCircle(-8, -5, 0.5, 32, dashMat));
+    scene.add(makeCircle(-8, 5, 0.5, 32, dashMat));
+    scene.add(makeCircle(8, -5, 0.5, 32, dashMat));
+    scene.add(makeCircle(8, 5, 0.5, 32, dashMat));
+    var dotGeom = new THREE.CircleGeometry(0.12, 16);
+    var dotMat = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.15 });
+    var centerDot = new THREE.Mesh(dotGeom, dotMat);
+    centerDot.position.z = -3.84;
+    scene.add(centerDot);
+
+    // Particles
+    var count = 300;
+    var positions = new Float32Array(count * 3);
+    var colors = new Float32Array(count * 3);
+    var velocities = new Float32Array(count * 3);
+    var iceColor = new THREE.Color(0xB8D4E3);
+    var redColor = new THREE.Color(0xD3191F);
+    var whiteColor = new THREE.Color(0xE8E8E8);
+
+    for (var i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 24;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 1;
+      velocities[i * 3] = (Math.random() - 0.5) * 0.002;
+      velocities[i * 3 + 1] = -Math.random() * 0.004 - 0.001;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
+      var r = Math.random();
+      var c;
+      if (r < 0.12) c = redColor;
+      else if (r < 0.45) c = iceColor;
+      else c = whiteColor;
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+    }
+
+    var particleGeom = new THREE.BufferGeometry();
+    particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    var particleMat = new THREE.PointsMaterial({
+      size: 0.04,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.6,
+      sizeAttenuation: true
+    });
+    var particles = new THREE.Points(particleGeom, particleMat);
+    scene.add(particles);
+
+    function renderRink() {
+      var pos = particleGeom.attributes.position.array;
+      for (var i = 0; i < count; i++) {
+        pos[i * 3] += velocities[i * 3];
+        pos[i * 3 + 1] += velocities[i * 3 + 1];
+        pos[i * 3 + 2] += velocities[i * 3 + 2];
+        if (pos[i * 3 + 1] < -8) {
+          pos[i * 3 + 1] = 8;
+          pos[i * 3] = (Math.random() - 0.5) * 24;
+        }
+      }
+      particleGeom.attributes.position.needsUpdate = true;
+      camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.015;
+      camera.position.y += (-mouse.y * 0.3 - camera.position.y) * 0.015;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    }
+    gsap.ticker.add(renderRink);
+
+    var heroSection = canvas.parentElement;
+    heroSection.addEventListener('mousemove', function(e) {
+      var rect = heroSection.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    });
+    window.addEventListener('resize', function() {
+      var w = heroSection.offsetWidth, h = heroSection.offsetHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  })();
+
+  // ===== CARD TILT =====
+  document.querySelectorAll('.tilt-card').forEach(function(card) {
+    card.addEventListener('mousemove', function(e) {
+      var rect = card.getBoundingClientRect();
+      var x = (e.clientX - rect.left) / rect.width;
+      var y = (e.clientY - rect.top) / rect.height;
+      var rotateY = (x - 0.5) * 20;
+      var rotateX = (0.5 - y) * 20;
+      card.style.transform = 'rotateY(' + rotateY + 'deg) rotateX(' + rotateX + 'deg)';
+      card.style.setProperty('--mx', (x * 100) + '%');
+      card.style.setProperty('--my', (y * 100) + '%');
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = 'rotateY(0) rotateX(0)';
+    });
+  });
+
+  // ===== PERSPECTIVE SECTION REVEAL =====
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('[data-reveal]').forEach(function(el) {
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      onEnter: function() { el.classList.add('in-view'); }
+    });
+  });
+
+  // ===== PIPELINE STEP STAGGER =====
+  gsap.utils.toArray('.pipeline-step').forEach(function(step, i) {
+    gsap.from(step, {
+      opacity: 0,
+      y: 30,
+      rotateX: 5,
+      duration: 0.6,
+      delay: i * 0.1,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: step, start: 'top 90%' }
+    });
+  });
+})();
+</script>
+</body>
+</html>

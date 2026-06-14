@@ -318,148 +318,187 @@ import HomeLayout from "../layouts/HomeLayout.astro";
   <!-- ====== PAGE SCRIPTS ====== -->
   <script is:inline>
     (function () {
-      // ——— NATIVE SCROLL (Lenis removed) ———
+      // ——— LENIS SMOOTH SCROLL ———
+      var lenis = new Lenis({ duration: 1.8, easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, touchMultiplier: 1.5, wheelMultiplier: 0.8 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
       gsap.ticker.lagSmoothing(0);
 
       // ——— GSAP SETUP ———
       gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
       ScrollTrigger.config({ limitCallbacks: true });
 
-      // ——— THREE.JS ICE RINK ———
+      // ——— ENHANCED HOCKEY RINK ———
       (function() {
         var canvas = document.getElementById('hero-canvas');
         if (!canvas) return;
+        var heroEl = canvas.parentElement;
         var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x0a0a0a, 1);
+        renderer.setClearColor(0x060608, 1);
+        renderer.fog = new THREE.FogExp2(0x060608, 0.035);
 
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(0, 0, 8);
+        scene.fog = renderer.fog;
+        var camera = new THREE.PerspectiveCamera(55, heroEl.offsetWidth / heroEl.offsetHeight, 0.1, 100);
+        camera.position.set(0, 3.5, 10);
+        camera.lookAt(0, 0, -2);
 
         var mouse = { x: 0, y: 0 };
 
-        // Ice plane
-        var floor = new THREE.Mesh(
-          new THREE.PlaneGeometry(28, 18),
-          new THREE.MeshBasicMaterial({ color: 0x08080c, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
-        );
-        floor.position.z = -4;
-        scene.add(floor);
+        // ICE SURFACE
+        var iceMat = new THREE.MeshPhongMaterial({ color: 0x0a0e14, specular: 0x1a2030, shininess: 80, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
+        var ice = new THREE.Mesh(new THREE.PlaneGeometry(32, 22), iceMat);
+        ice.rotation.x = -Math.PI / 2; ice.position.y = -0.01;
+        scene.add(ice);
 
-        // Rink markings
-        var dashMat = new THREE.LineDashedMaterial({ color: 0xD3191F, transparent: true, opacity: 0.06, dashSize: 0.3, gapSize: 0.2 });
-        var dashMatBlue = new THREE.LineDashedMaterial({ color: 0x4488cc, transparent: true, opacity: 0.04, dashSize: 0.3, gapSize: 0.2 });
+        // LIGHTING
+        scene.add(new THREE.AmbientLight(0x222233, 0.6));
+        var dirLight = new THREE.DirectionalLight(0x4488cc, 0.3);
+        dirLight.position.set(2, 8, 5); scene.add(dirLight);
+        var redPoint = new THREE.PointLight(0xD3191F, 0.4, 20);
+        redPoint.position.set(0, 2, 0); scene.add(redPoint);
 
-        function makeDashedLine(points, material) {
-          var geom = new THREE.BufferGeometry().setFromPoints(points);
-          var line = new THREE.Line(geom, material);
-          line.computeLineDistances();
-          return line;
+        // RINK HELPERS
+        var lineMat = function(c, o) { return new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: o }); };
+        function makeLine(pts, mat) { var g = new THREE.BufferGeometry().setFromPoints(pts); return new THREE.Line(g, mat); }
+        function makeDashedLine(pts, c, o, dash, gap) {
+          var g = new THREE.BufferGeometry().setFromPoints(pts);
+          var l = new THREE.LineDashedMaterial({ color: c, transparent: true, opacity: o, dashSize: dash || 0.3, gapSize: gap || 0.2 });
+          var line = new THREE.Line(g, l); line.computeLineDistances(); return line;
         }
-        function makeCircle(cx, cy, r, segments, material) {
-          var pts = [];
-          for (var i = 0; i <= segments; i++) {
-            var a = (i / segments) * Math.PI * 2;
-            pts.push(new THREE.Vector3(cx + Math.cos(a) * r, cy + Math.sin(a) * r, -3.85));
-          }
-          return makeDashedLine(pts, material);
-        }
+        var Y = 0.01;
+        var bx = 13, bz = 8.5;
 
-        scene.add(makeDashedLine([new THREE.Vector3(0, -9, -3.85), new THREE.Vector3(0, 9, -3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(-6, -9, -3.85), new THREE.Vector3(-6, 9, -3.85)], dashMatBlue));
-        scene.add(makeDashedLine([new THREE.Vector3(6, -9, -3.85), new THREE.Vector3(6, 9, -3.85)], dashMatBlue));
-        scene.add(makeDashedLine([new THREE.Vector3(-13, -8, -3.85), new THREE.Vector3(13, -8, -3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(13, -8, -3.85), new THREE.Vector3(13, 8, -3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(13, 8, -3.85), new THREE.Vector3(-13, 8, -3.85)], dashMat));
-        scene.add(makeDashedLine([new THREE.Vector3(-13, 8, -3.85), new THREE.Vector3(-13, -8, -3.85)], dashMat));
-        scene.add(makeCircle(0, 0, 3, 64, dashMat));
-        scene.add(makeCircle(-8, 0, 2, 48, dashMat));
-        scene.add(makeCircle(8, 0, 2, 48, dashMat));
-        scene.add(makeCircle(-8, -5, 0.5, 32, dashMat));
-        scene.add(makeCircle(-8, 5, 0.5, 32, dashMat));
-        scene.add(makeCircle(8, -5, 0.5, 32, dashMat));
-        scene.add(makeCircle(8, 5, 0.5, 32, dashMat));
-        var dotGeom = new THREE.CircleGeometry(0.12, 16);
-        var dotMat = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.15 });
-        var centerDot = new THREE.Mesh(dotGeom, dotMat);
-        centerDot.position.z = -3.84;
-        scene.add(centerDot);
-
-        // Particles
-        var count = window.innerWidth < 768 ? 150 : 300;
-        var positions = new Float32Array(count * 3);
-        var colors = new Float32Array(count * 3);
-        var velocities = new Float32Array(count * 3);
-        var iceColor = new THREE.Color(0xB8D4E3);
-        var redColor = new THREE.Color(0xD3191F);
-        var whiteColor = new THREE.Color(0xE8E8E8);
-
-        for (var i = 0; i < count; i++) {
-          positions[i * 3] = (Math.random() - 0.5) * 24;
-          positions[i * 3 + 1] = (Math.random() - 0.5) * 16;
-          positions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 1;
-          velocities[i * 3] = (Math.random() - 0.5) * 0.002;
-          velocities[i * 3 + 1] = -Math.random() * 0.004 - 0.001;
-          velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
-          var r = Math.random();
-          var c;
-          if (r < 0.12) c = redColor;
-          else if (r < 0.45) c = iceColor;
-          else c = whiteColor;
-          colors[i * 3] = c.r;
-          colors[i * 3 + 1] = c.g;
-          colors[i * 3 + 2] = c.b;
-        }
-
-        var particleGeom = new THREE.BufferGeometry();
-        particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        var particleMat = new THREE.PointsMaterial({
-          size: 0.04,
-          vertexColors: true,
-          transparent: true,
-          opacity: 0.6,
-          sizeAttenuation: true
+        // BOARDS (geometry + lines)
+        var boardMat = new THREE.LineBasicMaterial({ color: 0x334455, transparent: true, opacity: 0.5 });
+        scene.add(makeLine([new THREE.Vector3(-bx,Y,-bz), new THREE.Vector3(bx,Y,-bz)], boardMat));
+        scene.add(makeLine([new THREE.Vector3(bx,Y,-bz), new THREE.Vector3(bx,Y,bz)], boardMat));
+        scene.add(makeLine([new THREE.Vector3(bx,Y,bz), new THREE.Vector3(-bx,Y,bz)], boardMat));
+        scene.add(makeLine([new THREE.Vector3(-bx,Y,bz), new THREE.Vector3(-bx,Y,-bz)], boardMat));
+        var wallMat = new THREE.MeshPhongMaterial({ color: 0x111520, transparent: true, opacity: 0.4, emissive: 0xD3191F, emissiveIntensity: 0.03 });
+        var wallH = 0.6;
+        [[bx*2,0.08,0,wallH/2,-bz],[bx*2,0.08,0,wallH/2,bz],[0.08,bz*2,-bx,wallH/2,0],[0.08,bz*2,bx,wallH/2,0]].forEach(function(d) {
+          var m = new THREE.Mesh(new THREE.BoxGeometry(d[0],wallH,d[1]), wallMat);
+          m.position.set(d[2],d[3],d[4]); scene.add(m);
         });
-        var particles = new THREE.Points(particleGeom, particleMat);
-        scene.add(particles);
 
+        // CENTER LINE + BLUE LINES
+        scene.add(makeLine([new THREE.Vector3(0,Y,-bz), new THREE.Vector3(0,Y,bz)], lineMat(0xD3191F, 0.2)));
+        scene.add(makeLine([new THREE.Vector3(-6,Y,-bz), new THREE.Vector3(-6,Y,bz)], lineMat(0x4488cc, 0.15)));
+        scene.add(makeLine([new THREE.Vector3(6,Y,-bz), new THREE.Vector3(6,Y,bz)], lineMat(0x4488cc, 0.15)));
+
+        // CIRCLES + DOTS
+        function makeCircle(cx, cz, r, seg, c, o) {
+          var pts = []; for (var i = 0; i <= seg; i++) { var a = (i/seg)*Math.PI*2; pts.push(new THREE.Vector3(cx+Math.cos(a)*r, Y, cz+Math.sin(a)*r)); }
+          return makeDashedLine(pts, c, o, 0.3, 0.2);
+        }
+        scene.add(makeCircle(0,0,3,64,0xD3191F,0.12));
+        scene.add(makeCircle(-8,0,2,48,0x4488cc,0.08));
+        scene.add(makeCircle(8,0,2,48,0x4488cc,0.08));
+        var dotGeo = new THREE.CircleGeometry(0.2, 16);
+        var dotMatS = new THREE.MeshBasicMaterial({ color: 0xD3191F, transparent: true, opacity: 0.2 });
+        [[-8,-5],[-8,5],[8,-5],[8,5],[0,0]].forEach(function(p) {
+          var d = new THREE.Mesh(dotGeo, dotMatS); d.rotation.x = -Math.PI/2; d.position.set(p[0], Y+0.005, p[1]); scene.add(d);
+        });
+
+        // GOAL CREASES
+        function makeCrease(x) {
+          var pts = []; for (var i = 0; i <= 32; i++) { var a = (i/32)*Math.PI; pts.push(new THREE.Vector3(x+Math.cos(a)*1.2, Y, Math.sin(a)*1.2)); }
+          scene.add(makeDashedLine(pts, 0xD3191F, 0.1, 0.15, 0.1));
+          scene.add(makeLine([new THREE.Vector3(x,Y,-1.5), new THREE.Vector3(x,Y,1.5)], lineMat(0xD3191F, 0.15)));
+        }
+        makeCrease(-11.5); makeCrease(11.5);
+
+        // PARTICLES
+        var pCount = 300;
+        var pPos = new Float32Array(pCount*3), pCol = new Float32Array(pCount*3), pVel = new Float32Array(pCount*3);
+        var iceC = new THREE.Color(0xB8D4E3), redC = new THREE.Color(0xD3191F), whtC = new THREE.Color(0xE8E8E8);
+        for (var i = 0; i < pCount; i++) {
+          pPos[i*3] = (Math.random()-0.5)*24; pPos[i*3+1] = Math.random()*3+0.5; pPos[i*3+2] = (Math.random()-0.5)*16;
+          pVel[i*3] = (Math.random()-0.5)*0.002; pVel[i*3+1] = (Math.random()-0.5)*0.001; pVel[i*3+2] = (Math.random()-0.5)*0.001;
+          var r = Math.random(), c = r < 0.12 ? redC : r < 0.45 ? iceC : whtC;
+          pCol[i*3] = c.r; pCol[i*3+1] = c.g; pCol[i*3+2] = c.b;
+        }
+        var pGeom = new THREE.BufferGeometry();
+        pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        pGeom.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
+        scene.add(new THREE.Points(pGeom, new THREE.PointsMaterial({ size: 0.035, vertexColors: true, transparent: true, opacity: 0.5, sizeAttenuation: true })));
+
+        // PUCKS
+        var puckGeo = new THREE.CylinderGeometry(0.19, 0.19, 0.06, 16);
+        var pucks = [];
+        for (var i = 0; i < 3; i++) {
+          var p = new THREE.Mesh(puckGeo, new THREE.MeshPhongMaterial({ color: 0x111111, specular: 0x333333, shininess: 40 }));
+          p.position.set((Math.random()-0.5)*16, 0.03, (Math.random()-0.5)*10);
+          p.userData = { vx: (Math.random()-0.5)*0.04, vz: (Math.random()-0.5)*0.04, vr: (Math.random()-0.5)*0.03 };
+          scene.add(p); pucks.push(p);
+        }
+
+        // SKATE TRAIL PARTICLES
+        var trailMax = 200, trailPos = new Float32Array(trailMax*3), trailCol = new Float32Array(trailMax*3), trailAlpha = new Float32Array(trailMax), trailIdx = 0;
+        var trailGeom = new THREE.BufferGeometry();
+        trailGeom.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+        trailGeom.setAttribute('color', new THREE.BufferAttribute(trailCol, 3));
+        scene.add(new THREE.Points(trailGeom, new THREE.PointsMaterial({ size: 0.025, vertexColors: true, transparent: true, opacity: 0.35, sizeAttenuation: true })));
+
+        function spawnTrail(x, z) {
+          var idx = trailIdx % trailMax;
+          trailPos[idx*3] = x+(Math.random()-0.5)*0.3; trailPos[idx*3+1] = 0.02+Math.random()*0.15; trailPos[idx*3+2] = z+(Math.random()-0.5)*0.3;
+          var r = Math.random();
+          if (r < 0.6) { trailCol[idx*3] = 0.9; trailCol[idx*3+1] = 0.92; trailCol[idx*3+2] = 0.95; }
+          else if (r < 0.85) { trailCol[idx*3] = 0.72; trailCol[idx*3+1] = 0.83; trailCol[idx*3+2] = 0.9; }
+          else { trailCol[idx*3] = 0.82; trailCol[idx*3+1] = 0.1; trailCol[idx*3+2] = 0.12; }
+          trailAlpha[idx] = 1.0; trailIdx++;
+        }
+
+        // RENDER LOOP
         var heroKilled = false;
         function renderRink() {
           if (heroKilled) return;
-          var pos = particleGeom.attributes.position.array;
-          for (var i = 0; i < count; i++) {
-            pos[i * 3] += velocities[i * 3];
-            pos[i * 3 + 1] += velocities[i * 3 + 1];
-            pos[i * 3 + 2] += velocities[i * 3 + 2];
-            if (pos[i * 3 + 1] < -8) {
-              pos[i * 3 + 1] = 8;
-              pos[i * 3] = (Math.random() - 0.5) * 24;
-            }
+          // Particles
+          var pos = pGeom.attributes.position.array;
+          for (var i = 0; i < pCount; i++) {
+            pos[i*3] += pVel[i*3]; pos[i*3+1] += pVel[i*3+1]; pos[i*3+2] += pVel[i*3+2];
+            if (pos[i*3+1] < 0.2) { pos[i*3+1] = 3.5; pos[i*3] = (Math.random()-0.5)*24; }
+            if (pos[i*3+1] > 4) pos[i*3+1] = 0.2;
           }
-          particleGeom.attributes.position.needsUpdate = true;
-          camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.015;
-          camera.position.y += (-mouse.y * 0.3 - camera.position.y) * 0.015;
-          camera.lookAt(0, 0, 0);
+          pGeom.attributes.position.needsUpdate = true;
+          // Pucks
+          pucks.forEach(function(p) {
+            var d = p.userData;
+            p.position.x += d.vx; p.position.z += d.vz; p.rotation.y += d.vr;
+            var speed = Math.sqrt(d.vx*d.vx + d.vz*d.vz);
+            if (speed > 0.01) spawnTrail(p.position.x, p.position.z);
+            if (p.position.x > 12.5 || p.position.x < -12.5) { d.vx *= -0.85; p.position.x = Math.max(-12.5, Math.min(12.5, p.position.x)); }
+            if (p.position.z > 8 || p.position.z < -8) { d.vz *= -0.85; p.position.z = Math.max(-8, Math.min(8, p.position.z)); }
+            d.vx *= 0.998; d.vz *= 0.998; d.vr *= 0.995;
+            if (Math.random() < 0.003) { d.vx += (Math.random()-0.5)*0.06; d.vz += (Math.random()-0.5)*0.06; d.vr += (Math.random()-0.5)*0.02; }
+          });
+          // Trail fade
+          var tPos = trailGeom.attributes.position.array;
+          for (var i = 0; i < trailMax; i++) { if (trailAlpha[i] > 0) { trailAlpha[i] -= 0.008; tPos[i*3+1] += 0.002; } }
+          trailGeom.attributes.position.needsUpdate = true;
+          // Camera
+          camera.position.x += (mouse.x*3 - camera.position.x) * 0.012;
+          camera.position.y += (3.5 - mouse.y*1.5 - camera.position.y) * 0.012;
+          camera.lookAt(0, 0, -2);
           renderer.render(scene, camera);
         }
-        // Drive Three.js from GSAP ticker (single clock, no competing rAF)
         gsap.ticker.add(renderRink);
 
-        window.addEventListener('mousemove', function(e) {
-          mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-          mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+        heroEl.addEventListener('mousemove', function(e) {
+          var rect = heroEl.getBoundingClientRect();
+          mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          mouse.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
         });
         window.addEventListener('resize', function() {
-          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.aspect = heroEl.offsetWidth / heroEl.offsetHeight;
           camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
         });
-        window.addEventListener('scroll', function() {
-          heroKilled = window.scrollY > window.innerHeight * 1.5;
-        }, { passive: true });
+        window.addEventListener('scroll', function() { heroKilled = window.scrollY > window.innerHeight * 1.5; }, { passive: true });
       })();
 
       // LOADER
@@ -604,13 +643,14 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           e.preventDefault();
           var target = document.querySelector(a.getAttribute('href'));
           if (target) {
-            gsap.to(window, { scrollTo: { y: target, offsetY: 80 }, duration: 0.8, ease: 'power2.inOut' });
+            lenis.scrollTo(target, { offset: -80, duration: 1.2 });
           }
         });
       });
 
       // REDUCED MOTION
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        lenis.destroy();
         ScrollTrigger.getAll().forEach(function(st) { st.kill(); });
         gsap.globalTimeline.progress(1);
         document.querySelectorAll('.hp-service-row, [data-service-content], .hp-service__visual, .hp-player-card, .hp-step, .hp-hero__actions, .hp-hero__scroll, .hp-hero__eyebrow span, .hp-hero__title .line-inner, .hp-hero__subtitle span, .hp-interlude h2, .hp-interlude p, .hp-cta__content h2, .hp-cta__content p, .hp-cta__buttons').forEach(function(el) {
