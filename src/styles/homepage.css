@@ -28,10 +28,12 @@
   background: var(--rise-black);
   color: var(--rise-white);
   overflow-x: hidden;
-  cursor: none;
 }
-@media (max-width: 767px) {
-  .home-dark { cursor: auto; }
+/* Unified cursor: none on ALL elements desktop */
+@media (min-width: 768px) {
+  .home-dark, .home-dark *, .home-dark *::before, .home-dark *::after {
+    cursor: none !important;
+  }
 }
 .home-dark h1, .home-dark h2, .home-dark h3, .home-dark h4, .home-dark h5, .home-dark h6 {
   color: var(--rise-white);
@@ -288,7 +290,7 @@ button.hp-nav__cta { background: transparent; }
   margin-bottom: 2rem;
 }
 .hp-hero__title .line { overflow: hidden; display: block; }
-.hp-hero__title .line-inner { display: inline-block; transform: translateY(105%); }
+.hp-hero__title .line-inner { display: inline-block; transform: translateY(105%); perspective: 800px; }
 .hp-hero__title .accent { color: var(--rise-red); }
 .hp-hero__subtitle {
   font-family: var(--font-body);
