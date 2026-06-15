@@ -1,6 +1,6 @@
 /* ============================================================
-   RISE Homepage — Dark Theme (redesign-mockup.html)
-   Only loaded on the homepage via HomeLayout.astro
+   RISE Homepage — World-Class Dark Theme
+   Hockey DNA: ice textures, rink lines, jersey culture, frost
    ============================================================ */
 
 /* -- Dark Theme Variables -- */
@@ -8,15 +8,17 @@
   --rise-red: #D3191F;
   --rise-red-dark: #A81419;
   --rise-red-glow: rgba(211, 25, 31, 0.15);
+  --rise-red-subtle: rgba(211, 25, 31, 0.06);
   --rise-black: #0a0a0a;
   --rise-surface: #0d0d0d;
-  --rise-surface-2: #0d0d0d;
-  --rise-surface-3: #0d0d0d;
+  --rise-surface-2: #111111;
+  --rise-surface-3: #141414;
   --rise-white: #f0f0f0;
   --rise-muted: #888888;
   --rise-border: rgba(255, 255, 255, 0.06);
   --ice-blue: #B8D4E3;
   --ice-blue-dim: rgba(184, 212, 227, 0.08);
+  --ice-frost: rgba(180, 210, 230, 0.04);
   --font-heading: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
 }
@@ -26,6 +28,10 @@
   background: var(--rise-black);
   color: var(--rise-white);
   overflow-x: hidden;
+  cursor: none;
+}
+@media (max-width: 767px) {
+  .home-dark { cursor: auto; }
 }
 .home-dark h1, .home-dark h2, .home-dark h3, .home-dark h4, .home-dark h5, .home-dark h6 {
   color: var(--rise-white);
@@ -33,7 +39,7 @@
 .home-dark a { color: inherit; text-decoration: none; }
 .home-dark img { max-width: 100%; display: block; }
 
-/* -- Film Grain -- */
+/* -- Film Grain (subtle) -- */
 .home-dark::after {
   content: '';
   position: fixed;
@@ -41,7 +47,42 @@
   background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.5;
+  opacity: 0.4;
+}
+
+/* ============ CUSTOM CURSOR ============ */
+.hp-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.hp-cursor__dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--rise-red);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10002;
+  will-change: transform;
+}
+.hp-cursor__ring {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10001;
+  will-change: transform;
+  transition: border-color 0.3s, transform 0.3s;
+}
+@media (max-width: 767px) {
+  .hp-cursor { display: none; }
 }
 
 /* ============ LOADER ============ */
@@ -102,11 +143,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.4s;
+  transition: background 0.4s, backdrop-filter 0.4s;
 }
 .hp-nav.scrolled {
-  background: rgba(10, 10, 10, 0.85);
-  /* backdrop-filter: blur(20px); — removed for scroll perf */
+  background: rgba(10, 10, 10, 0.9);
   border-bottom: 1px solid var(--rise-border);
 }
 .hp-nav__logo img {
@@ -157,7 +197,9 @@
   border: 1px solid var(--rise-red);
   color: var(--rise-red) !important;
   transition: all 0.3s !important;
+  cursor: pointer;
 }
+button.hp-nav__cta { background: transparent; }
 .hp-nav__cta:hover {
   background: var(--rise-red);
   color: var(--rise-white) !important;
@@ -201,16 +243,26 @@
   inset: 0;
   z-index: 0;
 }
+/* Frost overlay — ice texture feel */
+.hp-hero__frost {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(180, 210, 230, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(180, 210, 230, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+}
 .hp-hero__overlay {
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(10, 10, 10, 0.6) 50%, var(--rise-black) 75%);
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
 }
 .hp-hero__content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   text-align: center;
   padding: 0 2rem;
   max-width: 900px;
@@ -261,7 +313,7 @@
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -284,6 +336,28 @@
 @keyframes scrollPulse {
   0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
   50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* Ice particles (CSS DOM) */
+.hp-ice-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hp-ice-dot {
+  position: absolute;
+  background: rgba(180, 210, 230, 0.6);
+  border-radius: 50%;
+  animation: iceFloat linear infinite;
+  pointer-events: none;
+}
+@keyframes iceFloat {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
 }
 
 /* ============ BUTTONS ============ */
@@ -372,23 +446,42 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* ============ RINK DIVIDER ============ */
-.hp-divider {
+/* ============ RINK DIVIDERS (hockey-coded) ============ */
+.hp-rink-divider {
   position: relative;
-  height: 1px;
-  background: var(--rise-border);
+  height: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0;
+  overflow: hidden;
 }
-.hp-divider__puck {
-  width: 12px;
-  height: 12px;
+.hp-rink-divider__line {
+  flex: 1;
+  height: 2px;
+  transform-origin: left;
+}
+.hp-rink-divider__line--red {
+  background: linear-gradient(90deg, transparent 0%, var(--rise-red) 20%, var(--rise-red) 80%, transparent 100%);
+  opacity: 0.4;
+}
+.hp-rink-divider__line--blue {
+  background: linear-gradient(90deg, transparent 0%, #4488cc 20%, #4488cc 80%, transparent 100%);
+  opacity: 0.25;
+  height: 1px;
+}
+.hp-rink-divider__puck {
+  width: 14px;
+  height: 14px;
   background: var(--rise-black);
   border: 1.5px solid var(--rise-red);
   border-radius: 50%;
   position: relative;
   z-index: 1;
+  flex-shrink: 0;
+}
+.hp-rink-divider--blue {
+  height: 1px;
 }
 
 /* ============ SECTIONS ============ */
@@ -434,7 +527,20 @@
 }
 
 /* ============ HOW IT WORKS (PIPELINE) ============ */
-.hp-how { background: var(--rise-surface); }
+.hp-how {
+  background: var(--rise-surface);
+  position: relative;
+}
+/* Subtle ice texture behind */
+.hp-how::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, var(--ice-frost) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, var(--ice-frost) 0%, transparent 40%);
+  pointer-events: none;
+}
 .hp-pipeline {
   position: relative;
   display: grid;
@@ -459,6 +565,7 @@
   height: 100%;
   background: var(--rise-red);
   transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 8px var(--rise-red-glow);
 }
 .hp-step {
   text-align: center;
@@ -477,10 +584,10 @@
   justify-content: center;
   margin: 0 auto 1.5rem;
   position: relative;
-  transition: border-color 0.5s;
+  transition: border-color 0.5s, box-shadow 0.5s;
 }
 .hp-step__marker.active {
-  border-color: var(--rise-red);
+  border-color: rgba(211, 25, 31, 0.5);
   box-shadow: 0 0 30px var(--rise-red-glow);
 }
 .hp-step__number {
@@ -524,8 +631,23 @@
   border-bottom: 1px solid var(--rise-border);
   position: relative;
   overflow: hidden;
+  contain: layout style paint;
+  will-change: transform, opacity;
 }
 .hp-service-row:first-child { border-top: 1px solid var(--rise-border); }
+/* Subtle red edge glow on hover */
+.hp-service-row::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--rise-red);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.hp-service-row:hover::after { opacity: 0.4; }
 .hp-service__visual {
   display: flex;
   align-items: center;
@@ -627,13 +749,23 @@
   .hp-service__info { border-left: none; padding: 3rem 2rem; }
 }
 
-/* ============ INTERLUDE ============ */
+/* ============ INTERLUDE (cinematic) ============ */
 .hp-interlude {
   background: var(--rise-surface);
   text-align: center;
   padding: 8rem 2.5rem;
+  position: relative;
+  overflow: hidden;
 }
-.hp-interlude .hp-container { max-width: 700px; }
+.hp-interlude__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(211, 25, 31, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, var(--ice-frost) 0%, transparent 40%);
+  pointer-events: none;
+}
+.hp-interlude .hp-container { max-width: 700px; position: relative; z-index: 1; }
 .hp-interlude h2 {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 4vw, 3rem);
@@ -663,21 +795,27 @@
   padding: 3rem;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.4s;
+  transition: border-color 0.4s, box-shadow 0.4s;
+  contain: layout style paint;
+  will-change: transform, opacity;
 }
-.hp-player-card:hover { border-color: rgba(211, 25, 31, 0.3); }
-.hp-player-card::before {
-  content: attr(data-number);
+.hp-player-card:hover {
+  border-color: rgba(211, 25, 31, 0.3);
+  box-shadow: 0 0 40px rgba(211, 25, 31, 0.08);
+}
+/* Massive jersey number background */
+.hp-player-card__bg-number {
   position: absolute;
   top: -0.15em;
   right: -0.05em;
   font-family: var(--font-heading);
-  font-size: 10rem;
+  font-size: 12rem;
   font-weight: 700;
   color: var(--rise-white);
-  opacity: 0.02;
+  opacity: 0.025;
   line-height: 1;
   pointer-events: none;
+  user-select: none;
 }
 .hp-player-card__jersey {
   font-family: var(--font-heading);
@@ -686,13 +824,13 @@
   color: var(--rise-red);
   line-height: 1;
   margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
-.hp-player-card__jersey::after {
-  content: '';
-  display: block;
+.hp-player-card__line {
   width: 30px;
   height: 2px;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   background: repeating-linear-gradient(90deg, var(--rise-red) 0px, var(--rise-red) 3px, transparent 3px, transparent 6px);
   opacity: 0.4;
 }
@@ -703,17 +841,23 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
   margin-bottom: 0.25rem;
+  position: relative;
+  z-index: 1;
 }
 .hp-player-card__pos {
   font-size: 0.85rem;
   color: var(--rise-muted);
   font-weight: 500;
   margin-bottom: 0.15rem;
+  position: relative;
+  z-index: 1;
 }
 .hp-player-card__team {
   font-size: 0.8rem;
   color: var(--rise-muted);
   font-style: italic;
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 639px) {
@@ -758,6 +902,62 @@
 
 @media (max-width: 639px) {
   .hp-stats__grid { grid-template-columns: 1fr 1fr; gap: 2rem 1rem; }
+}
+
+/* ============ JOURNEY SECTION ============ */
+.hp-journey {
+  background: var(--rise-black);
+  position: relative;
+  overflow: hidden;
+}
+.hp-journey::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(211, 25, 31, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hp-journey__visual {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.hp-journey__map {
+  margin-bottom: 3rem;
+}
+.hp-journey__svg {
+  width: 100%;
+  height: auto;
+}
+.hp-journey__arc-fill {
+  transition: stroke-dashoffset 0.1s;
+}
+.hp-journey__dot {
+  filter: drop-shadow(0 0 6px rgba(211, 25, 31, 0.4));
+}
+.hp-journey__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+.hp-journey__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.hp-journey__stat-num {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--rise-red);
+}
+.hp-journey__stat-label {
+  font-size: 0.75rem;
+  color: var(--rise-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
 }
 
 /* ============ FAQ ============ */
@@ -847,6 +1047,14 @@
   padding: 8rem 2.5rem;
   position: relative;
   overflow: hidden;
+}
+.hp-cta__frost {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(0,0,0,0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 .hp-cta::before {
   content: '';
@@ -962,27 +1170,10 @@
   .hp-interlude { padding: 5rem 1.25rem; }
   .hp-stats { padding: 3rem 1.25rem; }
   .hp-cta { padding: 5rem 1.25rem; }
+  .hp-journey__stats { grid-template-columns: 1fr; gap: 1.5rem; }
 }
 
 /* ============ SCROLL PERFORMANCE ============ */
-/* contain: isolates layout/paint so the browser doesn't
-   re-composite the whole page when these elements change.
-   Note: content-visibility:auto was tested here but killed
-   GSAP ScrollTrigger entrance animations (browser skips painting
-   off-screen elements so ScrollTrigger never fires). The perf win
-   from contain + reduced particles + no backdrop-filter is enough. */
-.hp-service-row {
-  contain: layout style paint;
-}
-.hp-player-card {
-  contain: layout style paint;
-}
-
-/* will-change on GSAP animation targets — hints the browser
-   to promote these to their own compositing layer */
-.hp-service-row,
-.hp-player-card,
-.hp-step,
 .hp-faq-item {
   will-change: transform, opacity;
 }
@@ -994,4 +1185,6 @@
     transition-duration: 0.01ms !important;
   }
   .hp-loader { display: none; }
+  .hp-cursor { display: none; }
+  .home-dark { cursor: auto; }
 }

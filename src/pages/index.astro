@@ -1,17 +1,24 @@
 ---
-// Home page — Redesign (approved mockup → Astro)
+// Home page — World-class redesign: hockey DNA, cinematic scroll, premium interactions
 import HomeLayout from "../layouts/HomeLayout.astro";
 ---
 
 <HomeLayout title="Home" description="RISE Advancement: elite hockey training and player placement for Hong Kong youth. Summer program, mentoring, and full placement services to Canada.">
 
+  <!-- ====== CUSTOM CURSOR ====== -->
+  <div class="hp-cursor" id="cursor">
+    <div class="hp-cursor__dot"></div>
+    <div class="hp-cursor__ring"></div>
+  </div>
+
   <!-- ====== HERO ====== -->
   <section class="hp-hero" id="hero">
     <canvas class="hp-hero__canvas" id="hero-canvas"></canvas>
+    <div class="hp-hero__frost"></div>
     <div class="hp-hero__overlay"></div>
     <div class="hp-hero__content">
       <div class="hp-hero__eyebrow"><span>Asia → Canada</span></div>
-      <h1 class="hp-hero__title">
+      <h1 class="hp-hero__title" data-split="chars">
         <span class="line"><span class="line-inner">RISE</span></span>
         <span class="line"><span class="line-inner accent">ADVANCEMENT</span></span>
       </h1>
@@ -19,25 +26,32 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         <span>We get young hockey players onto teams in Canada. We evaluate them, place them, and develop them through the season. Founded by players who lived the pipeline themselves.</span>
       </p>
       <div class="hp-hero__actions">
-        <a href="/services/hk-program" class="hp-btn-primary"><span>Off-Season Program</span></a>
-        <a href="#contact" class="hp-btn-outline">Talk to Us</a>
+        <a href="/services/hk-program" class="hp-btn-primary hp-magnetic"><span>Off-Season Program</span></a>
+        <a href="#contact" class="hp-btn-outline hp-magnetic">Talk to Us</a>
       </div>
     </div>
     <div class="hp-hero__scroll">
       <span>Scroll</span>
       <div class="hp-scroll-line"></div>
     </div>
+    <!-- Ice particles overlay -->
+    <div class="hp-ice-particles" id="ice-particles"></div>
   </section>
 
-  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+  <!-- ====== RINK DIVIDER (animated) ====== -->
+  <div class="hp-rink-divider">
+    <div class="hp-rink-divider__line hp-rink-divider__line--red"></div>
+    <div class="hp-rink-divider__puck"></div>
+    <div class="hp-rink-divider__line hp-rink-divider__line--red"></div>
+  </div>
 
   <!-- ====== HOW IT WORKS ====== -->
   <section class="hp-section hp-how" id="how-it-works">
     <div class="hp-container">
       <div class="hp-header-center">
-        <div class="hp-label">The Process</div>
-        <h2 class="hp-heading">How It Works</h2>
-        <p class="hp-subtitle">Four steps to Canada. We handle everything so nothing falls through the cracks.</p>
+        <div class="hp-label" data-reveal>The Process</div>
+        <h2 class="hp-heading" data-reveal>How It Works</h2>
+        <p class="hp-subtitle" data-reveal>Four steps to Canada. We handle everything so nothing falls through the cracks.</p>
       </div>
       <div class="hp-pipeline">
         <div class="hp-pipeline__line"><div class="hp-pipeline__line-fill" id="pipeline-fill"></div></div>
@@ -65,20 +79,23 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     </div>
   </section>
 
-  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+  <!-- ====== BLUE LINE DIVIDER ====== -->
+  <div class="hp-rink-divider hp-rink-divider--blue">
+    <div class="hp-rink-divider__line hp-rink-divider__line--blue"></div>
+  </div>
 
   <!-- ====== SERVICES ====== -->
   <section class="hp-services" id="services">
     <div class="hp-container" style="padding-top: 8rem; padding-bottom: 2rem;">
       <div class="hp-header-center">
-        <div class="hp-label">What We Offer</div>
-        <h2 class="hp-heading">Our Services</h2>
-        <p class="hp-subtitle">Three ways we help. Each one designed for a different stage of the journey.</p>
+        <div class="hp-label" data-reveal>What We Offer</div>
+        <h2 class="hp-heading" data-reveal>Our Services</h2>
+        <p class="hp-subtitle" data-reveal>Three ways we help. Each one designed for a different stage of the journey.</p>
       </div>
     </div>
 
     <!-- Service 1: The Move -->
-    <div class="hp-service-row" data-service>
+    <div class="hp-service-row" data-service data-parallax="0.05">
       <div class="hp-service__visual">
         <div class="hp-service__visual-bg"><div class="hp-service__number">01</div></div>
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.55;">
@@ -101,7 +118,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           <li>Exposure opportunities at the right level of play</li>
           <li>Guidance and support at every step</li>
         </ul>
-        <a href="/services/the-move" class="hp-service__link">
+        <a href="/services/the-move" class="hp-service__link hp-magnetic">
           Explore The Move
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -109,7 +126,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     </div>
 
     <!-- Service 2: Mentoring -->
-    <div class="hp-service-row" data-service>
+    <div class="hp-service-row" data-service data-parallax="-0.03">
       <div class="hp-service__visual">
         <div class="hp-service__visual-bg"><div class="hp-service__number">02</div></div>
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.55;">
@@ -131,7 +148,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           <li>Custom exercise and nutrition plans</li>
           <li>Mental skills coaching with a professional</li>
         </ul>
-        <a href="/services/mentoring" class="hp-service__link">
+        <a href="/services/mentoring" class="hp-service__link hp-magnetic">
           Explore Mentoring
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -139,7 +156,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     </div>
 
     <!-- Service 3: HK Off-Ice Program -->
-    <div class="hp-service-row" data-service>
+    <div class="hp-service-row" data-service data-parallax="0.04">
       <div class="hp-service__visual">
         <div class="hp-service__visual-bg"><div class="hp-service__number">03</div></div>
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" style="position:relative;z-index:1;opacity:0.55;">
@@ -161,7 +178,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           <li>Discovery Bay Ice Rink / Lohas Park</li>
           <li>Custom merch included</li>
         </ul>
-        <a href="/services/hk-program" class="hp-service__link">
+        <a href="/services/hk-program" class="hp-service__link hp-magnetic">
           Explore HK Program
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -169,41 +186,51 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     </div>
   </section>
 
-  <!-- ====== INTERLUDE ====== -->
-  <section class="hp-interlude">
+  <!-- ====== INTERLUDE (cinematic) ====== -->
+  <section class="hp-interlude" data-speed="1.3">
+    <div class="hp-interlude__bg"></div>
     <div class="hp-container">
-      <h2>Not just a program.</h2>
-      <p>Our off-season program is 10 weeks of elite training in Hong Kong. Gym, shooting, skating, and mental skills. June 8 to August 16. It's also the first step into the RISE ecosystem, where players get evaluated, developed, and placed on teams in Canada.</p>
-      <a href="/why-us" class="hp-btn-outline" style="border-color: rgba(255,255,255,0.2);">Why RISE?</a>
+      <h2 data-reveal>Not just a program.</h2>
+      <p data-reveal>Our off-season program is 10 weeks of elite training in Hong Kong. Gym, shooting, skating, and mental skills. June 8 to August 16. It's also the first step into the RISE ecosystem, where players get evaluated, developed, and placed on teams in Canada.</p>
+      <a href="/why-us" class="hp-btn-outline hp-magnetic" style="border-color: rgba(255,255,255,0.2);">Why RISE?</a>
     </div>
   </section>
 
-  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+  <!-- ====== RED LINE DIVIDER ====== -->
+  <div class="hp-rink-divider">
+    <div class="hp-rink-divider__line hp-rink-divider__line--red"></div>
+    <div class="hp-rink-divider__puck"></div>
+    <div class="hp-rink-divider__line hp-rink-divider__line--red"></div>
+  </div>
 
   <!-- ====== PLAYERS ====== -->
   <section class="hp-section hp-players" id="players">
     <div class="hp-container">
       <div class="hp-header-center">
-        <div class="hp-label">Proof</div>
-        <h2 class="hp-heading">Our Players</h2>
-        <p class="hp-subtitle">Real kids. Real teams. Real progress.</p>
+        <div class="hp-label" data-reveal>Proof</div>
+        <h2 class="hp-heading" data-reveal>Our Players</h2>
+        <p class="hp-subtitle" data-reveal>Real kids. Real teams. Real progress.</p>
       </div>
       <div class="hp-players__grid">
-        <div class="hp-player-card" data-number="#7">
+        <div class="hp-player-card" data-number="#7" data-player>
+          <div class="hp-player-card__bg-number">#7</div>
           <div class="hp-player-card__jersey">#7</div>
           <h3>Wilshere Tung</h3>
           <p class="hp-player-card__pos">Defenceman</p>
           <p class="hp-player-card__team">2012 Toronto Titans</p>
+          <div class="hp-player-card__line"></div>
         </div>
-        <div class="hp-player-card" data-number="#13">
+        <div class="hp-player-card" data-number="#13" data-player>
+          <div class="hp-player-card__bg-number">#13</div>
           <div class="hp-player-card__jersey">#13</div>
           <h3>Felix Lloren</h3>
           <p class="hp-player-card__pos">Defenceman</p>
           <p class="hp-player-card__team">2011 Upper Canada College</p>
+          <div class="hp-player-card__line"></div>
         </div>
       </div>
       <div style="text-align:center;margin-top:3rem;">
-        <a href="#contact" class="hp-btn-primary"><span>Start Your Kid's Journey</span></a>
+        <a href="#contact" class="hp-btn-primary hp-magnetic"><span>Start Your Kid's Journey</span></a>
       </div>
     </div>
   </section>
@@ -230,15 +257,71 @@ import HomeLayout from "../layouts/HomeLayout.astro";
     </div>
   </div>
 
-  <div class="hp-divider"><div class="hp-divider__puck"></div></div>
+  <!-- ====== BLUE LINE DIVIDER ====== -->
+  <div class="hp-rink-divider hp-rink-divider--blue">
+    <div class="hp-rink-divider__line hp-rink-divider__line--blue"></div>
+  </div>
+
+  <!-- ====== JOURNEY SECTION (NEW) ====== -->
+  <section class="hp-section hp-journey" id="journey">
+    <div class="hp-container">
+      <div class="hp-header-center">
+        <div class="hp-label" data-reveal>The Distance</div>
+        <h2 class="hp-heading" data-reveal>From Hong Kong<br>to the Rink</h2>
+        <p class="hp-subtitle" data-reveal>7,654 kilometers. A different country, a different language, a different game. We've made the trip. We know the way.</p>
+      </div>
+      <div class="hp-journey__visual">
+        <div class="hp-journey__map">
+          <svg viewBox="0 0 800 300" class="hp-journey__svg" id="journey-svg">
+            <!-- Simplified HK→Canada flight arc -->
+            <path class="hp-journey__arc" d="M 120,200 Q 400,20 680,180" fill="none" stroke="rgba(211,25,31,0.3)" stroke-width="1" stroke-dasharray="6 4"/>
+            <path class="hp-journey__arc-fill" d="M 120,200 Q 400,20 680,180" fill="none" stroke="#D3191F" stroke-width="2" stroke-dasharray="1200" stroke-dashoffset="1200"/>
+            <!-- HK dot -->
+            <circle class="hp-journey__dot" cx="120" cy="200" r="6" fill="#D3191F"/>
+            <text x="120" y="230" fill="#888" font-size="11" font-family="Oswald" text-anchor="middle" letter-spacing="0.1em">HONG KONG</text>
+            <!-- Canada dot -->
+            <circle class="hp-journey__dot" cx="680" cy="180" r="6" fill="#D3191F"/>
+            <text x="680" y="210" fill="#888" font-size="11" font-family="Oswald" text-anchor="middle" letter-spacing="0.1em">CANADA</text>
+            <!-- Plane -->
+            <g class="hp-journey__plane" transform="translate(120,200)">
+              <polygon points="0,-4 8,4 0,2 -8,4" fill="#D3191F" opacity="0.9"/>
+            </g>
+            <!-- Distance counter -->
+            <text class="hp-journey__distance" x="400" y="100" fill="#D3191F" font-size="36" font-family="Oswald" font-weight="700" text-anchor="middle" letter-spacing="0.05em" opacity="0.8">7,654 km</text>
+          </svg>
+        </div>
+        <div class="hp-journey__stats">
+          <div class="hp-journey__stat" data-reveal>
+            <span class="hp-journey__stat-num">7,654</span>
+            <span class="hp-journey__stat-label">Kilometers</span>
+          </div>
+          <div class="hp-journey__stat" data-reveal>
+            <span class="hp-journey__stat-num">12</span>
+            <span class="hp-journey__stat-label">Hour Flight</span>
+          </div>
+          <div class="hp-journey__stat" data-reveal>
+            <span class="hp-journey__stat-num">1</span>
+            <span class="hp-journey__stat-label">Dream</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== RED LINE DIVIDER ====== -->
+  <div class="hp-rink-divider">
+    <div class="hp-rink-divider__line hp-rink-divider__line--red"></div>
+    <div class="hp-rink-divider__puck"></div>
+    <div class="hp-rink-divider__line hp-rink-divider__line--red"></div>
+  </div>
 
   <!-- ====== FAQ ====== -->
   <section class="hp-section hp-faq" id="faq">
     <div class="hp-container">
       <div class="hp-header-center">
-        <div class="hp-label">Questions</div>
-        <h2 class="hp-heading">Parents Ask</h2>
-        <p class="hp-subtitle">The honest answers.</p>
+        <div class="hp-label" data-reveal>Questions</div>
+        <h2 class="hp-heading" data-reveal>Parents Ask</h2>
+        <p class="hp-subtitle" data-reveal>The honest answers.</p>
       </div>
       <div class="hp-faq__list">
         <div class="hp-faq-item">
@@ -267,12 +350,13 @@ import HomeLayout from "../layouts/HomeLayout.astro";
 
   <!-- ====== CTA ====== -->
   <section class="hp-cta" id="contact">
+    <div class="hp-cta__frost"></div>
     <div class="hp-cta__content">
-      <h2>Get in Touch</h2>
-      <p>No commitment. Just a conversation about your kid's hockey future. We reply within 24 hours.</p>
+      <h2 data-reveal>Get in Touch</h2>
+      <p data-reveal>No commitment. Just a conversation about your kid's hockey future. We reply within 24 hours.</p>
       <div class="hp-cta__buttons">
-        <a href="mailto:riseadvancements@gmail.com?subject=RISE%20Advancement%20-%20Interested" class="hp-btn-white">Email Us</a>
-        <a href="https://wa.me/85290950387" class="hp-btn-ghost">WhatsApp</a>
+        <a href="mailto:riseadvancements@gmail.com?subject=RISE%20Advancement%20-%20Interested" class="hp-btn-white hp-magnetic">Email Us</a>
+        <a href="https://wa.me/85290950387" class="hp-btn-ghost hp-magnetic">WhatsApp</a>
       </div>
     </div>
   </section>
@@ -298,7 +382,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         <h4>Contact</h4>
         <ul>
           <li><a href="mailto:riseadvancements@gmail.com">riseadvancements@gmail.com</a></li>
-          <li><a href="tel:+85290950387">+852 9095 0387</a></li>
+          <li><a href="tel:+852****0387">+852 9095 0387</a></li>
           <li>WeChat: RISE-Advancement</li>
         </ul>
       </div>
@@ -316,8 +400,12 @@ import HomeLayout from "../layouts/HomeLayout.astro";
   </footer>
 
   <!-- ====== PAGE SCRIPTS ====== -->
-  <script is:inline>
+  <script>
+    import { animate, hover, press } from "motion";
+
     (function () {
+      var isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
       // ——— LENIS SMOOTH SCROLL ———
       var lenis = new Lenis({ duration: 1.8, easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, touchMultiplier: 1.5, wheelMultiplier: 0.8 });
       lenis.on('scroll', ScrollTrigger.update);
@@ -328,7 +416,76 @@ import HomeLayout from "../layouts/HomeLayout.astro";
       gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
       ScrollTrigger.config({ limitCallbacks: true });
 
-      // ——— ENHANCED HOCKEY RINK ———
+      // ——— CUSTOM CURSOR ———
+      if (!isMobile) {
+        var cursor = document.getElementById('cursor');
+        var cursorDot = cursor.querySelector('.hp-cursor__dot');
+        var cursorRing = cursor.querySelector('.hp-cursor__ring');
+        var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+        document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX; mouseY = e.clientY;
+          gsap.set(cursorDot, { x: mouseX - 4, y: mouseY - 4 });
+        });
+
+        function updateRing() {
+          ringX += (mouseX - ringX) * 0.15;
+          ringY += (mouseY - ringY) * 0.15;
+          gsap.set(cursorRing, { x: ringX - 20, y: ringY - 20 });
+          requestAnimationFrame(updateRing);
+        }
+        updateRing();
+        cursor.style.opacity = '1';
+
+        // Cursor hover effects on interactive elements
+        document.querySelectorAll('a, button, .hp-magnetic').forEach(function(el) {
+          el.addEventListener('mouseenter', function() {
+            gsap.to(cursorRing, { scale: 1.5, borderColor: 'rgba(211,25,31,0.5)', duration: 0.3 });
+          });
+          el.addEventListener('mouseleave', function() {
+            gsap.to(cursorRing, { scale: 1, borderColor: 'rgba(255,255,255,0.15)', duration: 0.3 });
+          });
+        });
+      }
+
+      // ——— MAGNETIC BUTTONS (Motion gestures) ———
+      if (!isMobile) {
+        document.querySelectorAll('.hp-magnetic').forEach(function(btn) {
+          btn.addEventListener('mousemove', function(e) {
+            var rect = btn.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width / 2;
+            var y = e.clientY - rect.top - rect.height / 2;
+            animate(btn, { x: x * 0.2, y: y * 0.2 }, { type: "spring", stiffness: 300, damping: 20 });
+          });
+          btn.addEventListener('mouseleave', function() {
+            animate(btn, { x: 0, y: 0 }, { type: "spring", stiffness: 400, damping: 25 });
+          });
+        });
+      }
+
+      // ——— TEXT SPLIT + REVEAL ———
+      function splitChars(el) {
+        var text = el.textContent.trim();
+        el.innerHTML = '';
+        for (var i = 0; i < text.length; i++) {
+          var span = document.createElement('span');
+          span.className = 'hp-char';
+          span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+          span.style.display = 'inline-block';
+          el.appendChild(span);
+        }
+        return el.querySelectorAll('.hp-char');
+      }
+
+      // Split section headings on scroll
+      document.querySelectorAll('[data-reveal]').forEach(function(el) {
+        gsap.from(el, {
+          opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', immediateRender: false,
+          scrollTrigger: { trigger: el, start: 'top 88%' }
+        });
+      });
+
+      // ——— ENHANCED HOCKEY RINK (scroll-responsive) ———
       (function() {
         var canvas = document.getElementById('hero-canvas');
         if (!canvas) return;
@@ -346,19 +503,23 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         camera.lookAt(0, 0, -2);
 
         var mouse = { x: 0, y: 0 };
+        var scrollProgress = 0;
 
-        // ICE SURFACE
+        // ICE SURFACE with frost texture
         var iceMat = new THREE.MeshPhongMaterial({ color: 0x0a0e14, specular: 0x1a2030, shininess: 80, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
         var ice = new THREE.Mesh(new THREE.PlaneGeometry(32, 22), iceMat);
         ice.rotation.x = -Math.PI / 2; ice.position.y = -0.01;
         scene.add(ice);
 
-        // LIGHTING
+        // LIGHTING (enhanced — more dramatic)
         scene.add(new THREE.AmbientLight(0x222233, 0.6));
         var dirLight = new THREE.DirectionalLight(0x4488cc, 0.3);
         dirLight.position.set(2, 8, 5); scene.add(dirLight);
         var redPoint = new THREE.PointLight(0xD3191F, 0.4, 20);
         redPoint.position.set(0, 2, 0); scene.add(redPoint);
+        // Extra rim light for drama
+        var rimLight = new THREE.PointLight(0x4488cc, 0.2, 25);
+        rimLight.position.set(-8, 4, -5); scene.add(rimLight);
 
         // RINK HELPERS
         var lineMat = function(c, o) { return new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: o }); };
@@ -371,7 +532,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         var Y = 0.01;
         var bx = 13, bz = 8.5;
 
-        // BOARDS (geometry + lines)
+        // BOARDS
         var boardMat = new THREE.LineBasicMaterial({ color: 0x334455, transparent: true, opacity: 0.5 });
         scene.add(makeLine([new THREE.Vector3(-bx,Y,-bz), new THREE.Vector3(bx,Y,-bz)], boardMat));
         scene.add(makeLine([new THREE.Vector3(bx,Y,-bz), new THREE.Vector3(bx,Y,bz)], boardMat));
@@ -411,8 +572,8 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         }
         makeCrease(-11.5); makeCrease(11.5);
 
-        // PARTICLES
-        var pCount = 300;
+        // ICE PARTICLES (more, varied)
+        var pCount = 400;
         var pPos = new Float32Array(pCount*3), pCol = new Float32Array(pCount*3), pVel = new Float32Array(pCount*3);
         var iceC = new THREE.Color(0xB8D4E3), redC = new THREE.Color(0xD3191F), whtC = new THREE.Color(0xE8E8E8);
         for (var i = 0; i < pCount; i++) {
@@ -453,7 +614,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           trailAlpha[idx] = 1.0; trailIdx++;
         }
 
-        // RENDER LOOP
+        // RENDER LOOP (scroll-responsive camera)
         var heroKilled = false;
         function renderRink() {
           if (heroKilled) return;
@@ -480,10 +641,13 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           var tPos = trailGeom.attributes.position.array;
           for (var i = 0; i < trailMax; i++) { if (trailAlpha[i] > 0) { trailAlpha[i] -= 0.008; tPos[i*3+1] += 0.002; } }
           trailGeom.attributes.position.needsUpdate = true;
-          // Camera
+          // Scroll-responsive camera (rises and tilts as you scroll)
+          var scrollCam = scrollProgress * 2;
           camera.position.x += (mouse.x*3 - camera.position.x) * 0.012;
-          camera.position.y += (3.5 - mouse.y*1.5 - camera.position.y) * 0.012;
-          camera.lookAt(0, 0, -2);
+          camera.position.y += (3.5 + scrollCam - mouse.y*1.5 - camera.position.y) * 0.012;
+          camera.lookAt(0, 0, -2 - scrollProgress * 3);
+          // Red light pulses with scroll
+          redPoint.intensity = 0.4 + scrollProgress * 0.3;
           renderer.render(scene, camera);
         }
         gsap.ticker.add(renderRink);
@@ -493,15 +657,22 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
           mouse.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
         });
+
+        // Scroll tracking for Three.js
+        window.addEventListener('scroll', function() {
+          var heroH = heroEl.offsetHeight;
+          scrollProgress = Math.min(1, window.scrollY / heroH);
+          heroKilled = window.scrollY > heroH * 1.5;
+        }, { passive: true });
+
         window.addEventListener('resize', function() {
           camera.aspect = heroEl.offsetWidth / heroEl.offsetHeight;
           camera.updateProjectionMatrix();
           renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
         });
-        window.addEventListener('scroll', function() { heroKilled = window.scrollY > window.innerHeight * 1.5; }, { passive: true });
       })();
 
-      // LOADER
+      // ——— LOADER (enhanced cinematic) ———
       var loaderTl = gsap.timeline();
       loaderTl
         .to('#loader-fill', { width: '100%', duration: 0.8, ease: 'power2.inOut' })
@@ -512,7 +683,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         .to('.hp-hero__actions', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.2')
         .to('.hp-hero__scroll', { opacity: 1, duration: 0.4 }, '-=0.1');
 
-      // NAV SCROLL
+      // ——— NAV SCROLL ———
       ScrollTrigger.create({
         start: 80,
         onUpdate: function(self) {
@@ -520,11 +691,11 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         }
       });
 
-      // PIPELINE STEPS
+      // ——— PIPELINE STEPS (staggered reveal) ———
       gsap.utils.toArray('.hp-step').forEach(function(step, i) {
         var marker = step.querySelector('.hp-step__marker');
         gsap.from(step, {
-          opacity: 0, y: 20, duration: 0.45, ease: 'power2.out', delay: i * 0.06, immediateRender: false,
+          opacity: 0, y: 40, duration: 0.6, ease: 'power3.out', delay: i * 0.08, immediateRender: false,
           scrollTrigger: { trigger: step, start: 'top 90%' }
         });
         ScrollTrigger.create({
@@ -547,43 +718,65 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         }
       });
 
-      // SERVICE ROWS
+      // ——— SERVICE ROWS (parallax + reveal) ———
       gsap.utils.toArray('.hp-service-row').forEach(function(row) {
         var content = row.querySelector('[data-service-content]');
         var visual = row.querySelector('.hp-service__visual');
         if (content) {
           gsap.from(content, {
-            opacity: 0, x: 30, duration: 0.45, ease: 'power2.out', immediateRender: false,
+            opacity: 0, x: 40, duration: 0.6, ease: 'power3.out', immediateRender: false,
             scrollTrigger: { trigger: row, start: 'top 88%' }
           });
         }
         if (visual) {
           gsap.from(visual, {
-            opacity: 0, x: -30, duration: 0.45, ease: 'power2.out', immediateRender: false,
+            opacity: 0, x: -40, duration: 0.6, ease: 'power3.out', immediateRender: false,
             scrollTrigger: { trigger: row, start: 'top 88%' }
           });
         }
       });
 
-      // INTERLUDE
-      gsap.from('.hp-interlude h2', {
-        opacity: 0, y: 20, duration: 0.45, ease: 'power2.out', immediateRender: false,
-        scrollTrigger: { trigger: '.hp-interlude', start: 'top 88%' }
-      });
-      gsap.from('.hp-interlude p', {
-        opacity: 0, y: 15, duration: 0.45, ease: 'power2.out', delay: 0.1, immediateRender: false,
-        scrollTrigger: { trigger: '.hp-interlude', start: 'top 88%' }
+      // ——— PARALLAX ELEMENTS ———
+      gsap.utils.toArray('[data-parallax]').forEach(function(el) {
+        var speed = parseFloat(el.dataset.parallax) || 0.05;
+        gsap.to(el, {
+          y: function() { return speed * window.innerHeight; },
+          ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 1 }
+        });
       });
 
-      // PLAYER CARDS
-      gsap.utils.toArray('.hp-player-card').forEach(function(card, i) {
+      // ——— INTERLUDE (slower reveal, dramatic) ———
+      gsap.from('.hp-interlude h2', {
+        opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { trigger: '.hp-interlude', start: 'top 85%' }
+      });
+      gsap.from('.hp-interlude p', {
+        opacity: 0, y: 20, duration: 0.7, ease: 'power3.out', delay: 0.15, immediateRender: false,
+        scrollTrigger: { trigger: '.hp-interlude', start: 'top 85%' }
+      });
+
+      // ——— PLAYER CARDS (dramatic reveal) ———
+      gsap.utils.toArray('[data-player]').forEach(function(card, i) {
         gsap.from(card, {
-          opacity: 0, y: 30, duration: 0.45, ease: 'power2.out', delay: i * 0.08, immediateRender: false,
+          opacity: 0, y: 50, scale: 0.95, duration: 0.7, ease: 'power3.out', delay: i * 0.12, immediateRender: false,
           scrollTrigger: { trigger: card, start: 'top 88%' }
         });
       });
 
-      // STATS COUNTERS
+      // Player card hover (Motion gestures)
+      if (!isMobile) {
+        document.querySelectorAll('[data-player]').forEach(function(card) {
+          hover(card, function() {
+            animate(card, { y: -8, scale: 1.02 }, { type: "spring", stiffness: 300, damping: 20 });
+            return function() {
+              animate(card, { y: 0, scale: 1 }, { type: "spring", stiffness: 400, damping: 25 });
+            };
+          });
+        });
+      }
+
+      // ——— STATS COUNTERS (fixed) ———
       gsap.utils.toArray('[data-count]').forEach(function(el) {
         var target = parseInt(el.dataset.count);
         var obj = { val: 0 };
@@ -593,28 +786,74 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           once: true,
           onEnter: function() {
             gsap.to(obj, {
-              val: target, duration: 1.0, ease: 'power2.out',
-              onUpdate: function() { el.textContent = Math.round(obj.val); }
+              val: target, duration: 1.2, ease: 'power2.out',
+              onUpdate: function() {
+                var v = Math.round(obj.val);
+                el.textContent = target >= 100 ? v + '%' : v;
+              }
             });
           }
         });
       });
 
-      // CTA
-      gsap.from('.hp-cta__content h2', {
-        opacity: 0, y: 20, duration: 0.45, ease: 'power2.out', immediateRender: false,
-        scrollTrigger: { trigger: '.hp-cta', start: 'top 88%' }
-      });
-      gsap.from('.hp-cta__content p', {
-        opacity: 0, y: 15, duration: 0.45, ease: 'power2.out', delay: 0.1, immediateRender: false,
-        scrollTrigger: { trigger: '.hp-cta', start: 'top 88%' }
-      });
-      gsap.from('.hp-cta__buttons', {
-        opacity: 0, y: 15, duration: 0.45, ease: 'power2.out', delay: 0.2, immediateRender: false,
-        scrollTrigger: { trigger: '.hp-cta', start: 'top 88%' }
+      // ——— JOURNEY ARC ANIMATION ———
+      var arcFill = document.querySelector('.hp-journey__arc-fill');
+      if (arcFill) {
+        ScrollTrigger.create({
+          trigger: '.hp-journey',
+          start: 'top 70%',
+          end: 'bottom 40%',
+          onUpdate: function(self) {
+            gsap.set(arcFill, { strokeDashoffset: 1200 * (1 - self.progress) });
+          }
+        });
+      }
+
+      // Journey plane animation
+      var journeyPlane = document.querySelector('.hp-journey__plane');
+      var journeySvg = document.getElementById('journey-svg');
+      if (journeyPlane && journeySvg) {
+        ScrollTrigger.create({
+          trigger: '.hp-journey',
+          start: 'top 70%',
+          end: 'bottom 40%',
+          onUpdate: function(self) {
+            // Approximate position along the quadratic bezier
+            var t = self.progress;
+            var x = (1-t)*(1-t)*120 + 2*(1-t)*t*400 + t*t*680;
+            var y = (1-t)*(1-t)*200 + 2*(1-t)*t*20 + t*t*180;
+            // Angle
+            var dx = 2*(1-t)*(400-120) + 2*t*(680-400);
+            var dy = 2*(1-t)*(20-200) + 2*t*(180-20);
+            var angle = Math.atan2(dy, dx) * (180/Math.PI);
+            journeyPlane.setAttribute('transform', 'translate('+x+','+y+') rotate('+angle+')');
+          }
+        });
+      }
+
+      // ——— RINK DIVIDER ANIMATION ———
+      gsap.utils.toArray('.hp-rink-divider__line').forEach(function(line) {
+        gsap.from(line, {
+          scaleX: 0, duration: 1, ease: 'power3.inOut', immediateRender: false,
+          scrollTrigger: { trigger: line.parentElement, start: 'top 90%' }
+        });
       });
 
-      // FAQ ACCORDION
+      // ——— CTA ———
+      gsap.from('.hp-cta__content h2', {
+        opacity: 0, y: 20, duration: 0.6, ease: 'power3.out', immediateRender: false,
+        scrollTrigger: { trigger: '.hp-cta', start: 'top 85%' }
+      });
+      gsap.from('.hp-cta__content p', {
+        opacity: 0, y: 15, duration: 0.6, ease: 'power3.out', delay: 0.1, immediateRender: false,
+        scrollTrigger: { trigger: '.hp-cta', start: 'top 85%' }
+      });
+      gsap.from('.hp-cta__buttons', {
+        opacity: 0, y: 15, duration: 0.6, ease: 'power3.out', delay: 0.2, immediateRender: false,
+        scrollTrigger: { trigger: '.hp-cta', start: 'top 85%' }
+      });
+
+      // ——— FAQ ACCORDION ———
       document.querySelectorAll('.hp-faq-item__question').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var item = btn.closest('.hp-faq-item');
@@ -637,7 +876,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         });
       });
 
-      // SMOOTH SCROLL NAV
+      // ——— SMOOTH SCROLL NAV ———
       document.querySelectorAll('.hp-nav__links a[href^="#"]').forEach(function(a) {
         a.addEventListener('click', function(e) {
           e.preventDefault();
@@ -648,7 +887,22 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         });
       });
 
-      // REDUCED MOTION
+      // ——— ICE PARTICLES (CSS DOM particles on hero) ———
+      var iceParticlesEl = document.getElementById('ice-particles');
+      if (iceParticlesEl && !isMobile) {
+        for (var i = 0; i < 30; i++) {
+          var dot = document.createElement('div');
+          dot.className = 'hp-ice-dot';
+          dot.style.left = Math.random() * 100 + '%';
+          dot.style.top = Math.random() * 100 + '%';
+          dot.style.animationDelay = Math.random() * 5 + 's';
+          dot.style.animationDuration = (3 + Math.random() * 4) + 's';
+          dot.style.width = dot.style.height = (1 + Math.random() * 2) + 'px';
+          iceParticlesEl.appendChild(dot);
+        }
+      }
+
+      // ——— REDUCED MOTION ———
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         lenis.destroy();
         ScrollTrigger.getAll().forEach(function(st) { st.kill(); });
