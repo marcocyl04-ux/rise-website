@@ -231,6 +231,24 @@ button.hp-nav__cta { background: transparent; }
   .hp-nav__hamburger { display: block; }
 }
 
+/* Fixed rink backdrop — spans entire page */
+.hp-rink-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+.hp-rink-frost {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 50% 0%, transparent 0%, rgba(10,10,10,0.4) 40%, rgba(10,10,10,0.7) 100%);
+  pointer-events: none;
+}
+
 /* ============ HERO ============ */
 .hp-hero {
   position: relative;
@@ -239,21 +257,7 @@ button.hp-nav__cta { background: transparent; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-.hp-hero__canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-/* Frost overlay — ice texture feel */
-.hp-hero__frost {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(180, 210, 230, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 80%, rgba(180, 210, 230, 0.02) 0%, transparent 50%);
-  pointer-events: none;
+  z-index: 2;
 }
 .hp-hero__overlay {
   position: absolute;
@@ -451,6 +455,8 @@ button.hp-nav__cta { background: transparent; }
 /* ============ RINK DIVIDERS (hockey-coded) ============ */
 .hp-rink-divider {
   position: relative;
+  z-index: 2;
+  position: relative;
   height: 3px;
   display: flex;
   align-items: center;
@@ -490,6 +496,7 @@ button.hp-nav__cta { background: transparent; }
 .hp-section {
   padding: 8rem 2.5rem;
   position: relative;
+  z-index: 2;
 }
 .hp-container {
   max-width: 1100px;
@@ -530,6 +537,7 @@ button.hp-nav__cta { background: transparent; }
 
 /* ============ HOW IT WORKS (PIPELINE) ============ */
 .hp-how {
+  background: rgba(13,13,13,0.92);
   background: var(--rise-surface);
   position: relative;
 }
@@ -625,7 +633,7 @@ button.hp-nav__cta { background: transparent; }
 }
 
 /* ============ SERVICES ============ */
-.hp-services { padding: 0; }
+.hp-services { padding: 0; position: relative; z-index: 2; }
 .hp-service-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -753,7 +761,9 @@ button.hp-nav__cta { background: transparent; }
 
 /* ============ INTERLUDE (cinematic) ============ */
 .hp-interlude {
-  background: var(--rise-surface);
+  position: relative;
+  z-index: 2;
+  background: rgba(13,13,13,0.92);
   text-align: center;
   padding: 8rem 2.5rem;
   position: relative;
@@ -783,7 +793,7 @@ button.hp-nav__cta { background: transparent; }
 }
 
 /* ============ PLAYERS ============ */
-.hp-players { background: var(--rise-black); }
+.hp-players { background: rgba(10,10,10,0.92); }
 .hp-players__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -868,7 +878,9 @@ button.hp-nav__cta { background: transparent; }
 
 /* ============ STATS BAR ============ */
 .hp-stats {
-  background: var(--rise-surface-2);
+  position: relative;
+  z-index: 2;
+  background: rgba(17,17,17,0.92);
   border-top: 1px solid var(--rise-border);
   border-bottom: 1px solid var(--rise-border);
   padding: 4rem 2.5rem;
@@ -908,6 +920,8 @@ button.hp-nav__cta { background: transparent; }
 
 /* ============ JOURNEY SECTION ============ */
 .hp-journey {
+  position: relative;
+  z-index: 2;
   background: var(--rise-black);
   position: relative;
   overflow: hidden;
@@ -1045,6 +1059,8 @@ button.hp-nav__cta { background: transparent; }
 
 /* ============ CTA ============ */
 .hp-cta {
+  position: relative;
+  z-index: 2;
   background: var(--rise-red);
   padding: 8rem 2.5rem;
   position: relative;
@@ -1110,6 +1126,8 @@ button.hp-nav__cta { background: transparent; }
 
 /* ============ FOOTER ============ */
 .hp-footer {
+  position: relative;
+  z-index: 2;
   background: var(--rise-black);
   border-top: 1px solid var(--rise-border);
   padding: 4rem 2.5rem 2rem;

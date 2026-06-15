@@ -5,6 +5,10 @@ import HomeLayout from "../layouts/HomeLayout.astro";
 
 <HomeLayout title="Home" description="RISE Advancement: elite hockey training and player placement for Hong Kong youth. Summer program, mentoring, and full placement services to Canada.">
 
+  <!-- ====== FIXED RINK BACKDROP ====== -->
+  <canvas class="hp-rink-canvas" id="hero-canvas"></canvas>
+  <div class="hp-rink-frost"></div>
+
   <!-- ====== CUSTOM CURSOR ====== -->
   <div class="hp-cursor" id="cursor">
     <div class="hp-cursor__dot"></div>
@@ -13,8 +17,6 @@ import HomeLayout from "../layouts/HomeLayout.astro";
 
   <!-- ====== HERO ====== -->
   <section class="hp-hero" id="hero">
-    <canvas class="hp-hero__canvas" id="hero-canvas"></canvas>
-    <div class="hp-hero__frost"></div>
     <div class="hp-hero__overlay"></div>
     <div class="hp-hero__content">
       <div class="hp-hero__eyebrow"><span>Asia → Canada</span></div>
@@ -506,39 +508,38 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         });
       });
 
-      // ——— ENHANCED HOCKEY RINK (scroll-responsive) ———
+      // ——— ENHANCED HOCKEY RINK (full-page scroll-driven) ———
       (function() {
         var canvas = document.getElementById('hero-canvas');
         if (!canvas) return;
-        var heroEl = canvas.parentElement;
         var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setClearColor(0x060608, 1);
-        renderer.fog = new THREE.FogExp2(0x060608, 0.035);
+        renderer.fog = new THREE.FogExp2(0x060608, 0.03);
 
         var scene = new THREE.Scene();
         scene.fog = renderer.fog;
-        var camera = new THREE.PerspectiveCamera(55, heroEl.offsetWidth / heroEl.offsetHeight, 0.1, 100);
+        var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
         camera.position.set(0, 3.5, 10);
         camera.lookAt(0, 0, -2);
 
         var mouse = { x: 0, y: 0 };
-        var scrollProgress = 0;
+        var scrollNorm = 0; // 0 = top, 1 = bottom of page
+        var smoothScroll = 0; // smoothed version
 
-        // ICE SURFACE with frost texture
+        // ICE SURFACE
         var iceMat = new THREE.MeshPhongMaterial({ color: 0x0a0e14, specular: 0x1a2030, shininess: 80, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
         var ice = new THREE.Mesh(new THREE.PlaneGeometry(32, 22), iceMat);
         ice.rotation.x = -Math.PI / 2; ice.position.y = -0.01;
         scene.add(ice);
 
-        // LIGHTING (enhanced — more dramatic)
+        // LIGHTING
         scene.add(new THREE.AmbientLight(0x222233, 0.6));
         var dirLight = new THREE.DirectionalLight(0x4488cc, 0.3);
         dirLight.position.set(2, 8, 5); scene.add(dirLight);
         var redPoint = new THREE.PointLight(0xD3191F, 0.4, 20);
         redPoint.position.set(0, 2, 0); scene.add(redPoint);
-        // Extra rim light for drama
         var rimLight = new THREE.PointLight(0x4488cc, 0.2, 25);
         rimLight.position.set(-8, 4, -5); scene.add(rimLight);
 
@@ -593,7 +594,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         }
         makeCrease(-11.5); makeCrease(11.5);
 
-        // ICE PARTICLES (more, varied)
+        // ICE PARTICLES
         var pCount = 400;
         var pPos = new Float32Array(pCount*3), pCol = new Float32Array(pCount*3), pVel = new Float32Array(pCount*3);
         var iceC = new THREE.Color(0xB8D4E3), redC = new THREE.Color(0xD3191F), whtC = new THREE.Color(0xE8E8E8);
@@ -635,10 +636,43 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           trailAlpha[idx] = 1.0; trailIdx++;
         }
 
-        // RENDER LOOP (scroll-responsive camera)
-        var heroKilled = false;
+        // Camera keyframes: define camera position/lookAt per scroll zone
+        // [scrollStart, scrollEnd, camPos, lookAt]
+        var camKeyframes = [
+          { s: 0,    e: 0.15, from: { px:0, py:3.5, pz:10, lx:0, ly:0, lz:-2 },    to: { px:0, py:5, pz:12, lx:0, ly:0, lz:-2 } },
+          { s: 0.15, e: 0.35, from: { px:0, py:5, pz:12, lx:0, ly:0, lz:-2 },      to: { px:-4, py:6, pz:8, lx:2, ly:0, lz:0 } },
+          { s: 0.35, e: 0.55, from: { px:-4, py:6, pz:8, lx:2, ly:0, lz:0 },       to: { px:3, py:4, pz:-6, lx:-2, ly:0, lz:2 } },
+          { s: 0.55, e: 0.75, from: { px:3, py:4, pz:-6, lx:-2, ly:0, lz:2 },      to: { px:0, py:8, pz:0, lx:0, ly:0, lz:0 } },
+          { s: 0.75, e: 1.0,  from: { px:0, py:8, pz:0, lx:0, ly:0, lz:0 },       to: { px:-2, py:3, pz:10, lx:2, ly:0, lz:-4 } }
+        ];
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function smoothstep(t) { return t * t * (3 - 2 * t); }
+
+        function getCameraPose(scroll) {
+          for (var i = 0; i < camKeyframes.length; i++) {
+            var kf = camKeyframes[i];
+            if (scroll >= kf.s && scroll <= kf.e) {
+              var t = smoothstep((scroll - kf.s) / (kf.e - kf.s));
+              return {
+                px: lerp(kf.from.px, kf.to.px, t),
+                py: lerp(kf.from.py, kf.to.py, t),
+                pz: lerp(kf.from.pz, kf.to.pz, t),
+                lx: lerp(kf.from.lx, kf.to.lx, t),
+                ly: lerp(kf.from.ly, kf.to.ly, t),
+                lz: lerp(kf.from.lz, kf.to.lz, t)
+              };
+            }
+          }
+          var last = camKeyframes[camKeyframes.length - 1];
+          return { px: last.to.px, py: last.to.py, pz: last.to.pz, lx: last.to.lx, ly: last.to.ly, lz: last.to.lz };
+        }
+
+        // RENDER LOOP
         function renderRink() {
-          if (heroKilled) return;
+          // Smooth scroll interpolation
+          smoothScroll += (scrollNorm - smoothScroll) * 0.04;
+
           // Particles
           var pos = pGeom.attributes.position.array;
           for (var i = 0; i < pCount; i++) {
@@ -662,34 +696,38 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           var tPos = trailGeom.attributes.position.array;
           for (var i = 0; i < trailMax; i++) { if (trailAlpha[i] > 0) { trailAlpha[i] -= 0.008; tPos[i*3+1] += 0.002; } }
           trailGeom.attributes.position.needsUpdate = true;
-          // Scroll-responsive camera (rises and tilts as you scroll)
-          var scrollCam = scrollProgress * 2;
-          camera.position.x += (mouse.x*3 - camera.position.x) * 0.012;
-          camera.position.y += (3.5 + scrollCam - mouse.y*1.5 - camera.position.y) * 0.012;
-          camera.lookAt(0, 0, -2 - scrollProgress * 3);
-          // Red light pulses with scroll
-          redPoint.intensity = 0.4 + scrollProgress * 0.3;
+
+          // Camera from keyframes + mouse offset
+          var pose = getCameraPose(smoothScroll);
+          var mouseOffsetX = mouse.x * 2;
+          var mouseOffsetY = mouse.y * 1;
+          camera.position.x += (pose.px + mouseOffsetX - camera.position.x) * 0.03;
+          camera.position.y += (pose.py - mouseOffsetY - camera.position.y) * 0.03;
+          camera.position.z += (pose.pz - camera.position.z) * 0.03;
+          camera.lookAt(pose.lx, pose.ly, pose.lz);
+
+          // Red light intensity pulses with scroll
+          redPoint.intensity = 0.4 + smoothScroll * 0.4;
           renderer.render(scene, camera);
         }
         gsap.ticker.add(renderRink);
 
-        heroEl.addEventListener('mousemove', function(e) {
-          var rect = heroEl.getBoundingClientRect();
-          mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-          mouse.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        // Mouse tracking
+        window.addEventListener('mousemove', function(e) {
+          mouse.x = ((e.clientX) / window.innerWidth) * 2 - 1;
+          mouse.y = ((e.clientY) / window.innerHeight) * 2 - 1;
         });
 
-        // Scroll tracking for Three.js
+        // Full-page scroll tracking
         window.addEventListener('scroll', function() {
-          var heroH = heroEl.offsetHeight;
-          scrollProgress = Math.min(1, window.scrollY / heroH);
-          heroKilled = window.scrollY > heroH * 1.5;
+          var docH = document.documentElement.scrollHeight - window.innerHeight;
+          scrollNorm = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
         }, { passive: true });
 
         window.addEventListener('resize', function() {
-          camera.aspect = heroEl.offsetWidth / heroEl.offsetHeight;
+          camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
-          renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
+          renderer.setSize(window.innerWidth, window.innerHeight);
         });
       })();
 
