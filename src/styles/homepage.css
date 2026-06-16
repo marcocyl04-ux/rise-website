@@ -29,64 +29,14 @@
   color: var(--rise-white);
   overflow-x: hidden;
 }
-/* Unified cursor: none on ALL elements desktop */
-@media (min-width: 768px) {
-  .home-dark, .home-dark *, .home-dark *::before, .home-dark *::after {
-    cursor: none !important;
-  }
-}
+/* Custom cursor removed — using native cursor */
 .home-dark h1, .home-dark h2, .home-dark h3, .home-dark h4, .home-dark h5, .home-dark h6 {
   color: var(--rise-white);
 }
 .home-dark a { color: inherit; text-decoration: none; }
 .home-dark img { max-width: 100%; display: block; }
 
-/* -- Film Grain (subtle) -- */
-.home-dark::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.4;
-}
-
-/* ============ CUSTOM CURSOR ============ */
-.hp-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10001;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.hp-cursor__dot {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: var(--rise-red);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10002;
-  will-change: transform;
-}
-.hp-cursor__ring {
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10001;
-  will-change: transform;
-  transition: border-color 0.3s, transform 0.3s;
-}
-@media (max-width: 767px) {
-  .hp-cursor { display: none; }
-}
-
+/* Film grain and custom cursor removed for performance */
 /* ============ LOADER ============ */
 .hp-loader {
   position: fixed;
@@ -1205,6 +1155,5 @@ button.hp-nav__cta { background: transparent; }
     transition-duration: 0.01ms !important;
   }
   .hp-loader { display: none; }
-  .hp-cursor { display: none; }
   .home-dark { cursor: auto; }
 }
