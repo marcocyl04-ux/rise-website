@@ -583,7 +583,7 @@ button.hp-nav__cta { background: transparent; }
 }
 
 /* ============ SERVICES ============ */
-.hp-services { padding: 0; position: relative; z-index: 2; }
+.hp-services { padding: 0; position: relative; z-index: 2; background: var(--rise-black); }
 .hp-service-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

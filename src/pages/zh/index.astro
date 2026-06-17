@@ -322,7 +322,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
         // LIGHTS
         scene.add(new THREE.AmbientLight(0x222233, 0.6));
         var dl = new THREE.DirectionalLight(0x4488cc, 0.3); dl.position.set(2,8,5); scene.add(dl);
-        var rp = new THREE.PointLight(0xD3191F, 0.4, 20); rp.position.set(0,2,0); scene.add(rp);
+        var rp = new THREE.PointLight(0xD3191F, 0.15, 15); rp.position.set(0,2,0); scene.add(rp);
         // HELPERS
         var lm = function(c,o) { return new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o}); };
         function ml(pts,mat) { var g=new THREE.BufferGeometry().setFromPoints(pts); return new THREE.Line(g,mat); }
@@ -331,7 +331,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
         // BOARDS
         var bm = new THREE.LineBasicMaterial({color:0x334455,transparent:true,opacity:0.5});
         [ml([new THREE.Vector3(-bx,Y,-bz),new THREE.Vector3(bx,Y,-bz)],bm),ml([new THREE.Vector3(bx,Y,-bz),new THREE.Vector3(bx,Y,bz)],bm),ml([new THREE.Vector3(bx,Y,bz),new THREE.Vector3(-bx,Y,bz)],bm),ml([new THREE.Vector3(-bx,Y,bz),new THREE.Vector3(-bx,Y,-bz)],bm)].forEach(function(l){scene.add(l);});
-        var wm = new THREE.MeshPhongMaterial({color:0x111520,transparent:true,opacity:0.4,emissive:0xD3191F,emissiveIntensity:0.03}); var wh=0.6;
+        var wm = new THREE.MeshPhongMaterial({color:0x111520,transparent:true,opacity:0.4,emissive:0xD3191F,emissiveIntensity:0.01}); var wh=0.6;
         [[bx*2,0.08,0,wh/2,-bz],[bx*2,0.08,0,wh/2,bz],[0.08,bz*2,-bx,wh/2,0],[0.08,bz*2,bx,wh/2,0]].forEach(function(d){var m=new THREE.Mesh(new THREE.BoxGeometry(d[0],wh,d[1]),wm);m.position.set(d[2],d[3],d[4]);scene.add(m);});
         // LINES
         scene.add(ml([new THREE.Vector3(0,Y,-bz),new THREE.Vector3(0,Y,bz)],lm(0xD3191F,0.2)));

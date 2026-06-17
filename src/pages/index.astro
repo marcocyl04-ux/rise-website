@@ -475,7 +475,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         scene.add(new THREE.AmbientLight(0x222233, 0.6));
         var dirLight = new THREE.DirectionalLight(0x4488cc, 0.3);
         dirLight.position.set(2, 8, 5); scene.add(dirLight);
-        var redPoint = new THREE.PointLight(0xD3191F, 0.4, 20);
+        var redPoint = new THREE.PointLight(0xD3191F, 0.15, 15);
         redPoint.position.set(0, 2, 0); scene.add(redPoint);
         var rimLight = new THREE.PointLight(0x4488cc, 0.2, 25);
         rimLight.position.set(-8, 4, -5); scene.add(rimLight);
@@ -497,7 +497,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
         scene.add(makeLine([new THREE.Vector3(bx,Y,-bz), new THREE.Vector3(bx,Y,bz)], boardMat));
         scene.add(makeLine([new THREE.Vector3(bx,Y,bz), new THREE.Vector3(-bx,Y,bz)], boardMat));
         scene.add(makeLine([new THREE.Vector3(-bx,Y,bz), new THREE.Vector3(-bx,Y,-bz)], boardMat));
-        var wallMat = new THREE.MeshPhongMaterial({ color: 0x111520, transparent: true, opacity: 0.4, emissive: 0xD3191F, emissiveIntensity: 0.03 });
+        var wallMat = new THREE.MeshPhongMaterial({ color: 0x111520, transparent: true, opacity: 0.4, emissive: 0xD3191F, emissiveIntensity: 0.01 });
         var wallH = 0.6;
         [[bx*2,0.08,0,wallH/2,-bz],[bx*2,0.08,0,wallH/2,bz],[0.08,bz*2,-bx,wallH/2,0],[0.08,bz*2,bx,wallH/2,0]].forEach(function(d) {
           var m = new THREE.Mesh(new THREE.BoxGeometry(d[0],wallH,d[1]), wallMat);
@@ -644,7 +644,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
           camera.lookAt(pose.lx, pose.ly, pose.lz);
 
           // Red light intensity pulses with scroll
-          redPoint.intensity = 0.4 + smoothScroll * 0.4;
+          redPoint.intensity = 0.15 + smoothScroll * 0.15;
           renderer.render(scene, camera);
         }
         gsap.ticker.add(renderRink);
