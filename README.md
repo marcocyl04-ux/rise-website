@@ -64,7 +64,8 @@ rise-website/
 │   │   │       └── the-move.astro
 │   │   └── portal/
 │   │       ├── index.astro           # Portal dashboard (role-based routing)
-│   │       └── brain.astro           # Marketing brain UI (founder-only)
+│   │       ├── brain.astro           # Marketing brain UI (founder-only)
+│   │       └── install.astro         # PWA install instructions (platform-detected)
 │   ├── lib/
 │   │   ├── supabase.ts               # Supabase client initialization
 │   │   ├── auth.ts                   # Auth helpers (login, logout, getRole)
@@ -77,6 +78,8 @@ rise-website/
 ├── public/
 │   ├── favicon*                      # Favicons (multiple sizes)
 │   ├── logo-header.png               # Header logo
+│   ├── manifest.json                 # PWA manifest
+│   ├── sw.js                         # Service worker (network-first)
 │   ├── fonts/                        # Self-hosted Oswald + Inter
 │   ├── robots.txt
 │   └── sitemap.xml
@@ -132,6 +135,7 @@ npx vercel --prod --yes  # Deploy to Vercel (auto-deploy is unreliable, use CLI)
 | Brain | `/portal/brain` | Marketing brain interface (founder-only) |
 | Tracker | `/portal/tracker` | Nutrition tracker (proxied to rise-nutrition) |
 | Coach | `/portal/coach` | Coach dashboard (proxied to rise-nutrition) |
+| Install | `/portal/install` | PWA install instructions (platform-detected) |
 | Chinese | `/zh/*` | All pages mirrored in Traditional Chinese |
 
 ## Vercel Rewrites
