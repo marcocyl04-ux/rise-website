@@ -1,5 +1,8 @@
 # RISE Website — Current State (June 18, 2026)
 
+## Recent Fixes (commit 07365aa)
+- **Portal button broken on homepage** — `HomeLayout.astro` was the only layout missing `AuthModal`. The Portal button uses `data-open-auth` to trigger the auth modal, but without the component loaded, clicks did nothing. Fixed by importing `AuthModal` + adding `<AuthModal />` to the layout.
+
 ## What's Live
 
 ### Three.js Ice Rink (Hero)

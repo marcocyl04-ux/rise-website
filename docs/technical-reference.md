@@ -202,3 +202,7 @@ npx vercel --prod --yes
 2. **Supabase anon key is hardcoded** in `src/lib/supabase.ts` — safe (anon key is public) but should use env vars for portability
 3. **Chinese pages** — `src/pages/zh/` has manual copies of English pages. Not i18n-managed, can drift out of sync
 4. **Mockup HTML files** in repo root (`3d-mockup.html`, `hockey-rink-mockup.html`) are dev references, not deployed
+
+## Pitfalls
+
+1. **AuthModal must be in every layout** — The `data-open-auth` click handler lives inside `AuthModal.astro`. Any layout that uses auth triggers (login buttons, Portal buttons) MUST import and render `<AuthModal />`. `BaseLayout` and `MarketingLayout` have it; `HomeLayout` was missed initially (commit `07365aa`). If adding a new layout, include it.
