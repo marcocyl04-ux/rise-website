@@ -62,13 +62,9 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     <meta name="apple-mobile-web-app-title" content="RISE" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Google Fonts: Oswald (headings) + Inter (body) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Oswald:wght@500;600;700&display=block"
-      rel="stylesheet"
-    />
+    <!-- Fonts: self-hosted woff2 (preloaded for fastest paint) -->
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/oswald.woff2" as="font" type="font/woff2" crossorigin />
 
     <title>{title} | RISE Advancement</title>
 
@@ -88,7 +84,7 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     </script>
 
     <!-- Supabase JS v2 (for auth + portal) -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script is:inline async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script is:inline define:vars={{
       SUPABASE_URL: "https://zeczlwypqqvvpraosodv.supabase.co",
       SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplY3psd3lwcXF2dnByYW9zb2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNDEyMDgsImV4cCI6MjA5NDkxNzIwOH0.I7HWRsBOXDH2UG0u6NMEkXlosrlkuMkY6w9g5RtV_KM"
@@ -96,18 +92,22 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
       // Initialize the Supabase client once, attach to window.
       (function () {
         if (window.supabaseClient) return;
-        if (!window.supabase) return;
-        window.supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_ANON_KEY,
-          {
-            auth: {
-              persistSession: true,
-              autoRefreshToken: true,
-              detectSessionInUrl: true,
-            },
-          }
-        );
+        function init() {
+          if (window.supabaseClient || !window.supabase) return;
+          window.supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+            {
+              auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true,
+              },
+            }
+          );
+        }
+        init();
+        window.addEventListener("load", init);
       })();
     </script>
   </head>

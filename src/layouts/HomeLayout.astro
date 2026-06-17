@@ -6,7 +6,6 @@ import "../styles/homepage.css";
 import Loader from "../components/home/Loader.astro";
 import HomeNav from "../components/home/HomeNav.astro";
 import FloatingWhatsApp from "../components/FloatingWhatsApp.astro";
-import AuthModal from "../components/AuthModal.astro";
 
 export interface Props {
   title?: string;
@@ -62,13 +61,9 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0a0a0a" />
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts: self-hosted woff2 (preloaded for fastest paint) -->
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/oswald.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- External Libraries (defer = don't block first paint) -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -98,22 +93,25 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     <slot />
 
     <FloatingWhatsApp lang={lang} />
-    <AuthModal />
 
     <!-- Supabase JS v2 (loaded at end, not blocking first paint) -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script is:inline async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script is:inline define:vars={{
       SUPABASE_URL: "https://zeczlwypqqvvpraosodv.supabase.co",
-      SUPABASE_ANON_KEY: "eyJhbG...V_KM"
+      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplY3psd3lwcXF2dnByYW9zb2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNDEyMDgsImV4cCI6MjA5NDkxNzIwOH0.I7HWRsBOXDH2UG0u6NMEkXlosrlkuMkY6w9g5RtV_KM"
     }}>
       (function () {
         if (window.supabaseClient) return;
-        if (!window.supabase) return;
-        window.supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_ANON_KEY,
-          { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
-        );
+        function init() {
+          if (window.supabaseClient || !window.supabase) return;
+          window.supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+            { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+          );
+        }
+        init();
+        window.addEventListener("load", init);
       })();
     </script>
   </body>
