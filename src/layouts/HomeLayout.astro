@@ -6,6 +6,7 @@ import "../styles/homepage.css";
 import Loader from "../components/home/Loader.astro";
 import HomeNav from "../components/home/HomeNav.astro";
 import FloatingWhatsApp from "../components/FloatingWhatsApp.astro";
+import AuthModal from "../components/AuthModal.astro";
 
 export interface Props {
   title?: string;
@@ -93,6 +94,7 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     <slot />
 
     <FloatingWhatsApp lang={lang} />
+    <AuthModal />
 
     <!-- Supabase JS v2 (loaded at end, not blocking first paint) -->
     <script is:inline async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
