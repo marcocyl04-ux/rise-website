@@ -94,6 +94,22 @@ import Footer from "../../components/Footer.astro";
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6" /></svg>
           </span>
         </a>
+
+        <!-- Install App — visible to all authenticated users (hidden when already standalone) -->
+        <a class="portal-card portal-card-active" href="/portal/install" id="portal-install-card">
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(59,130,246,0.1); color: #2563eb">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Get the App</h3>
+            <p class="portal-card-desc">Add RISE to your home screen for quick access.</p>
+          </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6" /></svg>
+          </span>
+        </a>
       </div>
     </div>
   </section>
@@ -456,6 +472,13 @@ import Footer from "../../components/Footer.astro";
       if (brainCard) brainCard.removeAttribute("hidden");
       const coachCard = document.getElementById("portal-coach-card");
       if (coachCard) coachCard.removeAttribute("hidden");
+    }
+
+    // Hide "Get the App" card when already running as installed PWA
+    const isStandalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || (navigator as any).standalone === true;
+    if (isStandalone) {
+      const installCard = document.getElementById("portal-install-card");
+      if (installCard) installCard.setAttribute("hidden", "");
     }
 
     const name = profile?.full_name || deriveDisplayName(user);

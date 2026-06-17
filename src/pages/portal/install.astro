@@ -1,0 +1,352 @@
+---
+// /portal/install — PWA install instructions (platform-detected).
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<BaseLayout title="Install the RISE App" description="Add RISE to your home screen for quick access to your nutrition tracker and tools.">
+  <Header slot="header" />
+
+  <section class="install-page section">
+    <div class="container install-narrow">
+
+      <a class="install-back" href="/portal">&larr; Back to portal</a>
+
+      <header class="install-header">
+        <div class="install-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+          </svg>
+        </div>
+        <h1 class="install-title">Install RISE</h1>
+        <p class="install-sub">Add RISE to your home screen for quick access. No app store needed.</p>
+      </header>
+
+      <!-- iOS instructions -->
+      <div class="install-platform" id="install-ios" hidden>
+        <h2 class="install-platform-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          iPhone / iPad
+        </h2>
+        <ol class="install-steps">
+          <li>Open this page in <strong>Safari</strong></li>
+          <li>
+            Tap the <strong>Share button</strong>
+            <span class="install-hint">(square with arrow pointing up, bottom of screen)</span>
+          </li>
+          <li>
+            Scroll down and tap <strong>"Add to Home Screen"</strong>
+          </li>
+          <li>
+            Tap <strong>"Add"</strong> in the top right corner
+          </li>
+        </ol>
+        <p class="install-note">The RISE app will appear on your home screen like any other app.</p>
+      </div>
+
+      <!-- Android instructions -->
+      <div class="install-platform" id="install-android" hidden>
+        <h2 class="install-platform-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.341a.95.95 0 01-.952.952H7.429a.95.95 0 01-.952-.952V8.57a.95.95 0 011.904 0v5.827h8.19V8.57a.95.95 0 011.905 0v5.771zM14.476 4.381l1.338-1.338a.476.476 0 00-.673-.673l-1.5 1.5a4.378 4.378 0 00-3.282 0l-1.5-1.5a.476.476 0 00-.673.673L9.524 4.381a3.42 3.42 0 004.952 0zM8.095 5.524a.952.952 0 110-1.905.952.952 0 010 1.905zm7.81 0a.952.952 0 110-1.905.952.952 0 010 1.905z"/></svg>
+          Android
+        </h2>
+        <ol class="install-steps">
+          <li>Open this page in <strong>Chrome</strong></li>
+          <li>
+            Tap the <strong>three dots menu</strong> (top right)
+          </li>
+          <li>
+            Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>
+          </li>
+          <li>
+            Tap <strong>"Install"</strong> on the popup
+          </li>
+        </ol>
+        <p class="install-note">A Chrome banner may also appear at the bottom of this page automatically.</p>
+      </div>
+
+      <!-- Desktop instructions -->
+      <div class="install-platform" id="install-desktop" hidden>
+        <h2 class="install-platform-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8m-4-4v4"/></svg>
+          Computer
+        </h2>
+        <ol class="install-steps">
+          <li>Open this page in <strong>Chrome</strong> or <strong>Edge</strong></li>
+          <li>
+            Look for the <strong>install icon</strong> in the address bar (right side)
+          </li>
+          <li>
+            Click <strong>"Install"</strong>
+          </li>
+        </ol>
+        <p class="install-note">RISE will open in its own window, like a desktop app.</p>
+      </div>
+
+      <!-- Already installed state -->
+      <div class="install-done" id="install-done" hidden>
+        <div class="install-done-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" />
+          </svg>
+        </div>
+        <h2 class="install-done-title">RISE is installed</h2>
+        <p class="install-done-sub">You're all set. Open RISE from your home screen or app launcher.</p>
+        <a class="btn-primary install-done-btn" href="/portal">Back to portal</a>
+      </div>
+
+      <!-- Manual install button (for browsers that support beforeinstallprompt) -->
+      <button class="install-native-btn" id="install-native-btn" type="button" hidden>
+        Install RISE App
+      </button>
+
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .install-page {
+    min-height: 60vh;
+    padding: var(--space-8) 0 var(--space-12);
+  }
+  .install-narrow {
+    max-width: 560px;
+  }
+  .install-back {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--rise-neutral-500);
+    text-decoration: none;
+    margin-bottom: var(--space-6);
+    transition: color 0.15s;
+  }
+  .install-back:hover { color: var(--rise-red); text-decoration: none; }
+
+  .install-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+  .install-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(211, 25, 31, 0.08);
+    color: var(--rise-red);
+    margin-bottom: var(--space-4);
+  }
+  .install-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--rise-black);
+    margin: 0 0 var(--space-2);
+  }
+  .install-sub {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--rise-neutral-500);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .install-platform {
+    background: var(--rise-white);
+    border: 1px solid var(--rise-neutral-100);
+    border-radius: 12px;
+    padding: var(--space-6);
+  }
+  .install-platform-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--rise-black);
+    margin: 0 0 var(--space-5);
+  }
+
+  .install-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-5);
+    counter-reset: step;
+  }
+  .install-steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: var(--space-4);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--rise-neutral-700);
+    line-height: 1.6;
+  }
+  .install-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--rise-red);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .install-steps li:last-child { margin-bottom: 0; }
+  .install-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--rise-neutral-400);
+    margin-top: 2px;
+  }
+
+  .install-note {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--rise-neutral-400);
+    margin: 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--rise-neutral-100);
+    line-height: 1.5;
+  }
+
+  .install-done {
+    text-align: center;
+    padding: var(--space-6) 0;
+  }
+  .install-done-icon { margin-bottom: var(--space-4); }
+  .install-done-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--rise-black);
+    margin: 0 0 var(--space-2);
+  }
+  .install-done-sub {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--rise-neutral-500);
+    margin: 0 0 var(--space-5);
+    line-height: 1.6;
+  }
+  .install-done-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: 1px solid transparent;
+    transition: background 0.15s;
+  }
+  .install-done-btn:hover { background: var(--rise-red-dark); text-decoration: none; }
+
+  .install-native-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin-top: var(--space-4);
+    background: var(--rise-red);
+    color: var(--rise-white);
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .install-native-btn:hover { background: var(--rise-red-dark); }
+  .install-native-btn[hidden] { display: none !important; }
+
+  /* Hide all install platform sections by default — JS reveals the right one */
+  .install-platform[hidden] { display: none !important; }
+  .install-done[hidden] { display: none !important; }
+
+  /* When already installed, show "done" and hide everything else */
+  .is-standalone .install-platform,
+  .is-standalone .install-native-btn,
+  .is-standalone .install-back { display: none !important; }
+  .is-standalone .install-done { display: block !important; }
+</style>
+
+<script>
+  function detectPlatform(): string {
+    const ua = navigator.userAgent || "";
+    // iOS Safari (but not Chrome on iOS which also reports Safari)
+    if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
+      return "ios";
+    }
+    if (/android/i.test(ua)) {
+      return "android";
+    }
+    return "desktop";
+  }
+
+  function isStandalone(): boolean {
+    return (
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      (navigator as any).standalone === true
+    );
+  }
+
+  const platform = detectPlatform();
+  const standalone = isStandalone();
+
+  // If already installed, show the "done" message
+  if (standalone) {
+    document.documentElement.classList.add("is-standalone");
+    const doneEl = document.getElementById("install-done");
+    if (doneEl) doneEl.removeAttribute("hidden");
+  } else {
+    // Show the right platform instructions
+    const platformEl = document.getElementById("install-" + platform);
+    if (platformEl) platformEl.removeAttribute("hidden");
+  }
+
+  // Native install button (Android/Desktop Chrome)
+  let deferredPrompt: any = (window as any).__riseDeferredPrompt || null;
+
+  window.addEventListener("beforeinstallprompt", (e: Event) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById("install-native-btn");
+    if (btn && !standalone) btn.removeAttribute("hidden");
+  });
+
+  document.getElementById("install-native-btn")?.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch (e) {}
+    deferredPrompt = null;
+    const btn = document.getElementById("install-native-btn");
+    if (btn) btn.setAttribute("hidden", "");
+  });
+</script>
