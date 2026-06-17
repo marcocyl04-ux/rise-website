@@ -3,6 +3,13 @@
 ## Recent Fixes (commit 07365aa)
 - **Portal button broken on homepage** — `HomeLayout.astro` was the only layout missing `AuthModal`. The Portal button uses `data-open-auth` to trigger the auth modal, but without the component loaded, clicks did nothing. Fixed by importing `AuthModal` + adding `<AuthModal />` to the layout.
 
+## New: PWA Install Flow (commit e2037a4)
+- **`public/manifest.json`** — created (was missing entirely). PWA name "RISE", starts at `/portal`, dark theme
+- **`public/sw.js`** — created (was missing entirely). Network-first strategy, caches portal responses for offline
+- **`/portal/install`** — new page with platform-detected install instructions (iOS/Android/Desktop). Detects standalone mode and shows "already installed" state. Shows native install prompt on Chrome/Edge
+- **Portal hub** — new "Get the App" card visible to all authenticated users (hidden when already running as PWA)
+- **Tracker + Coach pages** — "Get the app" button changed from native `beforeinstallprompt` (doesn't work on iOS) to a link to `/portal/install` (works everywhere)
+
 ## What's Live
 
 ### Three.js Ice Rink (Hero)
