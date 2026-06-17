@@ -70,12 +70,11 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
       rel="stylesheet"
     />
 
-    <!-- External Libraries -->
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-    <!-- Lenis removed for performance -->
+    <!-- External Libraries (defer = don't block first paint) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
 
     <!-- JSON-LD Structured Data -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
@@ -91,8 +90,17 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     })} />
 
     <title>{title} | RISE Advancement</title>
+  </head>
+  <body class="home-dark">
+    <Loader />
+    <HomeNav />
 
-    <!-- Supabase JS v2 -->
+    <slot />
+
+    <FloatingWhatsApp lang={lang} />
+    <AuthModal />
+
+    <!-- Supabase JS v2 (loaded at end, not blocking first paint) -->
     <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script is:inline define:vars={{
       SUPABASE_URL: "https://zeczlwypqqvvpraosodv.supabase.co",
@@ -108,14 +116,5 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
         );
       })();
     </script>
-  </head>
-  <body class="home-dark">
-    <Loader />
-    <HomeNav />
-
-    <slot />
-
-    <FloatingWhatsApp lang={lang} />
-    <AuthModal />
   </body>
 </html>
