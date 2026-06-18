@@ -60,7 +60,9 @@
         <input type="password" name="password" required autocomplete="new-password" minlength="6" />
         <small data-i18n="auth.minChars">At least 6 characters</small>
       </label>
-      <button class="auth-btn primary" type="submit" data-i18n="auth.createBtn">Create account</button>
+      <!-- Turnstile CAPTCHA — invisible to real users -->
+      <div id="turnstile-signup" class="turnstile-container" style="margin-bottom: 1rem;"></div>
+      <button class="auth-btn primary" type="submit" data-i18n="auth.createBtn" id="signup-submit-btn" disabled>Create account</button>
       <div class="auth-divider"><span data-i18n="auth.or">or</span></div>
       <button class="auth-btn google" type="button" id="auth-signup-google" data-i18n="auth.google">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -399,6 +401,27 @@
     if (!email) return setMsg(signupMsg, "Email is required.", "error");
     if (!email.includes("@")) return setMsg(signupMsg, "Please enter a valid email.", "error");
     if (password.length < 6) return setMsg(signupMsg, "Password must be at least 6 characters.", "error");
+
+    // Verify Turnstile CAPTCHA token
+    const turnstileToken = (window as any).__turnstile_token;
+    if (!turnstileToken) return setMsg(signupMsg, "Please wait for security verification.", "error");
+    setMsg(signupMsg, "Verifying...");
+    try {
+      const verifyRes = await fetch("https://zeczlwypqqvvpraosodv.supabase.co/functions/v1/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: turnstileToken }),
+      });
+      if (!verifyRes.ok) {
+        setMsg(signupMsg, "Security verification failed. Please reload and try again.", "error");
+        (window as any).__turnstile_token = null;
+        return;
+      }
+    } catch {
+      setMsg(signupMsg, "Could not verify. Please try again.", "error");
+      return;
+    }
+
     setMsg(signupMsg, t("auth.creating"));
     const { data, error } = await sb.auth.signUp({
       email,
