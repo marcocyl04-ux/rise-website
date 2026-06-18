@@ -82,6 +82,32 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
         );
       })();
     </script>
+
+    <!-- Cloudflare Turnstile (bot protection on signup) -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+    <script>
+      window.__turnstile_token = null;
+      window.__turnstile_rendered = false;
+      function renderTurnstile() {
+        var container = document.getElementById("turnstile-signup");
+        if (!container || window.__turnstile_rendered || !window.turnstile) return;
+        window.__turnstile_rendered = true;
+        window.turnstile.render(container, {
+          sitekey: "0x4AAAAAADnBF6obN_9IcUya",
+          callback: function(token) { window.__turnstile_token = token; document.getElementById("signup-submit-btn").disabled = false; },
+          "error-callback": function() { window.__turnstile_token = null; },
+          "expired-callback": function() { window.__turnstile_token = null; },
+          theme: "dark",
+          size: "invisible",
+        });
+      }
+      document.addEventListener("click", function(e) {
+        var btn = e.target;
+        if (btn && btn.dataset && btn.dataset.authTab === "signup") {
+          setTimeout(renderTurnstile, 100);
+        }
+      });
+    </script>
   </head>
   <body class="home-dark">
     <HomeNav />
