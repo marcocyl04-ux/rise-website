@@ -26,6 +26,14 @@
     {
       "source": "/portal/coach/(.*)",
       "destination": "https://rise-nutrition-v2.vercel.app/portal/coach/$1"
+    },
+    {
+      "source": "/portal/admin",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/admin"
+    },
+    {
+      "source": "/portal/admin/(.*)",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/admin/$1"
     }
   ],
   "headers": [

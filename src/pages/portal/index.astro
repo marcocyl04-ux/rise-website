@@ -95,6 +95,22 @@ import Footer from "../../components/Footer.astro";
           </span>
         </a>
 
+        <!-- Security Dashboard — visible to all (page itself is role-gated) -->
+        <a class="portal-card portal-card-active" href="/portal/admin" id="portal-admin-card">
+          <div class="portal-card-icon" aria-hidden="true" style="background: rgba(211,25,31,0.1); color: var(--rise-red)">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /><circle cx="12" cy="16" r="1" />
+            </svg>
+          </div>
+          <div class="portal-card-body">
+            <h3 class="portal-card-title">Security Dashboard</h3>
+            <p class="portal-card-desc">Admin controls, invite codes, and audit logs.</p>
+          </div>
+          <span class="portal-card-arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4l6 6-6 6" /></svg>
+          </span>
+        </a>
+
         <!-- Install App — visible to all authenticated users (hidden when already standalone) -->
         <a class="portal-card portal-card-active" href="/portal/install" id="portal-install-card">
           <div class="portal-card-icon" aria-hidden="true" style="background: rgba(59,130,246,0.1); color: #2563eb">
