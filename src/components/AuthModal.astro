@@ -60,6 +60,14 @@
         <input type="password" name="password" required autocomplete="new-password" minlength="6" />
         <small data-i18n="auth.minChars">At least 6 characters</small>
       </label>
+      <label class="auth-field">
+        <span data-i18n="auth.inviteCode">Invite code</span>
+        <div class="invite-code-wrap">
+          <input type="text" name="invite_code" required autocomplete="off" placeholder="RISE-XXXXXX" id="signup-invite-code" />
+          <span class="invite-code-status" id="invite-code-status"></span>
+        </div>
+        <small id="invite-code-hint" data-i18n="auth.inviteCodeHint">Required to create an account</small>
+      </label>
       <!-- Turnstile CAPTCHA — invisible to real users -->
       <div id="turnstile-signup" class="turnstile-container" style="margin-bottom: 1rem;"></div>
       <button class="auth-btn primary" type="submit" data-i18n="auth.createBtn" id="signup-submit-btn" disabled>Create account</button>
@@ -204,6 +212,30 @@
     font-size: 0.75rem;
     color: var(--rise-neutral-400);
   }
+  .invite-code-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .invite-code-wrap input {
+    padding-right: 36px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .invite-code-status {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .invite-code-status.valid::after { content: "✓"; color: #16a34a; font-weight: 700; }
+  .invite-code-status.invalid::after { content: "✗"; color: #dc2626; font-weight: 700; }
+  .invite-code-status.checking::after { content: "…"; color: var(--rise-neutral-400); }
+  .auth-field input.is-valid { border-color: #16a34a; }
+  .auth-field input.is-invalid { border-color: #dc2626; }
   .auth-field input {
     background: var(--rise-white);
     border: 1px solid var(--rise-neutral-200);
@@ -380,12 +412,119 @@
     setMsg(loginMsg, t("auth.loggingIn"));
     try {
       const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) return setMsg(loginMsg, error.message, "error");
+      if (error) {
+        const msg = error.message?.includes("Invalid login credentials")
+          ? "No account found with these credentials. Check your email or sign up."
+          : error.message;
+        return setMsg(loginMsg, msg, "error");
+      }
       setMsg(loginMsg, "");
       closeModal();
       window.location.href = "/portal";
     } catch (err: any) {
       setMsg(loginMsg, err.message || "Login failed. Please try again.", "error");
+    }
+  });
+
+  // --- Invite code validation ---
+  const VALIDATE_FN = "https://zeczlwypqqvvpraosodv.supabase.co/functions/v1/validate-invite-code";
+  let validatedCode: { code: string; role: string } | null = null;
+
+  function getInviteInput(): HTMLInputElement | null {
+    return document.getElementById("signup-invite-code") as HTMLInputElement | null;
+  }
+  function getInviteStatus(): HTMLElement | null {
+    return document.getElementById("invite-code-status");
+  }
+  function getInviteHint(): HTMLElement | null {
+    return document.getElementById("invite-code-hint");
+  }
+
+  function setInviteState(state: "idle" | "checking" | "valid" | "invalid", msg?: string) {
+    const input = getInviteInput();
+    const status = getInviteStatus();
+    const hint = getInviteHint();
+    if (!input || !status) return;
+    status.className = "invite-code-status " + (state === "idle" ? "" : state);
+    input.classList.remove("is-valid", "is-invalid");
+    if (state === "valid") input.classList.add("is-valid");
+    if (state === "invalid") input.classList.add("is-invalid");
+    if (hint && msg) hint.textContent = msg;
+    else if (hint && state === "valid") hint.textContent = "Valid code";
+    else if (hint && state === "invalid") hint.textContent = msg || "Invalid code";
+    else if (hint) hint.textContent = "Required to create an account";
+  }
+
+  async function validateInviteCode(code: string): Promise<boolean> {
+    if (!code) { setInviteState("idle"); validatedCode = null; return false; }
+    setInviteState("checking");
+    try {
+      const sb = getSb();
+      const res = await fetch(VALIDATE_FN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": sb?.headers?.apikey || "",
+          "Authorization": "Bearer " + (sb?.headers?.apikey || ""),
+        },
+        body: JSON.stringify({ action: "validate", code }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        validatedCode = { code, role: data.role };
+        setInviteState("valid");
+        return true;
+      } else {
+        validatedCode = null;
+        setInviteState("invalid", data.error || "Invalid invite code");
+        return false;
+      }
+    } catch {
+      validatedCode = null;
+      setInviteState("invalid", "Could not verify code. Try again.");
+      return false;
+    }
+  }
+
+  async function redeemInviteCode(userId: string): Promise<string | null> {
+    const code = validatedCode?.code || sessionStorage.getItem("pending_invite_code");
+    if (!code) return null;
+    const sb = getSb();
+    if (!sb) return null;
+    try {
+      const session = (await sb.auth.getSession()).data.session;
+      const res = await fetch(VALIDATE_FN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": sb.headers.apikey,
+          "Authorization": "Bearer " + (session?.access_token || ""),
+        },
+        body: JSON.stringify({ action: "redeem", code, user_id: userId }),
+      });
+      const data = await res.json();
+      sessionStorage.removeItem("pending_invite_code");
+      if (data.success) return data.role;
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Validate on blur
+  getInviteInput()?.addEventListener("blur", () => {
+    const code = getInviteInput()?.value.trim().toUpperCase() || "";
+    if (code) validateInviteCode(code);
+  });
+
+  // Uppercase as user types
+  getInviteInput()?.addEventListener("input", () => {
+    const input = getInviteInput();
+    if (input) input.value = input.value.toUpperCase();
+    // Reset validation state when user edits
+    if (validatedCode && input && input.value.trim() !== validatedCode.code) {
+      validatedCode = null;
+      setInviteState("idle");
     }
   });
 
@@ -397,10 +536,18 @@
     const full_name = (form.elements.namedItem("full_name") as HTMLInputElement).value.trim();
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+    const inviteCode = (form.elements.namedItem("invite_code") as HTMLInputElement).value.trim().toUpperCase();
     if (!full_name) return setMsg(signupMsg, "Name is required.", "error");
     if (!email) return setMsg(signupMsg, "Email is required.", "error");
     if (!email.includes("@")) return setMsg(signupMsg, "Please enter a valid email.", "error");
     if (password.length < 6) return setMsg(signupMsg, "Password must be at least 6 characters.", "error");
+
+    // Validate invite code (re-validate if not already validated for this code)
+    if (!inviteCode) return setMsg(signupMsg, "Invite code is required.", "error");
+    if (!validatedCode || validatedCode.code !== inviteCode) {
+      const valid = await validateInviteCode(inviteCode);
+      if (!valid) return setMsg(signupMsg, "Invalid or expired invite code.", "error");
+    }
 
     // Verify Turnstile CAPTCHA token
     const turnstileToken = (window as any).__turnstile_token;
@@ -436,6 +583,8 @@
         "success"
       );
     }
+    // Redeem invite code after successful signup
+    const role = await redeemInviteCode(data.user.id);
     setMsg(signupMsg, "");
     closeModal();
     window.location.href = "/portal";
@@ -447,6 +596,21 @@
       setMsg(loginMsg, t("auth.unavailable"), "error");
       setMsg(signupMsg, t("auth.unavailable"), "error");
       return;
+    }
+    // If on signup tab, validate and store invite code before OAuth redirect
+    const inviteInput = getInviteInput();
+    if (inviteInput && !signupForm?.hasAttribute("hidden")) {
+      const code = inviteInput.value.trim().toUpperCase();
+      if (!code) {
+        setMsg(signupMsg, "Enter your invite code before signing in with Google.", "error");
+        return;
+      }
+      const valid = await validateInviteCode(code);
+      if (!valid) {
+        setMsg(signupMsg, "Invalid or expired invite code.", "error");
+        return;
+      }
+      sessionStorage.setItem("pending_invite_code", code);
     }
     const { error } = await sb.auth.signInWithOAuth({
       provider: "google",
@@ -460,4 +624,8 @@
 
   document.getElementById("auth-login-google")?.addEventListener("click", googleSignIn);
   document.getElementById("auth-signup-google")?.addEventListener("click", googleSignIn);
+
+  // Expose switchTab + redeemInviteCode for portal/index.astro
+  (window as any).__authSwitchTab = switchTab;
+  (window as any).__redeemInviteCode = redeemInviteCode;
 </script>

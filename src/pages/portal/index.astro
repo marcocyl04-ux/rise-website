@@ -450,12 +450,33 @@ import Footer from "../../components/Footer.astro";
     const anon = document.getElementById("portal-anon");
     const dash = document.getElementById("portal-dashboard");
 
+    // Handle ?code= invite link — store in sessionStorage and clean URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteCode = urlParams.get("code");
+    if (inviteCode) {
+      sessionStorage.setItem("pending_invite_code", inviteCode.toUpperCase());
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
     const { data: { session } } = await sb.auth.getSession();
 
     if (!session) {
       loading?.setAttribute("hidden", "");
       anon?.removeAttribute("hidden");
       applyTranslations();
+      // If there's a pending invite code, auto-open signup tab and pre-fill
+      const pending = sessionStorage.getItem("pending_invite_code");
+      if (pending) {
+        setTimeout(() => {
+          (window as any).openAuthModal?.();
+          (window as any).__authSwitchTab?.("signup");
+          const input = document.getElementById("signup-invite-code") as HTMLInputElement | null;
+          if (input) {
+            input.value = pending;
+            input.dispatchEvent(new Event("blur")); // trigger validation
+          }
+        }, 200);
+      }
       sb.auth.onAuthStateChange((_e: string, s: any) => {
         if (s) window.location.reload();
       });
@@ -463,6 +484,30 @@ import Footer from "../../components/Footer.astro";
     }
 
     const user = session.user;
+
+    // OAuth callback: redeem pending invite code if present
+    const pendingCode = sessionStorage.getItem("pending_invite_code");
+    if (pendingCode) {
+      try {
+        const VALIDATE_FN = "https://zeczlwypqqvvpraosodv.supabase.co/functions/v1/validate-invite-code";
+        const res = await fetch(VALIDATE_FN, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": sb.headers.apikey,
+            "Authorization": "Bearer " + session.access_token,
+          },
+          body: JSON.stringify({ action: "redeem", code: pendingCode, user_id: user.id }),
+        });
+        const data = await res.json();
+        sessionStorage.removeItem("pending_invite_code");
+        if (data.success) {
+          // Role was updated — reload to pick up new routing
+          window.location.reload();
+          return;
+        }
+      } catch { sessionStorage.removeItem("pending_invite_code"); }
+    }
 
     // Load profile for hello message
     const { data: profile } = await sb
