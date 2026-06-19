@@ -464,8 +464,8 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": sb?.headers?.apikey || "",
-          "Authorization": "Bearer " + (sb?.headers?.apikey || ""),
+          "apikey": sb?.supabaseKey || "",
+          "Authorization": "Bearer " + (sb?.supabaseKey || ""),
         },
         body: JSON.stringify({ action: "validate", code }),
       });
@@ -497,7 +497,7 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": sb.headers.apikey,
+          "apikey": sb.supabaseKey,
           "Authorization": "Bearer " + (session?.access_token || ""),
         },
         body: JSON.stringify({ action: "redeem", code, user_id: userId }),

@@ -494,7 +494,7 @@ import Footer from "../../components/Footer.astro";
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "apikey": sb.headers.apikey,
+            "apikey": sb.supabaseKey,
             "Authorization": "Bearer " + session.access_token,
           },
           body: JSON.stringify({ action: "redeem", code: pendingCode, user_id: user.id }),
