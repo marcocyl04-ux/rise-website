@@ -1,6 +1,6 @@
 // RISE Service Worker — network-first with offline fallback
 // Bump this constant to force a cache clear on all clients
-const CACHE_VERSION = "v5";
+const CACHE_VERSION = "v6";
 const CACHE_NAME = `rise-${CACHE_VERSION}`;
 const OFFLINE_URL = "/portal";
 
@@ -26,28 +26,27 @@ self.addEventListener("fetch", (event) => {
 
   var url = new URL(event.request.url);
 
-  // Cross-origin nutrition CDN assets: stale-while-revalidate
-  // Serve cached copy immediately, but fetch fresh in background so deploys propagate.
+  // Cross-origin nutrition CDN assets: network-first with cache fallback
+  // Always fetch fresh so deploys propagate immediately.
+  // Only use cache when offline (true offline mode).
   if (url.origin === NUTRITION_ORIGIN) {
     event.respondWith(
-      caches.match(event.request).then(function (cached) {
-        var networkFetch = fetch(event.request)
-          .then(function (response) {
-            if (response && response.ok) {
-              var clone = response.clone();
-              caches.open(CACHE_NAME).then(function (cache) {
-                cache.put(event.request, clone);
-              });
-            }
-            return response;
-          })
-          .catch(function () {
-            // Offline and no cache — return error response
-            return new Response("", { status: 503, statusText: "Offline" });
+      fetch(event.request)
+        .then(function (response) {
+          if (response && response.ok) {
+            var clone = response.clone();
+            caches.open(CACHE_NAME).then(function (cache) {
+              cache.put(event.request, clone);
+            });
+          }
+          return response;
+        })
+        .catch(function () {
+          // Offline: serve cached copy if available
+          return caches.match(event.request).then(function (cached) {
+            return cached || new Response("", { status: 503, statusText: "Offline" });
           });
-        // Serve cached immediately if available, fetch fresh in background
-        return cached || networkFetch;
-      })
+        })
     );
     return;
   }
