@@ -12,28 +12,20 @@
       "destination": "https://rise-nutrition-v2.vercel.app/$1"
     },
     {
-      "source": "/portal/tracker",
-      "destination": "https://rise-nutrition-v2.vercel.app/portal/tracker"
+      "source": "/portal",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal"
     },
     {
-      "source": "/portal/tracker/(.*)",
-      "destination": "https://rise-nutrition-v2.vercel.app/portal/tracker/$1"
+      "source": "/portal/(.*)",
+      "destination": "https://rise-nutrition-v2.vercel.app/portal/$1"
     },
     {
-      "source": "/portal/coach",
-      "destination": "https://rise-nutrition-v2.vercel.app/portal/coach"
+      "source": "/install-guide",
+      "destination": "https://rise-nutrition-v2.vercel.app/install-guide"
     },
     {
-      "source": "/portal/coach/(.*)",
-      "destination": "https://rise-nutrition-v2.vercel.app/portal/coach/$1"
-    },
-    {
-      "source": "/portal/admin",
-      "destination": "https://rise-nutrition-v2.vercel.app/portal/admin"
-    },
-    {
-      "source": "/portal/admin/(.*)",
-      "destination": "https://rise-nutrition-v2.vercel.app/portal/admin/$1"
+      "source": "/install-guide/(.*)",
+      "destination": "https://rise-nutrition-v2.vercel.app/install-guide/$1"
     }
   ],
   "headers": [
