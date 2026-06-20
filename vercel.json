@@ -9,6 +9,16 @@
       "source": "/nutrition/",
       "destination": "/portal/tracker",
       "permanent": false
+    },
+    {
+      "source": "/portal/brain",
+      "destination": "/portal/",
+      "permanent": false
+    },
+    {
+      "source": "/portal/brain/(.*)",
+      "destination": "/portal/",
+      "permanent": false
     }
   ],
   "rewrites": [

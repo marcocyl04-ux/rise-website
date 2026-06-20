@@ -1,6 +1,6 @@
 // RISE Service Worker — network-first with offline fallback
 // Bump this constant to force a cache clear on all clients
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const CACHE_NAME = `rise-${CACHE_VERSION}`;
 const OFFLINE_URL = "/portal";
 
@@ -26,13 +26,12 @@ self.addEventListener("fetch", (event) => {
 
   var url = new URL(event.request.url);
 
-  // Cross-origin nutrition CDN assets: cache-first (CSS/JS/fonts)
-  // These are the lifeblood of the portal in standalone PWA mode
+  // Cross-origin nutrition CDN assets: stale-while-revalidate
+  // Serve cached copy immediately, but fetch fresh in background so deploys propagate.
   if (url.origin === NUTRITION_ORIGIN) {
     event.respondWith(
       caches.match(event.request).then(function (cached) {
-        if (cached) return cached;
-        return fetch(event.request)
+        var networkFetch = fetch(event.request)
           .then(function (response) {
             if (response && response.ok) {
               var clone = response.clone();
@@ -43,9 +42,11 @@ self.addEventListener("fetch", (event) => {
             return response;
           })
           .catch(function () {
-            // Offline and no cache — return nothing (page will be partially styled)
+            // Offline and no cache — return error response
             return new Response("", { status: 503, statusText: "Offline" });
           });
+        // Serve cached immediately if available, fetch fresh in background
+        return cached || networkFetch;
       })
     );
     return;
