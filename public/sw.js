@@ -1,5 +1,6 @@
 // RISE Service Worker — network-first with offline fallback
-const CACHE_VERSION = "v2-" + new Date().toISOString().slice(0, 10);
+// Bump this constant to force a cache clear on all clients
+const CACHE_VERSION = "v3";
 const CACHE_NAME = `rise-${CACHE_VERSION}`;
 const OFFLINE_URL = "/portal";
 
@@ -22,12 +23,15 @@ self.addEventListener("fetch", (event) => {
   // Only handle GET requests
   if (event.request.method !== "GET") return;
 
+  // Skip non-GET and cross-origin requests (let the browser handle them normally)
+  if (!event.request.url.startsWith(self.location.origin)) return;
+
   // Network-first strategy: try network, fall back to cache
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Cache successful navigation responses for offline
-        if (response.ok && response.type === "basic") {
+        // Cache successful same-origin responses for offline
+        if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
