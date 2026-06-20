@@ -18,10 +18,10 @@ const { lang = "en" } = Astro.props;
       </a>
 
       <div class="nav-dropdown">
-        <a href="#" class="nav-dropdown-trigger" aria-haspopup="true">
+        <button type="button" class="nav-dropdown-trigger" aria-haspopup="true">
           {lang === "zh" ? "服務" : "Services"}
           <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
-        </a>
+        </button>
         <div class="nav-dropdown-menu">
           {lang === "zh" ? (
             <>
@@ -207,6 +207,11 @@ const { lang = "en" } = Astro.props;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      cursor: pointer;
     }
 
     .nav-desktop > a:hover,

@@ -1,5 +1,6 @@
 // RISE Service Worker — network-first with offline fallback
-const CACHE_NAME = "rise-v1";
+const CACHE_VERSION = "v2-" + new Date().toISOString().slice(0, 10);
+const CACHE_NAME = `rise-${CACHE_VERSION}`;
 const OFFLINE_URL = "/portal";
 
 self.addEventListener("install", (event) => {
@@ -13,9 +14,8 @@ self.addEventListener("activate", (event) => {
       Promise.all(
         keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
       )
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {

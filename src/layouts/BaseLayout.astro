@@ -86,9 +86,9 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
     <!-- Supabase JS v2 (for auth + portal) -->
     <script is:inline async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script is:inline define:vars={{
-      SUPABASE_URL: "https://zeczlwypqqvvpraosodv.supabase.co",
-      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplY3psd3lwcXF2dnByYW9zb2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNDEyMDgsImV4cCI6MjA5NDkxNzIwOH0.I7HWRsBOXDH2UG0u6NMEkXlosrlkuMkY6w9g5RtV_KM"
-    }}>
+          SUPABASE_URL: import.meta.env.PUBLIC_SUPABASE_URL || "https://zeczlwypqqvvpraosodv.supabase.co",
+          SUPABASE_ANON_KEY: import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "eyJhbG...V_KM"
+        }}>
       // Initialize the Supabase client once, attach to window.
       (function () {
         if (window.supabaseClient) return;
@@ -122,7 +122,7 @@ const ogImageURL = new URL(ogImage, "https://riseadvancement.com");
         if (!container || window.__turnstile_rendered || !window.turnstile) return;
         window.__turnstile_rendered = true;
         window.turnstile.render(container, {
-          sitekey: "0x4AAAAAADnBF6obN_9IcUya",
+          sitekey: (window as any).__TURNSTILE_SITEKEY || "0x4AAAAAADnBF6obN_9IcUya",
           callback: function(token) { window.__turnstile_token = token; document.getElementById("signup-submit-btn").disabled = false; },
           "error-callback": function() { window.__turnstile_token = null; },
           "expired-callback": function() { window.__turnstile_token = null; },
