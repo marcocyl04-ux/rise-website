@@ -430,6 +430,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
   <!-- ── Auth + Boot ─────────────────────────────────────────── -->
   <script is:inline define:vars={{ BRAIN_API }}>
     const API = BRAIN_API;
+    let brainToken = null;
 
     // ── Auth check ────────────────────────────────────────────
     async function initBrain() {
@@ -467,7 +468,7 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       }
 
       // Store session token for API calls
-      window._brainToken = session.access_token;
+      brainToken = session.access_token;
 
       loading.setAttribute("hidden", "");
       dash.removeAttribute("hidden");
@@ -477,8 +478,8 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
     // ── API helper (with auth header) ─────────────────────────
     async function brainFetch(path, opts = {}) {
       const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
-      if (window._brainToken) {
-        headers["Authorization"] = "Bearer " + window._brainToken;
+      if (brainToken) {
+        headers["Authorization"] = "Bearer " + brainToken;
       }
       const resp = await fetch(API + path, { ...opts, headers });
       if (!resp.ok) {
