@@ -19,6 +19,7 @@ export async function getUser() {
 
 export async function signInWithEmail(email: string, password: string) {
   const sb = getSupabase();
+  if (!sb) return { data: null, error: new Error("Supabase client not initialized") };
   return sb.auth.signInWithPassword({ email, password });
 }
 
@@ -28,6 +29,7 @@ export async function signUpWithEmail(
   fullName: string
 ) {
   const sb = getSupabase();
+  if (!sb) return { data: null, error: new Error("Supabase client not initialized") };
   return sb.auth.signUp({
     email,
     password,
@@ -37,6 +39,7 @@ export async function signUpWithEmail(
 
 export async function signInWithGoogle() {
   const sb = getSupabase();
+  if (!sb) return { data: null, error: new Error("Supabase client not initialized") };
   return sb.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -47,6 +50,7 @@ export async function signInWithGoogle() {
 
 export async function signOut() {
   const sb = getSupabase();
+  if (!sb) return { error: new Error("Supabase client not initialized") };
   return sb.auth.signOut();
 }
 
