@@ -473,6 +473,24 @@ const BRAIN_API = import.meta.env.PUBLIC_BRAIN_API_URL || "http://localhost:8000
       loading.setAttribute("hidden", "");
       dash.removeAttribute("hidden");
       brainInit();
+
+      // Session hardening: auto-logout after 2 hours of inactivity
+      (function initIdleTimeout() {
+        const IDLE_MS = 2 * 60 * 60 * 1000;
+        let timer;
+        function reset() {
+          clearTimeout(timer);
+          timer = setTimeout(async () => {
+            console.warn("[session] Idle timeout — logging out");
+            await sb.auth.signOut();
+            window.location.href = "/";
+          }, IDLE_MS);
+        }
+        reset();
+        ["mousedown", "keydown", "touchstart", "scroll"].forEach(function(evt) {
+          window.addEventListener(evt, reset, { passive: true });
+        });
+      })();
     }
 
     // ── API helper (with auth header) ─────────────────────────

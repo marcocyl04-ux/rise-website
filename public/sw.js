@@ -26,6 +26,12 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   // Same-origin: network-first with cache fallback
+  // IMPORTANT: Do NOT cache authenticated portal pages (could leak data on shared devices).
+  if (url.pathname.startsWith("/portal/")) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then(function (response) {
