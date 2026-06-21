@@ -1,6 +1,7 @@
 // Auth helpers. All client-side: the Supabase client is initialized in
 // BaseLayout.astro and exposed on window.supabaseClient.
 
+import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase } from "./supabase";
 
 export async function getSession() {
@@ -54,14 +55,14 @@ export async function signOut() {
   return sb.auth.signOut();
 }
 
-export function onAuthStateChange(callback: (event: string, session: any) => void) {
+export function onAuthStateChange(callback: (event: string, session: Session | null) => void) {
   const sb = getSupabase();
   if (!sb) return { data: { subscription: null } };
   return sb.auth.onAuthStateChange(callback);
 }
 
 // Ensure a user_profiles row exists.
-export async function ensureProfile(user: any) {
+export async function ensureProfile(user: User) {
   const sb = getSupabase();
   if (!sb || !user) return;
 
