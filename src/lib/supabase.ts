@@ -6,7 +6,7 @@
 
 export const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || "https://zeczlwypqqvvpraosodv.supabase.co";
 export const SUPABASE_ANON_KEY =
-  import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "eyJhbG...V_KM";
+  import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplY3psd3lwcXF2dnByYW9zb2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNDEyMDgsImV4cCI6MjA5NDkxNzIwOH0.I7HWRsBOXDH2UG0u6NMEkXlosrlkuMkY6w9g5RtV_KM";
 
 declare global {
   interface Window {
