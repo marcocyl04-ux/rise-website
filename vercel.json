@@ -35,6 +35,10 @@
       "destination": "https://rise-nutrition-v2.vercel.app/portal/$1"
     },
     {
+      "source": "/_astro/(.*)",
+      "destination": "https://rise-nutrition-v2.vercel.app/_astro/$1"
+    },
+    {
       "source": "/install-guide",
       "destination": "https://rise-nutrition-v2.vercel.app/install-guide"
     },
